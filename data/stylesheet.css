@@ -1,0 +1,55 @@
+.text-bold {
+    font-weight: 600;
+}
+
+.library-box {
+    background-color: transparent;
+}
+
+.library-inner-box {
+    background: transparent;
+    transition: background 320ms ease;
+}
+
+.library-inner-box .library-btn {
+    opacity: 0;
+}
+
+.library-inner-box:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.library-inner-box:hover .library-btn {
+    opacity: 1;
+}
+
+.library-btn:active,
+.library-btn:focus {
+    background-color: transparent;
+}
+
+.library-titlebar {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.library-toolbar {
+    background: rgba(0, 0, 0, 0.05);
+    border-bottom: none;
+}
+
+.library-colorbox {
+    border-radius: 12px;
+    box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.2);
+}
+
+.toolbar-btn {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.toolbar-btn.active {
+    background: rgba(0, 0, 0, 0.1);
+    opacity: 1;
+}
