@@ -3,30 +3,35 @@ namespace HTTPInspector {
         Gtk.Label title { get; set;}
         Gtk.Label url;
         Gtk.Box box;
+        public RequestItem item { get; set; }
         
-        private string get_method_label(int method) {
-            if (method == 0) {
-                return "<span color=\"#3892e0\">GET</span>";
-            } else if (method == 1) {
-                return "<span color=\"#3a9104\">POST</span>";
-            } else if (method == 2) {
-                return "<span color=\"#d48e15\">PUT</span>";
-            } else if (method == 3) {
-                return "<span color=\"#f37329\">PATCH</span>";
-            } else if (method == 4) {
-                return "<span color=\"#c6262e\">DELETE</span>";
-            } else {
-                return "";
+        private string get_method_label(Method method) {
+            switch (method) {
+                case Method.GET:
+                    return "<span color=\"#3892e0\">GET</span>";
+                case Method.POST:
+                    return "<span color=\"#3a9104\">POST</span>";
+                case Method.PUT:
+                    return "<span color=\"#d48e15\">PUT</span>";
+                case Method.PATCH:
+                    return "<span color=\"#f37329\">PATCH</span>";
+                case Method.DELETE:
+                    return "<span color=\"#c6262e\">DELETE</span>";
+                case Method.HEAD:
+                    return "<span color=\"#3892e0\">HEAD</span>";
+                default:
+                    assert_not_reached ();
             }
         }
         
-        public RequestHistoryItem (string _title, string _url, int method) {
-            title = new Gtk.Label (_title);
+        public RequestHistoryItem (RequestItem it) {
+            item = it;
+            title = new Gtk.Label (item.name);
             title.halign = Gtk.Align.START;
             title.margin_end = 10;
             title.set_line_wrap (true);
             
-            url = new Gtk.Label (get_method_label (method));
+            url = new Gtk.Label (get_method_label (item.method));
             url.set_justify (Gtk.Justification.CENTER);
             url.halign = Gtk.Align.END;
             url.margin_end = 10;
@@ -40,6 +45,11 @@ namespace HTTPInspector {
             box.pack_end (url, true, true, 2);
             
             add (box);
+        }
+        
+        public void update (RequestItem it) {
+            item = it;
+            url.label = get_method_label (item.method);
         }
     }
 }

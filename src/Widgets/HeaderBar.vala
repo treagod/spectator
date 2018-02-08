@@ -20,11 +20,15 @@ namespace HTTPInspector {
             var preferences_menuitem = new Gtk.ModelButton ();
             preferences_menuitem.text = _("Preferences");
             
+            var about_menuitem = new Gtk.ModelButton ();
+            about_menuitem.text = _("About");
+            
             var menu_grid = new Gtk.Grid ();
-            menu_grid.margin_bottom = 3;
+            menu_grid.margin = 7;
             menu_grid.orientation = Gtk.Orientation.VERTICAL;
-            menu_grid.width_request = 200;
+            menu_grid.add (about_menuitem);
             menu_grid.add (preferences_menuitem);
+            
             menu_grid.show_all ();
             
             var menu = new Gtk.Popover (null);
@@ -35,7 +39,6 @@ namespace HTTPInspector {
             app_menu.tooltip_text = _("Menu");
             app_menu.popover = menu;
             
-            //set_custom_title (new Gtk.Label("HTTP Inspector"));
             title = "HTTP Inspector";
             subtitle = "";
             pack_start (_new_request);

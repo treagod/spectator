@@ -2,7 +2,9 @@ namespace HTTPInspector {
     public class UrlEntry : Gtk.Grid {
         Gtk.ComboBoxText method_box;
         Gtk.Entry url_entry;
-        public signal void activate ();
+        
+        public signal void url_changed (string url);
+        public signal void method_changed(Method method);
 
         public UrlEntry () {
             init_method_box ();
@@ -15,8 +17,14 @@ namespace HTTPInspector {
                     // Add Parameter to url parameters
                     stdout.printf ("asd\n");
                 }
+                
                 return false;
             });
+            
+            url_entry.changed.connect (() => {
+                url_changed (url_entry.text);
+            });
+            
         }
 
         private void init_method_box () {
@@ -26,9 +34,23 @@ namespace HTTPInspector {
             method_box.append_text ("PUT");
             method_box.append_text ("PATCH");
             method_box.append_text ("DELETE");
+            method_box.append_text ("HEAD");
             method_box.active = 0;
+            
+            method_box.changed.connect (() => {
+                var index = method_box.get_active ();
+                method_changed (Method.convert(index));
+            });
 
             add (method_box);
+        }
+        
+        public void set_text (string url) {
+            url_entry.text = url;
+        }
+        
+        public void set_method (Method method) {
+            method_box.active = method.to_i ();
         }
 
         private void init_url_entry () {
@@ -40,13 +62,11 @@ namespace HTTPInspector {
             url_entry.icon_press.connect (() => {
                 stdout.printf("%s\n", url_entry.get_text () );
                 url_entry.has_focus = false;
-                activate ();
             });
 
             url_entry.activate.connect (() => {
                 stdout.printf("%s\n", url_entry.get_text () );
                 url_entry.has_focus = false;
-                activate ();
             });
             url_entry.hexpand = true;
             add (url_entry);

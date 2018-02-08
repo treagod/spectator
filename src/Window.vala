@@ -21,6 +21,7 @@
 
 namespace HTTPInspector {
     public class Window : Gtk.ApplicationWindow {
+        RequestHistory request_history;
 
         public Window (Gtk.Application app) {
             // Store the main app to be used
@@ -37,34 +38,37 @@ namespace HTTPInspector {
             var grid = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
             grid.width_request = 950;
             grid.height_request = 500;
-
-            var seperator = new Gtk.Separator (Gtk.Orientation.VERTICAL);
-            seperator.visible = true;
-            seperator.no_show_all = false;
-
-
-            var request_view  = new Request ();
-            var request_history = new RequestHistory ();
-
-
-            grid.add (request_history);
-            grid.add (seperator);
-            // grid.add (request_view);
-            var welcome = new Granite.Widgets.Welcome (_("HTTP Inspector"), _("Inspect your HTTP transmissions to the web"));
-            welcome.hexpand = true;
-            welcome.append ("bookmark-new", _("Create Request"), _("Create a new request to the web."));
-            
-            welcome.activated.connect((index) => {
-                create_request ();
-            });
-            grid.add (welcome);
             
             var headerbar = new HeaderBar ();
             headerbar.new_request.clicked.connect (() => {
                 create_request ();
             });
             set_titlebar (headerbar);
+
+            var seperator = new Gtk.Separator (Gtk.Orientation.VERTICAL);
+            seperator.visible = true;
+            seperator.no_show_all = false;
             
+            var content = new Content ();
+            request_history = new RequestHistory ();
+            
+            content.welcome_activated.connect ((index) => {
+                create_request ();
+            });
+            
+            content.item_changed.connect ((item) => {
+                request_history.update_active (item);
+            });
+            
+            request_history.selection_changed.connect ((item) => {
+                headerbar.subtitle = item.name;
+                content.show_request_view (item);
+            });
+
+            grid.add (request_history);
+            grid.add (seperator);
+            
+            grid.add (content);
 
             add (grid);
             show_all ();
@@ -75,6 +79,9 @@ namespace HTTPInspector {
         private void create_request () {
             var dialog = new RequestDialog (this);
             dialog.show_all ();
+            dialog.creation.connect ((name) => {
+                request_history.add_request (name);
+            });
         }
     }
 }

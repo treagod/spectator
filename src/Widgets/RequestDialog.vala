@@ -3,6 +3,7 @@ namespace HTTPInspector {
     
     public class RequestDialog : Gtk.Dialog {
         Gtk.Entry request_name_entry;
+        public signal void creation(string name);
         
         public RequestDialog (Gtk.ApplicationWindow parent) {
             title = "New Request";
@@ -26,6 +27,8 @@ namespace HTTPInspector {
             
             var content = get_content_area () as Gtk.Box;
             
+            
+            
             content.add (new DialogTitle ("Create Request"));
             content.add (hbox);
             
@@ -35,9 +38,14 @@ namespace HTTPInspector {
                     var name = request_name_entry.text;
                     
                     if (name.length == 0) {
-                        stdout.printf ("Needs a title\n");
+                        var warning_label = new Gtk.Label ("<span color=\"#a10705\">" + _("Request name must not be empty.") + "</span>");
+                        warning_label.use_markup = true;
+                        warning_label.margin = 5;
+                        content.pack_start (warning_label, false, true, 0);
+                        show_all ();  
+                        request_name_entry.get_style_context ().add_class ("error");
                     } else {
-                        stdout.printf ("Created request\n");
+                        creation (name);
                         destroy ();
                     }
                     

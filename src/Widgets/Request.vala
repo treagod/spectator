@@ -1,11 +1,25 @@
 namespace HTTPInspector {
     class Request : Gtk.Box {
+        private RequestItem item;
+        private UrlEntry url_entry;
+        public signal void item_changed(RequestItem  item);
+        
         public Request () {
             orientation = Gtk.Orientation.VERTICAL;
             margin = 4;
 
-            var url_entry = new UrlEntry ();
+            url_entry = new UrlEntry ();
             url_entry.margin_bottom = 10;
+            
+            url_entry.url_changed.connect ((url) => {
+                item.domain = url;
+                item_changed (item);
+            });
+            
+            url_entry.method_changed.connect ((method) => {
+                item.method = method;
+                item_changed (item);
+            });
 
             var stack = new Gtk.Stack ();
             stack.margin = 6;
@@ -20,11 +34,16 @@ namespace HTTPInspector {
             stack.add_titled (new Gtk.Label ("12435243"),"Body", "Body");
             //stack.add_titled (new Gtk.Label ("12435243"),"Auth", "Auth");
             //stack.add_titled (new Gtk.Label ("12435243"),"Options", "Options");
-
-
+            
             add (url_entry);
             add (stack_switcher);
             add (stack);
+        }
+        
+        public void set_item (RequestItem ite) {
+            item = ite;
+            url_entry.set_text (item.domain);
+            url_entry.set_method (item.method);
         }
     }
 }
