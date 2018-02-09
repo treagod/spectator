@@ -17,6 +17,8 @@ namespace HTTPInspector {
             }
         }
         
+        public signal void request_performed (Curl.Code code);
+        
     	private Curl.EasyHandle handle;
     	private RequestHeader headers;
     	private CallbackStream output_stream;
@@ -86,13 +88,17 @@ namespace HTTPInspector {
     	    }
     	}
 
-    	public Curl.Code perform () {
-    	    handle.setopt (Curl.Option.HTTPHEADER, headers.get_all ());
-    	    handle.setopt (Curl.Option.POSTFIELDS, "");
-    	    
-    	    return handle.perform ();
-    	}
-    	
+    	public async void perform () {
+    	    Thread.create<void>(() => {
+    	        handle.setopt (Curl.Option.HTTPHEADER, headers.get_all ());
+                handle.setopt (Curl.Option.POSTFIELDS, "");
+                request_performed (handle.perform ());
+    	    }, false);
+            
+            
+            yield;
+        }
+
     	public string get_response () {
     	    string response_part;
     	    var response_builder = new StringBuilder ();

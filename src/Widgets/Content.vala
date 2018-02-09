@@ -1,9 +1,9 @@
 namespace HTTPInspector {
     class Content : Gtk.Stack {
         private Granite.Widgets.Welcome welcome;
-        private RequestView request_view;
+        private RequestResponsePane req_res_pane;
+        
         public signal void item_changed (RequestItem item);
-
         public signal void welcome_activated(int index);
 
         public Content () {
@@ -14,15 +14,15 @@ namespace HTTPInspector {
             welcome.activated.connect((index) => {
                 welcome_activated (index);
             });
+            
+            req_res_pane = new RequestResponsePane ();
 
-            request_view  = new RequestView ();
-
-            request_view.item_changed.connect((item) => {
+            req_res_pane.item_changed.connect ((item) => {
                 item_changed (item);
             });
 
             add_named (welcome, "welcome");
-            add_named (request_view, "request_view");
+            add_named (req_res_pane, "req_res_pane");
 
             set_visible_child (welcome);
 
@@ -30,8 +30,8 @@ namespace HTTPInspector {
         }
 
         public void show_request_view (RequestItem item) {
-            request_view.set_item (item);
-            set_visible_child (request_view);
+            req_res_pane.set_item (item);
+            set_visible_child (req_res_pane);
         }
     }
 

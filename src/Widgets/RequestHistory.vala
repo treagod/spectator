@@ -40,7 +40,7 @@ namespace HTTPInspector {
             });
 
             orientation = Gtk.Orientation.VERTICAL;
-            width_request = 300;
+            width_request = 265;
 
             scroll.add (item_box);
 

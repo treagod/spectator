@@ -14,7 +14,7 @@ namespace HTTPInspector {
             switch (method) {
                 case Method.GET:
                     var color = dark_theme ? "64baff" : "0d52bf";
-                    return "<span color=\"#" + color + "\">PUT</span>";
+                    return "<span color=\"#" + color + "\">GET</span>";
                 case Method.POST:
                     var color = dark_theme ? "9bdb4d" : "3a9104";
                     return "<span color=\"#" + color + "\">POST</span>";

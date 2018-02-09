@@ -1,7 +1,7 @@
 namespace HTTPInspector {
     public class UrlEntry : Gtk.Grid {
-        Gtk.ComboBoxText method_box;
-        Gtk.Entry url_entry;
+        private Gtk.ComboBoxText method_box;
+        private Gtk.Entry url_entry;
         
         public signal void url_changed (string url);
         public signal void method_changed(Method method);
@@ -53,22 +53,33 @@ namespace HTTPInspector {
         public void set_method (Method method) {
             method_box.active = method.to_i ();
         }
+        
+        public void item_was_sent (bool was_sent) {
+            if (was_sent) {
+                url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "view-refresh-symbolic");
+            } else {
+                url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "media-playback-start-symbolic");
+            }
+        }
 
         private void init_url_entry () {
             url_entry = new Gtk.Entry ();
             url_entry.placeholder_text = "Type an URL";
-
-            url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "view-refresh-symbolic");
+            url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "media-playback-start-symbolic");
 
             url_entry.icon_press.connect (() => {
-                request_activated ();
+                widget_activate ();
             });
 
             url_entry.activate.connect (() => {
-                request_activated ();
+                widget_activate ();
             });
             url_entry.hexpand = true;
             add (url_entry);
+        }
+        
+        private void widget_activate () {
+            request_activated ();
         }
     }
 }

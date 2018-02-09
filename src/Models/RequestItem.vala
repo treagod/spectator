@@ -48,6 +48,8 @@ namespace HTTPInspector {
         public string subdomain { get; set; }
         public string path { get; set; }
         public Method method { get; set; }
+        public bool was_sent { get; set; }
+        public ResponseItem response;
         
         public RequestItem(string nam, Method meth) {
             name = nam;
@@ -55,6 +57,7 @@ namespace HTTPInspector {
             subdomain = "";
             path = "";
             method = meth;
+            was_sent = false;
         }
         
         public RequestItem.with_url(string nam, string url, Method meth) {
@@ -63,6 +66,7 @@ namespace HTTPInspector {
             subdomain = url;
             path = url;
             method = meth;
+            was_sent = false;
         }
         
         public RequestItem.from_int(string nam, int meth) {

@@ -8,6 +8,8 @@ You'll need the following dependencies:
 * cmake
 * libgee-0.8-dev
 * libgranite-dev
+* libgtksourceview-3.0-dev
+* libcurl4-openssl-dev
 * libwebkit2gtk-4.0-dev
 * valac
 
@@ -21,7 +23,7 @@ Run `cmake` to configure the build environment and then `make` to build
     cmake -DCMAKE_INSTALL_PREFIX=/usr ..
     make
 
-To install, use `make install`, then execute with `io.elementary.code`
+To install, use `make install`, then execute with `com.github.treagod.httpinspector`
 
     sudo make install
     com.github.treagod.httpinspecter

@@ -2,12 +2,16 @@ namespace HTTPInspector {
     class RequestView : Gtk.Box {
         private RequestItem item;
         private UrlEntry url_entry;
-        public signal void item_changed(RequestItem  item);
         
-        public RequestView () {
+        public signal void item_changed(RequestItem item);
+        public signal void response_received(string res);
+        
+        construct {
             orientation = Gtk.Orientation.VERTICAL;
             margin = 4;
-
+        }
+        
+        public RequestView () {
             url_entry = new UrlEntry ();
             url_entry.margin_bottom = 10;
             
@@ -21,9 +25,7 @@ namespace HTTPInspector {
                 item_changed (item);
             });
             
-            url_entry.request_activated.connect (() => {
-                perform_request ();
-            });
+            url_entry.request_activated.connect (perform_request);
 
             var stack = new Gtk.Stack ();
             stack.margin = 6;
@@ -44,18 +46,29 @@ namespace HTTPInspector {
             add (stack);
         }
         
+        public RequestItem get_item () {
+            return item;
+        }
+        
         public void set_item (RequestItem ite) {
             item = ite;
+            url_entry.item_was_sent (item.was_sent);
             url_entry.set_text (item.domain);
             url_entry.set_method (item.method);
         }
         
-        private void perform_request () {
+        private async void perform_request () {
             var req = new Requester (item.domain);
+            
+            req.request_performed.connect (() => {
+                response_received (req.get_response ());
+                url_entry.item_was_sent (item.was_sent);
+            });
+            item.was_sent = true;
             req.follow_location (true);
             req.set_method (item.method);
-            req.verbose ();
-            req.perform ();
+            //req.verbose ();
+            yield req.perform ();
         }
     }
 }
