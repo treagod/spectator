@@ -55,8 +55,7 @@ namespace HTTPInspector {
             });
         }
         
-        public void add_request (string name) {
-            var item = new RequestItem (name, Method.GET);
+        public void add_request (RequestItem item) {
             var box_item = new RequestHistoryItem (item);
             
             item_box.add (box_item);

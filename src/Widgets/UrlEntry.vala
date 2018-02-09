@@ -5,6 +5,7 @@ namespace HTTPInspector {
         
         public signal void url_changed (string url);
         public signal void method_changed(Method method);
+        public signal void request_activated ();
 
         public UrlEntry () {
             init_method_box ();
@@ -60,13 +61,11 @@ namespace HTTPInspector {
             url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "view-refresh-symbolic");
 
             url_entry.icon_press.connect (() => {
-                stdout.printf("%s\n", url_entry.get_text () );
-                url_entry.has_focus = false;
+                request_activated ();
             });
 
             url_entry.activate.connect (() => {
-                stdout.printf("%s\n", url_entry.get_text () );
-                url_entry.has_focus = false;
+                request_activated ();
             });
             url_entry.hexpand = true;
             add (url_entry);

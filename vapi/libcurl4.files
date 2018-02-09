@@ -1,0 +1,7 @@
+/usr/include/curl/curl.h
+/usr/include/curl/curlver.h
+/usr/include/curl/curlbuild.h
+/usr/include/curl/curlrules.h
+/usr/include/curl/easy.h
+/usr/include/curl/multi.h
+/usr/lib/x86_64-linux-gnu/libcurl.so.4

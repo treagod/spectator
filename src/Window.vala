@@ -18,7 +18,6 @@
 *
 * Authored by: Marvin Ahlgrimm
 */
-
 namespace HTTPInspector {
     public class Window : Gtk.ApplicationWindow {
         RequestHistory request_history;
@@ -28,13 +27,14 @@ namespace HTTPInspector {
             Object (application: app);
             
             // Theme color
-            //Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;	
+            Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = false;	
 
             // Show the app
             show_app ();
         }
 
         public void show_app () {
+            	
             var grid = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
             grid.width_request = 950;
             grid.height_request = 500;
@@ -79,8 +79,8 @@ namespace HTTPInspector {
         private void create_request () {
             var dialog = new RequestDialog (this);
             dialog.show_all ();
-            dialog.creation.connect ((name) => {
-                request_history.add_request (name);
+            dialog.creation.connect ((item) => {
+                request_history.add_request (item);
             });
         }
     }

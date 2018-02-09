@@ -1,9 +1,9 @@
 namespace HTTPInspector {
-    class HeaderTab : Gtk.Box {
+    class HeaderView : Gtk.Box {
         List<Gtk.Button> buttons;
         Gtk.Grid header_fields;
 
-        public HeaderTab () {
+        public HeaderView () {
             orientation = Gtk.Orientation.VERTICAL;
             margin_left = 7;
             margin_right = 7;
