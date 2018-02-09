@@ -33,9 +33,9 @@ namespace HTTPInspector {
             stack_switcher.set_stack (stack);
             stack_switcher.halign = Gtk.Align.CENTER;
 
-            stack.add_titled (new HeaderView (),"Header", "Header");
-            stack.add_titled (new Gtk.Label ("12435243"),"URL Params", "URL Params");
-            stack.add_titled (new Gtk.Label ("12435243"),"Body", "Body");
+            stack.add_titled (new HeaderView (), "header", _("Header"));
+            stack.add_titled (new Gtk.Label ("12435243"), "url_params", _("URL Parameters"));
+            stack.add_titled (new Gtk.Label ("12435243"), "body", _("Body"));
             //stack.add_titled (new Gtk.Label ("12435243"),"Auth", "Auth");
             //stack.add_titled (new Gtk.Label ("12435243"),"Options", "Options");
             
@@ -53,6 +53,7 @@ namespace HTTPInspector {
         private void perform_request () {
             var req = new Requester (item.domain);
             req.follow_location (true);
+            req.set_method (item.method);
             req.verbose ();
             req.perform ();
         }

@@ -7,7 +7,7 @@ namespace HTTPInspector {
         public signal void creation(RequestItem item);
         
         public RequestDialog (Gtk.ApplicationWindow parent) {
-            title = "New Request";
+            title = _("New Request");
             border_width = 5;            
             set_size_request (425, 100);
             deletable = false;
@@ -38,7 +38,7 @@ namespace HTTPInspector {
             add_button (_("Create"), Gtk.ResponseType.APPLY);
             var content = get_content_area () as Gtk.Box;
             
-            content.add (new DialogTitle ("Create Request"));
+            content.add (new DialogTitle (_("Create Request")));
             content.add (hbox);
             content.margin = 15;
             content.margin_top = 0;

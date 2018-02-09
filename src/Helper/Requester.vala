@@ -60,6 +60,31 @@ namespace HTTPInspector {
     	        handle.setopt (Curl.Option.USE_SSL, Curl.UseSSL.NONE);
     	    }
     	}
+    	
+    	public void set_method (Method method) {
+    	    switch (method) {
+    	        case Method.GET:
+                    handle.setopt (Curl.Option.CUSTOMREQUEST, "GET");
+                    break;
+    	        case Method.POST:
+    	            handle.setopt (Curl.Option.CUSTOMREQUEST, "POST");
+                    break;
+    	        case Method.PUT:
+    	            handle.setopt (Curl.Option.CUSTOMREQUEST, "PUT");
+                    break;
+    	        case Method.PATCH:
+    	            handle.setopt (Curl.Option.CUSTOMREQUEST, "PATCH");
+                    break;
+    	        case Method.DELETE:
+    	            handle.setopt (Curl.Option.CUSTOMREQUEST, "DELETE");
+                    break;
+                case Method.HEAD:
+                    handle.setopt (Curl.Option.CUSTOMREQUEST, "HEAD");
+                    break;    	        
+    	        default:
+    	            assert_not_reached ();
+    	    }
+    	}
 
     	public Curl.Code perform () {
     	    handle.setopt (Curl.Option.HTTPHEADER, headers.get_all ());
