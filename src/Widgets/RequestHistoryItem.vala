@@ -80,13 +80,23 @@ namespace HTTPInspector {
             
             request_name.label = item.name;
             
+            var escaped_url = escape_url (item.domain);       
             if (item.domain.length > 0) {
-                url.label = "<small><i>" + item.domain + "</i></small>";
+                url.label = "<small><i>" + escaped_url + "</i></small>";
             } else {
                 url.label = no_url;
             }
             
             show_all ();
+        }
+        
+        private string escape_url (string url) {
+            var escaped_url = url;
+            escaped_url = escaped_url.replace ("&", "&amp;");
+            escaped_url = escaped_url.replace ("\"", "&quot;");
+            escaped_url = escaped_url.replace ("<", "&lt;");
+            escaped_url = escaped_url.replace (">", "&gt;");
+            return escaped_url;
         }
     }
 }

@@ -24,9 +24,21 @@ namespace HTTPInspector {
         }
         
         public void insert (string res) {
-            Gtk.TextIter iter;
-            buffer.get_start_iter(out iter) ;
-            buffer.insert (ref iter, res, res.length);
+        /*
+            Gtk.TextIter iter_start;
+            
+            if (buffer.text)
+            buffer.get_start_iter(out iter_start);
+            Gtk.TextIter iter_end;
+            buffer.get_end_iter(out iter_end);
+            buffer.@delete (ref iter_start, ref iter_end);
+            buffer.insert (ref iter_start, res, res.length);
+            */
+            try {
+                buffer.text = convert_with_fallback (res, res.length, "UTF-8", "ISO-8859-1");
+            } catch (ConvertError e) {
+                stderr.printf ("Error converting markup for" + res + ", "+ e.message);
+            }
         }
         
         construct {

@@ -1,6 +1,7 @@
 namespace HTTPInspector {
     class HeaderView : Gtk.Box {
         List<Gtk.Button> buttons;
+        List<HeaderField> headers;
         Gtk.Grid header_fields;
 
         public HeaderView () {
@@ -9,9 +10,8 @@ namespace HTTPInspector {
             margin_right = 7;
 
             header_fields = new Gtk.Grid ();
-            header_fields.attach (new Gtk.Label("Header Key"), 0, 0, 1, 1);
-            header_fields.attach (new Gtk.Label("Header Value"), 1, 0, 1, 1);
             buttons = new List<Gtk.Button> ();
+            headers = new List<HeaderField> ();
             header_fields.column_spacing = 3;
             header_fields.row_spacing = 3;
             var add_row_button = new Gtk.Button.with_label ("Add header");
@@ -45,17 +45,14 @@ namespace HTTPInspector {
         }
 
         public void add_row () {
-            var header_key = new Gtk.Entry ();
-            var header_value = new Gtk.Entry ();
+            var header_field = new HeaderField ();      
             var del_button = new Gtk.Button.from_icon_name ("window-close");
 
-            header_key.hexpand = true;
-            header_value.hexpand = true;
-
             queue_button (del_button);
+            
+            headers.append (header_field);
 
-            header_fields.attach (header_key, 0, (int) buttons.length (), 1, 1);
-            header_fields.attach (header_value, 1, (int) buttons.length (), 1, 1);
+            header_fields.attach (header_field, 0, (int) buttons.length (), 1, 1);
             header_fields.attach (del_button, 2, (int) buttons.length (), 1, 1);
             show_all ();
         }

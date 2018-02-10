@@ -18,8 +18,3 @@ namespace HTTPInspector {
         }
     }
 }
-
-/*
-Curl.SList* chunk = null;
-chunk = Curl.SList.append (chunk, "Test: Test");
-*/

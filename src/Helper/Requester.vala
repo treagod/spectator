@@ -1,5 +1,35 @@
 namespace HTTPInspector {
     public class Requester {
+        private class Progress {
+            public double lastruntime { get; set; }
+            public Curl.EasyHandle handle;
+            
+            
+        }
+        
+        private static int xferinfo (void *p,
+                              double dltotal, double dlnow,
+                              double ultotal, double ulnow) {
+            stdout.printf ("asdsad\n");
+            var progress = (Progress) p;
+            double curtime = 0;
+             
+            progress.handle.getinfo (Curl.Info.TOTAL_TIME, ref curtime);
+            
+            if((curtime - progress.lastruntime) >= 3) {
+                progress.lastruntime = curtime;
+                stderr.printf("TOTAL TIME: %f \r\n", curtime);
+            }
+             
+            stderr.printf( "UP: %f of %f DOWN: %f of %f\n", ulnow, ultotal, dlnow, dltotal);
+             
+            if(dlnow > 6000) {
+                return 1;
+            }
+            
+            return 0;
+        }
+        
         private class CallbackStream : GLib.OutputStream {
             private MemoryInputStream input_stream;
     
@@ -23,21 +53,26 @@ namespace HTTPInspector {
     	private RequestHeader headers;
     	private CallbackStream output_stream;
     	private MemoryInputStream input_stream;
+    	private Progress progress;
     	
     	public Requester (string url) {
             handle = new Curl.EasyHandle  ();
             headers = new RequestHeader ();
             input_stream = new MemoryInputStream ();
             output_stream = new CallbackStream (input_stream);
+            progress = new Progress ();
             handle.setopt (Curl.Option.WRITEFUNCTION, write_function);
-            handle.setopt (Curl.Option.FILE, (void*)output_stream);
+            handle.setopt (Curl.Option.WRITEDATA, (void*)output_stream);
             handle.setopt (Curl.Option.URL, url);
             handle.setopt (Curl.Option.USERAGENT, "http-inspector/0.1");
+            handle.setopt (Curl.Option.XFERINFOFUNCTION, xferinfo);
+            handle.setopt (Curl.Option.XFERINFODATA, ref progress);
         }
         
         public void verbose (bool choice = true) {
             handle.setopt (Curl.Option.VERBOSE, choice);
         }
+        
         
         public void add_header (string key, string val) {
             headers.add_header (key, val);
@@ -49,6 +84,10 @@ namespace HTTPInspector {
         
         public void set_user_agent (string agent = "http-inspector/0.1") {
             handle.setopt (Curl.Option.USERAGENT, agent);
+        }
+        
+        public void set_timeout (int timeout) {
+            handle.setopt (Curl.Option.TIMEOUT, timeout);
         }
 
     	public void follow_location (bool choice) {
@@ -93,6 +132,8 @@ namespace HTTPInspector {
     	        handle.setopt (Curl.Option.HTTPHEADER, headers.get_all ());
                 handle.setopt (Curl.Option.POSTFIELDS, "");
                 request_performed (handle.perform ());
+                
+                stdout.printf ("%f\n", progress.lastruntime);
     	    }, false);
             
             
@@ -116,9 +157,11 @@ namespace HTTPInspector {
 
         private static size_t write_function (void* res, size_t size, size_t nmemb, void *data) {
             size_t bytes = size * nmemb;
+            
             OutputStream stream = (OutputStream) data;
 
             uint8[] buffer = new uint8[bytes];
+            stdout.printf ("%s\n", (string) res);
             Posix.memcpy ((void*)buffer, res, bytes);
 
             size_t bytes_written;

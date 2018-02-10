@@ -1,154 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (c) 2017 Alessandro Castellani (https://github.com/Alecaddd/sequeler) -->
+<!-- Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod/httpinspector) -->
 <component type="desktop">
   <id>com.github.treagod.httpinspector.desktop</id>
-  <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
-  <name>Sequeler</name>
-  <summary>Friendly SQL Client</summary>
+  <name>HTTP Inspector</name>
+  <summary>HTTP Client to inspect REST Interfaces</summary>
   <description>
     <p>
-      Easily connect to your local or remote database
+      <i>Tests your REST API by sending self defined HTTP requests</i>
     </p>
     <p>
-      Store your Database Connections in the built-in library, type and execute SQL commands directly in the App, and do everything you need to do without the necessity of opening the terminal.
+      Create multiple requests to different URLs with different HTTP Methods and define HTTP headers, request body with various options to access a web service. 
     </p>
     <p>
       Features Include:
     </p>
     <ul>
-      <li>Test Connections before saving them</li>
-      <li>Switch between light and dark mode</li>
-      <li>Handy keyboard shortcuts to quit (ctrl+q), access library (ctrl+l), create new connection (ctrl+n), and open preferences (ctrl+,)</li>
+      <li>Managment of multiple requests.</li>
+      <li>Defining HTTP headers for each request.</li>
+      <li>Tweaking each requests (such as Timeout, Follow Redirection, ..)</li>
+      <li>Presentation of server response in multiple ways.</li>
     </ul>
   </description>
   <provides>
     <binary>com.github.treagod.httpinspector</binary>
   </provides>
   <releases>
-    <release version="0.4.3" date="2018-01-23">
-      <description>
-        <p>Better error handling, less crashes!</p>
-        <ul>
-          <li>The app doesn't crash when dealing with big values</li>
-          <li>Handling errors related to columns</li>
-          <li>Quicker response on big select queries</li>
-          <li>Some small clean up</li>
-          <li>Fixes issue with SQL Lite encrypted path</li>
-        </ul>
-      </description>
-    </release>
-    <release version="0.4.2" date="2018-01-22">
-      <description>
-        <p>Better error handling, less crashes!</p>
-        <ul>
-          <li>The app doesn't crash when dealing with big values</li>
-          <li>Handling errors related to columns</li>
-          <li>Quicker response on big select queries</li>
-          <li>Some small clean up</li>
-        </ul>
-      </description>
-    </release>
-    <release version="0.4.1" date="2017-12-02">
-      <description>
-        <p>New Icon, Better error messages!</p>
-        <ul>
-          <li>New shiny icon</li>
-          <li>View SQL error message on error</li>
-          <li>FIX: Show proper PostgreSql Schema Table in Sidebar</li>
-          <li>Snappiest query execution ever for local databases</li>
-          <li>The usual bundle of bugs for you to discover</li>
-        </ul>
-      </description>
-    </release>
-    <release version="0.4.0" date="2017-11-10">
-      <description>
-        <p>Summoning the power of async methods!</p>
-        <ul>
-          <li>All DataBase queries are now async methods, super fast.</li>
-          <li>The UI doesn't freeze anymore during a long process</li>
-          <li>Granite SourceList to display list of tables</li>
-          <li>Tabs to switch between the Query Builder and the Table Structure</li>
-          <li>ComboBox to select table schemas from the open connection</li>
-          <li>Many more bugs and issues for you to have fun with</li>
-        </ul>
-      </description>
-    </release>
-    <release version="0.3.4" date="2017-10-23">
-      <description>
-        <p>Bug Fixes and Improvements</p>
-        <ul>
-          <li>Display Table lists for SQLite and PostgreSQL</li>
-          <li>Refresh Table List view if tables change</li>
-          <li>Removed unused GSettings</li>
-        </ul>
-      </description>
-    </release>
-    <release version="0.3.3" date="2017-10-20">
-      <description>
-        <p>This is so good you won't believe it. New Library UI, Schema Table, Custom Port, and more</p>
-        <ul>
-          <li>A brand new Library View directly in your home screen, super tight and organized</li>
-          <li>Custom Port field for those snazzy geeks who don't just use 3306</li>
-          <li>A shiny new Sidebar View to list all your DataBase Tables</li>
-          <li>Code cleanup and speed improvements</li>
-          <li>Usual abundance of bugs and issues for you to have fun with!</li>
-        </ul>
-      </description>
-    </release>
-    <release version="0.2.0" date="2017-10-10">
-      <description>
-        <p>Major Update: Releasing a sweet table to view Query Results!</p>
-        <ul>
-          <li>Did I say we got a sweet table to view query results?</li>
-          <li>New shortcut (ctrl+enter) to execute query</li>
-          <li>Solved bug while connecting to DB directly from the Connection Dialog</li>
-          <li>UI Improvements to Connection Dialog</li>
-          <li>Added Spanish and Lithuanian translations</li>
-        </ul>
-      </description>
-    </release>
-    <release version="0.1.5" date="2017-10-06">
-      <description>
-        <p>UI fixes</p>
-        <ul>
-          <li>Visual improvements to the library view</li>
-        </ul>
-      </description>
-    </release>
-    <release version="0.1.4" date="2017-10-05">
-      <description>
-        <p>Initial Release</p>
-        <ul>
-          <li>Store your Database connections</li>
-          <li>Quickly connect to a Local or Remote Database</li>
-          <li>Write SQL queries in the built-in code editor</li>
-        </ul>
-      </description>
-    </release>
   </releases>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/Alecaddd/sequeler/master/sequeler-screenshot.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/Alecaddd/sequeler/master/sequeler-screenshot1.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/Alecaddd/sequeler/master/sequeler-screenshot2.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/Alecaddd/sequeler/master/sequeler-screenshot3.png</image>
-    </screenshot>
   </screenshots>
-  <developer_name>Alessandro Castellani</developer_name>
-  <url type="homepage">https://github.com/Alecaddd/sequeler</url>
-  <url type="bugtracker">https://github.com/Alecaddd/sequeler/issues</url>
-  <url type="help">https://github.com/Alecaddd/sequeler/issues</url>
-  <update_contact>castellani.ale@gmail.com</update_contact>
-  <custom>
-    <value key="x-appcenter-color-primary">#3f3f3f</value>
-    <value key="x-appcenter-color-primary-text">#ffffff</value>
-    <value key="x-appcenter-suggested-price">5</value>
-  </custom>
+  <developer_name>Marvin Ahlgrimm</developer_name>
+  <url type="homepage">https://github.com/treagod/httpinspector</url>
+  <url type="bugtracker">https://github.com/treagod/httpinspector/issues</url>
+  <url type="help">https://github.com/treagod/httpinspector/issues</url>
+  <update_contact>marv.ahlgrimm@gmail.com</update_contact>
 </component>

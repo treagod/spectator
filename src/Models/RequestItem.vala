@@ -41,6 +41,10 @@ namespace HTTPInspector {
         }
     }
     
+    public enum RequestStatus {
+        NOT_SENT, SENT, SENDING
+    }
+    
     public class RequestItem  {
         
         public string name { get; set; }
@@ -48,38 +52,48 @@ namespace HTTPInspector {
         public string subdomain { get; set; }
         public string path { get; set; }
         public Method method { get; set; }
-        public bool was_sent { get; set; }
+        public RequestStatus status { get; set; }
         public ResponseItem response;
+        public Gee.HashMap<string, string> headers { get; private set; }
         
         public RequestItem(string nam, Method meth) {
+            headers = new Gee.HashMap<string, string> ();
             name = nam;
             domain = "";
             subdomain = "";
             path = "";
             method = meth;
-            was_sent = false;
+            status = RequestStatus.NOT_SENT;
         }
         
         public RequestItem.with_url(string nam, string url, Method meth) {
+            headers = new Gee.HashMap<string, string> ();
             name = nam;
             domain = url;
             subdomain = url;
             path = url;
             method = meth;
-            was_sent = false;
+            status = RequestStatus.NOT_SENT;
         }
         
         public RequestItem.from_int(string nam, int meth) {
+            headers = new Gee.HashMap<string, string> ();
             name = nam;
+            status = RequestStatus.NOT_SENT;
             method = Method.convert(meth);
         }
         
         public RequestItem.from_int_with_url(string nam, string url, Method meth) {
+            headers = new Gee.HashMap<string, string> ();
             name = nam;
             domain = url;
             subdomain = url;
             path = url;
             method = meth;
+        }
+        
+        public void add_header (string key, string val) {
+            headers[key] = val;
         }
     }
 }

@@ -54,11 +54,17 @@ namespace HTTPInspector {
             method_box.active = method.to_i ();
         }
         
-        public void item_was_sent (bool was_sent) {
-            if (was_sent) {
-                url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "view-refresh-symbolic");
-            } else {
-                url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "media-playback-start-symbolic");
+        public void item_status_changed (RequestStatus status) {
+            switch (status) {
+                case RequestStatus.SENT:
+                    url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "view-refresh-symbolic");
+                    break;
+                case RequestStatus.NOT_SENT:
+                    url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "media-playback-start-symbolic");
+                    break;
+                case RequestStatus.SENDING:
+                    url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "window-close-symbolic");
+                    break;
             }
         }
 

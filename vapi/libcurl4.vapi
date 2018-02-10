@@ -699,7 +699,9 @@ namespace Curl {
 		TRANSFER_ENCODING,
 		CLOSESOCKETFUNCTION,
 		CLOSESOCKETDATA,
-		LASTENTRY
+		LASTENTRY,
+		XFERINFOFUNCTION,
+		XFERINFODATA
 	}
 	[CCode (cheader_filename = "curl/curl.h", cprefix = "CURLPROXY_", has_type_id = false)]
 	public enum ProxyType {

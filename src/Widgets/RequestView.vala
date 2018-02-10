@@ -52,23 +52,25 @@ namespace HTTPInspector {
         
         public void set_item (RequestItem ite) {
             item = ite;
-            url_entry.item_was_sent (item.was_sent);
+            url_entry.item_status_changed (item.status);
             url_entry.set_text (item.domain);
             url_entry.set_method (item.method);
         }
         
         private async void perform_request () {
-            var req = new Requester (item.domain);
+            MainLoop loop = new MainLoop ();
+            var session = new Soup.Session ();
+            var msg = new Soup.Message ("GET", item.domain);
             
-            req.request_performed.connect (() => {
-                response_received (req.get_response ());
-                url_entry.item_was_sent (item.was_sent);
-            });
-            item.was_sent = true;
-            req.follow_location (true);
-            req.set_method (item.method);
-            //req.verbose ();
-            yield req.perform ();
+            session.queue_message (msg, (sess, mess) => {
+                item.status = RequestStatus.SENT;
+                response_received((string) mess.response_body.data);
+                url_entry.item_status_changed (item.status);
+                loop.quit ();
+	        });
+	        
+	        item.status = RequestStatus.SENDING;
+	        url_entry.item_status_changed (item.status);
         }
     }
 }
