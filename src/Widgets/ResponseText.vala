@@ -45,16 +45,6 @@ namespace HTTPInspector {
         }
 
         public void insert (ResponseItem? res) {
-        /*
-            Gtk.TextIter iter_start;
-
-            if (buffer.text)
-            buffer.get_start_iter(out iter_start);
-            Gtk.TextIter iter_end;
-            buffer.get_end_iter(out iter_end);
-            buffer.@delete (ref iter_start, ref iter_end);
-            buffer.insert (ref iter_start, res, res.length);
-            */
             if (res == null) {
                 buffer.text = "";
             } else {

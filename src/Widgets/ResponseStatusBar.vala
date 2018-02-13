@@ -61,6 +61,38 @@ namespace HTTPInspector {
                 color: #fafafa;
                 background-color: #273445;
             }
+
+            .dark-ok-status-box {
+                border-width: 1px;
+                border-style: solid;
+                border-color: #68b723;
+                color: #68b723;
+                background-color: #333333;
+            }
+
+            .dark-error-status-box {
+                border-width: 1px;
+                border-style: solid;
+                border-color: #c6262e;
+                color: #c6262e;
+                background-color: #333333;
+            }
+
+            .dark-redirect-status-box {
+                border-width: 1px;
+                border-style: solid;
+                border-color: #f9c440;
+                color: #f9c440;
+                background-color: #333333;
+            }
+
+            .dark-response-info-box {
+                border-width: 1px;
+                border-style: solid;
+                border-color: #d4d4d4;
+                color: #d4d4d4 ;
+                background-color: #333333;
+            }
         """;
 
 
@@ -117,12 +149,18 @@ namespace HTTPInspector {
 
         public void update (ResponseItem? it) {
             http_status_box.get_style_context ().remove_class ("ok-status-box");
+            http_status_box.get_style_context ().remove_class ("redirect-status-box");
             http_status_box.get_style_context ().remove_class ("error-status-box");
+            http_status_box.get_style_context ().remove_class ("dark-ok-status-box");
+            http_status_box.get_style_context ().remove_class ("dark-redirect-status-box");
+            http_status_box.get_style_context ().remove_class ("dark-error-status-box");
             http_status_box.get_style_context ().remove_class ("response-info-box");
             response_size_box.get_style_context ().remove_class ("response-info-box");
+            response_size_box.get_style_context ().remove_class ("dark-response-info-box");
             response_size_box.get_style_context ().remove_class ("no-info-box");
             request_time_box.get_style_context ().remove_class ("no-info-box");
             request_time_box.get_style_context ().remove_class ("response-info-box");
+            request_time_box.get_style_context ().remove_class ("dark-response-info-box");
             http_status_box.get_style_context ().remove_class ("no-info-box");
 
             if (it == null) {
@@ -136,12 +174,14 @@ namespace HTTPInspector {
                 http_status_box.halign = Gtk.Align.CENTER;
                 http_status_label.label = "No status";
             } else {
+                var seconds = _("seconds");
+                var formated_time = "%.2f ".printf (it.duration);
                 http_status_label.label = "%u Ok".printf (it.status_code);
                 response_size_label.label = ("%" + int64.FORMAT + " KB").printf (it.size / 1000);
-                request_time_label.label = "%.2f seconds".printf (it.duration);
-                response_size_box.get_style_context ().add_class ("response-info-box");
+                request_time_label.label = formated_time + seconds;
+                response_size_box.get_style_context ().add_class (response_info_box ());
                 response_size_label.halign = Gtk.Align.CENTER;
-                request_time_box.get_style_context ().add_class ("response-info-box");
+                request_time_box.get_style_context ().add_class (response_info_box ());
                 request_time_box.halign = Gtk.Align.CENTER;
                 http_status_box.get_style_context ().add_class (status_color (it.status_code));
                 http_status_box.halign = Gtk.Align.CENTER;
@@ -151,47 +191,36 @@ namespace HTTPInspector {
         }
     }
 
-    private string status_color (uint status) {
-        stdout.printf ("%u", status);
-        if (status >= 200 && status < 300) {
-            return "ok-status-box";
-        } else if (status >= 300 && status < 400) {
-            return "redirect-status_box";
-        } else if (status >= 400 && status < 600) {
-            return "error-status-box";
+    private string response_info_box () {
+        if (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) {
+            return "dark-response-info-box";
         } else {
             return "response-info-box";
         }
     }
+
+    private string status_color (uint status) {
+        if (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) {
+            if (status >= 200 && status < 300) {
+                return "dark-ok-status-box";
+            } else if (status >= 300 && status < 400) {
+                return "dark-redirect-status_box";
+            } else if (status >= 400 && status < 600) {
+                return "dark-error-status-box";
+            } else {
+                return "response-info-box";
+            }
+        } else {
+            if (status >= 200 && status < 300) {
+                return "ok-status-box";
+            } else if (status >= 300 && status < 400) {
+                return "redirect-status_box";
+            } else if (status >= 400 && status < 600) {
+                return "error-status-box";
+            } else {
+                return "response-info-box";
+            }
+        }
+
+    }
 }
-
-/*
-var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
-
-var status_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL,9);
-var label = new Gtk.Label ("200 Ok");
-label.margin = 5;
-status_box.pack_start (label, false, false);
-box.pack_start (status_box, false, false);
-status_box.margin_left = 15;
-status_box.get_style_context ().add_class ("status-box");
-
-var status_box2 = new Gtk.Box (Gtk.Orientation.HORIZONTAL,9);
-var label2 = new Gtk.Label ("Time 13.2 s");
-label2.margin = 5;
-status_box2.pack_start (label2, false, false);
-status_box2.get_style_context ().add_class ("response-info-box");
-
-var status_box3 = new Gtk.Box (Gtk.Orientation.HORIZONTAL,9);
-var label3 = new Gtk.Label ("Size 11.6 KB");
-label3.margin = 5;
-status_box3.pack_start (label3, false, false);
-status_box3.get_style_context ().add_class ("response-info-box");
-
-box.pack_start (status_box2, false, false);
-box.pack_start (status_box3, false, false);
-
-box.spacing = 7;
-
-pack_start (box, false, false, 15);
-*/
