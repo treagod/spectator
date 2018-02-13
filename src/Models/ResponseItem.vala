@@ -1,10 +1,12 @@
 namespace HTTPInspector {
     public class ResponseItem  {
-        string raw;
+        public string raw { get; set; }
+        public uint status_code { get; set; }
+        public double duration { get; set; }
+        public int64 size { get; set; }
         
-        public ResponseItem (string res) {
-            raw = res;
-            
+        
+        public ResponseItem () {            
             process_raw_response ();
         }
         

@@ -14,7 +14,7 @@ namespace HTTPInspector {
             });
             
             request_view.response_received.connect ((res) => {
-                response_view.set_response (res);
+                response_view.update_response (res);
             });
             
             add1 (request_view); 
@@ -24,6 +24,7 @@ namespace HTTPInspector {
         public void set_item (RequestItem item) {
             if (request_view.get_item () != item) {
                 request_view.set_item (item);
+                response_view.update_response (item.response);
                 //response_view.reset ();
             }
             

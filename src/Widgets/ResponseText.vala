@@ -23,7 +23,7 @@ namespace HTTPInspector {
             language = manager.get_language (lang);
         }
         
-        public void insert (string res) {
+        public void insert (ResponseItem? res) {
         /*
             Gtk.TextIter iter_start;
             
@@ -34,10 +34,14 @@ namespace HTTPInspector {
             buffer.@delete (ref iter_start, ref iter_end);
             buffer.insert (ref iter_start, res, res.length);
             */
-            try {
-                buffer.text = convert_with_fallback (res, res.length, "UTF-8", "ISO-8859-1");
-            } catch (ConvertError e) {
-                stderr.printf ("Error converting markup for" + res + ", "+ e.message);
+            if (res == null) {
+                buffer.text = "";
+            } else {
+               try {
+                   buffer.text = convert_with_fallback (res.raw, res.raw.length, "UTF-8", "ISO-8859-1");
+               } catch (ConvertError e) {
+                   stderr.printf ("Error converting markup for" + res.raw + ", "+ e.message);
+               } 
             }
         }
         

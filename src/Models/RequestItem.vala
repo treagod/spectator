@@ -63,7 +63,7 @@ namespace HTTPInspector {
         public string path { get; set; }
         public Method method { get; set; }
         public RequestStatus status { get; set; }
-        public ResponseItem response;
+        public ResponseItem response { get; set; }
         public Gee.ArrayList<Header> headers { get; private set; }
         
         public RequestItem(string nam, Method meth) {

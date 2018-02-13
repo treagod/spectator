@@ -5,7 +5,7 @@ namespace HTTPInspector {
         private HeaderView header_view;
         
         public signal void item_changed(RequestItem item);
-        public signal void response_received(string res);
+        public signal void response_received(ResponseItem it);
         
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -61,13 +61,26 @@ namespace HTTPInspector {
         }
         
         private async void perform_request () {
+            ulong microseconds = 0;
+            double seconds = 0.0;
+            Timer timer = new Timer ();
+            
             MainLoop loop = new MainLoop ();
             var session = new Soup.Session ();
+            session.user_agent = "http-inspector/0.1";
             var msg = new Soup.Message ("GET", item.domain);
             
             session.queue_message (msg, (sess, mess) => {
+                timer.stop ();
+                var res = new ResponseItem ();
+                seconds = timer.elapsed (out microseconds);
+                res.duration = seconds;
+                res.raw = (string) mess.response_body.data;
+                res.status_code = mess.status_code;
+                res.size = mess.response_body.length;
                 item.status = RequestStatus.SENT;
-                response_received((string) mess.response_body.data);
+                item.response = res;
+                response_received(res);
                 url_entry.item_status_changed (item.status);
                 loop.quit ();
 	        });

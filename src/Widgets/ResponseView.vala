@@ -2,6 +2,7 @@ namespace HTTPInspector {
     class ResponseView : Gtk.Box {
         private Gtk.ScrolledWindow scrolled;
         private ResponseText response;
+        private ResponseStatusBar status_bar;
         
         private const string CSS = """
             .status-box {
@@ -33,6 +34,7 @@ namespace HTTPInspector {
         
         construct {
             orientation = Gtk.Orientation.VERTICAL;
+            /*
             var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
             
             var status_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL,9);
@@ -58,9 +60,12 @@ namespace HTTPInspector {
             box.pack_start (status_box2, false, false);
             box.pack_start (status_box3, false, false);
             
-            box.spacing = 5;
+            box.spacing = 7;
+            */
             
-            pack_start (box, false, false, 10);
+            status_bar = new ResponseStatusBar ();
+            
+            pack_start (status_bar, false, false, 15);
         }
         
         public ResponseView () {
@@ -73,8 +78,9 @@ namespace HTTPInspector {
             pack_start (scrolled);
         }
         
-        public void set_response (string res) {
-            response.insert (res);
+        public void update_response (ResponseItem? it) {
+            response.insert (it);
+            status_bar.update (it);
         }
         
         public void reset () {
