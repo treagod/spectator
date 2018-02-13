@@ -2,6 +2,7 @@ namespace HTTPInspector {
     class RequestView : Gtk.Box {
         private RequestItem item;
         private UrlEntry url_entry;
+        private HeaderView header_view;
         
         public signal void item_changed(RequestItem item);
         public signal void response_received(string res);
@@ -13,6 +14,7 @@ namespace HTTPInspector {
         
         public RequestView () {
             url_entry = new UrlEntry ();
+            header_view = new HeaderView ();
             url_entry.margin_bottom = 10;
             
             url_entry.url_changed.connect ((url) => {
@@ -35,7 +37,7 @@ namespace HTTPInspector {
             stack_switcher.set_stack (stack);
             stack_switcher.halign = Gtk.Align.CENTER;
 
-            stack.add_titled (new HeaderView (), "header", _("Header"));
+            stack.add_titled (header_view, "header", _("Header"));
             stack.add_titled (new Gtk.Label ("12435243"), "url_params", _("URL Parameters"));
             stack.add_titled (new Gtk.Label ("12435243"), "body", _("Body"));
             //stack.add_titled (new Gtk.Label ("12435243"),"Auth", "Auth");
@@ -55,6 +57,7 @@ namespace HTTPInspector {
             url_entry.item_status_changed (item.status);
             url_entry.set_text (item.domain);
             url_entry.set_method (item.method);
+            header_view.update_item (item);
         }
         
         private async void perform_request () {
@@ -71,6 +74,12 @@ namespace HTTPInspector {
 	        
 	        item.status = RequestStatus.SENDING;
 	        url_entry.item_status_changed (item.status);
+	        
+	        url_entry.cancel_process.connect (() => {
+                session.cancel_message (msg, Soup.Status.CANCELLED);
+                item.status = RequestStatus.SENT;
+                url_entry.item_status_changed (item.status);
+            });
         }
     }
 }

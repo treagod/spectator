@@ -42,7 +42,7 @@ namespace HTTPInspector {
         }
         
         construct {
-            manager = Gtk.SourceLanguageManager.get_default ();
+            var style_scheme_manager = new Gtk.SourceStyleSchemeManager ();
             editable = false;
 
             buffer = new Gtk.SourceBuffer (null);

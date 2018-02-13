@@ -9,7 +9,6 @@ You'll need the following dependencies:
 * libgee-0.8-dev
 * libgranite-dev
 * libgtksourceview-3.0-dev
-* libcurl4-openssl-dev
 * libwebkit2gtk-4.0-dev
 * valac
 

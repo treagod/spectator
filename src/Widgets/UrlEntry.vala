@@ -2,10 +2,12 @@ namespace HTTPInspector {
     public class UrlEntry : Gtk.Grid {
         private Gtk.ComboBoxText method_box;
         private Gtk.Entry url_entry;
+        private bool processing = false;
         
         public signal void url_changed (string url);
         public signal void method_changed(Method method);
         public signal void request_activated ();
+        public signal void cancel_process ();
 
         public UrlEntry () {
             init_method_box ();
@@ -58,12 +60,15 @@ namespace HTTPInspector {
             switch (status) {
                 case RequestStatus.SENT:
                     url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "view-refresh-symbolic");
+                    processing = false;
                     break;
                 case RequestStatus.NOT_SENT:
                     url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "media-playback-start-symbolic");
+                    processing = false;
                     break;
                 case RequestStatus.SENDING:
                     url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "window-close-symbolic");
+                    processing = true;
                     break;
             }
         }
@@ -74,11 +79,20 @@ namespace HTTPInspector {
             url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "media-playback-start-symbolic");
 
             url_entry.icon_press.connect (() => {
-                widget_activate ();
+                if (processing) {
+                    cancel_process ();
+                } else {
+                    widget_activate ();
+                }
             });
 
             url_entry.activate.connect (() => {
-                widget_activate ();
+                if (processing) {
+                    cancel_process ();
+                } else {
+                    widget_activate ();
+                }
+                
             });
             url_entry.hexpand = true;
             add (url_entry);

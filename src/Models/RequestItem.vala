@@ -41,6 +41,16 @@ namespace HTTPInspector {
         }
     }
     
+    public class Header {
+        public string key { get; set; }
+        public string val { get; set; }
+        
+        public Header (string k, string v) {
+            key = k;
+            val = v;
+        }
+    }
+    
     public enum RequestStatus {
         NOT_SENT, SENT, SENDING
     }
@@ -54,10 +64,10 @@ namespace HTTPInspector {
         public Method method { get; set; }
         public RequestStatus status { get; set; }
         public ResponseItem response;
-        public Gee.HashMap<string, string> headers { get; private set; }
+        public Gee.ArrayList<Header> headers { get; private set; }
         
         public RequestItem(string nam, Method meth) {
-            headers = new Gee.HashMap<string, string> ();
+            headers = new Gee.ArrayList<Header> ();
             name = nam;
             domain = "";
             subdomain = "";
@@ -67,7 +77,7 @@ namespace HTTPInspector {
         }
         
         public RequestItem.with_url(string nam, string url, Method meth) {
-            headers = new Gee.HashMap<string, string> ();
+            headers = new Gee.ArrayList<Header> ();
             name = nam;
             domain = url;
             subdomain = url;
@@ -77,14 +87,14 @@ namespace HTTPInspector {
         }
         
         public RequestItem.from_int(string nam, int meth) {
-            headers = new Gee.HashMap<string, string> ();
+            headers = new Gee.ArrayList<Header> ();
             name = nam;
             status = RequestStatus.NOT_SENT;
             method = Method.convert(meth);
         }
         
         public RequestItem.from_int_with_url(string nam, string url, Method meth) {
-            headers = new Gee.HashMap<string, string> ();
+            headers = new Gee.ArrayList<Header> ();
             name = nam;
             domain = url;
             subdomain = url;
@@ -93,7 +103,14 @@ namespace HTTPInspector {
         }
         
         public void add_header (string key, string val) {
-            headers[key] = val;
+            headers.add (new Header (key, val));
+        }
+        
+        public void update_header (int index, string key, string val) {
+            var header = headers.get (index);
+            header.key = key;
+            header.val = val;
+            headers.set (index, header);
         }
     }
 }
