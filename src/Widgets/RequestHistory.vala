@@ -1,5 +1,25 @@
-namespace HTTPInspector {
+/*
+* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
+*/
 
+namespace HTTPInspector {
     public class TitleBar : Gtk.Box {
         public TitleBar (string text) {
             orientation = Gtk.Orientation.HORIZONTAL;
@@ -16,7 +36,7 @@ namespace HTTPInspector {
     public class RequestHistory : Gtk.Box {
         Gtk.FlowBox item_box;
         Gtk.ScrolledWindow scroll;
-        
+
         public signal void selection_changed(RequestItem item);
 
         public RequestHistory () {
@@ -33,7 +53,7 @@ namespace HTTPInspector {
             item_box.max_children_per_line = 1;
             item_box.margin = 6;
             item_box.expand = false;
-            
+
             item_box.child_activated.connect ((child) => {
                 var history_item = child as RequestHistoryItem;
                 selection_changed (history_item.item);
@@ -47,17 +67,17 @@ namespace HTTPInspector {
             this.pack_start (titlebar, false, true, 0);
             this.pack_start (scroll, true, true, 0);
         }
-        
+
         public void update_active (RequestItem item) {
             item_box.get_selected_children ().foreach ((child) => {
                 var history_item = child as RequestHistoryItem;
                 history_item.update (item);
             });
         }
-        
+
         public void add_request (RequestItem item) {
             var box_item = new RequestHistoryItem (item);
-            
+
             item_box.add (box_item);
             item_box.show_all ();
             item_box.select_child(box_item);

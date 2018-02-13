@@ -1,23 +1,44 @@
+/*
+* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
+*/
+
 namespace HTTPInspector {
     class HeaderField : Gtk.Box {
         public int index { get; private set; }
         private Gtk.Entry header_key_field;
         private Gtk.Entry header_value_field;
-        
+
         public string key { get { return header_key_field.text; }}
         public string val { get { return header_value_field.text; }}
-        
+
         public signal void header_changed (int i, string key, string val);
-        
+
         construct {
             orientation = Gtk.Orientation.HORIZONTAL;
         }
-        
+
         public HeaderField (int i) {
             index = i;
             header_key_field = new Gtk.Entry ();
             header_value_field = new Gtk.Entry ();
-            
+
             header_value_field.focus_in_event.connect (() => {
                 // Change Completion According to header key
                 if (header_key_field.text == "Content-Type") {
@@ -27,33 +48,33 @@ namespace HTTPInspector {
                 }
                 return false;
             });
-            
+
             header_value_field.focus_out_event.connect (() => {
                 header_changed (index, key, val);
-                
+
                 return false;
             });
-            
+
             header_key_field.focus_out_event.connect (() => {
                 header_changed (index, key, val);
-                
+
                 return false;
             });
-            
+
             header_key_field.hexpand = true;
             header_value_field.hexpand = true;
-            
+
             header_key_field.set_completion (common_header_key_completion ());
-            
+
             add (header_key_field);
             add (header_value_field);
         }
-        
+
         public void set_header (string key, string val) {
             header_key_field.text = key;
             header_value_field.text = val;
         }
-        
+
         private static Gtk.EntryCompletion common_header_key_completion () {
             Gtk.EntryCompletion completion = new Gtk.EntryCompletion ();
 
@@ -127,11 +148,11 @@ namespace HTTPInspector {
             list_store.set (iter, 0, "Via");
             list_store.append (out iter);
             list_store.set (iter, 0, "Warning");
-            
-            
+
+
             return completion;
         }
-        
+
         private static Gtk.EntryCompletion common_content_type_completion () {
             Gtk.EntryCompletion completion = new Gtk.EntryCompletion ();
 
@@ -213,7 +234,7 @@ namespace HTTPInspector {
             list_store.set (iter, 0, "application/xhtml+xml");
             list_store.append (out iter);
             list_store.set (iter, 0, "application/vnd.ms-excel");
-            
+
             return completion;
        }
     }

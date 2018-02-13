@@ -1,9 +1,30 @@
+/*
+* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
+*/
+
 namespace HTTPInspector {
     public class UrlEntry : Gtk.Grid {
         private Gtk.ComboBoxText method_box;
         private Gtk.Entry url_entry;
         private bool processing = false;
-        
+
         public signal void url_changed (string url);
         public signal void method_changed(Method method);
         public signal void request_activated ();
@@ -20,14 +41,14 @@ namespace HTTPInspector {
                     // Add Parameter to url parameters
                     stdout.printf ("asd\n");
                 }
-                
+
                 return false;
             });
-            
+
             url_entry.changed.connect (() => {
                 url_changed (url_entry.text);
             });
-            
+
         }
 
         private void init_method_box () {
@@ -39,7 +60,7 @@ namespace HTTPInspector {
             method_box.append_text ("DELETE");
             method_box.append_text ("HEAD");
             method_box.active = 0;
-            
+
             method_box.changed.connect (() => {
                 var index = method_box.get_active ();
                 method_changed (Method.convert(index));
@@ -47,15 +68,15 @@ namespace HTTPInspector {
 
             add (method_box);
         }
-        
+
         public void set_text (string url) {
             url_entry.text = url;
         }
-        
+
         public void set_method (Method method) {
             method_box.active = method.to_i ();
         }
-        
+
         public void item_status_changed (RequestStatus status) {
             switch (status) {
                 case RequestStatus.SENT:
@@ -92,12 +113,12 @@ namespace HTTPInspector {
                 } else {
                     widget_activate ();
                 }
-                
+
             });
             url_entry.hexpand = true;
             add (url_entry);
         }
-        
+
         private void widget_activate () {
             request_activated ();
         }
