@@ -57,7 +57,7 @@ namespace HTTPInspector {
             url_entry.item_status_changed (item.status);
             url_entry.set_text (item.domain);
             url_entry.set_method (item.method);
-            header_view.update_item (item);
+            show_all ();
         }
         
         private async void perform_request () {
