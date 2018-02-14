@@ -41,22 +41,35 @@ namespace HTTPInspector {
 
             header_value_field.focus_in_event.connect (() => {
                 // Change Completion According to header key
-                if (header_key_field.text == "Content-Type") {
-                    header_value_field.set_completion (common_content_type_completion ());
-                } else {
-                    header_value_field.set_completion (null);
+                switch (header_key_field.text) {
+                    case "Content-Type":
+                        header_value_field.set_completion (common_content_type_completion ());
+                        break;
+                    case "User-Agent":
+                        header_value_field.set_completion (common_user_agent_completion ());
+                        break;
+                    default:
+                        header_value_field.set_completion (null);
+                        break;
                 }
+
                 return false;
             });
 
             header_value_field.focus_out_event.connect (() => {
-                header_changed (index, key, val);
+                // Only emit if both entries are filled
+                if (header_key_field.text != "" && header_key_field.text != null) {
+                    header_changed (index, key, val);
+                }
 
                 return false;
             });
 
             header_key_field.focus_out_event.connect (() => {
-                header_changed (index, key, val);
+                // Only emit if both entries are filled
+                if (header_value_field.text != "" && header_value_field.text != null) {
+                    header_changed (index, key, val);
+                }
 
                 return false;
             });
@@ -149,6 +162,35 @@ namespace HTTPInspector {
             list_store.append (out iter);
             list_store.set (iter, 0, "Warning");
 
+
+            return completion;
+        }
+
+        private static Gtk.EntryCompletion common_user_agent_completion () {
+            Gtk.EntryCompletion completion = new Gtk.EntryCompletion ();
+
+            // Create, fill & register a ListStore:
+            Gtk.ListStore list_store = new Gtk.ListStore (1, typeof (string));
+            completion.set_model (list_store);
+            completion.set_text_column (0);
+            Gtk.TreeIter iter;
+
+            list_store.append (out iter);
+            list_store.set (iter, 0, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
+            list_store.append (out iter);
+            list_store.set (iter, 0, "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
+            list_store.append (out iter);
+            list_store.set (iter, 0, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
+            list_store.append (out iter);
+            list_store.set (iter, 0, "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0");
+            list_store.append (out iter);
+            list_store.set (iter, 0, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/604.4.7 (KHTML, like Gecko) Version/11.0.2 Safari/604.4.7");
+            list_store.append (out iter);
+            list_store.set (iter, 0, "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
+            list_store.append (out iter);
+            list_store.set (iter, 0, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
+            list_store.append (out iter);
+            list_store.set (iter, 0, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
 
             return completion;
         }

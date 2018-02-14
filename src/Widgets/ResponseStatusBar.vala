@@ -114,7 +114,8 @@ namespace HTTPInspector {
             var provider = new Gtk.CssProvider ();
             try {
                 provider.load_from_data (CSS, CSS.length);
-                Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+                Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider,
+                                                          Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
             } catch (Error e) {
                 critical (e.message);
             }
@@ -146,7 +147,7 @@ namespace HTTPInspector {
             json_selection.active = 0;
 
             json_selection.changed.connect (() => {
-                view_changed (html_selection.get_active ());
+                view_changed (json_selection.get_active ());
             });
 
             http_status_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL,9);

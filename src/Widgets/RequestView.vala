@@ -61,8 +61,8 @@ namespace HTTPInspector {
             stack.add_titled (header_view, "header", _("Header"));
             stack.add_titled (new Gtk.Label ("12435243"), "url_params", _("URL Parameters"));
             stack.add_titled (new Gtk.Label ("12435243"), "body", _("Body"));
-            //stack.add_titled (new Gtk.Label ("12435243"),"Auth", "Auth");
-            //stack.add_titled (new Gtk.Label ("12435243"),"Options", "Options");
+            stack.add_titled (new Gtk.Label ("12435243"),"Auth", "Auth");
+            stack.add_titled (new Gtk.Label ("12435243"),"Options", "Options");
 
             add (url_entry);
             add (stack_switcher);
@@ -78,6 +78,7 @@ namespace HTTPInspector {
             url_entry.item_status_changed (item.status);
             url_entry.set_text (item.domain);
             url_entry.set_method (item.method);
+            header_view.update_item (item);
             show_all ();
         }
 
@@ -89,8 +90,12 @@ namespace HTTPInspector {
 
             MainLoop loop = new MainLoop ();
             var session = new Soup.Session ();
-            session.user_agent = "http-inspector/0.1";
+            session.user_agent = item.user_agent;
             var msg = new Soup.Message ("GET", item.domain);
+
+            foreach (var header in item.headers) {
+                msg.request_headers.append (header.key, header.val);
+            }
 
             session.queue_message (msg, (sess, mess) => {
                 timer.stop ();

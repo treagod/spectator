@@ -21,7 +21,7 @@
 
 namespace HTTPInspector {
     class HeaderView : Gtk.Box {
-        private List<Gtk.Button> buttons;
+        private Gee.ArrayList<Gtk.Button> buttons;
         public Gee.ArrayList<HeaderField> headers;
         private Gtk.Grid header_fields;
         private RequestItem item;
@@ -32,7 +32,7 @@ namespace HTTPInspector {
             margin_right = 7;
 
             header_fields = new Gtk.Grid ();
-            buttons = new List<Gtk.Button> ();
+            buttons = new Gee.ArrayList<Gtk.Button> ();
             headers = new Gee.ArrayList<HeaderField> ();
             header_fields.column_spacing = 3;
             header_fields.row_spacing = 3;
@@ -54,8 +54,14 @@ namespace HTTPInspector {
         public void update_item (RequestItem it) {
             item = it;
 
+            header_fields.forall ((widget) => {
+                header_fields.remove (widget);
+            });
+
+            headers.clear ();
+
             if (item.headers.size == 0) {
-                item.add_header ("", "");
+                add_row ();
             }
 
             int i = 0;
@@ -66,44 +72,50 @@ namespace HTTPInspector {
         }
 
         private void queue_button (Gtk.Button button) {
-            buttons.append (button);
+            buttons.add (button);
             button.clicked.connect (() => {
-                var index = buttons.index (button);
+                var index = buttons.index_of (button);
                 buttons.remove (button);
                 header_fields.remove_row (index + 1);
 
-                if (buttons.length () == 0) {
+                if (buttons.size == 0) {
                     add_row ();
                 }
             });
         }
 
+        private void changed_header_callback (int i, string key, string val) {
+            item.update_header (i, key, val);
+        }
+
         public void add_row () {
-            var header_field = new HeaderField (0);
+            var header_field = new HeaderField (item.headers.size);
+            header_field.header_changed.connect (changed_header_callback);
             var del_button = new Gtk.Button.from_icon_name ("window-close");
 
             queue_button (del_button);
 
             headers.add (header_field);
 
-            header_fields.attach (header_field, 0, (int) buttons.length (), 1, 1);
-            header_fields.attach (del_button, 2, (int) buttons.length (), 1, 1);
+            header_fields.attach (header_field, 0, (int) buttons.size, 1, 1);
+            header_fields.attach (del_button, 2, (int) buttons.size, 1, 1);
             show_all ();
         }
 
         public void add_header_row (Header header, int index) {
             var header_field = new HeaderField (index);
+            header_field.header_changed.connect (changed_header_callback);
             header_field.set_header (header.key, header.val);
             var del_button = new Gtk.Button.from_icon_name ("window-close");
 
-            item.add_header (header.key, header.val);
+            //item.add_header (header.key, header.val);
 
             queue_button (del_button);
 
             headers.add (header_field);
 
-            header_fields.attach (header_field, 0, (int) buttons.length (), 1, 1);
-            header_fields.attach (del_button, 2, (int) buttons.length (), 1, 1);
+            header_fields.attach (header_field, 0, (int) buttons.size, 1, 1);
+            header_fields.attach (del_button, 2, (int) buttons.size, 1, 1);
             show_all ();
         }
     }

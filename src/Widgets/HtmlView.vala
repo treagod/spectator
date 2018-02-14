@@ -40,7 +40,7 @@ namespace HTTPInspector {
             show_all ();
         }
 
-        public void show (int i) {
+        public void show_view (int i) {
             switch (i) {
                 case 1:
                     set_visible_child (scrolled);

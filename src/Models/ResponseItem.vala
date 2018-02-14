@@ -29,7 +29,6 @@ namespace HTTPInspector {
 
         public Gee.HashMap<string, string> headers { get; private set; }
 
-
         public ResponseItem () {
             headers = new Gee.HashMap<string, string> ();
             process_raw_response ();
@@ -41,6 +40,5 @@ namespace HTTPInspector {
 
         private void process_raw_response () {
 
-        }
-    }
+        }    }
 }

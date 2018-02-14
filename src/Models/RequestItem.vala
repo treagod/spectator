@@ -76,9 +76,11 @@ namespace HTTPInspector {
         public RequestStatus status { get; set; }
         public ResponseItem response { get; set; }
         public Gee.ArrayList<Header> headers { get; private set; }
+        public string user_agent { get; private set; }
 
         public RequestItem(string nam, Method meth) {
             headers = new Gee.ArrayList<Header> ();
+            user_agent = "http-inspector/0.1";
             name = nam;
             domain = "";
             subdomain = "";
@@ -89,6 +91,7 @@ namespace HTTPInspector {
 
         public RequestItem.with_url(string nam, string url, Method meth) {
             headers = new Gee.ArrayList<Header> ();
+            user_agent = "http-inspector/0.1";
             name = nam;
             domain = url;
             subdomain = url;
@@ -97,31 +100,29 @@ namespace HTTPInspector {
             status = RequestStatus.NOT_SENT;
         }
 
-        public RequestItem.from_int(string nam, int meth) {
-            headers = new Gee.ArrayList<Header> ();
-            name = nam;
-            status = RequestStatus.NOT_SENT;
-            method = Method.convert(meth);
-        }
-
-        public RequestItem.from_int_with_url(string nam, string url, Method meth) {
-            headers = new Gee.ArrayList<Header> ();
-            name = nam;
-            domain = url;
-            subdomain = url;
-            path = url;
-            method = meth;
+        public void update_header (int i, string key, string val) {
+            if (headers.size > i && headers.size != 0) {
+                if (key == "User-Agent") {
+                    user_agent = val;
+                } else if (headers.@get (i).key == "User-Agent") {
+                    // User Agent was resetted -> set it to default
+                    user_agent = "http-inspector/0.1";
+                }
+                var header = headers.@get (i);
+                header.key = key;
+                header.val = val;
+            } else {
+                // Index does not exist, create new entry;
+                add_header (key, val);
+            }
         }
 
         public void add_header (string key, string val) {
-            headers.add (new Header (key, val));
-        }
+            if (key == "User-Agent") {
+                user_agent = val;
+            }
 
-        public void update_header (int index, string key, string val) {
-            var header = headers.get (index);
-            header.key = key;
-            header.val = val;
-            headers.set (index, header);
+            headers.add (new Header (key, val));
         }
     }
 }

@@ -21,9 +21,7 @@
 
 namespace HTTPInspector {
     class ResponseView : Gtk.Box {
-        private Gtk.ScrolledWindow scrolled;
         private ResponseStatusBar status_bar;
-        private Gtk.Stack stack;
         private HtmlView html_view;
 
         construct {
@@ -35,34 +33,37 @@ namespace HTTPInspector {
             status_bar = new ResponseStatusBar ();
 
             status_bar.view_changed.connect ((i) => {
-                html_view.show (i);
+                html_view.show_view (i);
             });
 
             pack_start (status_bar, false, false, 15);
             pack_start (html_view);
         }
 
-        public void update_response (ResponseItem? it) {
-            if (it != null) {
-                foreach (var entry in it.headers.entries) {
-                    if (entry.key == "Content-Type") {
-                        if (is_html (entry.value)) {
-                            status_bar.set_active_type (ResponseType.HTML);
-                        } else if (is_json (entry.value)) {
-                            status_bar.set_active_type (ResponseType.JSON);
-                        } else if (is_xml (entry.value)) {
-                            status_bar.set_active_type (ResponseType.XML);
-                        } else {
-                            status_bar.set_active_type (ResponseType.UNKOWN);
-                        }
-                    }
-                }
-            } else {
-                status_bar.set_active_type (ResponseType.UNKOWN);
-            }
+        public void update (ResponseItem? it) {
+            set_content_type (it);
             status_bar.update (it);
             html_view.update (it);
-            html_view.show (0);
+            html_view.show_view (0);
+        }
+
+        private void set_content_type (ResponseItem? it) {
+            if (it != null) {
+                var content_type = it.headers["Content-Type"];
+                if (content_type != null) {
+                    if (is_html (content_type)) {
+                        status_bar.set_active_type (ResponseType.HTML);
+                    } else if (is_json (content_type)) {
+                        status_bar.set_active_type (ResponseType.JSON);
+                    } else if (is_xml (content_type)) {
+                        status_bar.set_active_type (ResponseType.XML);
+                    } else {
+                        status_bar.set_active_type (ResponseType.UNKOWN);
+                    }
+                    return;
+                }
+            }
+            status_bar.set_active_type (ResponseType.UNKOWN);
         }
 
         private bool is_html (string type) {
