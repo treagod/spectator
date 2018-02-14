@@ -22,34 +22,67 @@
 namespace HTTPInspector {
     class ResponseView : Gtk.Box {
         private Gtk.ScrolledWindow scrolled;
-        private ResponseText response;
         private ResponseStatusBar status_bar;
+        private Gtk.Stack stack;
+        private HtmlView html_view;
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
-
-            status_bar = new ResponseStatusBar ();
-
-            pack_start (status_bar, false, false, 15);
         }
 
         public ResponseView () {
-            scrolled = new Gtk.ScrolledWindow (null, null);
-            response = new ResponseText ();
+            html_view = new HtmlView ();
+            status_bar = new ResponseStatusBar ();
 
+            status_bar.view_changed.connect ((i) => {
+                html_view.show (i);
+            });
 
-            scrolled.add (response);
-
-            pack_start (scrolled);
+            pack_start (status_bar, false, false, 15);
+            pack_start (html_view);
         }
 
         public void update_response (ResponseItem? it) {
-            response.insert (it);
+            if (it != null) {
+                foreach (var entry in it.headers.entries) {
+                    if (entry.key == "Content-Type") {
+                        if (is_html (entry.value)) {
+                            status_bar.set_active_type (ResponseType.HTML);
+                        } else if (is_json (entry.value)) {
+                            status_bar.set_active_type (ResponseType.JSON);
+                        } else if (is_xml (entry.value)) {
+                            status_bar.set_active_type (ResponseType.XML);
+                        } else {
+                            status_bar.set_active_type (ResponseType.UNKOWN);
+                        }
+                    }
+                }
+            } else {
+                status_bar.set_active_type (ResponseType.UNKOWN);
+            }
             status_bar.update (it);
+            html_view.update (it);
+            html_view.show (0);
         }
 
-        public void reset () {
-            response = new ResponseText ();
+        private bool is_html (string type) {
+            return type.contains ("text/html");
+        }
+
+        private bool is_json (string type) {
+            return type.contains ("application/json") ||
+                   type.contains ("text/json") ||
+                   type.contains ("application/x-javascript") ||
+                   type.contains ("text/x-javascript") ||
+                   type.contains ("application/x-json") ||
+                   type.contains ("text/x-json");
+        }
+
+        private bool is_xml (string type) {
+            return type.contains ("text/xml") ||
+                   type.contains ("application/xhtml+xml") ||
+                   type.contains ("application/xml") ||
+                   type.contains ("+xml");
         }
     }
 }

@@ -84,6 +84,7 @@ namespace HTTPInspector {
         private async void perform_request () {
             ulong microseconds = 0;
             double seconds = 0.0;
+            var url = item.domain;
             Timer timer = new Timer ();
 
             MainLoop loop = new MainLoop ();
@@ -99,6 +100,10 @@ namespace HTTPInspector {
                 res.raw = (string) mess.response_body.data;
                 res.status_code = mess.status_code;
                 res.size = mess.response_body.length;
+                res.url = url;
+                mess.response_headers.foreach ((key, val) => {
+                    res.add_header (key, val);
+                });
                 item.status = RequestStatus.SENT;
                 item.response = res;
                 response_received(res);

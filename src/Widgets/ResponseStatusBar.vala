@@ -20,6 +20,10 @@
 */
 
 namespace HTTPInspector {
+    public enum ResponseType {
+        HTML, JSON, XML, UNKOWN
+    }
+
     class ResponseStatusBar : Gtk.Box {
         private const string CSS = """
             .ok-status-box {
@@ -102,6 +106,9 @@ namespace HTTPInspector {
         private Gtk.Label request_time_label;
         private Gtk.Box response_size_box;
         private Gtk.Label response_size_label;
+        private Gtk.Stack content_type;
+
+        public signal void view_changed (int i);
 
         static construct {
             var provider = new Gtk.CssProvider ();
@@ -117,6 +124,30 @@ namespace HTTPInspector {
             orientation = Gtk.Orientation.HORIZONTAL;
             spacing = 7;
             margin_left = 15;
+            content_type = new Gtk.Stack ();
+
+            content_type.add_named (new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0),
+                                    "no-type");
+
+            var html_selection = new Gtk.ComboBoxText ();
+
+            html_selection.append_text (_("Web View"));
+            html_selection.append_text (_("HTML View"));
+            html_selection.active = 0;
+
+            html_selection.changed.connect (() => {
+                view_changed (html_selection.get_active ());
+            });
+
+            var json_selection = new Gtk.ComboBoxText ();
+
+            json_selection.append_text (_("Visual Preview"));
+            json_selection.append_text (_("Raw Preview"));
+            json_selection.active = 0;
+
+            json_selection.changed.connect (() => {
+                view_changed (html_selection.get_active ());
+            });
 
             http_status_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL,9);
             http_status_label = new Gtk.Label ("No Status");
@@ -145,6 +176,12 @@ namespace HTTPInspector {
             add (http_status_box);
             add (request_time_box);
             add (response_size_box);
+
+            content_type.add_named (html_selection, "html_selection");
+            content_type.add_named (json_selection  , "json_selection");
+            content_type.set_visible_child_name ("no-type");
+
+            pack_end (content_type, false, false);
         }
 
         public void update (ResponseItem? it) {
@@ -174,11 +211,9 @@ namespace HTTPInspector {
                 http_status_box.halign = Gtk.Align.CENTER;
                 http_status_label.label = "No status";
             } else {
-                var seconds = _("seconds");
-                var formated_time = "%.2f ".printf (it.duration);
-                http_status_label.label = "%u Ok".printf (it.status_code);
+                http_status_label.label = "%u %s".printf (it.status_code, status_code_text (it.status_code));
                 response_size_label.label = ("%" + int64.FORMAT + " KB").printf (it.size / 1000);
-                request_time_label.label = formated_time + seconds;
+                request_time_label.label = "%.2f %s".printf (it.duration, _("seconds"));
                 response_size_box.get_style_context ().add_class (response_info_box ());
                 response_size_label.halign = Gtk.Align.CENTER;
                 request_time_box.get_style_context ().add_class (response_info_box ());
@@ -189,7 +224,27 @@ namespace HTTPInspector {
             // Force redraw, otherwise box borders won't match the labels
             queue_draw ();
         }
+
+        public void set_active_type (ResponseType typ) {
+
+            switch (typ) {
+                case ResponseType.HTML:
+                    content_type.set_visible_child_name ("html_selection");
+                    break;
+                case ResponseType.JSON:
+                    content_type.set_visible_child_name ("json_selection");
+                    break;
+                case ResponseType.XML:
+                    content_type.set_visible_child_name ("xml_selection");
+                    break;
+                default:
+                    content_type.set_visible_child_name ("no-type");
+                    break;
+            }
+        }
     }
+
+
 
     private string response_info_box () {
         if (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) {
@@ -222,5 +277,144 @@ namespace HTTPInspector {
             }
         }
 
+    }
+
+    private string status_code_text (uint code) {
+        switch (code) {
+            case 100:
+                return "Continue";
+            case 101:
+                return "Switching Protocols";
+            case 102:
+                return "Processing";
+            case 200:
+                return "OK";
+            case 201:
+                return "Created";
+            case 202:
+                return "Accepted";
+            case 203:
+                return "Non-Authoritative Information";
+            case 204:
+                return "No Content";
+            case 205:
+                return "Reset Content";
+            case 206:
+                return "Partial Content";
+            case 207:
+                return "Multi-Status";
+            case 208:
+                return "Already Reported";
+            case 226:
+                return "IM Used";
+            case 300:
+                return "Multiple Choices";
+            case 301:
+                return "Moved Permanently";
+            case 302:
+                return "Found (Moved Temporarily)";
+            case 303:
+                return "See Other";
+            case 304:
+                return "Not Modified";
+            case 305:
+                return "Use Proxy";
+            case 307:
+                return "Temporary Redirect";
+            case 308:
+                return "Permanent Redirect";
+            case 400:
+                return "Bad Request";
+            case 401:
+                return "Unauthorized";
+            case 402:
+                return "Payment Required";
+            case 403:
+                return "Forbidden";
+            case 404:
+                return "Not Found";
+            case 405:
+                return "Method Not Allowed";
+            case 406:
+                return "Not Acceptable";
+            case 407:
+                return "Proxy Authentication Required";
+            case 408:
+                return "Request Time-out";
+            case 409:
+                return "Conflict";
+            case 410:
+                return "Gone";
+            case 411:
+                return "Length Required";
+            case 412:
+                return "Precondition Failed";
+            case 413:
+                return "Request Entity Too Large";
+            case 414:
+                return "URI Too Long";
+            case 415:
+                return "Unsupported Media Type";
+            case 416:
+                return "Requested range not satisfiable";
+            case 417:
+                return "Expectation Failed";
+            case 418:
+                return "I'm a teapot";
+            case 420:
+                return "Poly Not Fulfilled";
+            case 421:
+                return "Misdirected Request";
+            case 422:
+                return "Unprocessable Entity";
+            case 423:
+                return "Locked";
+            case 424:
+                return "Failed Dependency";
+            case 425:
+                return "Unordered Collection";
+            case 426:
+                return "Upgrade required";
+            case 428:
+                return "Precondition Required";
+            case 429:
+                return "Too Many Requests";
+            case 431:
+                return "Request Header Fields Too Large";
+            case 444:
+                return "No Response";
+            case 449:
+                return "This request should be retried after doing the appropriate action";
+            case 451:
+                return "Unavailable For Legal Reasons";
+            case 499:
+                return "Client Closed Request";
+            case 500:
+                return "Internal Server Error";
+            case 501:
+                return "Not implemented";
+            case 502:
+                return "Bad Gateway";
+            case 503:
+                return "Service Unavailable";
+            case 504:
+                return "Gateway Time-out";
+            case 505:
+                return "HTTP Version not supported";
+            case 506:
+                return "Variant Also Negotiates";
+            case 507:
+                return "Insufficient Storage";
+            case 508:
+                return "Loop Detected";
+            case 509:
+                return "Bandwidth Limit Exceeded";
+            case 510:
+                return "Not Extended";
+            case 511:
+                return "Network Authentication Required";
+            default:
+                return "Unkown";
+        }
     }
 }

@@ -20,27 +20,13 @@
 */
 
 namespace HTTPInspector {
-    public class ResponseItem  {
-        public string url { get; set; }
-        public string raw { get; set; }
-        public uint status_code { get; set; }
-        public double duration { get; set; }
-        public int64 size { get; set; }
+   public class Header {
+       public string key { get; set; }
+       public string val { get; set; }
 
-        public Gee.HashMap<string, string> headers { get; private set; }
-
-
-        public ResponseItem () {
-            headers = new Gee.HashMap<string, string> ();
-            process_raw_response ();
-        }
-
-        public void add_header(string key, string val) {
-            headers[key] = val;
-        }
-
-        private void process_raw_response () {
-
-        }
-    }
+       public Header (string k, string v) {
+           key = k;
+           val = v;
+       }
+   }
 }

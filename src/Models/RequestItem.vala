@@ -62,16 +62,6 @@ namespace HTTPInspector {
         }
     }
 
-    public class Header {
-        public string key { get; set; }
-        public string val { get; set; }
-
-        public Header (string k, string v) {
-            key = k;
-            val = v;
-        }
-    }
-
     public enum RequestStatus {
         NOT_SENT, SENT, SENDING
     }

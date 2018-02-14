@@ -40,10 +40,6 @@ namespace HTTPInspector {
             );
         }
 
-        public void set_lang (string lang) {
-            language = manager.get_language (lang);
-        }
-
         public void insert (ResponseItem? res) {
             if (res == null) {
                 buffer.text = "";
