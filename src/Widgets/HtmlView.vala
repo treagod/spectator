@@ -20,7 +20,7 @@
 */
 
 namespace HTTPInspector {
-    class HtmlView : Gtk.Stack {
+    public class HtmlView : AbstractTypeView {
         private WebKit.WebView web_view;
         private ResponseText response_text;
         private Gtk.ScrolledWindow scrolled;
@@ -40,7 +40,7 @@ namespace HTTPInspector {
             show_all ();
         }
 
-        public void show_view (int i) {
+        public override void show_view (int i) {
             switch (i) {
                 case 1:
                     set_visible_child (scrolled);
@@ -51,7 +51,7 @@ namespace HTTPInspector {
             }
         }
 
-        public void update (ResponseItem? it) {
+        public override void update (ResponseItem? it) {
             if (it != null) {
                 //web_view.load_uri (it.url);
                 web_view.load_alternate_html (it.raw, it.url, it.url);

@@ -83,6 +83,7 @@ namespace HTTPInspector {
         }
 
         private async void perform_request () {
+            grab_focus ();
             ulong microseconds = 0;
             double seconds = 0.0;
             var url = item.domain;

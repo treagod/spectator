@@ -20,7 +20,7 @@
 */
 
 namespace HTTPInspector {
-    class JsonView : Gtk.Stack {
+    class JsonView : AbstractTypeView {
         private ResponseText response_text;
         private ResponseText response_text_raw;
         private Gtk.ScrolledWindow scrolled;
@@ -44,7 +44,7 @@ namespace HTTPInspector {
             show_all ();
         }
 
-        public void show_view (int i) {
+        public override void show_view (int i) {
             switch (i) {
                 case 1:
                     set_visible_child (scrolled_raw);
@@ -55,7 +55,7 @@ namespace HTTPInspector {
             }
         }
 
-        public void update (ResponseItem? it) {
+        public override void update (ResponseItem? it) {
             if (it == null) {
                 response_text.insert_text ("");
             } else {

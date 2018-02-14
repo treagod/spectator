@@ -22,8 +22,8 @@
 namespace HTTPInspector {
     class ResponseView : Gtk.Box {
         private ResponseStatusBar status_bar;
-        private HtmlView html_view;
-        private JsonView json_view;
+        private AbstractTypeView html_view;
+        private AbstractTypeView json_view;
         private Gtk.Stack stack;
 
         construct {
@@ -54,10 +54,15 @@ namespace HTTPInspector {
             set_content_type (it);
             update_view (it);
             status_bar.update (it);
+            var current_view = (AbstractTypeView) stack.get_visible_child ();
+            current_view.update (it);
+            current_view.show_view (0);
+            /*
             html_view.update (it);
             json_view.update (it);
             html_view.show_view (0);
             json_view.show_view (0);
+            */
         }
 
         private void update_view (ResponseItem? it) {
