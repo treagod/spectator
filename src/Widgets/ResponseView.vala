@@ -23,28 +23,61 @@ namespace HTTPInspector {
     class ResponseView : Gtk.Box {
         private ResponseStatusBar status_bar;
         private HtmlView html_view;
+        private JsonView json_view;
+        private Gtk.Stack stack;
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
         }
 
         public ResponseView () {
+            stack = new Gtk.Stack ();
             html_view = new HtmlView ();
+            json_view = new JsonView ();
+
+            stack.add_named (html_view, "html_view");
+            stack.add_named (json_view, "json_view");
+            stack.set_visible_child (html_view);
+
             status_bar = new ResponseStatusBar ();
 
             status_bar.view_changed.connect ((i) => {
                 html_view.show_view (i);
+                json_view.show_view (i);
             });
 
             pack_start (status_bar, false, false, 15);
-            pack_start (html_view);
+            pack_start (stack);
         }
 
         public void update (ResponseItem? it) {
             set_content_type (it);
+            update_view (it);
             status_bar.update (it);
             html_view.update (it);
+            json_view.update (it);
             html_view.show_view (0);
+            json_view.show_view (0);
+        }
+
+        private void update_view (ResponseItem? it) {
+            if (it != null) {
+                var content_type = it.headers["Content-Type"];
+                if (it == null) {
+                    stack.set_visible_child (json_view);
+                } else {
+                    if (is_html (content_type)) {
+                        stack.set_visible_child (html_view);
+                    } else if (is_json (content_type)) {
+                        stack.set_visible_child (json_view);
+                    } else if (is_xml (content_type)) {
+                        stack.set_visible_child (html_view);
+                    }
+                }
+            } else {
+                stack.set_visible_child (json_view);
+            }
+
         }
 
         private void set_content_type (ResponseItem? it) {

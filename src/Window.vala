@@ -35,7 +35,6 @@ namespace HTTPInspector {
         }
 
         public void show_app () {
-
             var grid = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
             grid.width_request = 950;
             grid.height_request = 500;

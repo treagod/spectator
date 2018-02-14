@@ -21,9 +21,9 @@
 
 namespace HTTPInspector {
     class HtmlView : Gtk.Stack {
-        WebKit.WebView web_view;
-        ResponseText response_text;
-        Gtk.ScrolledWindow scrolled;
+        private WebKit.WebView web_view;
+        private ResponseText response_text;
+        private Gtk.ScrolledWindow scrolled;
 
         public HtmlView () {
             scrolled = new Gtk.ScrolledWindow (null, null);

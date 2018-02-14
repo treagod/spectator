@@ -23,13 +23,19 @@ namespace HTTPInspector {
     class ResponseText : Gtk.SourceView {
         public new Gtk.SourceBuffer buffer;
         public Gtk.SourceLanguageManager manager;
+        public Gtk.SourceStyleSchemeManager style_scheme_manager;
 
-        private string font { set; get; default = "Droid Sans Mono 11"; }
+
+        private string font { set; get; default = "Roboto Mono Regular 11"; }
 
         private Gtk.SourceLanguage? language {
             set {
                 buffer.language = value;
             }
+        }
+
+        public void set_lang (string lang) {
+            language = manager.get_language (lang);
         }
 
         public ResponseText () {
@@ -38,6 +44,14 @@ namespace HTTPInspector {
                 show_right_margin: false,
                 wrap_mode: Gtk.WrapMode.WORD_CHAR
             );
+        }
+
+        public void insert_text (string res) {
+            try {
+               buffer.text = convert_with_fallback (res, res.length, "UTF-8", "ISO-8859-1");
+           } catch (ConvertError e) {
+               stderr.printf ("Error converting markup for" + res + ", "+ e.message);
+           }
         }
 
         public void insert (ResponseItem? res) {
@@ -55,9 +69,13 @@ namespace HTTPInspector {
         construct {
             manager = Gtk.SourceLanguageManager.get_default ();
             editable = false;
+            style_scheme_manager = new Gtk.SourceStyleSchemeManager ();
+            var style_id = (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) ? "oblivion" : "classic";
+            var scheme = style_scheme_manager.get_scheme (style_id);
 
             buffer = new Gtk.SourceBuffer (null);
             buffer.highlight_syntax = true;
+            buffer.style_scheme = scheme;
 
             set_buffer (buffer);
             set_show_line_numbers (false);

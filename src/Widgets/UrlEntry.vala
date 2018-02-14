@@ -39,7 +39,6 @@ namespace HTTPInspector {
                 if (event.keyval == Gdk.Key.question) {
                     // Test if valid URL
                     // Add Parameter to url parameters
-                    stdout.printf ("asd\n");
                 }
 
                 return false;
