@@ -77,6 +77,15 @@ namespace HTTPInspector {
 
             identifier.add (request_name);
             identifier.add (url);
+            identifier.has_tooltip = true;
+
+            identifier.query_tooltip.connect ((x, y, keyboard_tooltip, tooltip) => {
+                if (item.domain == "") {
+                    return false;
+                }
+			    tooltip.set_text (item.domain);
+			    return true;
+		    });
 
             method = new Gtk.Label (get_method_label (item.method));
             method.set_justify (Gtk.Justification.CENTER);

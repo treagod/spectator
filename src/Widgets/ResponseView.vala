@@ -42,8 +42,8 @@ namespace HTTPInspector {
             status_bar = new ResponseStatusBar ();
 
             status_bar.view_changed.connect ((i) => {
-                html_view.show_view (i);
-                json_view.show_view (i);
+                var current_view = (AbstractTypeView) stack.get_visible_child ();
+                current_view.show_view (i);
             });
 
             pack_start (status_bar, false, false, 15);
@@ -57,12 +57,6 @@ namespace HTTPInspector {
             var current_view = (AbstractTypeView) stack.get_visible_child ();
             current_view.update (it);
             current_view.show_view (0);
-            /*
-            html_view.update (it);
-            json_view.update (it);
-            html_view.show_view (0);
-            json_view.show_view (0);
-            */
         }
 
         private void update_view (ResponseItem? it) {
