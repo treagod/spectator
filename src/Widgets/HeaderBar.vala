@@ -22,10 +22,13 @@
 namespace HTTPInspector {
     class HeaderBar : Gtk.HeaderBar {
         private Gtk.Button _new_request;
+        public Gtk.MenuButton app_menu;
 
         public Gtk.Button new_request {
             get { return _new_request; }
         }
+
+        public signal void preference_clicked ();
 
         public HeaderBar () {
             Object (
@@ -41,6 +44,10 @@ namespace HTTPInspector {
             var preferences_menuitem = new Gtk.ModelButton ();
             preferences_menuitem.text = _("Preferences");
 
+            preferences_menuitem.clicked.connect (() => {
+               preference_clicked ();
+            });
+
             var about_menuitem = new Gtk.ModelButton ();
             about_menuitem.text = _("About");
 
@@ -55,7 +62,7 @@ namespace HTTPInspector {
             var menu = new Gtk.Popover (null);
             menu.add (menu_grid);
 
-            var app_menu = new Gtk.MenuButton ();
+            app_menu = new Gtk.MenuButton ();
             app_menu.image = new Gtk.Image.from_icon_name ("open-menu", Gtk.IconSize.LARGE_TOOLBAR);
             app_menu.tooltip_text = _("Menu");
             app_menu.popover = menu;

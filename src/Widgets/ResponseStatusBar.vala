@@ -227,7 +227,6 @@ namespace HTTPInspector {
         }
 
         public void set_active_type (ResponseType typ) {
-
             switch (typ) {
                 case ResponseType.HTML:
                     content_type.set_visible_child_name ("html_selection");
@@ -241,6 +240,11 @@ namespace HTTPInspector {
                 default:
                     content_type.set_visible_child_name ("no-type");
                     break;
+            }
+
+            if (content_type.visible_child_name != "no-type") {
+                var combo = (Gtk.ComboBoxText) content_type.get_visible_child ();
+                combo.active = 0;
             }
         }
     }

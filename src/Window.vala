@@ -24,11 +24,17 @@ namespace HTTPInspector {
         RequestHistory request_history;
 
         public Window (Gtk.Application app) {
+            var settings = Settings.get_instance ();
             // Store the main app to be used
             Object (application: app);
 
-            // Theme color
-            Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = false;
+            Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = settings.dark_theme;
+            move (settings.pos_x, settings.pos_y);
+            resize (settings.window_width, settings.window_height);
+
+            if (settings.maximized) {
+                maximize ();
+            }
 
             // Show the app
             show_app ();
@@ -42,6 +48,9 @@ namespace HTTPInspector {
             var headerbar = new HeaderBar ();
             headerbar.new_request.clicked.connect (() => {
                 create_request ();
+            });
+            headerbar.preference_clicked.connect (() => {
+                open_preferences ();
             });
             set_titlebar (headerbar);
 
@@ -67,10 +76,8 @@ namespace HTTPInspector {
 
             grid.add (request_history);
             grid.add (seperator);
-
-            grid.add (content);
-
             add (grid);
+            grid.add (content);
             show_all ();
             show ();
             present ();
@@ -82,6 +89,27 @@ namespace HTTPInspector {
             dialog.creation.connect ((item) => {
                 request_history.add_request (item);
             });
+        }
+
+        private void open_preferences () {
+            var dialog = new Preferences (this);
+            dialog.show_all ();
+        }
+
+        protected override bool delete_event (Gdk.EventAny event) {
+            var settings = Settings.get_instance ();
+            int width, height, x, y;
+
+            get_size (out width, out height);
+            get_position (out x, out y);
+
+            settings.pos_x = x;
+            settings.pos_y = y;
+            settings.window_width = width;
+            settings.window_height = height;
+            settings.maximized = is_maximized;
+
+            return false;
         }
     }
 }

@@ -20,11 +20,10 @@
 */
 
 namespace HTTPInspector {
-    public Window window;
-
     public class Application : Granite.Application {
         // Avoid multiple instances
         public bool running = false;
+        public Window window;
 
         construct {
             flags |= ApplicationFlags.HANDLES_OPEN;
