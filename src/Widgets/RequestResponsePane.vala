@@ -43,11 +43,8 @@ namespace HTTPInspector {
         }
 
         public void set_item (RequestItem item) {
-            if (request_view.get_item () != item) {
-                request_view.set_item (item);
-                response_view.update (item.response);
-            }
-
+            request_view.set_item (item);
+            response_view.update (item.response);
         }
 
         construct {

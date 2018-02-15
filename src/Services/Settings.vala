@@ -23,6 +23,8 @@ namespace HTTPInspector {
     public class Settings : Granite.Services.Settings {
         private static Settings? instance = null;
 
+        public signal void theme_changed ();
+
         public bool dark_theme { get; set; }
         public int pos_x { get; set; }
         public int pos_y { get; set; }

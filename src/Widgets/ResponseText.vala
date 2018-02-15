@@ -73,6 +73,12 @@ namespace HTTPInspector {
             var style_id = (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) ? "oblivion" : "classic";
             var scheme = style_scheme_manager.get_scheme (style_id);
 
+            Settings.get_instance ().theme_changed.connect (() => {
+                var temp_id = (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) ? "oblivion" : "classic";
+                var schem = style_scheme_manager.get_scheme (temp_id);
+                buffer.style_scheme = schem;
+            });
+
             buffer = new Gtk.SourceBuffer (null);
             buffer.highlight_syntax = true;
             buffer.style_scheme = scheme;

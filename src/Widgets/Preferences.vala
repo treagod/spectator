@@ -59,14 +59,16 @@ namespace HTTPInspector {
         private Gtk.Box create_general_tab () {
             var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 5);
             var dark_theme_switch = new Gtk.Switch ();
+            var settings = Settings.get_instance ();
 
             dark_theme_switch.active = Gtk.Settings.get_default ().gtk_application_prefer_dark_theme;
 
             dark_theme_switch.notify.connect (() => {
                 Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = dark_theme_switch.active;
+                settings.theme_changed ();
             });
 
-            Settings.get_instance ().schema.bind ("dark-theme", dark_theme_switch, "active", SettingsBindFlags.DEFAULT);
+            settings.schema.bind ("dark-theme", dark_theme_switch, "active", SettingsBindFlags.DEFAULT);
 
             box.add (dark_theme_switch);
             return box;

@@ -107,6 +107,7 @@ namespace HTTPInspector {
         private Gtk.Box response_size_box;
         private Gtk.Label response_size_label;
         private Gtk.Stack content_type;
+        private ResponseItem? item;
 
         public signal void view_changed (int i);
 
@@ -182,10 +183,15 @@ namespace HTTPInspector {
             content_type.add_named (json_selection  , "json_selection");
             content_type.set_visible_child_name ("no-type");
 
+            Settings.get_instance ().theme_changed.connect (() => {
+                update (item);
+            });
+
             pack_end (content_type, false, false);
         }
 
         public void update (ResponseItem? it) {
+            item = it;
             http_status_box.get_style_context ().remove_class ("ok-status-box");
             http_status_box.get_style_context ().remove_class ("redirect-status-box");
             http_status_box.get_style_context ().remove_class ("error-status-box");

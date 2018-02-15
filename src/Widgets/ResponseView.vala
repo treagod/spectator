@@ -25,6 +25,7 @@ namespace HTTPInspector {
         private AbstractTypeView html_view;
         private AbstractTypeView json_view;
         private Gtk.Stack stack;
+        private ResponseItem? item;
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -51,6 +52,7 @@ namespace HTTPInspector {
         }
 
         public void update (ResponseItem? it) {
+            item = it;
             set_content_type (it);
             update_view (it);
             status_bar.update (it);

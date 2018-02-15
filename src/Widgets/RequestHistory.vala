@@ -54,6 +54,13 @@ namespace HTTPInspector {
             item_box.margin = 6;
             item_box.expand = false;
 
+            Settings.get_instance ().theme_changed.connect (() => {
+                item_box.forall ((widget) => {
+                    var it = (RequestHistoryItem) widget;
+                    it.update (it.item);
+                });
+            });
+
             item_box.child_activated.connect ((child) => {
                 var history_item = child as RequestHistoryItem;
                 selection_changed (history_item.item);
