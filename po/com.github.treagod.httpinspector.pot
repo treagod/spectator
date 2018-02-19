@@ -1,0 +1,111 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-19 08:53+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/Widgets/HeaderBar.vala:42 ../src/Widgets/Content.vala:33
+#: ../src/Widgets/RequestDialog.vala:60
+msgid "Create Request"
+msgstr ""
+
+#: ../src/Widgets/HeaderBar.vala:45 ../src/Widgets/Preferences.vala:27
+msgid "Preferences"
+msgstr ""
+
+#: ../src/Widgets/HeaderBar.vala:52
+msgid "About"
+msgstr ""
+
+#: ../src/Widgets/HeaderBar.vala:67
+msgid "Menu"
+msgstr ""
+
+#: ../src/Widgets/ResponseStatusBar.vala:136
+msgid "Web View"
+msgstr ""
+
+#: ../src/Widgets/ResponseStatusBar.vala:137
+msgid "HTML View"
+msgstr ""
+
+#: ../src/Widgets/ResponseStatusBar.vala:146
+msgid "Visual Preview"
+msgstr ""
+
+#: ../src/Widgets/ResponseStatusBar.vala:147
+msgid "Raw Preview"
+msgstr ""
+
+#: ../src/Widgets/ResponseStatusBar.vala:223
+msgid "seconds"
+msgstr ""
+
+#: ../src/Widgets/RequestView.vala:61
+msgid "Header"
+msgstr ""
+
+#: ../src/Widgets/RequestView.vala:62
+msgid "URL Parameters"
+msgstr ""
+
+#: ../src/Widgets/RequestView.vala:63
+msgid "Body"
+msgstr ""
+
+#: ../src/Widgets/Content.vala:31
+msgid "HTTP Inspector"
+msgstr ""
+
+#: ../src/Widgets/Content.vala:31
+msgid "Inspect your HTTP transmissions to the web"
+msgstr ""
+
+#: ../src/Widgets/Content.vala:33
+msgid "Create a new request to the web."
+msgstr ""
+
+#: ../src/Widgets/Preferences.vala:38
+msgid "General"
+msgstr ""
+
+#: ../src/Widgets/Preferences.vala:39
+msgid "General2"
+msgstr ""
+
+#: ../src/Widgets/Preferences.vala:45 ../src/Widgets/RequestDialog.vala:56
+msgid "Close"
+msgstr ""
+
+#: ../src/Widgets/RequestHistory.vala:47
+msgid "Request History"
+msgstr ""
+
+#: ../src/Widgets/RequestDialog.vala:29
+msgid "New Request"
+msgstr ""
+
+#: ../src/Widgets/RequestDialog.vala:37
+msgid "Name:"
+msgstr ""
+
+#: ../src/Widgets/RequestDialog.vala:57
+msgid "Create"
+msgstr ""
+
+#: ../src/Widgets/RequestDialog.vala:87
+msgid "Request name must not be empty."
+msgstr ""
