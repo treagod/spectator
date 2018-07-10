@@ -22,6 +22,7 @@
 namespace HTTPInspector {
     public class Window : Gtk.ApplicationWindow {
         RequestHistory request_history;
+        RequestController request_controller;
 
         public Window (Gtk.Application app) {
             var settings = Settings.get_instance ();
@@ -60,6 +61,7 @@ namespace HTTPInspector {
 
             var content = new Content ();
             request_history = new RequestHistory ();
+            request_controller = new RequestController ();
 
             content.welcome_activated.connect ((index) => {
                 create_request ();
@@ -88,6 +90,7 @@ namespace HTTPInspector {
             dialog.show_all ();
             dialog.creation.connect ((item) => {
                 request_history.add_request (item);
+                request_controller.add_request (item);
             });
         }
 

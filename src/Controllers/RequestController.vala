@@ -20,28 +20,17 @@
 */
 
 namespace HTTPInspector {
-    public class Application : Granite.Application {
-        // Avoid multiple instances
-        public bool running = false;
-        public Window window;
+    public class RequestController {
+        public RequestController () {
 
-        construct {
-            flags |= ApplicationFlags.HANDLES_OPEN;
-
-            program_name = "HTTP Inspector";
-            exec_name = "com.github.treagod.httpinspector";
         }
 
-        protected override void activate () {
-            if (!running) {
-                window = new Window (this);
-                this.add_window (window);
+        public void add_request (RequestItem item) {
+            stdout.printf ("Item created\n");
+        }
 
-                running = true;
-
-                return;
-            }
-            window.show_app ();
+        public void register_view () {
+            stdout.printf ("Registered view\n");
         }
     }
 }
