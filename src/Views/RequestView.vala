@@ -20,19 +20,7 @@
 */
 
 namespace HTTPInspector {
-    public class RequestController {
-        List<RequestVie> views;
-
-        public RequestController () {
-
-        }
-
-        public void add_request (RequestItem item) {
-            stdout.printf ("Item created\n");
-        }
-
-        public void register_view (RequestVie view) {
-            views.append (view);
-        }
+    public interface RequestVie : GLib.Object  {
+        public abstract void foo ();
     }
 }

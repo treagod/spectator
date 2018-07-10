@@ -33,13 +33,16 @@ namespace HTTPInspector {
         }
     }
 
-    public class RequestHistory : Gtk.Box {
-        Gtk.FlowBox item_box;
-        Gtk.ScrolledWindow scroll;
+    public class RequestHistory : Gtk.Box, RequestVie {
+        private Gtk.FlowBox item_box;
+        private Gtk.ScrolledWindow scroll;
 
         public signal void selection_changed(RequestItem item);
 
-        public RequestHistory () {
+        public void foo () {}
+
+        public RequestHistory (RequestController req_ctrl) {
+            req_ctrl.register_view (this);
             scroll = new Gtk.ScrolledWindow (null, null);
             scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
@@ -83,6 +86,7 @@ namespace HTTPInspector {
         }
 
         public void add_request (RequestItem item) {
+
             var box_item = new RequestHistoryItem (item);
 
             item_box.add (box_item);

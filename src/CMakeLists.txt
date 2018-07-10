@@ -11,6 +11,8 @@ vala_precompile(VALA_C ${EXEC_NAME}
 
 	Controllers/RequestController.vala
 
+	Views/RequestView.vala
+
 	Services/Settings.vala
 
 	Widgets/AbstractTypeView.vala

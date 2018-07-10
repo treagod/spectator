@@ -60,8 +60,8 @@ namespace HTTPInspector {
             seperator.no_show_all = false;
 
             var content = new Content ();
-            request_history = new RequestHistory ();
             request_controller = new RequestController ();
+            request_history = new RequestHistory (request_controller);
 
             content.welcome_activated.connect ((index) => {
                 create_request ();
