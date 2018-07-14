@@ -20,10 +20,27 @@
 */
 
 namespace HTTPInspector {
-    namespace View {
-        public interface Request : GLib.Object  {
-            public signal void new_item (RequestItem item);
-            public signal void selected_item_updated ();
+    public class RequestStore {
+        private Gee.ArrayList<RequestItem> items;
+
+        public RequestStore () {
+            items = new Gee.ArrayList<RequestItem> ();
+        }
+
+        public void add_request (RequestItem item) {
+            items.add (item);
+        }
+
+        public int index_of (RequestItem item) {
+            return items.index_of (item);
+        }
+
+        public RequestItem get_request (int idx) {
+            return items.@get (idx);
+        }
+
+        public void update_request (int idx, RequestItem item) {
+            items.insert (idx, item);
         }
     }
 }

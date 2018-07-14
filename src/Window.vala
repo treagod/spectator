@@ -20,9 +20,10 @@
 */
 
 namespace HTTPInspector {
-    public class Window : Gtk.ApplicationWindow {
-        RequestHistory request_history;
-        RequestController request_controller;
+    public class Window : Gtk.ApplicationWindow, View.Request {
+        private Content content;
+        private RequestHistory request_history;
+        private RequestController request_controller;
 
         public Window (Gtk.Application app) {
             var settings = Settings.get_instance ();
@@ -59,9 +60,11 @@ namespace HTTPInspector {
             seperator.visible = true;
             seperator.no_show_all = false;
 
-            var content = new Content ();
             request_controller = new RequestController ();
+            content = new Content (request_controller);
             request_history = new RequestHistory (request_controller);
+
+            request_controller.register_view (this);
 
             content.welcome_activated.connect ((index) => {
                 create_request ();
@@ -71,9 +74,9 @@ namespace HTTPInspector {
                 request_history.update_active (item);
             });
 
-            request_history.selection_changed.connect ((item) => {
-                headerbar.subtitle = item.name;
-                content.show_request_view (item);
+            selected_item_updated.connect (() => {
+                headerbar.subtitle = request_controller.selected_item.name;
+                content.show_request_view (request_controller.selected_item);
             });
 
             grid.add (request_history);
@@ -89,7 +92,6 @@ namespace HTTPInspector {
             var dialog = new RequestDialog (this);
             dialog.show_all ();
             dialog.creation.connect ((item) => {
-                request_history.add_request (item);
                 request_controller.add_request (item);
             });
         }

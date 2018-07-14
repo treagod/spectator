@@ -20,18 +20,19 @@
 */
 
 namespace HTTPInspector {
-    class RequestResponsePane : Gtk.Paned {
+    class RequestResponsePane : Gtk.Paned, View.Request {
         private RequestView request_view;
         private ResponseView response_view;
 
         public signal void item_changed (RequestItem item);
 
-        public RequestResponsePane () {
-            request_view  = new RequestView ();
+        public RequestResponsePane (RequestController req_ctrl) {
+            req_ctrl.register_view (this);
+            request_view  = new RequestView (req_ctrl);
             response_view = new ResponseView ();
 
-            request_view.item_changed.connect((item) => {
-                item_changed (item);
+            selected_item_updated.connect (() => {
+                //item_changed (item);
             });
 
             request_view.response_received.connect ((res) => {

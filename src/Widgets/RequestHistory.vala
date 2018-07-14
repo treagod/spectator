@@ -33,19 +33,19 @@ namespace HTTPInspector {
         }
     }
 
-    public class RequestHistory : Gtk.Box, RequestVie {
+    public class RequestHistory : Gtk.Box, View.Request {
         private Gtk.FlowBox item_box;
         private Gtk.ScrolledWindow scroll;
-
-        public signal void selection_changed(RequestItem item);
-
-        public void foo () {}
 
         public RequestHistory (RequestController req_ctrl) {
             req_ctrl.register_view (this);
             scroll = new Gtk.ScrolledWindow (null, null);
             scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
+
+            new_item.connect ((item) => {
+                append_request (item);
+            });
 
             var titlebar = new TitleBar (_("Request History"));
 
@@ -66,7 +66,7 @@ namespace HTTPInspector {
 
             item_box.child_activated.connect ((child) => {
                 var history_item = child as RequestHistoryItem;
-                selection_changed (history_item.item);
+                req_ctrl.update_selected_item (history_item.item);
             });
 
             orientation = Gtk.Orientation.VERTICAL;
@@ -85,14 +85,12 @@ namespace HTTPInspector {
             });
         }
 
-        public void add_request (RequestItem item) {
-
+        private void append_request (RequestItem item) {
             var box_item = new RequestHistoryItem (item);
 
             item_box.add (box_item);
             item_box.show_all ();
             item_box.select_child(box_item);
-            selection_changed (item);
         }
     }
 }
