@@ -24,6 +24,7 @@ namespace HTTPInspector {
         public interface Request : GLib.Object  {
             public signal void new_item (RequestItem item);
             public signal void selected_item_updated ();
+            public signal void request_completed ();
         }
     }
 }

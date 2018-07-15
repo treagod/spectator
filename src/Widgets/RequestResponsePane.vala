@@ -35,6 +35,10 @@ namespace HTTPInspector {
                 //item_changed (item);
             });
 
+            request_completed.connect (() => {
+               response_view.update (req_ctrl.selected_item.response);
+            });
+
             request_view.response_received.connect ((res) => {
                 response_view.update (res);
             });

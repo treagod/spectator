@@ -31,6 +31,7 @@ namespace HTTPInspector {
         public int window_width { get; set; }
         public int window_height { get; set; }
         public bool maximized { get; set; }
+        public string proxy_uri { get; set; }
 
 
         public static Settings get_instance () {

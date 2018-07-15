@@ -68,15 +68,17 @@ namespace HTTPInspector {
             }
         }
 
-        private async void perform_request () {
+        public async void perform_request () {
             ulong microseconds = 0;
             double seconds = 0.0;
             var url = selected_item.domain;
+            var settings = Settings.get_instance ();
             Timer timer = new Timer ();
 
             MainLoop loop = new MainLoop ();
             var session = new Soup.Session ();
             session.user_agent = selected_item.user_agent;
+            session.proxy_uri = new Soup.URI (settings.proxy_uri);
             var msg = new Soup.Message ("GET", selected_item.domain);
 
             foreach (var header in selected_item.headers) {
@@ -97,7 +99,12 @@ namespace HTTPInspector {
                 });
                 selected_item.status = RequestStatus.SENT;
                 selected_item.response = res;
-                //response_received(res);
+
+                foreach (var view in views) {
+                    view.request_completed ();
+                }
+
+
                 loop.quit ();
 	        });
 

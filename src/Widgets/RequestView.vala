@@ -49,7 +49,9 @@ namespace HTTPInspector {
                 req_ctrl.selected_item.method = method;
             });
 
-            url_entry.request_activated.connect (perform_request);
+            url_entry.request_activated.connect (() => {
+                req_ctrl.perform_request ();
+            });
 
             var stack = new Gtk.Stack ();
             stack.margin = 6;
