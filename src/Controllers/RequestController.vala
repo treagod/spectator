@@ -77,8 +77,17 @@ namespace HTTPInspector {
             MainLoop loop = new MainLoop ();
             var session = new Soup.Session ();
             session.user_agent = selected_item.user_agent;
+            session.timeout = int.parse (settings.timeout);
 
             if (settings.use_proxy) {
+                var no_proxies = settings.no_proxy.split (",");
+
+                foreach (var no_proxy in no_proxies) {
+                    if (no_proxy == location) {
+                        break;
+                    }
+                }
+
                 session.proxy_uri = new Soup.URI (settings.proxy_uri);
             }
 
