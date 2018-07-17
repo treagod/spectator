@@ -58,26 +58,27 @@ namespace HTTPInspector {
         public override void update (ResponseItem? it) {
             if (it == null) {
                 response_text.insert_text ("");
-            } else {
-                try {
-                    // Pretty Print Version of response JSON
-                    var parser = new Json.Parser ();
-                    var json = convert_with_fallback (it.raw, it.raw.length, "UTF-8", "ISO-8859-1");
-                    parser.load_from_data (json, -1);
-                    var root = parser.get_root ();
-                    var generator = new Json.Generator ();
-                    generator.set_root (root);
-                    generator.indent = 4;
-                    generator.pretty = true;
-                    var pretty_json = generator.to_data (null);
-                    response_text.insert_text (pretty_json);
-                } catch (Error e) {
-                    stderr.printf ("Error parsing JSON.\n");
-                }
-
+                response_text_raw.insert_text ("");
+                return;
             }
 
-            response_text_raw.insert (it);
+            try {
+                // Pretty Print Version of response JSON
+                var parser = new Json.Parser ();
+                var json = convert_with_fallback (it.data, it.data.length, "UTF-8", "ISO-8859-1");
+                parser.load_from_data (json, -1);
+                var root = parser.get_root ();
+                var generator = new Json.Generator ();
+                generator.set_root (root);
+                generator.indent = 4;
+                generator.pretty = true;
+                var pretty_json = generator.to_data (null);
+                response_text.insert_text (pretty_json);
+            } catch (Error e) {
+                stderr.printf ("Error parsing JSON.\n");
+            }
+
+            response_text_raw.insert_text (it.raw);
         }
     }
 }

@@ -53,7 +53,7 @@ namespace HTTPInspector {
 
         public override void update (ResponseItem? it) {
             if (it != null) {
-                web_view.load_alternate_html (it.raw, it.url, it.url);
+                web_view.load_alternate_html (it.data, it.url, it.url);
             } else {
                 web_view.load_plain_text ("");
             }

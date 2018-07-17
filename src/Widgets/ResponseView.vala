@@ -62,42 +62,40 @@ namespace HTTPInspector {
         }
 
         private void update_view (ResponseItem? it) {
-            if (it != null) {
-                var content_type = it.headers["Content-Type"];
-                if (it == null) {
-                    stack.set_visible_child (json_view);
-                } else {
-                    if (is_html (content_type)) {
-                        stack.set_visible_child (html_view);
-                    } else if (is_json (content_type)) {
-                        stack.set_visible_child (json_view);
-                    } else if (is_xml (content_type)) {
-                        stack.set_visible_child (html_view);
-                    }
-                }
-            } else {
+            if (it == null) {
                 stack.set_visible_child (json_view);
+                return;
             }
 
+            var content_type = it.headers["Content-Type"];
+
+            if (is_html (content_type)) {
+                stack.set_visible_child (html_view);
+            } else if (is_json (content_type)) {
+                stack.set_visible_child (json_view);
+            } else if (is_xml (content_type)) {
+                stack.set_visible_child (html_view);
+            }
         }
 
         private void set_content_type (ResponseItem? it) {
-            if (it != null) {
-                var content_type = it.headers["Content-Type"];
-                if (content_type != null) {
-                    if (is_html (content_type)) {
-                        status_bar.set_active_type (ResponseType.HTML);
-                    } else if (is_json (content_type)) {
-                        status_bar.set_active_type (ResponseType.JSON);
-                    } else if (is_xml (content_type)) {
-                        status_bar.set_active_type (ResponseType.XML);
-                    } else {
-                        status_bar.set_active_type (ResponseType.UNKOWN);
-                    }
-                    return;
+            if (it == null) {
+                status_bar.set_active_type (ResponseType.UNKOWN);
+                return;
+            }
+
+            var content_type = it.headers["Content-Type"];
+            if (content_type != null) {
+                if (is_html (content_type)) {
+                    status_bar.set_active_type (ResponseType.HTML);
+                } else if (is_json (content_type)) {
+                    status_bar.set_active_type (ResponseType.JSON);
+                } else if (is_xml (content_type)) {
+                    status_bar.set_active_type (ResponseType.XML);
+                } else {
+                    status_bar.set_active_type (ResponseType.UNKOWN);
                 }
             }
-            status_bar.set_active_type (ResponseType.UNKOWN);
         }
 
         private bool is_html (string type) {

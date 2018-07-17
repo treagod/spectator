@@ -109,14 +109,24 @@ namespace HTTPInspector {
                 var res = new ResponseItem ();
                 seconds = timer.elapsed (out microseconds);
                 res.duration = seconds;
-                res.raw = (string) mess.response_body.data;
 
                 res.status_code = mess.status_code;
                 res.size = mess.response_body.length;
                 res.url = url;
+
+                var builder = new StringBuilder ();
+
                 mess.response_headers.foreach ((key, val) => {
                     res.add_header (key, val);
+                    builder.append ("%s: %s\r\n".printf (key, val));
                 });
+
+                builder.append ("\r\n");
+                builder.append ((string) mess.response_body.data);
+
+                res.raw = builder.str;
+                res.data = (string) mess.response_body.data;
+
                 selected_item.status = RequestStatus.SENT;
                 selected_item.response = res;
 

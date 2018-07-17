@@ -23,6 +23,7 @@ namespace HTTPInspector {
     public class ResponseItem  {
         public string url { get; set; }
         public string raw { get; set; }
+        public string data { get; set; }
         public uint status_code { get; set; }
         public double duration { get; set; }
         public int64 size { get; set; }
