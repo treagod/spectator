@@ -33,7 +33,6 @@ namespace HTTPInspector {
             req_ctrl.register_view (this);
 
             selected_item_updated.connect (() => {
-                stdout.printf("%d\n", req_ctrl.selected_item.headers.size);
                 headers = new Gee.ArrayList<HeaderField> ();
                 update_headers (req_ctrl.selected_item);
             });

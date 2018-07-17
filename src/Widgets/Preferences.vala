@@ -21,8 +21,6 @@
 
 namespace HTTPInspector {
     public class Preferences : Gtk.Dialog {
-        private Gtk.Stack main_stack;
-
         public Preferences (Gtk.Window? parent) {
             title = _("Preferences");
             border_width = 5;
@@ -31,16 +29,18 @@ namespace HTTPInspector {
             transient_for =  parent;
             modal = true;
 
-            main_stack = new Gtk.Stack ();
+            var main_stack = new Gtk.Stack ();
             main_stack.margin = 6;
             main_stack.margin_bottom = 18;
             main_stack.margin_top = 24;
             main_stack.add_titled (create_general_tab (), "general", _("General"));
-            main_stack.add_titled (new Gtk.Label ("asd"), "general2", _("General2"));
+            main_stack.add_titled (create_network_tab (), "network", _("Network"));
 
             var main_stackswitcher = new Gtk.StackSwitcher ();
             main_stackswitcher.set_stack (main_stack);
             main_stackswitcher.halign = Gtk.Align.CENTER;
+
+
 
             add_button (_("Close"), Gtk.ResponseType.CLOSE);
 
@@ -50,16 +50,32 @@ namespace HTTPInspector {
 
             var content = get_content_area () as Gtk.Box;
 
+            //content.add (create_general_tab ());
             content.add (main_stackswitcher);
             content.add (main_stack);
+
             content.margin = 15;
             content.margin_top = 0;
         }
 
         private Gtk.Box create_general_tab () {
-            var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 5);
-            var dark_theme_switch = new Gtk.Switch ();
+            var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
+            var option_grid = new Gtk.Grid ();
             var settings = Settings.get_instance ();
+
+            option_grid.column_spacing = 12;
+            option_grid.row_spacing = 6;
+
+
+            var theme_label = new Gtk.Label (_("Dark Theme"));
+            theme_label.halign = Gtk.Align.START;
+            var dark_theme_switch = new Gtk.Switch ();
+            dark_theme_switch.halign = Gtk.Align.END;
+
+            var redirect_label = new Gtk.Label (_("Follow redirects automatically"));
+            redirect_label.halign = Gtk.Align.START;
+            var redirect_switch = new Gtk.Switch ();
+            redirect_switch.halign = Gtk.Align.END;
 
             dark_theme_switch.active = Gtk.Settings.get_default ().gtk_application_prefer_dark_theme;
 
@@ -68,11 +84,112 @@ namespace HTTPInspector {
                 settings.theme_changed ();
             });
 
+            redirect_switch.active = settings.follow_redirects;
+            redirect_switch.notify.connect (() => {
+                settings.follow_redirects = redirect_switch.active;
+            });
+
             settings.schema.bind ("dark-theme", dark_theme_switch, "active", SettingsBindFlags.DEFAULT);
 
-            box.add (dark_theme_switch);
+            var maximum_redirects_label = new Gtk.Label (_("Maximum Redirects"));
+            maximum_redirects_label.halign = Gtk.Align.START;
+            var maximum_redirects_entry = new Gtk.Entry ();
+            maximum_redirects_entry.halign = Gtk.Align.END;
+            maximum_redirects_entry.xalign = 1.0f;
+            maximum_redirects_entry.text = settings.maximum_redirects;
+
+            maximum_redirects_entry.changed.connect (() => {
+                settings.maximum_redirects = maximum_redirects_entry.text;
+            });
+
+            var timeout_label = new Gtk.Label (_("Network Request Timeout"));
+            timeout_label.halign = Gtk.Align.START;
+            var timeout_entry = new Gtk.Entry ();
+            timeout_entry.halign = Gtk.Align.END;
+            timeout_entry.xalign = 1.0f;
+            timeout_entry.text = settings.timeout;
+
+            timeout_entry.changed.connect (() => {
+                settings.timeout = timeout_entry.text;
+            });
+
+            option_grid.attach (theme_label, 0, 1, 1, 1);
+            option_grid.attach (dark_theme_switch, 1, 1, 1, 1);
+            option_grid.attach (redirect_label, 0, 2, 1, 1);
+            option_grid.attach (redirect_switch, 1, 2, 1, 1);
+            option_grid.attach (maximum_redirects_label, 0, 3, 1, 1);
+            option_grid.attach (maximum_redirects_entry, 1, 3, 1, 1);
+            option_grid.attach (timeout_label, 0, 4, 1, 1);
+            option_grid.attach (timeout_entry, 1, 4, 1, 1);
+
+            box.add (option_grid);
+
             return box;
         }
 
+        private Gtk.Box create_network_tab () {
+            var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
+            var option_grid = new Gtk.Grid ();
+            var settings = Settings.get_instance ();
+
+            option_grid.column_spacing = 12;
+            option_grid.row_spacing = 6;
+
+            var use_proxy_label = new Gtk.Label(_("Use Proxy"));
+            use_proxy_label.halign = Gtk.Align.START;
+            var use_proxy_switch = new Gtk.Switch ();
+            use_proxy_switch.halign = Gtk.Align.END;
+
+            use_proxy_switch.active = settings.use_proxy;
+            use_proxy_switch.notify.connect (() => {
+                settings.use_proxy = use_proxy_switch.active;
+            });
+
+            var proxy_label = new Gtk.Label (_("HTTP Proxy"));
+            proxy_label.halign = Gtk.Align.START;
+            var proxy_entry = new Gtk.Entry ();
+            proxy_entry.halign = Gtk.Align.END;
+            proxy_entry.text = settings.http_proxy;
+
+            proxy_entry.changed.connect (() => {
+                settings.https_proxy = proxy_entry.text;
+            });
+
+            var https_proxy_label = new Gtk.Label (_("HTTPS Proxy"));
+            https_proxy_label.halign = Gtk.Align.START;
+            var https_proxy_entry = new Gtk.Entry ();
+            https_proxy_entry.halign = Gtk.Align.END;
+            https_proxy_entry.text = settings.https_proxy;
+
+            https_proxy_entry.changed.connect (() => {
+                settings.https_proxy = https_proxy_entry.text;
+            });
+
+            var no_proxy_label = new Gtk.Label (_("No Proxy"));
+            no_proxy_label.halign = Gtk.Align.START;
+            var no_proxy_entry = new Gtk.Entry ();
+            no_proxy_entry.halign = Gtk.Align.END;
+            no_proxy_entry.text = settings.no_proxy;
+            no_proxy_entry.hexpand = true;
+
+            no_proxy_entry.changed.connect (() => {
+                settings.no_proxy = no_proxy_entry.text;
+            });
+
+            option_grid.attach (use_proxy_label, 0, 0, 1, 1);
+            option_grid.attach (use_proxy_switch, 1, 0, 1, 1);
+            option_grid.attach (proxy_label, 0, 1, 1, 1);
+            option_grid.attach (proxy_entry, 1, 1, 1, 1);
+            option_grid.attach (https_proxy_label, 0, 2, 1, 1);
+            option_grid.attach (https_proxy_entry, 1, 2, 1, 1);
+            option_grid.attach (no_proxy_label, 0, 3, 1, 1);
+            option_grid.attach (no_proxy_entry, 1, 3, 1, 1);
+
+            option_grid.hexpand = true;
+
+            box.add (option_grid);
+
+            return box;
+        }
     }
 }

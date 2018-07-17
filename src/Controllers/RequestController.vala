@@ -36,8 +36,6 @@ namespace HTTPInspector {
             selected_item = item;
             selected_item_idx = store.index_of (item);
 
-            stdout.printf ("%d\n", selected_item_idx);
-
             foreach (var view in views) {
                 view.new_item (item);
                 view.selected_item_updated ();
@@ -54,7 +52,6 @@ namespace HTTPInspector {
 
         public void update_selected_item (RequestItem item) {
             var idx = store.index_of (item);
-            stdout.printf("Selected %d\n", idx);
 
             if (idx == -1) {
                 stdout.printf ("Invalid itme\n");
@@ -68,18 +65,24 @@ namespace HTTPInspector {
             }
         }
 
-        public async void perform_request () {
+        public async void perform_request (string? location = null) {
             ulong microseconds = 0;
             double seconds = 0.0;
             var url = selected_item.domain;
             var settings = Settings.get_instance ();
             Timer timer = new Timer ();
 
+            location = (location == null) ? selected_item.domain : location;
+
             MainLoop loop = new MainLoop ();
             var session = new Soup.Session ();
             session.user_agent = selected_item.user_agent;
-            session.proxy_uri = new Soup.URI (settings.proxy_uri);
-            var msg = new Soup.Message ("GET", selected_item.domain);
+
+            if (settings.use_proxy) {
+                session.proxy_uri = new Soup.URI (settings.proxy_uri);
+            }
+
+            var msg = new Soup.Message ("GET", location);
 
             foreach (var header in selected_item.headers) {
                 msg.request_headers.append (header.key, header.val);
@@ -87,10 +90,18 @@ namespace HTTPInspector {
 
             session.queue_message (msg, (sess, mess) => {
                 timer.stop ();
+
+                // Performance new request to redirected location
+                if (mess.status_code == 301 && settings.follow_redirects) {
+                    perform_request (mess.response_headers.get_one ("Location"));
+                    return;
+                }
+
                 var res = new ResponseItem ();
                 seconds = timer.elapsed (out microseconds);
                 res.duration = seconds;
                 res.raw = (string) mess.response_body.data;
+
                 res.status_code = mess.status_code;
                 res.size = mess.response_body.length;
                 res.url = url;

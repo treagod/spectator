@@ -30,6 +30,48 @@
             <description>Wether the main window was maximized or not.</description>
         </key>
 
+        <key name="follow-redirects" type="b">
+            <default>true</default>
+            <summary>Makes a new request to redirect.</summary>
+            <description>Specifies if a new request should be made if the previous got a 301 - Redirect Header.</description>
+        </key>
+
+        <key name="use-proxy" type="b">
+            <default>false</default>
+            <summary>Use a proxy for every request.</summary>
+            <description>Use a proxy for every request.</description>
+        </key>
+
+        <key name="http-proxy" type="s">
+            <default>''</default>
+            <summary>HTTP Proxy.</summary>
+            <description>Specifies which HTTP Proxy to use.</description>
+        </key>
+
+        <key name="https-proxy" type="s">
+            <default>''</default>
+            <summary>HTTPS Proxy.</summary>
+            <description>Specifies which HTTPS Proxy to use.</description>
+        </key>
+
+        <key name="no-proxy" type="s">
+            <default>''</default>
+            <summary>Defines No Proxy.</summary>
+            <description>Specifies which domains should not be proxied.</description>
+        </key>
+
+        <key name="maximum-redirects" type="s">
+            <default>'-1'</default>
+            <summary>Maximum redirects.</summary>
+            <description>Specifies how often a request can be redirected before the request is cancled.</description>
+        </key>
+
+        <key name="timeout" type="s">
+            <default>'0'</default>
+            <summary>Timeout.</summary>
+            <description>Specifies how long a request should wait on a response before it's terminated.</description>
+        </key>
+
         <key name="proxy-uri" type="s">
             <default>''</default>
             <summary>Proxy URI for the requests.</summary>

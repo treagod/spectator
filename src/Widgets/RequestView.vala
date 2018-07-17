@@ -78,8 +78,5 @@ namespace HTTPInspector {
             url_entry.set_method (item.method);
             show_all ();
         }
-
-        private async void perform_request () {
-        }
     }
 }

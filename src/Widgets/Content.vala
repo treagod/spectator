@@ -29,11 +29,7 @@ namespace HTTPInspector {
 
         public Content (RequestController req_ctrl) {
             req_ctrl.register_view (this);
-
-            selected_item_updated.connect (() => {
-                stdout.printf ("Content\n");
-            });
-
+            
             welcome = new Granite.Widgets.Welcome (_("HTTP Inspector"), _("Inspect your HTTP transmissions to the web"));
             welcome.hexpand = true;
             welcome.append ("bookmark-new", _("Create Request"), _("Create a new request to the web."));

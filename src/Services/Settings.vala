@@ -31,7 +31,14 @@ namespace HTTPInspector {
         public int window_width { get; set; }
         public int window_height { get; set; }
         public bool maximized { get; set; }
+        public bool use_proxy { get; set; }
+        public string http_proxy { get; set; }
+        public string https_proxy { get; set; }
+        public string no_proxy { get; set; }
         public string proxy_uri { get; set; }
+        public bool follow_redirects { get; set; }
+        public string maximum_redirects { get; set; }
+        public string timeout { get; set; }
 
 
         public static Settings get_instance () {
