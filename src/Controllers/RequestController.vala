@@ -65,80 +65,16 @@ namespace HTTPInspector {
             }
         }
 
-        public async void perform_request (string? location = null) {
-            ulong microseconds = 0;
-            double seconds = 0.0;
-            var url = selected_item.domain;
-            var settings = Settings.get_instance ();
-            Timer timer = new Timer ();
+        public async void perform_request () {
+            var action = new RequestAction (selected_item);
 
-            location = (location == null) ? selected_item.domain : location;
-
-            MainLoop loop = new MainLoop ();
-            var session = new Soup.Session ();
-            session.user_agent = selected_item.user_agent;
-            session.timeout = int.parse (settings.timeout);
-
-            if (settings.use_proxy) {
-                var no_proxies = settings.no_proxy.split (",");
-
-                foreach (var no_proxy in no_proxies) {
-                    if (no_proxy == location) {
-                        break;
-                    }
-                }
-
-                session.proxy_uri = new Soup.URI (settings.proxy_uri);
-            }
-
-            var msg = new Soup.Message ("GET", location);
-
-            foreach (var header in selected_item.headers) {
-                msg.request_headers.append (header.key, header.val);
-            }
-
-            session.queue_message (msg, (sess, mess) => {
-                timer.stop ();
-
-                // Performance new request to redirected location
-                if (mess.status_code == 301 && settings.follow_redirects) {
-                    perform_request (mess.response_headers.get_one ("Location"));
-                    return;
-                }
-
-                var res = new ResponseItem ();
-                seconds = timer.elapsed (out microseconds);
-                res.duration = seconds;
-
-                res.status_code = mess.status_code;
-                res.size = mess.response_body.length;
-                res.url = url;
-
-                var builder = new StringBuilder ();
-
-                mess.response_headers.foreach ((key, val) => {
-                    res.add_header (key, val);
-                    builder.append ("%s: %s\r\n".printf (key, val));
-                });
-
-                builder.append ("\r\n");
-                builder.append ((string) mess.response_body.data);
-
-                res.raw = builder.str;
-                res.data = (string) mess.response_body.data;
-
-                selected_item.status = RequestStatus.SENT;
-                selected_item.response = res;
-
+            action.finished_request.connect (() => {
                 foreach (var view in views) {
                     view.request_completed ();
                 }
+            });
 
-
-                loop.quit ();
-	        });
-
-	        selected_item.status = RequestStatus.SENDING;
+            action.make_request ();
         }
     }
 }
