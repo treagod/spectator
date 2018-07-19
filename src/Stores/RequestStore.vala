@@ -21,7 +21,7 @@
 
 namespace HTTPInspector {
     public class RequestStore {
-        private Gee.ArrayList<RequestItem> items;
+        public Gee.ArrayList<RequestItem> items { get; private set; }
 
         public RequestStore () {
             items = new Gee.ArrayList<RequestItem> ();

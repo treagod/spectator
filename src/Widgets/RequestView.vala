@@ -23,6 +23,7 @@ namespace HTTPInspector {
     class RequestView : Gtk.Box, View.Request {
         private UrlEntry url_entry;
         private HeaderView header_view;
+        private HeaderView url_params_view;
 
         public signal void response_received(ResponseItem it);
 
@@ -34,6 +35,7 @@ namespace HTTPInspector {
         public RequestView (RequestController req_ctrl) {
             url_entry = new UrlEntry ();
             header_view = new HeaderView (req_ctrl);
+            url_params_view = new HeaderView (req_ctrl);
             url_entry.margin_bottom = 10;
             req_ctrl.register_view (this);
 
@@ -62,10 +64,8 @@ namespace HTTPInspector {
             stack_switcher.halign = Gtk.Align.CENTER;
 
             stack.add_titled (header_view, "header", _("Header"));
-            stack.add_titled (new Gtk.Label ("12435243"), "url_params", _("URL Parameters"));
+            stack.add_titled (url_params_view, "url_params", _("URL Params"));
             stack.add_titled (new Gtk.Label ("12435243"), "body", _("Body"));
-            stack.add_titled (new Gtk.Label ("12435243"),"Auth", "Auth");
-            stack.add_titled (new Gtk.Label ("12435243"),"Options", "Options");
 
             add (url_entry);
             add (stack_switcher);
@@ -73,7 +73,7 @@ namespace HTTPInspector {
         }
 
         public void set_item (RequestItem item) {
-            url_entry.item_status_changed (item.status);
+            url_entry.change_status (item.status);
             url_entry.set_text (item.domain);
             url_entry.set_method (item.method);
             show_all ();

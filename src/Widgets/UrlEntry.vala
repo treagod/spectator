@@ -76,7 +76,7 @@ namespace HTTPInspector {
             method_box.active = method.to_i ();
         }
 
-        public void item_status_changed (RequestStatus status) {
+        public void change_status (RequestStatus status) {
             switch (status) {
                 case RequestStatus.SENT:
                     url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "view-refresh-symbolic");

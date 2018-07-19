@@ -54,6 +54,7 @@ namespace HTTPInspector {
             item_box.valign = Gtk.Align.START;
             item_box.min_children_per_line = 1;
             item_box.max_children_per_line = 1;
+            item_box.selection_mode = Gtk.SelectionMode.SINGLE;
             item_box.margin = 6;
             item_box.expand = false;
 
@@ -83,6 +84,11 @@ namespace HTTPInspector {
                 var history_item = child as RequestHistoryItem;
                 history_item.update (item);
             });
+        }
+
+        public void clear_selection () {
+            item_box.unselect_all ();
+            queue_draw ();
         }
 
         private void append_request (RequestItem item) {

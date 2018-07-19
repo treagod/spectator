@@ -133,8 +133,8 @@ namespace HTTPInspector {
 
             var html_selection = new Gtk.ComboBoxText ();
 
-            html_selection.append_text (_("Web View"));
-            html_selection.append_text (_("HTML View"));
+            html_selection.append_text (_("Preview"));
+            html_selection.append_text (_("Source Code"));
             html_selection.active = 0;
 
             html_selection.changed.connect (() => {
@@ -143,8 +143,8 @@ namespace HTTPInspector {
 
             var json_selection = new Gtk.ComboBoxText ();
 
-            json_selection.append_text (_("Visual Preview"));
-            json_selection.append_text (_("Raw Preview"));
+            json_selection.append_text (_("Prettified"));
+            json_selection.append_text (_("Raw"));
             json_selection.active = 0;
 
             json_selection.changed.connect (() => {
@@ -155,7 +155,7 @@ namespace HTTPInspector {
             http_status_label = new Gtk.Label ("No Status");
             http_status_box.get_style_context ().add_class ("no-info-box");
             http_status_label.halign = Gtk.Align.CENTER;
-            http_status_label.margin = 5;
+            http_status_label.margin = 3;
 
             http_status_box.add (http_status_label);
 
@@ -163,7 +163,7 @@ namespace HTTPInspector {
             request_time_label = new Gtk.Label ("No duration");
             request_time_box.get_style_context ().add_class ("no-info-box");
             request_time_label.halign = Gtk.Align.CENTER;
-            request_time_label.margin = 5;
+            request_time_label.margin = 3;
 
             request_time_box.add (request_time_label);
 
@@ -171,7 +171,7 @@ namespace HTTPInspector {
             response_size_label = new Gtk.Label ("No size");
             response_size_box.get_style_context ().add_class ("no-info-box");
             response_size_label.halign = Gtk.Align.CENTER;
-            response_size_label.margin = 5;
+            response_size_label.margin = 3;
 
             response_size_box.add (response_size_label);
 

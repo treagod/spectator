@@ -83,6 +83,12 @@
             <summary>Use dark theme</summary>
             <description>Switch between Light and Dark theme.</description>
         </key>
+
+        <key name="data" type="s">
+           <default>''</default>
+           <summary>Data of HTTP Inspector.</summary>
+           <description>Stores all requests items and the API version of the app in a JSON object.</description>
+       </key>
     </schema>
 </schemalist>
 

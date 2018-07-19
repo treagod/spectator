@@ -21,7 +21,6 @@
 
 namespace HTTPInspector {
     public class RequestAction {
-        private string redirect_location;
         private RequestItem item;
         private Settings settings = Settings.get_instance ();
         private uint performed_redirects = 0;
@@ -62,7 +61,7 @@ namespace HTTPInspector {
                 session.proxy_uri = new Soup.URI (settings.proxy_uri);
             }
 
-            var msg = new Soup.Message ("GET", location);
+            var msg = new Soup.Message (item.method.to_str (), location);
 
             foreach (var header in item.headers) {
                 msg.request_headers.append (header.key, header.val);

@@ -23,7 +23,7 @@ namespace HTTPInspector {
     public enum Method {
         GET, POST, PUT, PATCH, DELETE, HEAD;
 
-        public static Method convert(int i) {
+        public static Method convert (int i) {
             switch (i) {
                 case 0:
                     return GET;
@@ -60,6 +60,25 @@ namespace HTTPInspector {
                     assert_not_reached ();
             }
         }
+
+        public string to_str () {
+            switch (this) {
+                case GET:
+                    return "GET";
+                case POST:
+                    return "POST";
+                case PUT:
+                    return "PUT";
+                case PATCH:
+                    return "PATCH";
+                case DELETE:
+                    return "DELETE";
+                case HEAD:
+                    return "HEAD";
+                default:
+                    assert_not_reached ();
+            }
+        }
     }
 
     public enum RequestStatus {
@@ -67,7 +86,6 @@ namespace HTTPInspector {
     }
 
     public class RequestItem  {
-
         public string name { get; set; }
         public string domain { get; set; }
         public string subdomain { get; set; }
@@ -78,7 +96,7 @@ namespace HTTPInspector {
         public Gee.ArrayList<Header> headers { get; private set; }
         public string user_agent { get; private set; }
 
-        public RequestItem(string nam, Method meth) {
+        public RequestItem (string nam, Method meth) {
             headers = new Gee.ArrayList<Header> ();
             user_agent = "http-inspector/0.1";
             name = nam;
@@ -89,7 +107,7 @@ namespace HTTPInspector {
             status = RequestStatus.NOT_SENT;
         }
 
-        public RequestItem.with_url(string nam, string url, Method meth) {
+        public RequestItem.with_uri (string nam, string url, Method meth) {
             headers = new Gee.ArrayList<Header> ();
             user_agent = "http-inspector/0.1";
             name = nam;

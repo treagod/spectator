@@ -23,7 +23,7 @@ namespace HTTPInspector {
     public class RequestController {
         private List<View.Request> views;
         private RequestStore store;
-        public RequestItem selected_item { get; private set; }
+        public RequestItem? selected_item { get; private set; }
         private int selected_item_idx;
 
         public RequestController () {
@@ -75,6 +75,11 @@ namespace HTTPInspector {
             });
 
             action.make_request ();
+        }
+
+        // TODO: Make immutable
+        public Gee.ArrayList<RequestItem> get_items () {
+            return store.items;
         }
     }
 }

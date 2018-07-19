@@ -39,6 +39,7 @@ namespace HTTPInspector {
         public bool follow_redirects { get; set; }
         public string maximum_redirects { get; set; }
         public string timeout { get; set; }
+        public string data { get; set; }
 
 
         public static Settings get_instance () {

@@ -38,11 +38,14 @@ namespace HTTPInspector {
                 maximize ();
             }
 
+
+
             // Show the app
             show_app ();
         }
 
         public void show_app () {
+            var settings = Settings.get_instance ();
             var grid = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
             grid.width_request = 950;
             grid.height_request = 500;
@@ -79,6 +82,33 @@ namespace HTTPInspector {
                 content.show_request_view (request_controller.selected_item);
             });
 
+            if (settings.data != "") {
+                var parser = new Json.Parser ();
+                try {
+                    parser.load_from_data (settings.data);
+                    // TODO:  Error if root is no object
+                    var root = parser.get_root ();
+                    var object = root.get_object ();
+
+                    var items = object.get_member ("request_items");
+                    // TODO: throw error if not an array
+                    var s = items.get_array ();
+
+                    foreach (var array_node in s.get_elements ()) {
+                        var item = array_node.get_object ();
+                        var name = item.get_string_member ("name");
+                        var uri = item.get_string_member ("uri");
+                        var method = (int) item.get_int_member ("method");
+                        request_controller.add_request (new RequestItem.with_uri (name, uri, Method.convert (method)));
+                    }
+                } catch (Error e) {
+                    // Do something funny
+                }
+
+                content.show_welcome ();
+                request_history.clear_selection ();
+            }
+
             grid.add (request_history);
             grid.add (seperator);
             add (grid);
@@ -113,8 +143,54 @@ namespace HTTPInspector {
             settings.window_width = width;
             settings.window_height = height;
             settings.maximized = is_maximized;
+            settings.data = generate_data_json_str ();
 
             return false;
+        }
+
+        private string generate_data_json_str () {
+            Json.Builder builder = new Json.Builder ();
+            builder.begin_object ();
+            builder.set_member_name ("version");
+            builder.add_string_value ("0.1.0");
+
+            var items = request_controller.get_items ();
+
+            builder.set_member_name ("request_items");
+            builder.begin_array ();
+
+            if (items.size > 0) {
+                foreach (var item in items) {
+                    builder.begin_object ();
+                    builder.set_member_name ("name");
+                    builder.add_string_value (item.name);
+                    builder.set_member_name ("uri");
+                    builder.add_string_value (item.domain);
+                    builder.set_member_name ("method");
+                    builder.add_int_value (item.method.to_i ());
+                    builder.set_member_name ("headers");
+                    builder.begin_array ();
+                    foreach (var header in item.headers) {
+                        builder.begin_object ();
+                        builder.set_member_name ("key");
+                        builder.add_string_value (header.key);
+                        builder.set_member_name ("value");
+                        builder.add_string_value (header.val);
+                        builder.end_object ();
+                    }
+                    builder.end_array ();
+
+                    builder.end_object ();
+                }
+            }
+
+            builder.end_array ();
+            builder.end_object ();
+
+            var generator = new Json.Generator ();
+            generator.set_root (builder.get_root ());
+
+            return generator.to_data (null);
         }
     }
 }
