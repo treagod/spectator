@@ -85,24 +85,30 @@ namespace HTTPInspector {
         NOT_SENT, SENT, SENDING
     }
 
-    public class RequestItem  {
+    public class RequestItem : Object  {
         public string name { get; set; }
-        public string domain { get; set; }
-        public string subdomain { get; set; }
-        public string path { get; set; }
+        private string _raw_uri { get; set; }
+        private Soup.URI? _uri { get; set; }
         public Method method { get; set; }
         public RequestStatus status { get; set; }
         public ResponseItem response { get; set; }
         public Gee.ArrayList<Header> headers { get; private set; }
         public string user_agent { get; private set; }
+        public string uri {
+            get {
+               return _raw_uri;
+            }
+            set {
+                _uri = new Soup.URI (value);
+               _raw_uri = value;
+            }
+        }
 
         public RequestItem (string nam, Method meth) {
             headers = new Gee.ArrayList<Header> ();
             user_agent = "http-inspector/0.1";
             name = nam;
-            domain = "";
-            subdomain = "";
-            path = "";
+            uri = "";
             method = meth;
             status = RequestStatus.NOT_SENT;
         }
@@ -111,9 +117,7 @@ namespace HTTPInspector {
             headers = new Gee.ArrayList<Header> ();
             user_agent = "http-inspector/0.1";
             name = nam;
-            domain = url;
-            subdomain = url;
-            path = url;
+            uri = url;
             method = meth;
             status = RequestStatus.NOT_SENT;
         }
@@ -133,6 +137,10 @@ namespace HTTPInspector {
                 // Index does not exist, create new entry;
                 add_header (key, val);
             }
+        }
+
+        public bool has_valid_uri () {
+            return _uri != null;
         }
 
         public void add_header (string key, string val) {

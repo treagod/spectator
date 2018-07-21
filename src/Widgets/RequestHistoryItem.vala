@@ -65,8 +65,8 @@ namespace HTTPInspector {
 
             url = new Gtk.Label ("");
 
-            if (item.domain.length > 0) {
-                url.label = "<small><i>" + item.domain + "</i></small>";
+            if (item.uri.length > 0) {
+                url.label = "<small><i>" + item.uri + "</i></small>";
             } else {
                 url.label = no_url;
             }
@@ -80,10 +80,10 @@ namespace HTTPInspector {
             identifier.has_tooltip = true;
 
             identifier.query_tooltip.connect ((x, y, keyboard_tooltip, tooltip) => {
-                if (item.domain == "") {
+                if (item.uri == "") {
                     return false;
                 }
-			    tooltip.set_text (item.domain);
+			    tooltip.set_text (item.uri);
 			    return true;
 		    });
 
@@ -109,8 +109,8 @@ namespace HTTPInspector {
 
             request_name.label = item.name;
 
-            var escaped_url = escape_url (item.domain);
-            if (item.domain.length > 0) {
+            var escaped_url = escape_url (item.uri);
+            if (item.uri.length > 0) {
                 url.label = "<small><i>" + escaped_url + "</i></small>";
             } else {
                 url.label = no_url;

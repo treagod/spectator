@@ -43,7 +43,7 @@ namespace HTTPInspector {
         private async void perform_request (string? location = null) {
             ulong microseconds = 0;
             double seconds = 0.0;
-            location = (location == null) ? item.domain : location;
+            location = (location == null) ? item.uri : location;
             MainLoop loop = new MainLoop ();
             var session = new Soup.Session ();
             session.user_agent = item.user_agent;
@@ -68,8 +68,11 @@ namespace HTTPInspector {
             }
 
             session.queue_message (msg, (sess, mess) => {
+                stdout.printf("Total of %u redirects\n", performed_redirects);
                 // Performance new request to redirected location
-                if (mess.status_code == 301 && settings.follow_redirects /*&& settings.maximum_redirects < performed_redirects */) {
+                stdout.printf ("%u %s %u\n", mess.status_code, settings.follow_redirects.to_string (), performed_redirects);
+                if (mess.status_code == 302 && settings.follow_redirects && performed_redirects < int.parse (settings.maximum_redirects)) {
+                    performed_redirects += 1;
                     perform_request (mess.response_headers.get_one ("Location"));
                     return;
                 }

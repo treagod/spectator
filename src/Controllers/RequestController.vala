@@ -38,7 +38,7 @@ namespace HTTPInspector {
 
             foreach (var view in views) {
                 view.new_item (item);
-                view.selected_item_updated ();
+                view.selected_item_changed ();
             }
         }
 
@@ -60,8 +60,14 @@ namespace HTTPInspector {
             selected_item = item;
             selected_item_idx = idx;
 
+            selected_item.notify.connect (() => {
+                foreach (var view in views) {
+                    view.selected_item_updated ();
+                }
+            });
+
             foreach (var view in views) {
-                view.selected_item_updated ();
+                view.selected_item_changed ();
             }
         }
 

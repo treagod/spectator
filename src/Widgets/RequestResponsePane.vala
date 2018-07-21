@@ -31,10 +31,6 @@ namespace HTTPInspector {
             request_view  = new RequestView (req_ctrl);
             response_view = new ResponseView ();
 
-            selected_item_updated.connect (() => {
-                //item_changed (item);
-            });
-
             request_completed.connect (() => {
                response_view.update (req_ctrl.selected_item.response);
             });

@@ -38,8 +38,6 @@ namespace HTTPInspector {
                 maximize ();
             }
 
-
-
             // Show the app
             show_app ();
         }
@@ -77,7 +75,7 @@ namespace HTTPInspector {
                 request_history.update_active (item);
             });
 
-            selected_item_updated.connect (() => {
+            selected_item_changed.connect (() => {
                 headerbar.subtitle = request_controller.selected_item.name;
                 content.show_request_view (request_controller.selected_item);
             });
@@ -165,7 +163,7 @@ namespace HTTPInspector {
                     builder.set_member_name ("name");
                     builder.add_string_value (item.name);
                     builder.set_member_name ("uri");
-                    builder.add_string_value (item.domain);
+                    builder.add_string_value (item.uri);
                     builder.set_member_name ("method");
                     builder.add_int_value (item.method.to_i ());
                     builder.set_member_name ("headers");

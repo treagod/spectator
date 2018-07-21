@@ -43,6 +43,10 @@ namespace HTTPInspector {
             scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
 
+            selected_item_updated.connect (() => {
+                update_active (req_ctrl.selected_item);
+            });
+
             new_item.connect ((item) => {
                 append_request (item);
             });

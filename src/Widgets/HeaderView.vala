@@ -32,7 +32,7 @@ namespace HTTPInspector {
 
             req_ctrl.register_view (this);
 
-            selected_item_updated.connect (() => {
+            selected_item_changed.connect (() => {
                 headers = new Gee.ArrayList<HeaderField> ();
                 update_headers (req_ctrl.selected_item);
             });
