@@ -56,9 +56,6 @@ namespace HTTPInspector {
             stack.margin = 6;
             stack.margin_bottom = 18;
             stack.margin_top = 18;
-            var stack_switcher = new Gtk.StackSwitcher ();
-            stack_switcher.set_stack (stack);
-            stack_switcher.halign = Gtk.Align.CENTER;
 
             stack.add_titled (header_view, "header", _("Header"));
             stack.add_titled (url_params_view, "url_params", _("URL Params"));

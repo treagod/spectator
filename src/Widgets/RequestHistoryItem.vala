@@ -22,11 +22,10 @@
 namespace HTTPInspector {
     class RequestHistoryItem : Gtk.FlowBoxChild {
         static string no_url = "<small><i>No URL specified</i></small>";
-        Gtk.Box identifier { get; set;}
+        Gtk.EventBox identifier { get; set;}
         Gtk.Label method;
         Gtk.Label request_name;
         Gtk.Label url;
-        Gtk.Box box;
         public RequestItem item { get; set; }
 
         private string get_method_label(Method method) {
@@ -57,7 +56,8 @@ namespace HTTPInspector {
 
         public RequestHistoryItem (RequestItem it) {
             item = it;
-            identifier = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+            identifier = new Gtk.EventBox ();
+            var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
 
             request_name = new Gtk.Label (item.name);
             request_name.halign = Gtk.Align.START;
@@ -75,17 +75,35 @@ namespace HTTPInspector {
             url.use_markup = true;
             url.ellipsize = Pango.EllipsizeMode.END;
 
-            identifier.add (request_name);
-            identifier.add (url);
-            identifier.has_tooltip = true;
+            box.add (request_name);
+            box.add (url);
+            box.has_tooltip = true;
 
-            identifier.query_tooltip.connect ((x, y, keyboard_tooltip, tooltip) => {
+            box.query_tooltip.connect ((x, y, keyboard_tooltip, tooltip) => {
                 if (item.uri == "") {
                     return false;
                 }
 			    tooltip.set_text (item.uri);
 			    return true;
-		    });
+            });
+
+            identifier.button_release_event.connect ((event) => {
+                if (event.button == 3) {
+                    var menu = new Gtk.Menu ();
+                    var edit_item = new Gtk.MenuItem.with_label ("Edit");
+                    var delete_item = new Gtk.MenuItem.with_label ("Delete");
+
+                    menu.add (edit_item);
+                    menu.add (delete_item);
+                    menu.show_all ();
+                    menu.popup_at_pointer (event);
+
+                    return true;
+                }
+                return false;
+            });
+            
+            identifier.add (box);
 
             method = new Gtk.Label (get_method_label (item.method));
             method.set_justify (Gtk.Justification.CENTER);
