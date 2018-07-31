@@ -19,18 +19,18 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace HTTPInspector.Widgets.Response {
     class JsonView : AbstractTypeView {
-        private ResponseText response_text;
-        private ResponseText response_text_raw;
+        private SourceView response_text;
+        private SourceView response_text_raw;
         private Gtk.ScrolledWindow scrolled;
         private Gtk.ScrolledWindow scrolled_raw;
 
         public JsonView () {
             scrolled = new Gtk.ScrolledWindow (null, null);
             scrolled_raw = new Gtk.ScrolledWindow (null, null);
-            response_text = new ResponseText ();
-            response_text_raw = new ResponseText ();
+            response_text = new SourceView ();
+            response_text_raw = new SourceView ();
             scrolled.add (response_text);
             scrolled_raw.add (response_text_raw);
 

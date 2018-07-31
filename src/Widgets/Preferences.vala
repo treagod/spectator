@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace HTTPInspector.Widgets {
     public class Preferences : Gtk.Dialog {
         public Preferences (Gtk.Window? parent) {
             title = _("Preferences");

@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace HTTPInspector.Widgets.Request {
     class HeaderView : Gtk.Box, View.Request {
         private Gee.ArrayList<Gtk.Button> buttons;
         public Gee.ArrayList<HeaderField> headers;
@@ -125,6 +125,5 @@ namespace HTTPInspector {
 
             show_all ();
         }
-
     }
 }

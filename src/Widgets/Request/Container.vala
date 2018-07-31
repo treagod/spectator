@@ -19,8 +19,8 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
-    class RequestView : Gtk.Box, View.Request {
+namespace HTTPInspector.Widgets.Request {
+    class Container : Gtk.Box, View.Request {
         private UrlEntry url_entry;
         private HeaderView header_view;
         private HeaderView url_params_view;
@@ -33,7 +33,7 @@ namespace HTTPInspector {
             margin = 4;
         }
 
-        public RequestView (RequestController req_ctrl) {
+        public Container (RequestController req_ctrl) {
             url_entry = new UrlEntry ();
             header_view = new HeaderView (req_ctrl);
             url_params_view = new HeaderView (req_ctrl);

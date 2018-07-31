@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace HTTPInspector.Widgets {
     public class RequestDialog : Gtk.Dialog {
         Gtk.Entry request_name_entry;
         Gtk.ComboBoxText method_box;

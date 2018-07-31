@@ -21,8 +21,8 @@
 
 namespace HTTPInspector {
     public class Window : Gtk.ApplicationWindow, View.Request {
-        private Content content;
-        private RequestHistory request_history;
+        private Widgets.Content content;
+        private Widgets.Sidebar.Container item_container;
         private RequestController request_controller;
 
         public Window (Gtk.Application app) {
@@ -48,7 +48,7 @@ namespace HTTPInspector {
             grid.width_request = 950;
             grid.height_request = 500;
 
-            var headerbar = new HeaderBar ();
+            var headerbar = new Widgets.HeaderBar ();
             headerbar.new_request.clicked.connect (() => {
                 create_request ();
             });
@@ -62,8 +62,8 @@ namespace HTTPInspector {
             seperator.no_show_all = false;
 
             request_controller = new RequestController ();
-            content = new Content (request_controller);
-            request_history = new RequestHistory (request_controller);
+            content = new Widgets.Content (request_controller);
+            item_container = new Widgets.Sidebar.Container (request_controller);
 
             request_controller.register_view (this);
 
@@ -72,7 +72,7 @@ namespace HTTPInspector {
             });
 
             content.item_changed.connect ((item) => {
-                request_history.update_active (item);
+                item_container.update_active (item);
             });
 
             selected_item_changed.connect (() => {
@@ -104,10 +104,10 @@ namespace HTTPInspector {
                 }
 
                 content.show_welcome ();
-                request_history.clear_selection ();
+                item_container.clear_selection ();
             }
 
-            grid.add (request_history);
+            grid.add (item_container);
             grid.add (seperator);
             add (grid);
             grid.add (content);
@@ -117,7 +117,7 @@ namespace HTTPInspector {
         }
 
         private void create_request () {
-            var dialog = new RequestDialog (this);
+            var dialog = new Widgets.RequestDialog (this);
             dialog.show_all ();
             dialog.creation.connect ((item) => {
                 request_controller.add_request (item);
@@ -125,7 +125,7 @@ namespace HTTPInspector {
         }
 
         private void open_preferences () {
-            var dialog = new Preferences (this);
+            var dialog = new Widgets.Preferences (this);
             dialog.show_all ();
         }
 

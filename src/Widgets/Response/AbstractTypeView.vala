@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace HTTPInspector.Widgets.Response {
     public abstract class AbstractTypeView : Gtk.Stack {
         public abstract void show_view (int i);
         public abstract void update (ResponseItem? it);

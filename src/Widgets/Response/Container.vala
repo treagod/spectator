@@ -19,9 +19,9 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
-    class ResponseView : Gtk.Box {
-        private ResponseStatusBar status_bar;
+namespace HTTPInspector.Widgets.Response {
+    class Container : Gtk.Box {
+        private StatusBar.Container status_bar;
         private AbstractTypeView html_view;
         private AbstractTypeView json_view;
         private Gtk.Stack stack;
@@ -31,7 +31,7 @@ namespace HTTPInspector {
             orientation = Gtk.Orientation.VERTICAL;
         }
 
-        public ResponseView () {
+        public Container () {
             stack = new Gtk.Stack ();
             html_view = new HtmlView ();
             json_view = new JsonView ();
@@ -40,7 +40,7 @@ namespace HTTPInspector {
             stack.add_named (json_view, "json_view");
             stack.set_visible_child (html_view);
 
-            status_bar = new ResponseStatusBar ();
+            status_bar = new StatusBar.Container ();
 
             status_bar.view_changed.connect ((i) => {
                 var current_view = (AbstractTypeView) stack.get_visible_child ();
@@ -80,20 +80,20 @@ namespace HTTPInspector {
 
         private void set_content_type (ResponseItem? it) {
             if (it == null) {
-                status_bar.set_active_type (ResponseType.UNKOWN);
+                status_bar.set_active_type (Type.UNKOWN);
                 return;
             }
 
             var content_type = it.headers["Content-Type"];
             if (content_type != null) {
                 if (is_html (content_type)) {
-                    status_bar.set_active_type (ResponseType.HTML);
+                    status_bar.set_active_type (Type.HTML);
                 } else if (is_json (content_type)) {
-                    status_bar.set_active_type (ResponseType.JSON);
+                    status_bar.set_active_type (Type.JSON);
                 } else if (is_xml (content_type)) {
-                    status_bar.set_active_type (ResponseType.XML);
+                    status_bar.set_active_type (Type.XML);
                 } else {
-                    status_bar.set_active_type (ResponseType.UNKOWN);
+                    status_bar.set_active_type (Type.UNKOWN);
                 }
             }
         }
@@ -104,18 +104,18 @@ namespace HTTPInspector {
 
         private bool is_json (string type) {
             return type.contains ("application/json") ||
-                   type.contains ("text/json") ||
-                   type.contains ("application/x-javascript") ||
-                   type.contains ("text/x-javascript") ||
-                   type.contains ("application/x-json") ||
-                   type.contains ("text/x-json");
+                    type.contains ("text/json") ||
+                    type.contains ("application/x-javascript") ||
+                    type.contains ("text/x-javascript") ||
+                    type.contains ("application/x-json") ||
+                    type.contains ("text/x-json");
         }
 
         private bool is_xml (string type) {
             return type.contains ("text/xml") ||
-                   type.contains ("application/xhtml+xml") ||
-                   type.contains ("application/xml") ||
-                   type.contains ("+xml");
+                    type.contains ("application/xhtml+xml") ||
+                    type.contains ("application/xml") ||
+                    type.contains ("+xml");
         }
     }
 }

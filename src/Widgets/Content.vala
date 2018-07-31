@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace HTTPInspector.Widgets {
     class Content : Gtk.Stack, View.Request {
         private Granite.Widgets.Welcome welcome;
         private RequestResponsePane req_res_pane;

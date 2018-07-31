@@ -19,12 +19,12 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
-    public enum ResponseType {
+namespace HTTPInspector.Widgets.Response.StatusBar {
+    public enum Type {
         HTML, JSON, XML, UNKOWN
     }
 
-    class ResponseStatusBar : Gtk.Box {
+    class Container : Gtk.Box {
         private const string CSS = """
             .ok-status-box {
                 border-width: 1px;
@@ -116,7 +116,7 @@ namespace HTTPInspector {
             try {
                 provider.load_from_data (CSS, CSS.length);
                 Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider,
-                                                          Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+                                                            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
             } catch (Error e) {
                 critical (e.message);
             }
@@ -232,15 +232,15 @@ namespace HTTPInspector {
             queue_draw ();
         }
 
-        public void set_active_type (ResponseType typ) {
+        public void set_active_type (Type typ) {
             switch (typ) {
-                case ResponseType.HTML:
+                case Type.HTML:
                     content_type.set_visible_child_name ("html_selection");
                     break;
-                case ResponseType.JSON:
+                case Type.JSON:
                     content_type.set_visible_child_name ("json_selection");
                     break;
-                case ResponseType.XML:
+                case Type.XML:
                     content_type.set_visible_child_name ("xml_selection");
                     break;
                 default:

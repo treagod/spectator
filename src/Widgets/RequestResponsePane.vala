@@ -19,17 +19,17 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace HTTPInspector.Widgets {
     class RequestResponsePane : Gtk.Paned, View.Request {
-        private RequestView request_view;
-        private ResponseView response_view;
+        private Request.Container request_view;
+        private Response.Container response_view;
 
         public signal void item_changed (RequestItem item);
 
         public RequestResponsePane (RequestController req_ctrl) {
             req_ctrl.register_view (this);
-            request_view  = new RequestView (req_ctrl);
-            response_view = new ResponseView ();
+            request_view  = new Request.Container (req_ctrl);
+            response_view = new Response.Container ();
 
             request_completed.connect (() => {
                response_view.update (req_ctrl.selected_item.response);

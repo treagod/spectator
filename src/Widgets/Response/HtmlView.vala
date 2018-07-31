@@ -19,16 +19,16 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace HTTPInspector.Widgets.Response {
     public class HtmlView : AbstractTypeView {
         private WebKit.WebView web_view;
-        private ResponseText response_text;
+        private SourceView response_text;
         private Gtk.ScrolledWindow scrolled;
 
         public HtmlView () {
             scrolled = new Gtk.ScrolledWindow (null, null);
             web_view = new WebKit.WebView ();
-            response_text = new ResponseText ();
+            response_text = new SourceView ();
             web_view.load_plain_text ("");
             scrolled.add (response_text);
 

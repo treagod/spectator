@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace HTTPInspector.Widgets {
     class HeaderBar : Gtk.HeaderBar {
         private Gtk.Button _new_request;
         public Gtk.MenuButton app_menu;

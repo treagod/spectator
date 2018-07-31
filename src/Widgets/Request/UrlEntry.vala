@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace HTTPInspector.Widgets.Request {
     public class UrlEntry : Gtk.Grid {
         private Gtk.ComboBoxText method_box;
         private Gtk.Entry url_entry;

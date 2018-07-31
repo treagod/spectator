@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace HTTPInspector.Widgets.Request {
     class HeaderField : Gtk.Box {
         public int index { get; private set; }
         private Gtk.Entry header_key_field;
@@ -278,6 +278,7 @@ namespace HTTPInspector {
             list_store.set (iter, 0, "application/vnd.ms-excel");
 
             return completion;
-       }
+        }
     }
+
 }

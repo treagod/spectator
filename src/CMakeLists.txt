@@ -18,23 +18,27 @@ vala_precompile(VALA_C ${EXEC_NAME}
 	Services/Settings.vala
 	Services/RequestAction.vala
 
-	Widgets/AbstractTypeView.vala
+	
 	Widgets/Content.vala
 	Widgets/HeaderBar.vala
-	Widgets/HeaderField.vala
-	Widgets/HeaderView.vala
-	Widgets/HtmlView.vala
-	Widgets/JsonView.vala
 	Widgets/Preferences.vala
 	Widgets/RequestDialog.vala
-	Widgets/RequestHistory.vala
-	Widgets/RequestHistoryItem.vala
+	Widgets/Sidebar/Container.vala
+	Widgets/Sidebar/Item.vala
 	Widgets/RequestResponsePane.vala
-	Widgets/RequestView.vala
-	Widgets/ResponseStatusBar.vala
-	Widgets/ResponseText.vala
-	Widgets/ResponseView.vala
-	Widgets/UrlEntry.vala
+
+	Widgets/Response/SourceView.vala
+	Widgets/Response/Container.vala
+	Widgets/Response/AbstractTypeView.vala
+	Widgets/Response/HtmlView.vala
+	Widgets/Response/JsonView.vala
+
+	Widgets/Response/StatusBar/Container.vala
+
+	Widgets/Request/Container.vala
+	Widgets/Request/UrlEntry.vala
+	Widgets/Request/HeaderField.vala
+	Widgets/Request/HeaderView.vala
 
 # tell what libraries to use when compiling
 PACKAGES

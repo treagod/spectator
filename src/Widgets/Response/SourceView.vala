@@ -19,8 +19,8 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
-    class ResponseText : Gtk.SourceView {
+namespace HTTPInspector.Widgets.Response {
+    class SourceView : Gtk.SourceView {
         public new Gtk.SourceBuffer buffer;
         public Gtk.SourceLanguageManager manager;
         public Gtk.SourceStyleSchemeManager style_scheme_manager;
@@ -38,7 +38,7 @@ namespace HTTPInspector {
             language = manager.get_language (lang);
         }
 
-        public ResponseText () {
+        public SourceView () {
             Object (
                 highlight_current_line: false,
                 show_right_margin: false,
