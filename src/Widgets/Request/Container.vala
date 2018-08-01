@@ -23,6 +23,7 @@ namespace HTTPInspector.Widgets.Request {
     class Container : Gtk.Box, View.Request {
         private UrlEntry url_entry;
         private HeaderView header_view;
+        private BodyView body_view;
         private HeaderView url_params_view;
         private Granite.Widgets.ModeButton tabs;
 
@@ -52,14 +53,16 @@ namespace HTTPInspector.Widgets.Request {
                 req_ctrl.perform_request ();
             });
 
+            body_view = new BodyView ();
+
             var stack = new Gtk.Stack ();
-            stack.margin = 6;
+            stack.margin = 0;
             stack.margin_bottom = 18;
             stack.margin_top = 18;
 
             stack.add_titled (header_view, "header", _("Header"));
             stack.add_titled (url_params_view, "url_params", _("URL Params"));
-            stack.add_titled (new Gtk.Label ("12435243"), "body", _("Body"));
+            stack.add_titled (body_view, "body", _("Body"));
 
             add (url_entry);
 

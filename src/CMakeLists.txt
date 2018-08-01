@@ -39,6 +39,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
 	Widgets/Request/UrlEntry.vala
 	Widgets/Request/HeaderField.vala
 	Widgets/Request/HeaderView.vala
+	Widgets/Request/BodyView.vala
 
 # tell what libraries to use when compiling
 PACKAGES
