@@ -126,6 +126,7 @@ namespace HTTPInspector {
 
         private void open_preferences () {
             var dialog = new Widgets.Preferences (this);
+            
             dialog.show_all ();
         }
 
