@@ -94,24 +94,24 @@ namespace HTTPInspector.Widgets {
 
             var maximum_redirects_label = new Gtk.Label (_("Maximum Redirects"));
             maximum_redirects_label.halign = Gtk.Align.START;
-            var maximum_redirects_entry = new Gtk.Entry ();
+            var maximum_redirects_entry = new Gtk.SpinButton.with_range (0.0, 60.0, 1.0);
             maximum_redirects_entry.halign = Gtk.Align.END;
             maximum_redirects_entry.xalign = 1.0f;
-            maximum_redirects_entry.text = settings.maximum_redirects;
+            maximum_redirects_entry.value = settings.maximum_redirects;
 
             maximum_redirects_entry.changed.connect (() => {
-                settings.maximum_redirects = maximum_redirects_entry.text;
+                settings.maximum_redirects = maximum_redirects_entry.get_value_as_int ();
             });
 
             var timeout_label = new Gtk.Label (_("Network Request Timeout"));
             timeout_label.halign = Gtk.Align.START;
-            var timeout_entry = new Gtk.Entry ();
+            var timeout_entry = new Gtk.SpinButton.with_range (0.0, 60.0, 1.0);
             timeout_entry.halign = Gtk.Align.END;
             timeout_entry.xalign = 1.0f;
-            timeout_entry.text = settings.timeout;
+            timeout_entry.value = settings.timeout;
 
             timeout_entry.changed.connect (() => {
-                settings.timeout = timeout_entry.text;
+                settings.timeout = timeout_entry.value;
             });
 
             option_grid.attach (theme_label, 0, 1, 1, 1);

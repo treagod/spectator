@@ -60,14 +60,14 @@
             <description>Specifies which domains should not be proxied.</description>
         </key>
 
-        <key name="maximum-redirects" type="s">
-            <default>'-1'</default>
+        <key name="maximum-redirects" type="i">
+            <default>0</default>
             <summary>Maximum redirects.</summary>
             <description>Specifies how often a request can be redirected before the request is cancled.</description>
         </key>
 
-        <key name="timeout" type="s">
-            <default>'0'</default>
+        <key name="timeout" type="d">
+            <default>0.0</default>
             <summary>Timeout.</summary>
             <description>Specifies how long a request should wait on a response before it's terminated.</description>
         </key>

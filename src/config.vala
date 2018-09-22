@@ -1,6 +1,6 @@
 namespace Constants {
-   public const string DATADIR = "/usr/local/share";
-   public const string PKGDATADIR = "/usr/local/share/com.github.treagod.httpinspector";
+   public const string DATADIR = "/usr/share";
+   public const string PKGDATADIR = "/usr/share/com.github.treagod.httpinspector";
    public const string GETTEXT_PACKAGE = "com.github.treagod.httpinspector";
    public const string RELEASE_NAME = "HTTP Inspector";
    public const string VERSION = "0.1";

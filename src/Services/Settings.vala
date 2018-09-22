@@ -37,8 +37,8 @@ namespace HTTPInspector {
         public string no_proxy { get; set; }
         public string proxy_uri { get; set; }
         public bool follow_redirects { get; set; }
-        public string maximum_redirects { get; set; }
-        public string timeout { get; set; }
+        public int maximum_redirects { get; set; }
+        public double timeout { get; set; }
         public string data { get; set; }
 
 
