@@ -20,16 +20,14 @@
 */
 
 namespace HTTPInspector {
-    public class Application : Granite.Application {
+    public class Application : Gtk.Application {
         // Avoid multiple instances
         public bool running = false;
         public Window window;
 
         construct {
             flags |= ApplicationFlags.HANDLES_OPEN;
-
-            program_name = "HTTP Inspector";
-            exec_name = "com.github.treagod.httpinspector";
+            application_id = "com.github.treagod.httpinspector";
         }
 
         protected override void activate () {
