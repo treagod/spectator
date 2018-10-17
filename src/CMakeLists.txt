@@ -49,10 +49,15 @@ PACKAGES
 	gtksourceview-3.0
 	webkit2gtk-4.0
 	json-glib-1.0
+CUSTOM_VAPIS
+	duktape/duktape.vapi
 )
 
 # tell cmake what to call the executable we just made
 add_executable(${EXEC_NAME} ${VALA_C})
+
+target_link_libraries(${EXEC_NAME} m)
+target_link_libraries(${EXEC_NAME} duktape)
 
 configure_file (
     ${CMAKE_SOURCE_DIR}/src/config.vala.cmake
