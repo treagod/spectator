@@ -89,7 +89,6 @@ namespace HTTPInspector.Widgets.Sidebar {
         }
 
         public void update_active (RequestItem item) {
-            stdout.printf ("asda\n");
             item_box.get_selected_children ().foreach ((child) => {
                 var history_item = child as Sidebar.Item;
                 history_item.update (item);

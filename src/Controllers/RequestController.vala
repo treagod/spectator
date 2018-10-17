@@ -31,9 +31,16 @@ namespace HTTPInspector {
             views = new List<View.Request> ();
         }
 
+        private void update_views () {
+            foreach (var view in views) {
+                view.selected_item_updated ();
+            }
+        }
+
         public void add_request (RequestItem item) {
             store.add_request (item);
             selected_item = item;
+            selected_item.notify.connect (update_views);
             selected_item_idx = store.index_of (item);
 
             foreach (var view in views) {
@@ -59,12 +66,6 @@ namespace HTTPInspector {
 
             selected_item = item;
             selected_item_idx = idx;
-
-            selected_item.notify.connect (() => {
-                foreach (var view in views) {
-                    view.selected_item_updated ();
-                }
-            });
 
             foreach (var view in views) {
                 view.selected_item_changed ();
