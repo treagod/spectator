@@ -10,6 +10,8 @@ You'll need the following dependencies:
 * libgranite-dev
 * libgtksourceview-3.0-dev
 * libwebkit2gtk-4.0-dev
+* libjson-glib-dev
+* duktape-dev
 * valac
 
 It's recommended to create a clean build environment
