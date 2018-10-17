@@ -50,7 +50,7 @@ PACKAGES
 	webkit2gtk-4.0
 	json-glib-1.0
 CUSTOM_VAPIS
-	duktape/duktape.vapi
+	Duktape/duktape.vapi
 )
 
 # tell cmake what to call the executable we just made

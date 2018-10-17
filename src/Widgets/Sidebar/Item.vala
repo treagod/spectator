@@ -22,11 +22,12 @@
 namespace HTTPInspector.Widgets.Sidebar {
     class Item : Gtk.FlowBoxChild {
         static string no_url = "<small><i>No URL specified</i></small>";
-        Gtk.EventBox identifier { get; set;}
+        Gtk.EventBox item_box { get; set;}
         Gtk.Label method;
         Gtk.Label request_name;
         Gtk.Label url;
         public RequestItem item { get; set; }
+        public signal void item_deleted (RequestItem item);
 
         private string get_method_label(Method method) {
             var dark_theme = Gtk.Settings.get_default ().gtk_application_prefer_dark_theme;
@@ -56,8 +57,8 @@ namespace HTTPInspector.Widgets.Sidebar {
 
         public Item (RequestItem it) {
             item = it;
-            identifier = new Gtk.EventBox ();
-            var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+            item_box = new Gtk.EventBox ();
+            var info_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
 
             request_name = new Gtk.Label (item.name);
             request_name.halign = Gtk.Align.START;
@@ -75,11 +76,11 @@ namespace HTTPInspector.Widgets.Sidebar {
             url.use_markup = true;
             url.ellipsize = Pango.EllipsizeMode.END;
 
-            box.add (request_name);
-            box.add (url);
-            box.has_tooltip = true;
+            info_box.add (request_name);
+            info_box.add (url);
+            info_box.has_tooltip = true;
 
-            box.query_tooltip.connect ((x, y, keyboard_tooltip, tooltip) => {
+            info_box.query_tooltip.connect ((x, y, keyboard_tooltip, tooltip) => {
                 if (item.uri == "") {
                     return false;
                 }
@@ -87,11 +88,15 @@ namespace HTTPInspector.Widgets.Sidebar {
                 return true;
             });
 
-            identifier.button_release_event.connect ((event) => {
+            item_box.button_release_event.connect ((event) => {
                 if (event.button == 3) {
                     var menu = new Gtk.Menu ();
                     var edit_item = new Gtk.MenuItem.with_label ("Edit");
                     var delete_item = new Gtk.MenuItem.with_label ("Delete");
+
+                    delete_item.activate.connect (() => {
+                        item_deleted (item);
+                    });
 
                     menu.add (edit_item);
                     menu.add (delete_item);
@@ -102,8 +107,6 @@ namespace HTTPInspector.Widgets.Sidebar {
                 }
                 return false;
             });
-            
-            identifier.add (box);
 
             method = new Gtk.Label (get_method_label (item.method));
             method.set_justify (Gtk.Justification.CENTER);
@@ -112,13 +115,15 @@ namespace HTTPInspector.Widgets.Sidebar {
             method.margin_end = 10;
             method.use_markup = true;
 
-            box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
-            box.margin = 4;
+            var container = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+            container.margin = 4;
 
-            box.pack_start (identifier, true, true, 0);
-            box.pack_end (method, true, true, 2);
+            container.pack_start (info_box, true, true, 0);
+            container.pack_end (method, true, true, 2);
 
-            add (box);
+            item_box.add (container);
+
+            add (item_box);
         }
 
         public void update (RequestItem it) {

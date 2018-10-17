@@ -42,5 +42,13 @@ namespace HTTPInspector {
         public void update_request (int idx, RequestItem item) {
             items.insert (idx, item);
         }
+
+        public bool destroy (RequestItem item) {
+            if (items.contains(item)) {
+                items.remove (item);
+                return true;
+            }
+            return false;
+        }
     }
 }

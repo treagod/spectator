@@ -54,7 +54,7 @@ namespace HTTPInspector {
             var idx = store.index_of (item);
 
             if (idx == -1) {
-                stdout.printf ("Invalid itme\n");
+                stdout.printf ("Invalid item\n");
             }
 
             selected_item = item;
@@ -69,6 +69,10 @@ namespace HTTPInspector {
             foreach (var view in views) {
                 view.selected_item_changed ();
             }
+        }
+
+        public bool destroy (RequestItem item) {
+            return store.destroy (item);
         }
 
         public async void perform_request () {

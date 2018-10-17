@@ -36,6 +36,7 @@ namespace HTTPInspector.Widgets.Sidebar {
     public class Container : Gtk.Box, View.Request {
         private Gtk.FlowBox item_box;
         private Gtk.ScrolledWindow scroll;
+        private signal bool item_deleted (RequestItem item);
 
         public Container (RequestController req_ctrl) {
             req_ctrl.register_view (this);
@@ -45,6 +46,10 @@ namespace HTTPInspector.Widgets.Sidebar {
 
             selected_item_updated.connect (() => {
                 update_active (req_ctrl.selected_item);
+            });
+
+            item_deleted.connect ((item) => {
+                return req_ctrl.destroy (item);
             });
 
             new_item.connect ((item) => {
@@ -84,6 +89,7 @@ namespace HTTPInspector.Widgets.Sidebar {
         }
 
         public void update_active (RequestItem item) {
+            stdout.printf ("asda\n");
             item_box.get_selected_children ().foreach ((child) => {
                 var history_item = child as Sidebar.Item;
                 history_item.update (item);
@@ -101,6 +107,16 @@ namespace HTTPInspector.Widgets.Sidebar {
             item_box.add (box_item);
             item_box.show_all ();
             item_box.select_child(box_item);
+
+            box_item.item_deleted.connect ((item) => {
+                var deleted = item_deleted (item);
+
+                if (deleted) {
+                    item_box.remove (box_item);
+                } else {
+                    stderr.printf ("Something went wrong\n");
+                }
+            });
         }
     }
 }
