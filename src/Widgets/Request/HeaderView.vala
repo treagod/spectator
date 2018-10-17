@@ -24,6 +24,7 @@ namespace HTTPInspector.Widgets.Request {
         private Gee.ArrayList<Gtk.Button> buttons;
         public Gee.ArrayList<HeaderField> headers;
         private Gtk.Grid header_fields;
+        public signal RequestItem request_selected_item ();
 
         public HeaderView (RequestController req_ctrl) {
             orientation = Gtk.Orientation.VERTICAL;
@@ -31,11 +32,6 @@ namespace HTTPInspector.Widgets.Request {
             margin_right = 7;
 
             req_ctrl.register_view (this);
-
-            selected_item_changed.connect (() => {
-                headers = new Gee.ArrayList<HeaderField> ();
-                update_headers (req_ctrl.selected_item);
-            });
 
             header_fields = new Gtk.Grid ();
             buttons = new Gee.ArrayList<Gtk.Button> ();
@@ -49,7 +45,8 @@ namespace HTTPInspector.Widgets.Request {
             add_row_button.margin_right = 128;
 
             add_row_button.clicked.connect (() => {
-                add_row (req_ctrl.selected_item);
+                stdout.printf ("buttonclicked\n");
+                add_row (request_selected_item ());
             });
 
 
@@ -70,6 +67,11 @@ namespace HTTPInspector.Widgets.Request {
             }
 
             add_header_rows (item);
+        }
+
+        public void change_selected_item (RequestItem item) {
+            headers = new Gee.ArrayList<HeaderField> ();
+            update_headers (item);
         }
 
 

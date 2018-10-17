@@ -41,6 +41,11 @@ namespace HTTPInspector.Widgets.Request {
             url_entry.margin_bottom = 10;
             req_ctrl.register_view (this);
 
+            header_view.request_selected_item.connect (() => {
+                stdout.printf ("asdasd\n");
+                return req_ctrl.selected_item;
+            });
+
             url_entry.url_changed.connect ((url) => {
                 req_ctrl.selected_item.uri = url;
             });
@@ -103,6 +108,8 @@ namespace HTTPInspector.Widgets.Request {
                     update_tabs (body_label, selected_item);
                 });
 
+                header_view.change_selected_item (selected_item);
+
                 update_tabs (body_label, selected_item);
             });
 
@@ -110,6 +117,11 @@ namespace HTTPInspector.Widgets.Request {
             add (stack);
         }
 
+        // update_tabs checks on item change which HTTP method is selected.
+        // When POST, PUT or PATCH is selected the user will be able to 
+        // select the Body Tab
+        // For all other methods this method checks if the Body Tab was selected. If
+        // the Body tab was selected, select Headers Tab. Furthermore disable Body Tab
         private void update_tabs(Gtk.Widget body_selector, RequestItem item) {
             if (item.method == Method.POST || item.method == Method.PUT || item.method == Method.PATCH) {
                 body_selector.sensitive = true;

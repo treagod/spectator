@@ -22,16 +22,22 @@
 namespace HTTPInspector.Widgets.Request {
     class BodyView : Gtk.Box {
         public BodyView () {
-            var stack = new Gtk.Stack ();
-            var sidebar = new Gtk.StackSidebar ();
+            var grid = new Gtk.Grid ();
+            var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
+            var label = new UrlEntry ();
+            box.add (label);
+            var method_box = new Gtk.ComboBoxText ();
+            method_box.append_text ("form-data");
+            method_box.append_text ("x-www-form-urlencoded");
+            method_box.append_text ("raw");
+            method_box.halign = Gtk.Align.END;
+            method_box.active = 0;
 
-            stack.add_titled (new Gtk.Label ("asdad"), "asd", "123");
-            stack.add_titled (new Gtk.Label ("trdg"), "jkl", "7686");
+            grid.attach (method_box, 1, 0, 1, 1);
+            grid.attach (box, 0, 1, 2, 1);
 
-            sidebar.set_stack (stack);
 
-            add (sidebar);
-            add (stack);
+            add (grid);
         }
     }
 }
