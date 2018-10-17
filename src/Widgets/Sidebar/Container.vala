@@ -120,6 +120,10 @@ namespace HTTPInspector.Widgets.Sidebar {
 
             box_item.item_edit.connect ((item) => {
                 item_edit (item);
+
+                item.notify.connect (() => {
+                    box_item.refresh ();
+                });
             });
         }
     }

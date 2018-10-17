@@ -147,6 +147,21 @@ namespace HTTPInspector.Widgets.Sidebar {
             show_all ();
         }
 
+        public void refresh () {
+            method.label = get_method_label (item.method);
+
+            request_name.label = item.name;
+
+            var escaped_url = escape_url (item.uri);
+            if (item.uri.length > 0) {
+                url.label = "<small><i>" + escaped_url + "</i></small>";
+            } else {
+                url.label = no_url;
+            }
+
+            show_all ();
+        }
+
         private string escape_url (string url) {
             var escaped_url = url;
             escaped_url = escaped_url.replace ("&", "&amp;");
