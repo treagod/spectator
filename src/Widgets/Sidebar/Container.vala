@@ -37,6 +37,7 @@ namespace HTTPInspector.Widgets.Sidebar {
         private Gtk.FlowBox item_box;
         private Gtk.ScrolledWindow scroll;
         private signal bool item_deleted (RequestItem item);
+        public signal void item_edit (RequestItem item);
 
         public Container (RequestController req_ctrl) {
             req_ctrl.register_view (this);
@@ -115,6 +116,10 @@ namespace HTTPInspector.Widgets.Sidebar {
                 } else {
                     stderr.printf ("Something went wrong\n");
                 }
+            });
+
+            box_item.item_edit.connect ((item) => {
+                item_edit (item);
             });
         }
     }

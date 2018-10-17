@@ -28,6 +28,7 @@ namespace HTTPInspector.Widgets.Sidebar {
         Gtk.Label url;
         public RequestItem item { get; set; }
         public signal void item_deleted (RequestItem item);
+        public signal void item_edit (RequestItem item);
 
         private string get_method_label(Method method) {
             var dark_theme = Gtk.Settings.get_default ().gtk_application_prefer_dark_theme;
@@ -93,6 +94,10 @@ namespace HTTPInspector.Widgets.Sidebar {
                     var menu = new Gtk.Menu ();
                     var edit_item = new Gtk.MenuItem.with_label ("Edit");
                     var delete_item = new Gtk.MenuItem.with_label ("Delete");
+
+                    edit_item.activate.connect (() => {
+                        item_edit (item);
+                    });
 
                     delete_item.activate.connect (() => {
                         item_deleted (item);

@@ -67,6 +67,10 @@ namespace HTTPInspector {
 
             request_controller.register_view (this);
 
+            item_container.item_edit.connect ((item) => {
+                update_request (item);
+            });
+
             content.welcome_activated.connect ((index) => {
                 create_request ();
             });
@@ -117,16 +121,21 @@ namespace HTTPInspector {
         }
 
         private void create_request () {
-            var dialog = new Widgets.RequestDialog (this);
+            var dialog = new Dialogs.Request.CreateDialog (this);
             dialog.show_all ();
             dialog.creation.connect ((item) => {
                 request_controller.add_request (item);
             });
         }
 
+        private void update_request (RequestItem item) {
+            var dialog = new Dialogs.Request.UpdateDialog (this, item);
+            dialog.show_all ();
+        }
+
         private void open_preferences () {
             var dialog = new Widgets.Preferences (this);
-            
+
             dialog.show_all ();
         }
 

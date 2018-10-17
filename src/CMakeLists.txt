@@ -17,10 +17,13 @@ vala_precompile(VALA_C ${EXEC_NAME}
 	Services/Settings.vala
 	Services/RequestAction.vala
 
+	Dialogs/Request/Dialog.vala
+	Dialogs/Request/CreateDialog.vala
+	Dialogs/Request/UpdateDialog.vala
+
 	Widgets/Content.vala
 	Widgets/HeaderBar.vala
 	Widgets/Preferences.vala
-	Widgets/RequestDialog.vala
 	Widgets/Sidebar/Container.vala
 	Widgets/Sidebar/Item.vala
 	Widgets/RequestResponsePane.vala
