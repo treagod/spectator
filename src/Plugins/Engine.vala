@@ -21,18 +21,8 @@
 
 namespace HTTPInspector.Plugins {
     public class Engine : Object {
-        private Lua.LuaVM vm;
-        private Engine? engine;
-
-        static public init () {
-            if (engine == null) {
-                engine = new Engine ();
-            }
-        }
 
         private Engine () {
-            vm = new Lua.LuaVM ();
-            vm.open_libs ();
         }
     }
 }

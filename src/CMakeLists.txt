@@ -1,7 +1,6 @@
 # files we want to compile
 include(ValaPrecompile)
 vala_precompile(VALA_C ${EXEC_NAME}
-	Main.vala
 	Application.vala
 	Window.vala
 
@@ -18,8 +17,6 @@ vala_precompile(VALA_C ${EXEC_NAME}
 	Services/Settings.vala
 	Services/RequestAction.vala
 
-	Plugins/LuaPlugin.vala
-	
 	Widgets/Content.vala
 	Widgets/HeaderBar.vala
 	Widgets/Preferences.vala
@@ -52,7 +49,6 @@ PACKAGES
 	gtksourceview-3.0
 	webkit2gtk-4.0
 	json-glib-1.0
-	lua
 )
 
 # tell cmake what to call the executable we just made

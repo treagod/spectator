@@ -41,5 +41,9 @@ namespace HTTPInspector {
             }
             window.show_app ();
         }
+
+        public static int main (string[] args) {
+            return new Application ().run (args);
+        }
     }
 }
