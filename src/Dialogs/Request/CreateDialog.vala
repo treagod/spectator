@@ -47,16 +47,10 @@ namespace HTTPInspector.Dialogs.Request {
         }
 
         private void create_request () {
-            var content = get_content_area () as Gtk.Box;
             var name = request_name_entry.text;
 
             if (name.length == 0) {
-                var warning_label = new Gtk.Label ("<span color=\"#a10705\">" + _("Request name must not be empty.") + "</span>");
-                warning_label.use_markup = true;
-                warning_label.margin = 5;
-                content.pack_start (warning_label, false, true, 0);
-                show_all ();
-                request_name_entry.get_style_context ().add_class ("error");
+                show_warning (_("Request name must not be empty."));
             } else {
                 var index = method_box.get_active ();
                 creation (new RequestItem (name, Method.convert (index)));

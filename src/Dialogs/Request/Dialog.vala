@@ -24,6 +24,7 @@ namespace HTTPInspector.Dialogs.Request {
         protected Gtk.Entry request_name_entry;
         protected Gtk.ComboBoxText method_box;
         private DialogTitle dialog_title;
+        private bool warning_active;
 
         public Dialog (string titl, Gtk.ApplicationWindow parent) {
             title = titl;
@@ -33,6 +34,7 @@ namespace HTTPInspector.Dialogs.Request {
             resizable = false;
             transient_for = parent;
             modal = true;
+            warning_active = false;
 
             var request_name_label = new Gtk.Label (_("Name:"));
             request_name_entry = new Gtk.Entry ();
@@ -54,6 +56,20 @@ namespace HTTPInspector.Dialogs.Request {
 
             content.add (dialog_title);
             content.add (hbox);
+        }
+
+        protected void show_warning (string warning) {
+            if (!warning_active) {
+                var content = get_content_area () as Gtk.Box;
+
+                var warning_label = new Gtk.Label ("<span color=\"#a10705\">" + warning + "</span>");
+                warning_label.use_markup = true;
+                warning_label.margin = 5;
+                content.pack_start (warning_label, false, true, 0);
+                show_all ();
+                request_name_entry.get_style_context ().add_class ("error");
+                warning_active = true;
+            }
         }
 
         private void setup_method_box () {

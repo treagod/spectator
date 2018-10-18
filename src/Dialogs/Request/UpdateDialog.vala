@@ -28,22 +28,35 @@ namespace HTTPInspector.Dialogs.Request {
             request_name_entry.text = item.name;
             method_box.active = item.method.to_i ();
 
+            request_name_entry.activate.connect (() => {
+                update_request (item);
+            });
+
             add_button (_("Update"), Gtk.ResponseType.APPLY);
 
             response.connect ((source, id) => {
                 switch (id) {
                 case Gtk.ResponseType.APPLY:
-                    item.name = request_name_entry.text;
-                    item.method = Method.convert (method_box.active);
-                    updated ();
-                    destroy();
-
+                    update_request (item);
                     break;
                 case Gtk.ResponseType.CLOSE:
                     destroy ();
                     break;
                 }
             });
+        }
+
+        private void update_request (RequestItem item) {
+            var name = request_name_entry.text;
+
+            if (name.length == 0) {
+                show_warning (_("Request name must not be empty."));
+            } else {
+                item.name = request_name_entry.text;
+                item.method = Method.convert (method_box.active);
+                updated ();
+                destroy ();
+            }
         }
     }
 }
