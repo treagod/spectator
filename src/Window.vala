@@ -71,6 +71,12 @@ namespace HTTPInspector {
                 update_request (item);
             });
 
+            item_container.notify_delete.connect (() => {
+                if (request_controller.get_items ().size == 0) {
+                    content.show_welcome ();
+                }
+            });
+
             content.welcome_activated.connect ((index) => {
                 create_request ();
             });

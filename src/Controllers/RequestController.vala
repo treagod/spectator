@@ -89,7 +89,7 @@ namespace HTTPInspector {
         }
 
         // TODO: Make immutable
-        public Gee.ArrayList<RequestItem> get_items () {
+        public unowned Gee.ArrayList<RequestItem> get_items () {
             return store.items;
         }
     }

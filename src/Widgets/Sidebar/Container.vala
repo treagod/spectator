@@ -38,6 +38,7 @@ namespace HTTPInspector.Widgets.Sidebar {
         private Gtk.ScrolledWindow scroll;
         private signal bool item_deleted (RequestItem item);
         public signal void item_edit (RequestItem item);
+        public signal void notify_delete ();
 
         public Container (RequestController req_ctrl) {
             req_ctrl.register_view (this);
@@ -113,6 +114,7 @@ namespace HTTPInspector.Widgets.Sidebar {
 
                 if (deleted) {
                     item_box.remove (box_item);
+                    notify_delete ();
                 } else {
                     stderr.printf ("Something went wrong\n");
                 }
