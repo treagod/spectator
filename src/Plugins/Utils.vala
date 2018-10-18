@@ -21,12 +21,45 @@
 
 namespace HTTPInspector.Plugins.Utils {
     public string read_file (string path) {
-        return "";
+        var file = File.new_for_path (path);
+        var builder = new StringBuilder ();
+
+        try {
+            // Open file for reading and wrap returned FileInputStream into a
+            // DataInputStream, so we can read line by line
+            var dis = new DataInputStream (file.read ());
+            string line;
+            // Read lines until end of file (null) is reached
+            while ((line = dis.read_line (null)) != null) {
+                builder.append (line);
+                builder.append ("\n");
+            }
+        } catch (Error e) {
+            error ("%s", e.message);
+        }
+
+        return builder.str;
     }
 
-    public string read_description (string path) {
-        string json = read_file (path);
+    public void set_information (Plugin plugin, string json_path) {
+        string json = read_file (json_path);
 
-        return json;
+        if (json != "") {
+            var parser = new Json.Parser ();
+            try {
+                parser.load_from_data (json);
+                // TODO:  Error if root is no object
+                var root = parser.get_root ();
+                var object = root.get_object ();
+
+                // TODO: Error handling
+                plugin.author = object.get_string_member ("author");
+                plugin.name = object.get_string_member ("name");
+                plugin.description = object.get_string_member ("description");
+                plugin.version = object.get_string_member ("version");
+            } catch (Error e) {
+                // Do something funny
+            }
+        }
     }
 }

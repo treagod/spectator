@@ -52,7 +52,7 @@ namespace HTTPInspector.Plugins {
                 string json_path = Path.build_filename (path, "plugin.json");
 
                 if (plugin_files_exist (js_path, json_path)) {
-                    var plugin = new Plugin ();
+                    var plugin = new Plugin (Utils.read_file (js_path), json_path);
                     plugins.add (plugin);
                 } else {
                     return false;
