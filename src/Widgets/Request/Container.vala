@@ -26,6 +26,7 @@ namespace HTTPInspector.Widgets.Request {
         private BodyView body_view;
         private HeaderView url_params_view;
         private Granite.Widgets.ModeButton tabs;
+        private Gtk.Stack stack;
 
         public signal void response_received(ResponseItem it);
 
@@ -42,7 +43,6 @@ namespace HTTPInspector.Widgets.Request {
             req_ctrl.register_view (this);
 
             header_view.request_selected_item.connect (() => {
-                stdout.printf ("asdasd\n");
                 return req_ctrl.selected_item;
             });
 
@@ -68,7 +68,7 @@ namespace HTTPInspector.Widgets.Request {
 
             body_view = new BodyView ();
 
-            var stack = new Gtk.Stack ();
+            stack = new Gtk.Stack ();
             stack.margin = 0;
             stack.margin_bottom = 18;
             stack.margin_top = 18;
@@ -79,17 +79,45 @@ namespace HTTPInspector.Widgets.Request {
 
             add (url_entry);
 
-            tabs = new Granite.Widgets.ModeButton ();
+
             var header_params_label = new Gtk.Label ("Headers");
             var url_params_label = new Gtk.Label ("URL Params");
             var body_label = new Gtk.Label ("Body");
-            int current_index = 0;
+
+            setup_tabs (header_params_label, url_params_label, body_label);
+
             body_label.sensitive = false;
+
+            stack.set_visible_child_name ("header");
+
+
+            selected_item_changed.connect (() => {
+                var selected_item = req_ctrl.selected_item;
+                set_item (selected_item);
+
+                selected_item.notify.connect (() => {
+                    update_tabs (body_label, selected_item);
+                });
+
+                header_view.change_selected_item (selected_item);
+
+                update_tabs (body_label, selected_item);
+            });
+
+            add (tabs);
+            add (stack);
+        }
+
+        private void setup_tabs (Gtk.Label header_params_label,
+                Gtk.Label url_params_label, Gtk.Label body_label) {
+            tabs = new Granite.Widgets.ModeButton ();
+            int current_index = 0;
+
             tabs.append (header_params_label);
             tabs.append (url_params_label);
             tabs.append (body_label);
             tabs.set_active (0);
-            stack.set_visible_child_name ("header");
+
             tabs.mode_changed.connect ((tab) => {
                 if (tab == body_label ) {
                     if (body_label.sensitive == false) {
@@ -107,22 +135,6 @@ namespace HTTPInspector.Widgets.Request {
                 }
 
             });
-
-            selected_item_changed.connect (() => {
-                var selected_item = req_ctrl.selected_item;
-                set_item (selected_item);
-
-                selected_item.notify.connect (() => {
-                    update_tabs (body_label, selected_item);
-                });
-
-                header_view.change_selected_item (selected_item);
-
-                update_tabs (body_label, selected_item);
-            });
-
-            add (tabs);
-            add (stack);
         }
 
         // update_tabs checks on item change which HTTP method is selected.
