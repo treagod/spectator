@@ -21,8 +21,62 @@
 
 namespace HTTPInspector.Plugins {
     public class Engine : Object {
+        public Gee.ArrayList<Plugin> plugins { get; private set; }
 
-        private Engine () {
+        public Engine () {
+            load_plugins ();
+        }
+
+        private void load_plugins () {
+            plugins = new Gee.ArrayList<Plugin> ();
+            var plugin_dir = Path.build_filename (Environment.get_home_dir (), ".local", "share",
+                                                    Constants.APP_ID, "plugins");
+
+            if (!valid_plugin_dir (plugin_dir)) {
+                // throw something
+            }
+
+            Dir dir = Dir.open (plugin_dir, 0);
+
+            string? name = null;
+            while ((name = dir.read_name ()) != null) {
+                var success = load_plugin (plugin_dir, name);
+
+            }
+        }
+
+        private bool load_plugin (string dir, string name) {
+            string path = Path.build_filename (dir, name);
+            if (FileUtils.test (path, FileTest.IS_DIR)) {
+                string js_path = Path.build_filename (path, "plugin.js");
+                string json_path = Path.build_filename (path, "plugin.json");
+
+                if (plugin_files_exist (js_path, json_path)) {
+                    var plugin = new Plugin ();
+                    plugins.add (plugin);
+                } else {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool plugin_files_exist (string js_path, string json_path) {
+            return FileUtils.test (js_path, FileTest.EXISTS) &&
+                   FileUtils.test (json_path, FileTest.EXISTS);
+        }
+
+        private bool valid_plugin_dir (string dir) {
+            if (FileUtils.test (dir, FileTest.EXISTS) &&
+                !FileUtils.test (dir, FileTest.IS_DIR)) {
+                return false;
+            } else if (!FileUtils.test (dir, FileTest.EXISTS)) {
+                DirUtils.create_with_parents (dir, 0700);
+            }
+
+
+            return FileUtils.test (dir, FileTest.IS_DIR);
         }
     }
 }
