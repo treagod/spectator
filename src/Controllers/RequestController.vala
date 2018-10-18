@@ -25,6 +25,7 @@ namespace HTTPInspector {
         private RequestStore store;
         public RequestItem? selected_item { get; private set; }
         private int selected_item_idx;
+        public signal void start_request ();
 
         public RequestController () {
             store = new RequestStore ();
@@ -85,6 +86,7 @@ namespace HTTPInspector {
                 }
             });
 
+            start_request ();
             action.make_request ();
         }
 

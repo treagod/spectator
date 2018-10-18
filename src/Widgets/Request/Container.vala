@@ -58,6 +58,14 @@ namespace HTTPInspector.Widgets.Request {
                 req_ctrl.perform_request ();
             });
 
+            req_ctrl.start_request.connect (() => {
+                url_entry.change_status (RequestItem.SENDING);
+            });
+
+            request_completed.connect (() => {
+                url_entry.change_status (RequestItem.SENT);
+            });
+
             body_view = new BodyView ();
 
             var stack = new Gtk.Stack ();
@@ -118,7 +126,7 @@ namespace HTTPInspector.Widgets.Request {
         }
 
         // update_tabs checks on item change which HTTP method is selected.
-        // When POST, PUT or PATCH is selected the user will be able to 
+        // When POST, PUT or PATCH is selected the user will be able to
         // select the Body Tab
         // For all other methods this method checks if the Body Tab was selected. If
         // the Body tab was selected, select Headers Tab. Furthermore disable Body Tab
