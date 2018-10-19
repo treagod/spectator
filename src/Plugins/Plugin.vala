@@ -41,10 +41,31 @@ namespace HTTPInspector.Plugins {
             Utils.set_information (this, json);
             source = src_code;
             setup_context ();
+            context.eval_string (source);
         }
 
-        public void run () {
-            context.eval_string (source);
+        public void call_request_sent (RequestItem req) {
+            context.get_global_string ("request_sent");
+            var obj_idx = context.push_object ();
+            context.push_string (req.name);
+            context.put_prop_string (obj_idx, "name");
+            context.push_string (req.uri);
+            context.put_prop_string (obj_idx, "uri");
+            context.push_string (req.method.to_str ());
+            context.put_prop_string (obj_idx, "method");
+
+            var header_obj = context.push_object ();
+            foreach (var header in req.headers) {
+                // TODO: If header already exists, append it
+                context.push_string (header.val);
+                context.put_prop_string (header_obj, header.key);
+            }
+            context.put_prop_string (obj_idx, "headers");
+            context.call (1);
+        }
+
+        public void call_response_recieved (ResponseItem res) {
+
         }
 
         private void setup_context () {

@@ -24,7 +24,6 @@ namespace HTTPInspector {
         private Widgets.Content content;
         private Widgets.Sidebar.Container item_container;
         private RequestController request_controller;
-        private Plugins.Engine plugin_engine;
 
         public Window (Gtk.Application app) {
             var settings = Settings.get_instance ();
@@ -38,8 +37,6 @@ namespace HTTPInspector {
             if (settings.maximized) {
                 maximize ();
             }
-
-            plugin_engine = new Plugins.Engine ();
 
             // Show the app
             show_app ();

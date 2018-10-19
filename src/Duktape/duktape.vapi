@@ -66,6 +66,9 @@ namespace Duktape {
         [CCode (cname = "duk_push_c_function")]
         public int push_vala_function(ValaFunction func, int nargs);
 
+        [CCode (cname = "duk_push_array")]
+        public uint push_array();
+
         [CCode (cname = "duk_insert")]
         public void insert (int idx);
 
@@ -80,6 +83,12 @@ namespace Duktape {
 
         [CCode (cname = "duk_pop")]
         public void pop();
+
+        [CCode (cname = "duk_get_global_string")]
+        public void get_global_string (string name);
+
+        [CCode (cname = "duk_call")]
+        public void call (uint nargs);
     }
 
     [CCode (cprefix = "DUK_RET_", cname = "int")]

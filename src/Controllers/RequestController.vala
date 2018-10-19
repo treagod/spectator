@@ -25,11 +25,13 @@ namespace HTTPInspector {
         private RequestStore store;
         public RequestItem? selected_item { get; private set; }
         private int selected_item_idx;
+        private Plugins.Engine plugin_engine;
         public signal void start_request ();
 
         public RequestController () {
             store = new RequestStore ();
             views = new List<View.Request> ();
+            plugin_engine = new Plugins.Engine ();
         }
 
         private void update_views () {
@@ -65,6 +67,9 @@ namespace HTTPInspector {
                 stdout.printf ("Invalid item\n");
             }
 
+
+            plugin_engine.run_request (selected_item);
+
             selected_item = item;
             selected_item_idx = idx;
 
@@ -79,6 +84,7 @@ namespace HTTPInspector {
 
         public async void perform_request () {
             var action = new RequestAction (selected_item);
+            plugin_engine.run_request (selected_item);
 
             action.finished_request.connect (() => {
                 foreach (var view in views) {

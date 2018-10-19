@@ -27,6 +27,12 @@ namespace HTTPInspector.Plugins {
             load_plugins ();
         }
 
+        public void run_request (RequestItem item) {
+            foreach (var plugin in plugins) {
+                plugin.call_request_sent (item);
+            }
+        }
+
         private void load_plugins () {
             plugins = new Gee.ArrayList<Plugin> ();
             var plugin_dir = Path.build_filename (Environment.get_home_dir (), ".local", "share",
@@ -36,7 +42,7 @@ namespace HTTPInspector.Plugins {
                 // throw something
             }
 
-            Dir dir = Dir.open (plugin_dir, 0);
+            var dir = Dir.open (plugin_dir, 0);
 
             string? name = null;
             while ((name = dir.read_name ()) != null) {
