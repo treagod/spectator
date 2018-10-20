@@ -24,6 +24,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
 	Dialogs/Request/Dialog.vala
 	Dialogs/Request/CreateDialog.vala
 	Dialogs/Request/UpdateDialog.vala
+	Dialogs/Alert.vala
 
 	Widgets/Content.vala
 	Widgets/HeaderBar.vala
