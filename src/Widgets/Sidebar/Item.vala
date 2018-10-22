@@ -20,7 +20,7 @@
 */
 
 namespace HTTPInspector.Widgets.Sidebar {
-    class Item : Gtk.FlowBoxChild {
+    public class Item : Gtk.FlowBoxChild {
         static string no_url = "<small><i>No URL specified</i></small>";
         Gtk.EventBox item_box { get; set;}
         Gtk.Label method;
@@ -58,6 +58,9 @@ namespace HTTPInspector.Widgets.Sidebar {
 
         public Item (RequestItem it) {
             item = it;
+            item.notify.connect (() => {
+                refresh ();
+            });
             item_box = new Gtk.EventBox ();
             var info_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
 
@@ -89,29 +92,7 @@ namespace HTTPInspector.Widgets.Sidebar {
                 return true;
             });
 
-            item_box.button_release_event.connect ((event) => {
-                if (event.button == 3) {
-                    var menu = new Gtk.Menu ();
-                    var edit_item = new Gtk.MenuItem.with_label ("Edit");
-                    var delete_item = new Gtk.MenuItem.with_label ("Delete");
-
-                    edit_item.activate.connect (() => {
-                        item_edit (item);
-                    });
-
-                    delete_item.activate.connect (() => {
-                        item_deleted (item);
-                    });
-
-                    menu.add (edit_item);
-                    menu.add (delete_item);
-                    menu.show_all ();
-                    menu.popup_at_pointer (event);
-
-                    return true;
-                }
-                return false;
-            });
+            create_box_menu ();
 
             method = new Gtk.Label (get_method_label (item.method));
             method.set_justify (Gtk.Justification.CENTER);
@@ -145,6 +126,32 @@ namespace HTTPInspector.Widgets.Sidebar {
             }
 
             show_all ();
+        }
+
+        private void create_box_menu () {
+            item_box.button_release_event.connect ((event) => {
+                if (event.button == 3) {
+                    var menu = new Gtk.Menu ();
+                    var edit_item = new Gtk.MenuItem.with_label ("Edit");
+                    var delete_item = new Gtk.MenuItem.with_label ("Delete");
+
+                    edit_item.activate.connect (() => {
+                        item_edit (item);
+                    });
+
+                    delete_item.activate.connect (() => {
+                        item_deleted (item);
+                    });
+
+                    menu.add (edit_item);
+                    menu.add (delete_item);
+                    menu.show_all ();
+                    menu.popup_at_pointer (event);
+
+                    return true;
+                }
+                return false;
+            });
         }
 
         public void refresh () {

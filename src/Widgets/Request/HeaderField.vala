@@ -21,21 +21,31 @@
 
 namespace HTTPInspector.Widgets.Request {
     class HeaderField : Gtk.Box {
-        public int index { get; private set; }
         private Gtk.Entry header_key_field;
         private Gtk.Entry header_value_field;
+        public Header header;
 
         public string key { get { return header_key_field.text; }}
         public string val { get { return header_value_field.text; }}
-
-        public signal void header_changed (int i, string key, string val);
 
         construct {
             orientation = Gtk.Orientation.HORIZONTAL;
         }
 
-        public HeaderField (int i) {
-            index = i;
+        public HeaderField () {
+            header = new Header ("", "");
+            setup ();
+        }
+
+        public HeaderField.with_value (Header header) {
+            this.header = header;
+            setup ();
+
+            header_key_field.text = header.key;
+            header_value_field.text = header.val;
+        }
+
+        private void setup () {
             header_key_field = new Gtk.Entry ();
             header_value_field = new Gtk.Entry ();
 
@@ -59,7 +69,8 @@ namespace HTTPInspector.Widgets.Request {
             header_value_field.focus_out_event.connect (() => {
                 // Only emit if both entries are filled
                 if (header_key_field.text != "" && header_key_field.text != null) {
-                    header_changed (index, key, val);
+                    header.key = key;
+                    header.val = val;
                 }
 
                 return false;
@@ -68,7 +79,8 @@ namespace HTTPInspector.Widgets.Request {
             header_key_field.focus_out_event.connect (() => {
                 // Only emit if both entries are filled
                 if (header_value_field.text != "" && header_value_field.text != null) {
-                    header_changed (index, key, val);
+                    header.key = key;
+                    header.val = val;
                 }
 
                 return false;

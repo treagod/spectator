@@ -24,19 +24,41 @@ namespace HTTPInspector.Widgets {
         private Request.Container request_view;
         private Response.Container response_view;
 
+        public signal void url_changed (string url);
+        public signal void method_changed (Method method);
+        public signal void request_activated ();
+        public signal void cancel_process ();
+        public signal void header_added (Header header);
+        public signal void header_deleted (Header header);
+
         public signal void item_changed (RequestItem item);
 
-        public RequestResponsePane (RequestController req_ctrl) {
-            req_ctrl.register_view (this);
-            request_view  = new Request.Container (req_ctrl);
+        public RequestResponsePane () {
+            request_view  = new Request.Container ();
             response_view = new Response.Container ();
-
-            request_completed.connect (() => {
-               response_view.update (req_ctrl.selected_item.response);
-            });
 
             request_view.response_received.connect ((res) => {
                 response_view.update (res);
+            });
+
+            request_view.url_changed.connect ((url) => {
+                url_changed (url);
+            });
+
+            request_view.request_activated.connect (() => {
+                request_activated ();
+            });
+
+            request_view.method_changed.connect ((method) => {
+                method_changed (method);
+            });
+
+            request_view.header_added.connect ((header) => {
+                header_added (header);
+            });
+
+            request_view.header_deleted.connect ((header) => {
+                header_deleted (header);
             });
 
             add1 (request_view);

@@ -135,7 +135,7 @@ namespace HTTPInspector {
                 header.val = val;
             } else {
                 // Index does not exist, create new entry;
-                add_header (key, val);
+                // add_header (key, val);
             }
         }
 
@@ -143,12 +143,12 @@ namespace HTTPInspector {
             return _uri != null;
         }
 
-        public void add_header (string key, string val) {
-            if (key == "User-Agent") {
-                user_agent = val;
-            }
+        public void add_header (Header header) {
+            headers.add (header);
+        }
 
-            headers.add (new Header (key, val));
+        public void remove_header (Header header) {
+            headers.remove (header);
         }
     }
 }

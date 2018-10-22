@@ -24,14 +24,17 @@ namespace HTTPInspector.Widgets.Request {
         private Gee.ArrayList<Gtk.Button> buttons;
         public Gee.ArrayList<HeaderField> headers;
         private Gtk.Grid header_fields;
-        public signal RequestItem request_selected_item ();
+        private uint id;
 
-        public HeaderView (RequestController req_ctrl) {
+        public signal RequestItem request_selected_item ();
+        public signal void header_deleted (Header header);
+        public signal void header_added (Header header);
+
+        public HeaderView () {
             orientation = Gtk.Orientation.VERTICAL;
             margin_left = 7;
             margin_right = 7;
-
-            req_ctrl.register_view (this);
+            id = 0;
 
             header_fields = new Gtk.Grid ();
             buttons = new Gee.ArrayList<Gtk.Button> ();
@@ -45,8 +48,7 @@ namespace HTTPInspector.Widgets.Request {
             add_row_button.margin_right = 128;
 
             add_row_button.clicked.connect (() => {
-                stdout.printf ("buttonclicked\n");
-                add_row (request_selected_item ());
+                add_row ();
             });
 
 
@@ -63,10 +65,10 @@ namespace HTTPInspector.Widgets.Request {
             headers.clear ();
 
             if (item.headers.size == 0) {
-                add_row (item);
+                add_row ();
             }
 
-            add_header_rows (item);
+            // add_header_rows (item);
         }
 
         public void change_selected_item (RequestItem item) {
@@ -83,48 +85,57 @@ namespace HTTPInspector.Widgets.Request {
                 header_fields.remove_row (index + 1);
 
                 if (buttons.size == 0) {
-                    add_row (item);
+                    add_row ();
                 }
             });
         }
 
-        public void add_row (RequestItem item) {
-            var header_field = new HeaderField (item.headers.size);
-            header_field.header_changed.connect ((i, key, val) => {
-                item.update_header (i, key, val);
+        public void change_headers (Gee.ArrayList<Header> headers) {
+            header_fields.forall ((widget) => {
+                header_fields.remove (widget);
             });
+
+            foreach (var header in headers) {
+                add_header (header);
+            }
+        }
+
+        public void add_header (Header header) {
+            var header_field = new HeaderField.with_value (header);
             var del_button = new Gtk.Button.from_icon_name ("window-close");
 
-            queue_button (del_button, item);
+            del_button.clicked.connect (() => {
+                header_deleted (header_field.header);
+                header_fields.remove (header_field);
+                header_fields.remove (del_button);
+            });
 
             headers.add (header_field);
 
-            header_fields.attach (header_field, 0, (int) buttons.size, 1, 1);
-            header_fields.attach (del_button, 2, (int) buttons.size, 1, 1);
+            header_fields.attach (header_field, 0, (int) id, 1, 1);
+            header_fields.attach (del_button, 2, (int) id, 1, 1);
+
+            id++;
             show_all ();
         }
 
-        public void add_header_rows (RequestItem item) {
-            int i = 0;
-            foreach (var header in item.headers) {
-                var header_field = new HeaderField (i);
+        public void add_row () {
+            var header_field = new HeaderField ();
+            var del_button = new Gtk.Button.from_icon_name ("window-close");
 
-                header_field.header_changed.connect ((i, key, val) => {
-                    item.update_header (i, key, val);
-                });
+            del_button.clicked.connect (() => {
+                header_deleted (header_field.header);
+                header_fields.remove (header_field);
+                header_fields.remove (del_button);
+            });
 
-                header_field.set_header (header.key, header.val);
-                var del_button = new Gtk.Button.from_icon_name ("window-close");
+            headers.add (header_field);
 
-                queue_button (del_button, item);
+            header_fields.attach (header_field, 0, (int) id, 1, 1);
+            header_fields.attach (del_button, 2, (int) id, 1, 1);
 
-                headers.add (header_field);
-
-                header_fields.attach (header_field, 0, (int) buttons.size, 1, 1);
-                header_fields.attach (del_button, 2, (int) buttons.size, 1, 1);
-                i++;
-            }
-
+            header_added (header_field.header);
+            id++;
             show_all ();
         }
     }

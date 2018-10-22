@@ -21,7 +21,7 @@
 
 namespace HTTPInspector.Dialogs.Request {
     public class UpdateDialog : Dialog {
-        public signal void updated ();
+        public signal void updated (RequestItem item);
 
         public UpdateDialog (Gtk.ApplicationWindow parent, RequestItem item) {
             base (_("Update Request"), parent);
@@ -54,7 +54,7 @@ namespace HTTPInspector.Dialogs.Request {
             } else {
                 item.name = request_name_entry.text;
                 item.method = Method.convert (method_box.active);
-                updated ();
+                updated (item);
                 destroy ();
             }
         }

@@ -35,14 +35,6 @@ namespace HTTPInspector.Widgets.Request {
             init_url_entry ();
             margin_top = 4;
             margin_bottom = 4;
-            url_entry.key_press_event.connect ((event) => {
-                if (event.keyval == Gdk.Key.question) {
-                    // Test if valid URL
-                    // Add Parameter to url parameters
-                }
-
-                return false;
-            });
 
             url_entry.changed.connect (() => {
                 url_changed (url_entry.text);
@@ -70,6 +62,10 @@ namespace HTTPInspector.Widgets.Request {
 
         public void set_text (string url) {
             url_entry.text = url;
+        }
+
+        public string get_text () {
+            return url_entry.text;
         }
 
         public void set_method (Method method) {
@@ -107,18 +103,15 @@ namespace HTTPInspector.Widgets.Request {
             });
 
             url_entry.activate.connect (() => {
-                if (processing) {
-                    cancel_process ();
-                } else {
-                    widget_activate ();
-                }
-
+                widget_activate ();
             });
+
             url_entry.hexpand = true;
             add (url_entry);
         }
 
         private void widget_activate () {
+            change_status (RequestStatus.SENDING);
             request_activated ();
         }
     }
