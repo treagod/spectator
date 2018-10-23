@@ -46,7 +46,6 @@ namespace HTTPInspector {
             location = (location == null) ? item.uri : location;
             MainLoop loop = new MainLoop ();
             var session = new Soup.Session ();
-            session.user_agent = item.user_agent;
             session.timeout = (uint) settings.timeout;
 
             if (settings.use_proxy) {

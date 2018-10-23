@@ -219,7 +219,7 @@ namespace HTTPInspector.Widgets.Response.StatusBar {
                 http_status_label.label = "No status";
             } else {
                 http_status_label.label = "%u %s".printf (it.status_code, status_code_text (it.status_code));
-                response_size_label.label = ("%" + int64.FORMAT + " KB").printf (it.size / 1000);
+                response_size_label.label = human_readable_bytes (it.size);
                 request_time_label.label = "%.2f %s".printf (it.duration, _("seconds"));
                 response_size_box.get_style_context ().add_class (response_info_box ());
                 response_size_label.halign = Gtk.Align.CENTER;
@@ -230,6 +230,20 @@ namespace HTTPInspector.Widgets.Response.StatusBar {
             }
             // Force redraw, otherwise box borders won't match the labels
             queue_draw ();
+        }
+
+        private string human_readable_bytes (int64 response_size) {
+            if (response_size >= 1000000000) {
+                return ("%" + int64.FORMAT + " Gigabytes").printf (response_size / 1000000000);
+            } else if (response_size >= 1000000) {
+                return ("%" + int64.FORMAT + " Megabytes").printf (response_size / 1000000);
+            } else if (response_size >= 1000) {
+                return ("%" + int64.FORMAT + " Kilobytes").printf (response_size / 1000);
+            }
+
+            // Assuming nobody is downloading more or equal than 1 TB...
+            // if you do, please give send me an email with proof (marv.ahlgrimm@gmail.com)
+            return ("%" + int64.FORMAT + " Bytes").printf (response_size);
         }
 
         public void set_active_type (Type typ) {

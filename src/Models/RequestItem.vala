@@ -93,7 +93,7 @@ namespace HTTPInspector {
         public RequestStatus status { get; set; }
         public ResponseItem response { get; set; }
         public Gee.ArrayList<Header> headers { get; private set; }
-        public string user_agent { get; private set; }
+
         public string uri {
             get {
                return _raw_uri;
@@ -106,7 +106,6 @@ namespace HTTPInspector {
 
         public RequestItem (string nam, Method meth) {
             headers = new Gee.ArrayList<Header> ();
-            user_agent = "http-inspector/0.1";
             name = nam;
             uri = "";
             method = meth;
