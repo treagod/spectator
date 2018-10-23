@@ -69,21 +69,28 @@ namespace HTTPInspector.Widgets.Request {
             header_value_field.focus_out_event.connect (() => {
                 // Only emit if both entries are filled
                 if (header_key_field.text != "" && header_key_field.text != null) {
-                    header.key = key;
                     header.val = val;
                 }
 
                 return false;
             });
 
-            header_key_field.focus_out_event.connect (() => {
+            header_value_field.changed.connect (() => {
                 // Only emit if both entries are filled
-                if (header_value_field.text != "" && header_value_field.text != null) {
-                    header.key = key;
+                if (header_key_field.text != "" && header_key_field.text != null) {
                     header.val = val;
                 }
+            });
+
+            header_key_field.focus_out_event.connect (() => {
+                // Only emit if both entries are filled
+                header.key = key;
 
                 return false;
+            });
+
+            header_key_field.changed.connect (() => {
+                header.key = key;
             });
 
             header_key_field.hexpand = true;

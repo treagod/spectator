@@ -73,6 +73,9 @@ namespace HTTPInspector.Controllers {
                     builder.set_member_name ("headers");
                     builder.begin_array ();
                     foreach (var header in item.headers) {
+                        if (header.key == "") {
+                            continue;
+                        }
                         builder.begin_object ();
                         builder.set_member_name ("key");
                         builder.add_string_value (header.key);

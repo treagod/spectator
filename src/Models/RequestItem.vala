@@ -115,7 +115,6 @@ namespace HTTPInspector {
 
         public RequestItem.with_uri (string nam, string url, Method meth) {
             headers = new Gee.ArrayList<Header> ();
-            user_agent = "http-inspector/0.1";
             name = nam;
             uri = url;
             method = meth;
@@ -124,18 +123,12 @@ namespace HTTPInspector {
 
         public void update_header (int i, string key, string val) {
             if (headers.size > i && headers.size != 0) {
-                if (key == "User-Agent") {
-                    user_agent = val;
-                } else if (headers.@get (i).key == "User-Agent") {
-                    // User Agent was resetted -> set it to default
-                    user_agent = "http-inspector/0.1";
-                }
                 var header = headers.@get (i);
                 header.key = key;
                 header.val = val;
             } else {
-                // Index does not exist, create new entry;
-                // add_header (key, val);
+                //Index does not exist, create new entry;
+                add_header (new Header (key, val));
             }
         }
 
