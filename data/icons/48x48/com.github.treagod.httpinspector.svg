@@ -1,0 +1,22 @@
+<svg width="49" height="49" viewBox="0 0 49 49" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="24.5" cy="24.5" r="24.5" fill="#2E4216" fill-opacity="0.2"/>
+<circle cx="24.5" cy="24.5" r="23.0588" fill="#8EC747"/>
+<circle cx="24.5" cy="24.5" r="23.0588" fill="url(#paint0_linear)"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M47.5478 25.2206C47.5551 24.9813 47.5588 24.7411 47.5588 24.5C47.5588 11.765 37.235 1.44118 24.5 1.44118C11.7649 1.44118 1.44116 11.765 1.44116 24.5C1.44116 24.7411 1.44486 24.9813 1.45221 25.2206C1.83289 12.819 12.006 2.88234 24.5 2.88234C36.9939 2.88234 47.1671 12.819 47.5478 25.2206Z" fill="#B9E867"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M47.5478 23.7794C47.1671 36.181 36.994 46.1176 24.5 46.1176C12.0061 46.1176 1.83296 36.181 1.45227 23.7794C1.44492 24.0187 1.44122 24.2589 1.44122 24.5C1.44122 37.2351 11.765 47.5588 24.5 47.5588C37.2351 47.5588 47.5589 37.2351 47.5589 24.5C47.5589 24.2589 47.5552 24.0187 47.5478 23.7794Z" fill="#8CC347"/>
+<ellipse cx="24.5" cy="25.9412" rx="18.7353" ry="12.9706" fill="black" fill-opacity="0.2"/>
+<ellipse cx="24.5" cy="24.5" rx="18.7353" ry="12.9706" fill="#FAFAFA"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M24.5 31.7059C30.8675 31.7059 36.0294 28.1571 36.0294 23.7794C36.0294 19.4018 30.8675 15.853 24.5 15.853C18.1325 15.853 12.9706 19.4018 12.9706 23.7794C12.9706 28.1571 18.1325 31.7059 24.5 31.7059Z" fill="#8EC747"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M24.5 31.7059C30.8675 31.7059 36.0294 28.1571 36.0294 23.7794C36.0294 19.4018 30.8675 15.853 24.5 15.853C18.1325 15.853 12.9706 19.4018 12.9706 23.7794C12.9706 28.1571 18.1325 31.7059 24.5 31.7059Z" fill="url(#paint1_linear)"/>
+<ellipse cx="24.5" cy="23.7794" rx="4.32353" ry="3.60294" fill="#FAFAFA"/>
+<defs>
+<linearGradient id="paint0_linear" x1="24.5" y1="1.44118" x2="24.5" y2="47.5588" gradientUnits="userSpaceOnUse">
+<stop stop-color="#B9E968"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint1_linear" x1="24.5" y1="4.52942" x2="24.5" y2="43.0294" gradientUnits="userSpaceOnUse">
+<stop stop-color="#B9E968"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+</defs>
+</svg>

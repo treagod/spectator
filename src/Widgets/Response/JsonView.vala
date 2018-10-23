@@ -27,11 +27,12 @@ namespace HTTPInspector.Widgets.Response {
         private Gtk.ScrolledWindow scrolled_raw;
 
         public JsonView () {
+            var test = new JsonTreeView.parse_string ("{\"key\": \"value\"}");//"{\"asd\": 1}");
             scrolled = new Gtk.ScrolledWindow (null, null);
             scrolled_raw = new Gtk.ScrolledWindow (null, null);
             response_text = new SourceView ();
             response_text_raw = new SourceView ();
-            scrolled.add (response_text);
+            scrolled.add (test);
             scrolled_raw.add (response_text_raw);
 
             response_text.set_lang ("json");
