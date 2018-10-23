@@ -16,7 +16,7 @@ set (PKGDATADIR "${DATADIR}/com.github.treagod.httpinspector")
 
 set (EXEC_NAME "com.github.treagod.httpinspector")
 set (RELEASE_NAME "HTTP Inspector")
-set (VERSION "0.1")
+set (VERSION "0.1.0")
 set (VERSION_INFO "Initial release")
 
 # disable C compiler warnings

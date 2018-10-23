@@ -21,9 +21,9 @@
 
 namespace HTTPInspector {
     public class Window : Gtk.ApplicationWindow, View.Request {
-        private Widgets.Content content;
-        private Widgets.Sidebar.Container item_container;
-        private RequestController request_controller;
+        private Widgets.Content request_item_view;
+        private Widgets.Sidebar.Container sidebar;
+        private Controllers.MainController controller;
 
         public Window (Gtk.Application app) {
             var settings = Settings.get_instance ();
@@ -49,46 +49,19 @@ namespace HTTPInspector {
             grid.height_request = 500;
 
             var headerbar = new Widgets.HeaderBar ();
-            headerbar.new_request.clicked.connect (() => {
-                create_request ();
-            });
-            headerbar.preference_clicked.connect (() => {
-                open_preferences ();
-            });
+
             set_titlebar (headerbar);
 
             var seperator = new Gtk.Separator (Gtk.Orientation.VERTICAL);
             seperator.visible = true;
             seperator.no_show_all = false;
 
-            request_controller = new RequestController ();
-            content = new Widgets.Content (request_controller);
-            item_container = new Widgets.Sidebar.Container (request_controller);
+            request_item_view = new Widgets.Content ();
+            sidebar = new Widgets.Sidebar.Container ();
 
-            request_controller.register_view (this);
+            var req_controller = new Controllers.RequestController (headerbar, sidebar, request_item_view);
 
-            item_container.item_edit.connect ((item) => {
-                update_request (item);
-            });
-
-            item_container.notify_delete.connect (() => {
-                if (request_controller.get_items ().size == 0) {
-                    content.show_welcome ();
-                }
-            });
-
-            content.welcome_activated.connect ((index) => {
-                create_request ();
-            });
-
-            content.item_changed.connect ((item) => {
-                item_container.update_active (item);
-            });
-
-            selected_item_changed.connect (() => {
-                headerbar.subtitle = request_controller.selected_item.name;
-                content.show_request_view (request_controller.selected_item);
-            });
+            controller = new Controllers.MainController (this, req_controller);
 
             if (settings.data != "") {
                 var parser = new Json.Parser ();
@@ -107,42 +80,31 @@ namespace HTTPInspector {
                         var name = item.get_string_member ("name");
                         var uri = item.get_string_member ("uri");
                         var method = (int) item.get_int_member ("method");
-                        request_controller.add_request (new RequestItem.with_uri (name, uri, Method.convert (method)));
+                        var request = new RequestItem.with_uri (name, uri, Method.convert (method));
+                        var headers = item.get_array_member ("headers");
+
+                        foreach (var header_element in headers.get_elements ()) {
+                            var header = header_element.get_object ();
+                            request.add_header (new Header (header.get_string_member ("key"), header.get_string_member ("value")));
+                        }
+
+                        controller.add_request (request);
                     }
                 } catch (Error e) {
                     // Do something funny
                 }
 
-                content.show_welcome ();
-                item_container.clear_selection ();
+                request_item_view.show_welcome ();
+                sidebar.clear_selection ();
             }
 
-            grid.add (item_container);
+            grid.add (sidebar);
             grid.add (seperator);
             add (grid);
-            grid.add (content);
+            grid.add (request_item_view);
             show_all ();
             show ();
             present ();
-        }
-
-        private void create_request () {
-            var dialog = new Dialogs.Request.CreateDialog (this);
-            dialog.show_all ();
-            dialog.creation.connect ((item) => {
-                request_controller.add_request (item);
-            });
-        }
-
-        private void update_request (RequestItem item) {
-            var dialog = new Dialogs.Request.UpdateDialog (this, item);
-            dialog.show_all ();
-        }
-
-        private void open_preferences () {
-            var dialog = new Widgets.Preferences (this);
-
-            dialog.show_all ();
         }
 
         protected override bool delete_event (Gdk.EventAny event) {
@@ -157,54 +119,11 @@ namespace HTTPInspector {
             settings.window_width = width;
             settings.window_height = height;
             settings.maximized = is_maximized;
-            settings.data = generate_data_json_str ();
+            var s = controller.serialize_data ();
+            stdout.printf ("%s\n", s);
+            settings.data = s;
 
             return false;
-        }
-
-        private string generate_data_json_str () {
-            Json.Builder builder = new Json.Builder ();
-            builder.begin_object ();
-            builder.set_member_name ("version");
-            builder.add_string_value ("0.1.0");
-
-            var items = request_controller.get_items ();
-
-            builder.set_member_name ("request_items");
-            builder.begin_array ();
-
-            if (items.size > 0) {
-                foreach (var item in items) {
-                    builder.begin_object ();
-                    builder.set_member_name ("name");
-                    builder.add_string_value (item.name);
-                    builder.set_member_name ("uri");
-                    builder.add_string_value (item.uri);
-                    builder.set_member_name ("method");
-                    builder.add_int_value (item.method.to_i ());
-                    builder.set_member_name ("headers");
-                    builder.begin_array ();
-                    foreach (var header in item.headers) {
-                        builder.begin_object ();
-                        builder.set_member_name ("key");
-                        builder.add_string_value (header.key);
-                        builder.set_member_name ("value");
-                        builder.add_string_value (header.val);
-                        builder.end_object ();
-                    }
-                    builder.end_array ();
-
-                    builder.end_object ();
-                }
-            }
-
-            builder.end_array ();
-            builder.end_object ();
-
-            var generator = new Json.Generator ();
-            generator.set_root (builder.get_root ());
-
-            return generator.to_data (null);
         }
     }
 }

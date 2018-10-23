@@ -36,27 +36,16 @@ namespace HTTPInspector.Widgets.Sidebar {
     public class Container : Gtk.Box, View.Request {
         private Gtk.FlowBox item_box;
         private Gtk.ScrolledWindow scroll;
-        private signal bool item_deleted (RequestItem item);
-        public signal void item_edit (RequestItem item);
+
+        public signal void item_deleted (RequestItem item);
+        public signal void item_edited (RequestItem item);
+        public signal void selection_changed (RequestItem item);
         public signal void notify_delete ();
 
-        public Container (RequestController req_ctrl) {
-            req_ctrl.register_view (this);
+        public Container () {
             scroll = new Gtk.ScrolledWindow (null, null);
             scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
-
-            selected_item_updated.connect (() => {
-                update_active (req_ctrl.selected_item);
-            });
-
-            item_deleted.connect ((item) => {
-                return req_ctrl.destroy (item);
-            });
-
-            new_item.connect ((item) => {
-                append_request (item);
-            });
 
             var titlebar = new TitleBar (_("Request History"));
 
@@ -78,7 +67,7 @@ namespace HTTPInspector.Widgets.Sidebar {
 
             item_box.child_activated.connect ((child) => {
                 var history_item = child as Sidebar.Item;
-                req_ctrl.update_selected_item (history_item.item);
+                selection_changed (history_item.item);
             });
 
             orientation = Gtk.Orientation.VERTICAL;
@@ -90,19 +79,23 @@ namespace HTTPInspector.Widgets.Sidebar {
             this.pack_start (scroll, true, true, 0);
         }
 
-        public void update_active (RequestItem item) {
-            item_box.get_selected_children ().foreach ((child) => {
-                var history_item = child as Sidebar.Item;
-                history_item.update (item);
-            });
+        public void update_active_method (Method method) {
+            var sidebar_item = get_active ();
+
+            if (sidebar_item != null) {
+                sidebar_item.item.method = method;
+            }
         }
 
-        public void clear_selection () {
-            item_box.unselect_all ();
-            queue_draw ();
+        public void update_active_url (string uri) {
+            var sidebar_item = get_active ();
+
+            if (sidebar_item != null) {
+                sidebar_item.item.uri = uri;
+            }
         }
 
-        private void append_request (RequestItem item) {
+        public void add (RequestItem item) {
             var box_item = new Sidebar.Item (item);
 
             item_box.add (box_item);
@@ -110,23 +103,46 @@ namespace HTTPInspector.Widgets.Sidebar {
             item_box.select_child(box_item);
 
             box_item.item_deleted.connect ((item) => {
-                var deleted = item_deleted (item);
-
-                if (deleted) {
-                    item_box.remove (box_item);
-                    notify_delete ();
-                } else {
-                    stderr.printf ("Something went wrong\n");
-                }
+                item_deleted (item);
+                item_box.remove (box_item);
             });
 
             box_item.item_edit.connect ((item) => {
-                item_edit (item);
-
-                item.notify.connect (() => {
-                    box_item.refresh ();
-                });
+                item_edited (item);
             });
+        }
+
+        public void update_active (RequestItem item) {
+            Sidebar.Item? sidebar_item = get_active ();
+
+            if (sidebar_item != null) {
+                sidebar_item.update (item);
+            }
+        }
+
+        private Sidebar.Item? get_active () {
+            var children = item_box.get_selected_children ();
+
+            if (children.length() > 0) {
+                return ((Sidebar.Item) children.nth_data (0));
+            }
+
+            return null;
+        }
+
+        public RequestItem? get_active_item () {
+            var sidebar_item = get_active ();
+
+            if (sidebar_item != null) {
+                return sidebar_item.item;
+            }
+
+            return null;
+        }
+
+        public void clear_selection () {
+            item_box.unselect_all ();
+            queue_draw ();
         }
     }
 }

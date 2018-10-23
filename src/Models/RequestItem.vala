@@ -93,7 +93,7 @@ namespace HTTPInspector {
         public RequestStatus status { get; set; }
         public ResponseItem response { get; set; }
         public Gee.ArrayList<Header> headers { get; private set; }
-        public string user_agent { get; private set; }
+
         public string uri {
             get {
                return _raw_uri;
@@ -106,7 +106,6 @@ namespace HTTPInspector {
 
         public RequestItem (string nam, Method meth) {
             headers = new Gee.ArrayList<Header> ();
-            user_agent = "http-inspector/0.1";
             name = nam;
             uri = "";
             method = meth;
@@ -115,7 +114,6 @@ namespace HTTPInspector {
 
         public RequestItem.with_uri (string nam, string url, Method meth) {
             headers = new Gee.ArrayList<Header> ();
-            user_agent = "http-inspector/0.1";
             name = nam;
             uri = url;
             method = meth;
@@ -124,18 +122,12 @@ namespace HTTPInspector {
 
         public void update_header (int i, string key, string val) {
             if (headers.size > i && headers.size != 0) {
-                if (key == "User-Agent") {
-                    user_agent = val;
-                } else if (headers.@get (i).key == "User-Agent") {
-                    // User Agent was resetted -> set it to default
-                    user_agent = "http-inspector/0.1";
-                }
                 var header = headers.@get (i);
                 header.key = key;
                 header.val = val;
             } else {
-                // Index does not exist, create new entry;
-                add_header (key, val);
+                //Index does not exist, create new entry;
+                add_header (new Header (key, val));
             }
         }
 
@@ -143,12 +135,12 @@ namespace HTTPInspector {
             return _uri != null;
         }
 
-        public void add_header (string key, string val) {
-            if (key == "User-Agent") {
-                user_agent = val;
-            }
+        public void add_header (Header header) {
+            headers.add (header);
+        }
 
-            headers.add (new Header (key, val));
+        public void remove_header (Header header) {
+            headers.remove (header);
         }
     }
 }

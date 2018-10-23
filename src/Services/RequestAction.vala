@@ -46,7 +46,6 @@ namespace HTTPInspector {
             location = (location == null) ? item.uri : location;
             MainLoop loop = new MainLoop ();
             var session = new Soup.Session ();
-            session.user_agent = item.user_agent;
             session.timeout = (uint) settings.timeout;
 
             if (settings.use_proxy) {
@@ -63,14 +62,23 @@ namespace HTTPInspector {
 
             var msg = new Soup.Message (item.method.to_str (), location);
 
+            var user_agent = "";
             foreach (var header in item.headers) {
+                if (header.key == "User-Agent") {
+                    user_agent = header.val;
+                    continue;
+                }
                 msg.request_headers.append (header.key, header.val);
             }
 
+            if (user_agent == "") {
+                session.user_agent = "HTTPInspector-%s".printf (Constants.VERSION);
+            } else {
+                session.user_agent = user_agent;
+            }
+
             session.queue_message (msg, (sess, mess) => {
-                stdout.printf("Total of %u redirects\n", performed_redirects);
                 // Performance new request to redirected location
-                stdout.printf ("%u %s %u\n", mess.status_code, settings.follow_redirects.to_string (), performed_redirects);
                 if (mess.status_code == 302 && settings.follow_redirects && performed_redirects < settings.maximum_redirects) {
                     performed_redirects += 1;
                     perform_request (mess.response_headers.get_one ("Location"));

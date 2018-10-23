@@ -20,16 +20,21 @@
 */
 
 namespace HTTPInspector.Widgets {
-    class Content : Gtk.Stack, View.Request {
+    public class Content : Gtk.Stack, View.Request {
         private Granite.Widgets.Welcome welcome;
         private RequestResponsePane req_res_pane;
 
+        public signal void url_changed (string url);
+        public signal void method_changed (Method method);
+        public signal void request_activated ();
+        public signal void cancel_process ();
+
         public signal void item_changed (RequestItem item);
         public signal void welcome_activated(int index);
+        public signal void header_added (Header header);
+        public signal void header_deleted (Header header);
 
-        public Content (RequestController req_ctrl) {
-            req_ctrl.register_view (this);
-
+        public Content () {
             welcome = new Granite.Widgets.Welcome (_("HTTP Inspector"), _("Inspect your HTTP transmissions to the web"));
             welcome.hexpand = true;
             welcome.append ("bookmark-new", _("Create Request"), _("Create a new request to the web."));
@@ -38,7 +43,26 @@ namespace HTTPInspector.Widgets {
                 welcome_activated (index);
             });
 
-            req_res_pane = new RequestResponsePane (req_ctrl);
+            req_res_pane = new RequestResponsePane ();
+            req_res_pane.url_changed.connect ((url) => {
+                url_changed (url);
+            });
+
+            req_res_pane.request_activated.connect (() => {
+                request_activated ();
+            });
+
+            req_res_pane.method_changed.connect((method) => {
+                method_changed (method);
+            });
+
+            req_res_pane.header_added.connect ((header) => {
+                header_added (header);
+            });
+
+            req_res_pane.header_deleted.connect ((header) => {
+                header_deleted (header);
+            });
 
             add_named (welcome, "welcome");
             add_named (req_res_pane, "req_res_pane");
@@ -48,7 +72,7 @@ namespace HTTPInspector.Widgets {
             show_all ();
         }
 
-        public void show_request_view (RequestItem item) {
+        public void show_request (RequestItem item) {
             req_res_pane.set_item (item);
             set_visible_child (req_res_pane);
         }
@@ -58,4 +82,4 @@ namespace HTTPInspector.Widgets {
         }
     }
 
-}	
+}

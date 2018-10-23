@@ -27,6 +27,14 @@ namespace HTTPInspector.Widgets.Request {
         private HeaderView url_params_view;
         private Granite.Widgets.ModeButton tabs;
         private Gtk.Stack stack;
+        private Gtk.Label body_label;
+
+        public signal void url_changed (string url);
+        public signal void method_changed (Method method);
+        public signal void request_activated ();
+        public signal void cancel_process ();
+        public signal void header_added (Header header);
+        public signal void header_deleted (Header header);
 
         public signal void response_received(ResponseItem it);
 
@@ -35,31 +43,35 @@ namespace HTTPInspector.Widgets.Request {
             margin = 4;
         }
 
-        public Container (RequestController req_ctrl) {
+        public Container () {
             url_entry = new UrlEntry ();
-            header_view = new HeaderView (req_ctrl);
-            url_params_view = new HeaderView (req_ctrl);
+            header_view = new HeaderView ();
+            url_params_view = new HeaderView ();
             url_entry.margin_bottom = 10;
-            req_ctrl.register_view (this);
 
             header_view.request_selected_item.connect (() => {
-                return req_ctrl.selected_item;
+                return new RequestItem (name, Method.convert (0));
+            });
+
+            header_view.header_added.connect ((header) => {
+                header_added (header);
+            });
+            
+            header_view.header_deleted.connect ((header) => {
+                header_deleted (header);
             });
 
             url_entry.url_changed.connect ((url) => {
-                req_ctrl.selected_item.uri = url;
+                url_changed (url);
             });
 
             url_entry.method_changed.connect ((method) => {
-                req_ctrl.selected_item.method = method;
+                method_changed (method);
+                update_tabs (method);
             });
 
             url_entry.request_activated.connect (() => {
-                req_ctrl.perform_request ();
-            });
-
-            req_ctrl.start_request.connect (() => {
-                url_entry.change_status (RequestItem.SENDING);
+                request_activated ();
             });
 
             request_completed.connect (() => {
@@ -79,10 +91,9 @@ namespace HTTPInspector.Widgets.Request {
 
             add (url_entry);
 
-
             var header_params_label = new Gtk.Label ("Headers");
             var url_params_label = new Gtk.Label ("URL Params");
-            var body_label = new Gtk.Label ("Body");
+            body_label = new Gtk.Label ("Body");
 
             setup_tabs (header_params_label, url_params_label, body_label);
 
@@ -92,16 +103,6 @@ namespace HTTPInspector.Widgets.Request {
 
 
             selected_item_changed.connect (() => {
-                var selected_item = req_ctrl.selected_item;
-                set_item (selected_item);
-
-                selected_item.notify.connect (() => {
-                    update_tabs (body_label, selected_item);
-                });
-
-                header_view.change_selected_item (selected_item);
-
-                update_tabs (body_label, selected_item);
             });
 
             add (tabs);
@@ -142,21 +143,27 @@ namespace HTTPInspector.Widgets.Request {
         // select the Body Tab
         // For all other methods this method checks if the Body Tab was selected. If
         // the Body tab was selected, select Headers Tab. Furthermore disable Body Tab
-        private void update_tabs(Gtk.Widget body_selector, RequestItem item) {
-            if (item.method == Method.POST || item.method == Method.PUT || item.method == Method.PATCH) {
-                body_selector.sensitive = true;
+        private void update_tabs(Method method) {
+            if (method == Method.POST || method == Method.PUT || method == Method.PATCH) {
+                body_label.sensitive = true;
             } else {
                 if (tabs.selected == 2) {
                     tabs.set_active (0);
                 }
-                body_selector.sensitive = false;
+                body_label.sensitive = false;
             }
+        }
+
+        private void set_headers (Gee.ArrayList<Header> headers) {
+            header_view.change_headers (headers);
         }
 
         public void set_item (RequestItem item) {
             url_entry.change_status (item.status);
             url_entry.set_text (item.uri);
             url_entry.set_method (item.method);
+            update_tabs (item.method);
+            set_headers (item.headers);
             show_all ();
         }
     }

@@ -70,11 +70,11 @@ namespace HTTPInspector.Widgets.Response {
             manager = Gtk.SourceLanguageManager.get_default ();
             editable = false;
             style_scheme_manager = new Gtk.SourceStyleSchemeManager ();
-            var style_id = (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) ? "oblivion" : "classic";
+            var style_id = (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) ? "solarized-dark" : "solarized-light";
             var scheme = style_scheme_manager.get_scheme (style_id);
 
             Settings.get_instance ().theme_changed.connect (() => {
-                var temp_id = (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) ? "oblivion" : "classic";
+                var temp_id = (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) ? "solarized-dark" : "solarized-light";
                 var schem = style_scheme_manager.get_scheme (temp_id);
                 buffer.style_scheme = schem;
             });

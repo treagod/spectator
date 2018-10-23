@@ -20,7 +20,7 @@
 */
 
 namespace HTTPInspector.Widgets {
-    class HeaderBar : Gtk.HeaderBar {
+    public class HeaderBar : Gtk.HeaderBar {
         private Gtk.Button _new_request;
         public Gtk.MenuButton app_menu;
 

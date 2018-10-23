@@ -71,9 +71,15 @@ namespace HTTPInspector.Plugins {
         private void setup_context () {
             context = new Duktape.Context ();
             var obj_idx = context.push_object ();
+
             context.push_vala_function (native_print, Duktape.VARARGS);
             context.put_prop_string (obj_idx, "log");
             context.put_global_string ("console");
+
+            obj_idx = context.push_object ();
+            context.push_string (Constants.VERSION);
+            context.put_prop_string (obj_idx, "version");
+            context.put_global_string ("HttpInspector");
 
             setup_plugin_information ();
         }

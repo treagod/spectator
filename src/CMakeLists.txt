@@ -9,6 +9,8 @@ vala_precompile(VALA_C ${EXEC_NAME}
 	Models/ResponseItem.vala
 
 	Controllers/RequestController.vala
+	Controllers/MainController.vala
+	Controllers/ReqController.vala
 
 	Views/RequestView.vala
 
