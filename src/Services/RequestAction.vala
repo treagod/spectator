@@ -46,19 +46,15 @@ namespace HTTPInspector {
             location = (location == null) ? item.uri : location;
             MainLoop loop = new MainLoop ();
             var session = new Soup.Session ();
-            session.timeout = (uint) settings.timeout;
 
             if (settings.use_proxy) {
-                var no_proxies = settings.no_proxy.split (",");
-
-                foreach (var no_proxy in no_proxies) {
-                    if (no_proxy == location) {
-                        break;
-                    }
-                }
-
-                session.proxy_uri = new Soup.URI (settings.proxy_uri);
+                var proxy_resolver = new SimpleProxyResolver (null, settings.no_proxy);
+                proxy_resolver.set_uri_proxy ("http", settings.http_proxy);
+                proxy_resolver.set_uri_proxy ("https", settings.https_proxy);
+                session.proxy_resolver = proxy_resolver;
             }
+
+            session.timeout = (uint) settings.timeout;
 
             var msg = new Soup.Message (item.method.to_str (), location);
 

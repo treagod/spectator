@@ -47,8 +47,6 @@ namespace HTTPInspector.Widgets.Response {
             if (node.get_node_type () == Json.NodeType.OBJECT) {
                 store.append (out root, null);
                 store.set (root, 0, "Object", 1, "", -1);
-
-                var iter = add_object_content ((Json.Object) node, root);
             } else if (node.get_node_type () == Json.NodeType.ARRAY) {
                 store.append (out root, null);
                 store.set (root, 0, "Array", 1, "", -1);
@@ -74,7 +72,7 @@ namespace HTTPInspector.Widgets.Response {
             }
         }
 
-        private Gtk.TreeIter add_object_content (Json.Object object, Gtk.TreeIter parent) {
+        private owned Gtk.TreeIter add_object_content (Json.Object object, Gtk.TreeIter parent) {
             Gtk.TreeIter iter;
 
             store.append (out iter, parent);

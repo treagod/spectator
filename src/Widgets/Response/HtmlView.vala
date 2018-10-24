@@ -27,7 +27,21 @@ namespace HTTPInspector.Widgets.Response {
 
         public HtmlView () {
             scrolled = new Gtk.ScrolledWindow (null, null);
-            web_view = new WebKit.WebView ();
+            var settings = Settings.get_instance ();
+
+            if (settings.use_proxy) {
+                var context = WebKit.WebContext.get_default ();
+                var proxy_settings = new WebKit.NetworkProxySettings ("", settings.no_proxy.split (","));
+                proxy_settings.add_proxy_for_scheme ("http", settings.http_proxy);
+                proxy_settings.add_proxy_for_scheme ("https", settings.https_proxy);
+                context.set_network_proxy_settings (WebKit.NetworkProxyMode.CUSTOM, proxy_settings);
+
+                web_view = new WebKit.WebView.with_context (context);
+            } else {
+                web_view = new WebKit.WebView ();
+            }
+
+            configure_webview ();
             response_text = new SourceView ();
             web_view.load_plain_text ("");
             scrolled.add (response_text);
@@ -38,6 +52,23 @@ namespace HTTPInspector.Widgets.Response {
             set_visible_child (web_view);
 
             show_all ();
+        }
+
+        private void configure_webview () {
+            var settings = web_view.get_settings ();
+            settings.allow_file_access_from_file_urls = false;
+            settings.allow_modal_dialogs = false;
+            settings.enable_fullscreen = false;
+            settings.enable_developer_extras = false;
+            settings.enable_html5_database = false;
+            settings.enable_html5_local_storage = false;
+            settings.enable_java = false;
+            settings.enable_page_cache = false;
+            settings.enable_plugins = false;
+            settings.enable_smooth_scrolling = true;
+            settings.javascript_can_access_clipboard = false;
+            settings.javascript_can_open_windows_automatically = false;
+            web_view.editable = false;
         }
 
         public override void show_view (int i) {

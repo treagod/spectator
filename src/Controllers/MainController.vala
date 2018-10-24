@@ -43,7 +43,7 @@ namespace HTTPInspector.Controllers {
         }
 
         private void open_preferences () {
-            var dialog = new Widgets.Preferences (window);
+            var dialog = new Dialogs.Preferences (window);
             dialog.show_all ();
         }
 

@@ -27,10 +27,12 @@ vala_precompile(VALA_C ${EXEC_NAME}
 	Dialogs/Request/CreateDialog.vala
 	Dialogs/Request/UpdateDialog.vala
 	Dialogs/Alert.vala
+	Dialogs/Preferences.vala
+	Dialogs/Preference/General.vala
+	Dialogs/Preference/Network.vala
 
 	Widgets/Content.vala
 	Widgets/HeaderBar.vala
-	Widgets/Preferences.vala
 	Widgets/Sidebar/Container.vala
 	Widgets/Sidebar/Item.vala
 	Widgets/RequestResponsePane.vala
