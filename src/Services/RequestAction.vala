@@ -67,6 +67,7 @@ namespace HTTPInspector {
                 msg.request_headers.append (header.key, header.val);
             }
 
+            // Use applications User-Agent if none was defined
             if (user_agent == "") {
                 session.user_agent = "HTTPInspector-%s".printf (Constants.VERSION);
             } else {

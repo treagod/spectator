@@ -36,7 +36,7 @@ namespace HTTPInspector.Widgets {
         public RequestResponsePane () {
             request_view  = new Request.Container ();
             response_view = new Response.Container ();
-
+gigi
             request_view.response_received.connect ((res) => {
                 response_view.update (res);
             });
@@ -61,8 +61,8 @@ namespace HTTPInspector.Widgets {
                 header_deleted (header);
             });
 
-            add1 (request_view);
-            add2 (response_view);
+            pack1 (request_view, true, false);
+            pack2 (response_view, true, false);
         }
 
         public void set_item (RequestItem item) {
