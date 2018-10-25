@@ -48,9 +48,17 @@ namespace HTTPInspector {
             var session = new Soup.Session ();
 
             if (settings.use_proxy) {
-                var proxy_resolver = new SimpleProxyResolver (null, settings.no_proxy);
+                var proxy_resolver = new SimpleProxyResolver (null, null);
+
+                // Workaround as no proxy setting in constructor is broken
+                var ignore_hosts = settings.no_proxy.split (",");
+                foreach (var host in ignore_hosts) {
+                    host.strip ();
+                }
+                proxy_resolver.ignore_hosts = ignore_hosts;
                 proxy_resolver.set_uri_proxy ("http", settings.http_proxy);
                 proxy_resolver.set_uri_proxy ("https", settings.https_proxy);
+
                 session.proxy_resolver = proxy_resolver;
             }
 

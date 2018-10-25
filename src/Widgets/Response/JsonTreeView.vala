@@ -72,13 +72,11 @@ namespace HTTPInspector.Widgets.Response {
             }
         }
 
-        private owned Gtk.TreeIter add_object_content (Json.Object object, Gtk.TreeIter parent) {
+        private void add_object_content (Json.Object object, Gtk.TreeIter parent) {
             Gtk.TreeIter iter;
 
             store.append (out iter, parent);
             store.set (iter, 0, "test", 1, "maeh", -1);
-
-            return iter;
         }
 
         private void add_value (Value val, Gtk.TreeIter iter) {
