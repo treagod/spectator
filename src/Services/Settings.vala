@@ -35,6 +35,9 @@ namespace HTTPInspector {
         public string http_proxy { get; set; }
         public string https_proxy { get; set; }
         public string no_proxy { get; set; }
+        public bool use_userinformation { get; set; }
+        public string proxy_username { get; set; }
+        public string proxy_password { get; set; }
         public string proxy_uri { get; set; }
         public bool follow_redirects { get; set; }
         public int maximum_redirects { get; set; }

@@ -85,6 +85,10 @@ namespace HTTPInspector.Dialogs.Preference {
             username_entry.text = settings.no_proxy;
             username_entry.hexpand = true;
 
+            username_entry.changed.connect (() => {
+                settings.proxy_username = username_entry.text;
+            });
+
             var password_label = new Gtk.Label (_("Password"));
             password_label.halign = Gtk.Align.START;
             var password_entry = new Gtk.Entry ();
@@ -92,6 +96,20 @@ namespace HTTPInspector.Dialogs.Preference {
             password_entry.text = settings.no_proxy;
             password_entry.hexpand = true;
             password_entry.visibility = false;
+
+            password_entry.changed.connect (() => {
+                settings.proxy_password = proxy_entry.text;
+            });
+
+            user_information_switch.notify.connect (() => {
+                var use_userinformation = user_information_switch.active;
+                settings.use_userinformation = use_userinformation;
+                username_entry.sensitive = use_userinformation;
+                password_entry.sensitive = use_userinformation;
+            });
+
+            username_entry.sensitive = user_information_switch.active;
+            password_entry.sensitive = user_information_switch.active;
 
             var use_prox = settings.use_proxy;
             proxy_entry.sensitive = use_prox;
@@ -128,8 +146,8 @@ namespace HTTPInspector.Dialogs.Preference {
                 https_proxy_entry.sensitive = use_proxy;
                 no_proxy_entry.sensitive = use_proxy;
                 user_information_switch.sensitive = use_proxy;
-                username_entry.sensitive = use_proxy;
-                password_entry.sensitive = use_proxy;
+                username_entry.sensitive = user_information_switch.active;
+                password_entry.sensitive = user_information_switch.active;
             });
 
             add (option_grid);

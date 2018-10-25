@@ -36,7 +36,7 @@ namespace HTTPInspector.Widgets {
         public RequestResponsePane () {
             request_view  = new Request.Container ();
             response_view = new Response.Container ();
-gigi
+
             request_view.response_received.connect ((res) => {
                 response_view.update (res);
             });

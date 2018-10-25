@@ -54,6 +54,24 @@
             <description>Specifies which HTTPS Proxy to use.</description>
         </key>
 
+        <key name="use-userinformation" type="b">
+            <default>false</default>
+            <summary>Use user information for proxy.</summary>
+            <description>Sets the user credentials for a proxy server.</description>
+        </key>
+
+        <key name="proxy-username" type="s">
+            <default>''</default>
+            <summary>Username for proxy credentials.</summary>
+            <description>Specifies which user uses the proxy.</description>
+        </key>
+
+        <key name="proxy-password" type="s">
+            <default>''</default>
+            <summary>Password for proxy credentials.</summary>
+            <description>Specifies the password for the user of the proxy.</description>
+        </key>
+
         <key name="no-proxy" type="s">
             <default>''</default>
             <summary>Defines No Proxy.</summary>
