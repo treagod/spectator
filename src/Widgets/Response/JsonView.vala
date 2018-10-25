@@ -23,24 +23,30 @@ namespace HTTPInspector.Widgets.Response {
     class JsonView : AbstractTypeView {
         private SourceView response_text;
         private SourceView response_text_raw;
+        private JsonTreeView tree_view;
         private Gtk.ScrolledWindow scrolled;
         private Gtk.ScrolledWindow scrolled_raw;
+        private Gtk.ScrolledWindow tree_scrolled;
 
         public JsonView () {
-            var test = new JsonTreeView.parse_string ("{\"key\": \"value\"}");//"{\"asd\": 1}");
+            tree_view = new JsonTreeView.empty ();
             scrolled = new Gtk.ScrolledWindow (null, null);
             scrolled_raw = new Gtk.ScrolledWindow (null, null);
+            tree_scrolled = new Gtk.ScrolledWindow (null, null);
             response_text = new SourceView ();
             response_text_raw = new SourceView ();
-            scrolled.add (test);
+            scrolled.add (response_text);
             scrolled_raw.add (response_text_raw);
+            tree_scrolled.add (tree_view);
 
             response_text.set_lang ("json");
 
+
+            add_named (tree_scrolled, "tree_scrolled");
             add_named (scrolled, "response_text");
             add_named (scrolled_raw, "response_text_raw");
 
-            set_visible_child (scrolled);
+            set_visible_child (tree_scrolled);
 
             show_all ();
         }
@@ -48,10 +54,13 @@ namespace HTTPInspector.Widgets.Response {
         public override void show_view (int i) {
             switch (i) {
                 case 1:
+                    set_visible_child (scrolled);
+                    break;
+                case 2:
                     set_visible_child (scrolled_raw);
                     break;
                 default:
-                    set_visible_child (scrolled);
+                    set_visible_child (tree_scrolled);
                     break;
             }
         }
@@ -60,6 +69,7 @@ namespace HTTPInspector.Widgets.Response {
             if (it == null) {
                 response_text.insert_text ("");
                 response_text_raw.insert_text ("");
+                tree_view.clear ();
                 return;
             }
 
@@ -67,6 +77,7 @@ namespace HTTPInspector.Widgets.Response {
                 // Pretty Print Version of response JSON
                 var parser = new Json.Parser ();
                 var json = convert_with_fallback (it.data, it.data.length, "UTF-8", "ISO-8859-1");
+                tree_view.update_from_string (json);
                 parser.load_from_data (json, -1);
                 var root = parser.get_root ();
                 var generator = new Json.Generator ();

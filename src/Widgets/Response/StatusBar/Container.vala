@@ -143,6 +143,7 @@ namespace HTTPInspector.Widgets.Response.StatusBar {
 
             var json_selection = new Gtk.ComboBoxText ();
 
+            json_selection.append_text (_("JSON Tree"));
             json_selection.append_text (_("Prettified"));
             json_selection.append_text (_("Raw"));
             json_selection.active = 0;

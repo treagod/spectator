@@ -21,12 +21,18 @@
 
 namespace HTTPInspector.Widgets.Response {
     public class JsonTreeView  : Gtk.TreeView {
+        // Workaround to keep Gtk.TreeIter in memory to do recursive creation
+        private class TreeIter {
+            public Gtk.TreeIter iter;
+        }
+
         private Gtk.TreeStore store;
+
         public JsonTreeView (Json.Node node) {
             init_tree (node);
         }
 
-        public JsonTreeView.parse_string (string json) {
+        public JsonTreeView.from_string (string json) {
             var parser = new Json.Parser ();
             try {
 
@@ -37,50 +43,108 @@ namespace HTTPInspector.Widgets.Response {
             }
         }
 
-        private void init_tree (Json.Node node) {
-            var store = new Gtk.TreeStore (2, typeof (string), typeof (string));
+        public JsonTreeView.empty () {
+            store = new Gtk.TreeStore (2, typeof (string), typeof (string));
             set_model (store);
             insert_column_with_attributes (-1, "Key", new Gtk.CellRendererText (), "text", 0, null);
             insert_column_with_attributes (-1, "Value", new Gtk.CellRendererText (), "text", 1, null);
-            Gtk.TreeIter root;
+        }
 
-            if (node.get_node_type () == Json.NodeType.OBJECT) {
-                store.append (out root, null);
-                store.set (root, 0, "Object", 1, "", -1);
-            } else if (node.get_node_type () == Json.NodeType.ARRAY) {
-                store.append (out root, null);
-                store.set (root, 0, "Array", 1, "", -1);
-            } else {
-                var val = node.get_value ();
+        public void clear () {
+            store.clear ();
+        }
 
-                switch (val.type ()) {
-                case Type.INT64:
-                    store.append (out root, null);
-                    store.set (root, 0, "", 1, (("%" + int64.FORMAT + "").printf (val.get_int64 ())), -1);
-                    break;
-                case Type.INT:
-                    store.append (out root, null);
-                    store.set (root, 0, "", 1, ("%d".printf (val.get_int ())), -1);
-                    break;
-                default:
-                    store.append (out root, null);
-                    store.set (root, 0, "", 1, node.get_string (), -1);
-                    break;
-                }
+        public void update_from_string (string json) {
+            clear ();
+            var parser = new Json.Parser ();
+            try {
+                parser.load_from_data (json);
 
-                return;
+                init_top_level (parser.get_root ());
+            } catch (Error e) {
+                print ("Unable to parse the string: %s\n", e.message);
             }
         }
 
-        private void add_object_content (Json.Object object, Gtk.TreeIter parent) {
-            Gtk.TreeIter iter;
+        private void init_tree (Json.Node node) {
+            store = new Gtk.TreeStore (2, typeof (string), typeof (string));
+            set_model (store);
+            insert_column_with_attributes (-1, "Key", new Gtk.CellRendererText (), "text", 0, null);
+            insert_column_with_attributes (-1, "Value", new Gtk.CellRendererText (), "text", 1, null);
 
-            store.append (out iter, parent);
-            store.set (iter, 0, "test", 1, "maeh", -1);
+            init_top_level (node);
         }
 
-        private void add_value (Value val, Gtk.TreeIter iter) {
+        private void init_top_level (Json.Node node) {
+            var root = new TreeIter ();
 
+            store.append (out root.iter, null);
+
+            if (node.get_node_type () == Json.NodeType.OBJECT) {
+                store.set (root.iter, 0, "Object", 1, "", -1);
+                add_object_content (node.get_object (), root);
+            } else if (node.get_node_type () == Json.NodeType.ARRAY) {
+                store.set (root.iter, 0, "Array", 1, "", -1);
+                add_array_content (node.get_array (), root);
+            } else {
+                add_key_value ("", node, root);
+            }
+        }
+
+        private void add_object_content (Json.Object object, TreeIter parent) {
+            var iter = new TreeIter ();
+
+            object.foreach_member ((object, key, node) => {
+                store.append (out iter.iter, parent.iter);
+                add_key_value (key, node, iter);
+            });
+        }
+
+        private void add_array_content (Json.Array array, TreeIter parent) {
+            var iter = new TreeIter ();
+
+            array.foreach_element ((array, idx, node) => {
+                store.append (out iter.iter, parent.iter);
+                add_key_value ("%u".printf (idx), node, iter);
+            });
+        }
+
+        private void add_key_value (string key, Json.Node node, TreeIter iter) {
+            if (node.get_node_type () == Json.NodeType.OBJECT) {
+                store.set (iter.iter, 0, key, 1, "", -1);
+                add_object_content (node.get_object (), iter);
+            } else if (node.get_node_type () == Json.NodeType.ARRAY) {
+                store.set (iter.iter, 0, key, 1, "", -1);
+                add_array_content (node.get_array (), iter);
+            } else {
+                add_value (key, node.get_value (), iter);
+            }
+        }
+
+        private void add_value (string key, Value val, TreeIter iter) {
+            switch (val.type ()) {
+            case Type.INT64:
+                store.set (iter.iter, 0, key, 1, (("%" + int64.FORMAT + "").printf (val.get_int64 ())), -1);
+                break;
+            case Type.INT:
+                store.set (iter.iter, 0, key, 1, ("%d".printf (val.get_int ())), -1);
+                break;
+            case Type.DOUBLE:
+                store.set (iter.iter, 0, key, 1, val.get_double ().to_string (), -1);
+                break;
+            case Type.INVALID:
+                store.set (iter.iter, 0, key, 1, "INVALID", -1);
+                break;
+            case Type.NONE:
+                store.set (iter.iter, 0, key, 1, "null", -1);
+                break;
+            case Type.BOOLEAN:
+                store.set (iter.iter, 0, key, 1, val.get_boolean ().to_string (), -1);
+                break;
+            default:
+                store.set (iter.iter, 0, key, 1, val.get_string (), -1);
+                break;
+            }
         }
     }
 }
