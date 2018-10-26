@@ -76,12 +76,13 @@ namespace HTTPInspector.Dialogs.Preference {
             user_information_label.halign = Gtk.Align.START;
             var user_information_switch = new Gtk.Switch ();
             user_information_switch.halign = Gtk.Align.END;
+            user_information_switch.active = settings.use_userinformation;
 
             var username_label = new Gtk.Label (_("Username"));
             username_label.halign = Gtk.Align.START;
             var username_entry = new Gtk.Entry ();
             username_entry.halign = Gtk.Align.END;
-            username_entry.text = settings.no_proxy;
+            username_entry.text = settings.proxy_username;
             username_entry.hexpand = true;
 
             username_entry.changed.connect (() => {
@@ -92,12 +93,12 @@ namespace HTTPInspector.Dialogs.Preference {
             password_label.halign = Gtk.Align.START;
             var password_entry = new Gtk.Entry ();
             password_entry.halign = Gtk.Align.END;
-            password_entry.text = settings.no_proxy;
+            password_entry.text = settings.proxy_password;
             password_entry.hexpand = true;
             password_entry.visibility = false;
 
             password_entry.changed.connect (() => {
-                settings.proxy_password = proxy_entry.text;
+                settings.proxy_password = password_entry.text;
             });
 
             user_information_switch.notify.connect (() => {
@@ -145,8 +146,8 @@ namespace HTTPInspector.Dialogs.Preference {
                 https_proxy_entry.sensitive = use_proxy;
                 no_proxy_entry.sensitive = use_proxy;
                 user_information_switch.sensitive = use_proxy;
-                username_entry.sensitive = user_information_switch.active;
-                password_entry.sensitive = user_information_switch.active;
+                username_entry.sensitive = user_information_switch.active && use_proxy;
+                password_entry.sensitive = user_information_switch.active && use_proxy;
             });
 
             add (option_grid);

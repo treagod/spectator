@@ -55,8 +55,12 @@ namespace HTTPInspector {
                     host.strip ();
                 }
                 proxy_resolver.ignore_hosts = ignore_hosts;
-                proxy_resolver.set_uri_proxy ("http", settings.http_proxy);
-                proxy_resolver.set_uri_proxy ("https", settings.https_proxy);
+
+                var http_proxy = settings.http_proxy;
+                var https_proxy = settings.https_proxy;
+
+                proxy_resolver.set_uri_proxy ("http", http_proxy);
+                proxy_resolver.set_uri_proxy ("https", https_proxy);
 
                 session.proxy_resolver = proxy_resolver;
             }
