@@ -95,7 +95,7 @@ namespace HTTPInspector.Widgets.Sidebar {
             }
         }
 
-        public void add (RequestItem item) {
+        public void add_item (RequestItem item) {
             var box_item = new Sidebar.Item (item);
 
             item_box.add (box_item);

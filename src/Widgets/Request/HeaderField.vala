@@ -102,11 +102,6 @@ namespace HTTPInspector.Widgets.Request {
             add (header_value_field);
         }
 
-        public void set_header (string key, string val) {
-            header_key_field.text = key;
-            header_value_field.text = val;
-        }
-
         private static Gtk.EntryCompletion common_header_key_completion () {
             Gtk.EntryCompletion completion = new Gtk.EntryCompletion ();
 

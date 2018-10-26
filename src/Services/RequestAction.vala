@@ -34,11 +34,11 @@ namespace HTTPInspector {
         }
 
         public async void make_request () {
-            timer = new Timer ();
-
-            perform_request ();
-
-	        item.status = RequestStatus.SENDING;
+            if (item.status != RequestStatus.SENDING) {
+                timer = new Timer ();
+                perform_request ();
+    	        item.status = RequestStatus.SENDING;
+            }
         }
 
         private async void perform_request (string? location = null) {

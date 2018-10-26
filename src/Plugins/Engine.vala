@@ -42,13 +42,20 @@ namespace HTTPInspector.Plugins {
                 // throw something
             }
 
-            var dir = Dir.open (plugin_dir, 0);
+            try {
+                var dir = Dir.open (plugin_dir, 0);
 
-            string? name = null;
-            while ((name = dir.read_name ()) != null) {
-                var success = load_plugin (plugin_dir, name);
+                string? name = null;
+                while ((name = dir.read_name ()) != null) {
+                    var success = load_plugin (plugin_dir, name);
 
+                    if (success) {
+                    }
+                }
+            } catch (FileError e) {
+                stderr.printf ("Error opening plugin directory. No plugins will be loaded. \n%s\n", e.message);
             }
+
         }
 
         private bool load_plugin (string dir, string name) {

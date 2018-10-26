@@ -27,7 +27,6 @@ namespace HTTPInspector.Dialogs.Preference {
         }
 
         public Network () {
-            var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
             var option_grid = new Gtk.Grid ();
             var settings = Settings.get_instance ();
 

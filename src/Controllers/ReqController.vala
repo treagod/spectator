@@ -139,7 +139,7 @@ namespace HTTPInspector.Controllers {
                 content.show_request (item);
             }
             items.add (item);
-            sidebar.add (item);
+            sidebar.add_item (item);
         }
 
         public unowned Gee.ArrayList<RequestItem> get_items_reference () {

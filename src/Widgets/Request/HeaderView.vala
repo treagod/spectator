@@ -56,40 +56,6 @@ namespace HTTPInspector.Widgets.Request {
             add (add_row_button);
         }
 
-
-        public void update_headers (RequestItem item) {
-            header_fields.forall ((widget) => {
-                header_fields.remove (widget);
-            });
-
-            headers.clear ();
-
-            if (item.headers.size == 0) {
-                add_row ();
-            }
-
-            // add_header_rows (item);
-        }
-
-        public void change_selected_item (RequestItem item) {
-            headers = new Gee.ArrayList<HeaderField> ();
-            update_headers (item);
-        }
-
-
-        private void queue_button (Gtk.Button button, RequestItem item) {
-            buttons.add (button);
-            button.clicked.connect (() => {
-                var index = buttons.index_of (button);
-                buttons.remove (button);
-                header_fields.remove_row (index + 1);
-
-                if (buttons.size == 0) {
-                    add_row ();
-                }
-            });
-        }
-
         public void change_headers (Gee.ArrayList<Header> headers) {
             header_fields.forall ((widget) => {
                 header_fields.remove (widget);

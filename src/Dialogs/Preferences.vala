@@ -59,75 +59,9 @@ namespace HTTPInspector.Dialogs {
             content.margin_top = 0;
         }
 
-        private Gtk.Box create_network_tab () {
-            var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
-            var option_grid = new Gtk.Grid ();
-            var settings = Settings.get_instance ();
-
-            option_grid.column_spacing = 12;
-            option_grid.row_spacing = 6;
-
-            var use_proxy_label = new Gtk.Label(_("Use Proxy"));
-            use_proxy_label.halign = Gtk.Align.START;
-            var use_proxy_switch = new Gtk.Switch ();
-            use_proxy_switch.halign = Gtk.Align.END;
-
-            use_proxy_switch.active = settings.use_proxy;
-            use_proxy_switch.notify.connect (() => {
-                settings.use_proxy = use_proxy_switch.active;
-            });
-
-            var proxy_label = new Gtk.Label (_("HTTP Proxy"));
-            proxy_label.halign = Gtk.Align.START;
-            var proxy_entry = new Gtk.Entry ();
-            proxy_entry.halign = Gtk.Align.END;
-            proxy_entry.text = settings.http_proxy;
-
-            proxy_entry.changed.connect (() => {
-                settings.https_proxy = proxy_entry.text;
-            });
-
-            var https_proxy_label = new Gtk.Label (_("HTTPS Proxy"));
-            https_proxy_label.halign = Gtk.Align.START;
-            var https_proxy_entry = new Gtk.Entry ();
-            https_proxy_entry.halign = Gtk.Align.END;
-            https_proxy_entry.text = settings.https_proxy;
-
-            https_proxy_entry.changed.connect (() => {
-                settings.https_proxy = https_proxy_entry.text;
-            });
-
-            var no_proxy_label = new Gtk.Label (_("No Proxy"));
-            no_proxy_label.halign = Gtk.Align.START;
-            var no_proxy_entry = new Gtk.Entry ();
-            no_proxy_entry.halign = Gtk.Align.END;
-            no_proxy_entry.text = settings.no_proxy;
-            no_proxy_entry.hexpand = true;
-
-            no_proxy_entry.changed.connect (() => {
-                settings.no_proxy = no_proxy_entry.text;
-            });
-
-            option_grid.attach (use_proxy_label, 0, 0, 1, 1);
-            option_grid.attach (use_proxy_switch, 1, 0, 1, 1);
-            option_grid.attach (proxy_label, 0, 1, 1, 1);
-            option_grid.attach (proxy_entry, 1, 1, 1, 1);
-            option_grid.attach (https_proxy_label, 0, 2, 1, 1);
-            option_grid.attach (https_proxy_entry, 1, 2, 1, 1);
-            option_grid.attach (no_proxy_label, 0, 3, 1, 1);
-            option_grid.attach (no_proxy_entry, 1, 3, 1, 1);
-
-            option_grid.hexpand = true;
-
-            box.add (option_grid);
-
-            return box;
-        }
-
         private Gtk.Box create_plugin_tab () {
             var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
             var option_grid = new Gtk.Grid ();
-            var settings = Settings.get_instance ();
 
             option_grid.column_spacing = 12;
             option_grid.row_spacing = 6;
