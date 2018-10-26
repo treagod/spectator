@@ -91,7 +91,7 @@ namespace HTTPInspector {
         private Soup.URI? _uri { get; set; }
         public Method method { get; set; }
         public RequestStatus status { get; set; }
-        public ResponseItem response { get; set; }
+        public ResponseItem? response { get; set; }
         public Gee.ArrayList<Header> headers { get; private set; }
 
         public string uri {

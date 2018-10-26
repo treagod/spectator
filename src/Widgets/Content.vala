@@ -23,6 +23,7 @@ namespace HTTPInspector.Widgets {
     public class Content : Gtk.Stack, View.Request {
         private Granite.Widgets.Welcome welcome;
         private RequestResponsePane req_res_pane;
+        private Request.Container request_view;
 
         public signal void url_changed (string url);
         public signal void method_changed (Method method);
@@ -43,6 +44,7 @@ namespace HTTPInspector.Widgets {
                 welcome_activated (index);
             });
 
+            request_view = new Request.Container ();
             req_res_pane = new RequestResponsePane ();
             req_res_pane.url_changed.connect ((url) => {
                 url_changed (url);
@@ -64,8 +66,30 @@ namespace HTTPInspector.Widgets {
                 header_deleted (header);
             });
 
+            // Request View
+            request_view.url_changed.connect ((url) => {
+                url_changed (url);
+            });
+
+            request_view.request_activated.connect (() => {
+                request_activated ();
+            });
+
+            request_view.method_changed.connect((method) => {
+                method_changed (method);
+            });
+
+            request_view.header_added.connect ((header) => {
+                header_added (header);
+            });
+
+            request_view.header_deleted.connect ((header) => {
+                header_deleted (header);
+            });
+
             add_named (welcome, "welcome");
             add_named (req_res_pane, "req_res_pane");
+            add_named (request_view, "response_view");
 
             set_visible_child (welcome);
 
@@ -73,8 +97,13 @@ namespace HTTPInspector.Widgets {
         }
 
         public void show_request (RequestItem item) {
-            req_res_pane.set_item (item);
-            set_visible_child (req_res_pane);
+            if (item.response == null) {
+                request_view.set_item (item);
+                set_visible_child (request_view);
+            } else {
+                req_res_pane.set_item (item);
+                set_visible_child (req_res_pane);
+            }
         }
 
         public void show_welcome () {
