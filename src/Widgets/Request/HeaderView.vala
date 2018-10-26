@@ -20,13 +20,12 @@
 */
 
 namespace HTTPInspector.Widgets.Request {
-    class HeaderView : Gtk.Box, View.Request {
+    class HeaderView : Gtk.Box {
         private Gee.ArrayList<Gtk.Button> buttons;
         public Gee.ArrayList<HeaderField> headers;
         private Gtk.Grid header_fields;
         private uint id;
 
-        public signal RequestItem request_selected_item ();
         public signal void header_deleted (Header header);
         public signal void header_added (Header header);
 

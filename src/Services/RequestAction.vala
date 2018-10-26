@@ -34,11 +34,9 @@ namespace HTTPInspector {
         }
 
         public async void make_request () {
-            if (item.status != RequestStatus.SENDING) {
-                timer = new Timer ();
-                perform_request ();
-    	        item.status = RequestStatus.SENDING;
-            }
+            timer = new Timer ();
+            yield perform_request ();
+	        item.status = RequestStatus.SENDING;
         }
 
         private async void perform_request (string? location = null) {
@@ -91,7 +89,7 @@ namespace HTTPInspector {
                 // Performance new request to redirected location
                 if (mess.status_code == 302 && settings.follow_redirects && performed_redirects < settings.maximum_redirects) {
                     performed_redirects += 1;
-                    perform_request (mess.response_headers.get_one ("Location"));
+                    perform_request.begin (mess.response_headers.get_one ("Location"));
                     return;
                 }
 

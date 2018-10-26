@@ -20,7 +20,7 @@
 */
 
 namespace HTTPInspector.Widgets.Request {
-    class Container : Gtk.Box, View.Request {
+    class Container : Gtk.Box {
         private UrlEntry url_entry;
         private HeaderView header_view;
         private BodyView body_view;
@@ -49,14 +49,10 @@ namespace HTTPInspector.Widgets.Request {
             url_params_view = new HeaderView ();
             url_entry.margin_bottom = 10;
 
-            header_view.request_selected_item.connect (() => {
-                return new RequestItem (name, Method.convert (0));
-            });
-
             header_view.header_added.connect ((header) => {
                 header_added (header);
             });
-            
+
             header_view.header_deleted.connect ((header) => {
                 header_deleted (header);
             });
@@ -72,10 +68,6 @@ namespace HTTPInspector.Widgets.Request {
 
             url_entry.request_activated.connect (() => {
                 request_activated ();
-            });
-
-            request_completed.connect (() => {
-                url_entry.change_status (RequestItem.SENT);
             });
 
             body_view = new BodyView ();
@@ -100,10 +92,6 @@ namespace HTTPInspector.Widgets.Request {
             body_label.sensitive = false;
 
             stack.set_visible_child_name ("header");
-
-
-            selected_item_changed.connect (() => {
-            });
 
             add (tabs);
             add (stack);

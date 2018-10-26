@@ -33,7 +33,7 @@ namespace HTTPInspector.Widgets.Sidebar {
         }
     }
 
-    public class Container : Gtk.Box, View.Request {
+    public class Container : Gtk.Box {
         private Gtk.FlowBox item_box;
         private Gtk.ScrolledWindow scroll;
 

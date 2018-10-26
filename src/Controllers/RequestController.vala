@@ -19,86 +19,131 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace HTTPInspector.Controllers {
     public class RequestController {
-        private List<View.Request> views;
-        private RequestStore store;
-        public RequestItem? selected_item { get; private set; }
-        private int selected_item_idx;
-        private Plugins.Engine plugin_engine;
-        public signal void start_request ();
+        // Models
+        private Gee.ArrayList<RequestItem> items;
+        // \Models
+        // Views
+        private Widgets.Sidebar.Container sidebar;
+        private Widgets.Content content;
+        private Widgets.HeaderBar headerbar;
+        // \Views
+        public MainController main;
 
-        public RequestController () {
-            store = new RequestStore ();
-            views = new List<View.Request> ();
-            plugin_engine = new Plugins.Engine ();
+        public signal void preference_clicked ();
+
+        public RequestController (Widgets.HeaderBar headerbar, Widgets.Sidebar.Container sidebar,
+                                  Widgets.Content content) {
+            this.sidebar = sidebar;
+            this.content = content;
+            this.headerbar = headerbar;
+            this.items = new Gee.ArrayList<RequestItem> ();
+
+            setup ();
         }
 
-        private void update_views () {
-            foreach (var view in views) {
-                view.selected_item_updated ();
-            }
-        }
+        private void setup () {
+            content.welcome_activated.connect (show_create_request_dialog);
+            headerbar.new_request.clicked.connect (show_create_request_dialog);
+            headerbar.preference_clicked.connect (() => { preference_clicked (); });
+            sidebar.item_edited.connect (show_update_request_dialog);
+            sidebar.selection_changed.connect ((item) => {
+                update_headerbar (item);
+                update_content (item);
+            });
 
-        public void add_request (RequestItem item) {
-            store.add_request (item);
-            selected_item = item;
-            selected_item.notify.connect (update_views);
-            selected_item_idx = store.index_of (item);
+            content.url_changed.connect ((url) => {
+                sidebar.update_active_url (url);
+            });
 
-            foreach (var view in views) {
-                view.new_item (item);
-                view.selected_item_changed ();
-            }
-        }
+            content.method_changed.connect ((method) => {
+                sidebar.update_active_method (method);
+            });
 
-        public int get_selected_item_idx () {
-            return selected_item_idx;
-        }
+            content.request_activated.connect (() => {
+                var item = sidebar.get_active_item ();
+                item.status = RequestStatus.SENDING;
+                var action = new RequestAction (item);
 
-        public void register_view (View.Request view) {
-            views.append (view);
-        }
+                action.finished_request.connect (() => {
+                    if (item == sidebar.get_active_item ()) {
+                        content.show_request (item);
+                    }
+                });
 
-        public void update_selected_item (RequestItem item) {
-            var idx = store.index_of (item);
+                action.request_failed.connect ((item) => {
+                    item.status = RequestStatus.SENT;
+                    content.show_request (item);
+                    content.set_error ("Request failed: %s".printf (item.name));
+                });
 
-            if (idx == -1) {
-                stdout.printf ("Invalid item\n");
-            }
+                action.make_request.begin ();
+            });
 
+            content.header_added.connect((header) =>  {
+                var item = sidebar.get_active_item ();
+                item.add_header (header);
+            });
 
-            plugin_engine.run_request (selected_item);
+            content.header_deleted.connect ((header) => {
+                var item = sidebar.get_active_item ();
 
-            selected_item = item;
-            selected_item_idx = idx;
+                item.remove_header (header);
+            });
 
-            foreach (var view in views) {
-                view.selected_item_changed ();
-            }
-        }
+            sidebar.item_deleted.connect ((item) => {
+                items.remove (item);
 
-        public bool destroy (RequestItem item) {
-            return store.destroy (item);
-        }
-
-        public async void perform_request () {
-            var action = new RequestAction (selected_item);
-            plugin_engine.run_request (selected_item);
-
-            action.finished_request.connect (() => {
-                foreach (var view in views) {
-                    view.request_completed ();
+                if (items.size == 0) {
+                    content.show_welcome ();
                 }
             });
 
-            start_request ();
-            action.make_request ();
+            content.item_changed.connect ((item) => {
+                sidebar.update_active (item);
+            });
         }
 
-        // TODO: Make immutable
-        public unowned Gee.ArrayList<RequestItem> get_items () {
-            return store.items;
+        private void show_create_request_dialog () {
+            var dialog = new Dialogs.Request.CreateDialog (main.window);
+            dialog.show_all ();
+            dialog.creation.connect ((item) => {
+                add_item (item);
+                update_headerbar (item);
+            });
+        }
+
+        private void show_update_request_dialog (RequestItem item) {
+           var dialog = new Dialogs.Request.UpdateDialog (main.window, item);
+           dialog.show_all ();
+           dialog.updated.connect ((item) => {
+               update_headerbar (item);
+
+               if (item == sidebar.get_active_item ()) {
+                   update_content (item);
+               }
+           });
+        }
+
+        private void update_headerbar (RequestItem item) {
+            headerbar.subtitle = item.name;
+        }
+
+        private void update_content (RequestItem item) {
+            content.show_request (item);
+        }
+
+        public void add_item (RequestItem item) {
+            if (items.size == 0) {
+                content.show_request (item);
+            }
+            items.add (item);
+            sidebar.add_item (item);
+        }
+
+        public unowned Gee.ArrayList<RequestItem> get_items_reference () {
+            return items;
         }
     }
 }

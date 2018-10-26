@@ -20,7 +20,7 @@
 */
 
 namespace HTTPInspector {
-    public class Window : Gtk.ApplicationWindow, View.Request {
+    public class Window : Gtk.ApplicationWindow {
         private Widgets.Content request_item_view;
         private Widgets.Sidebar.Container sidebar;
         private Controllers.MainController controller;

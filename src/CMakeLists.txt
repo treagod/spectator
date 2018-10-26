@@ -10,9 +10,6 @@ vala_precompile(VALA_C ${EXEC_NAME}
 
 	Controllers/RequestController.vala
 	Controllers/MainController.vala
-	Controllers/ReqController.vala
-
-	Views/RequestView.vala
 
 	Stores/RequestStore.vala
 

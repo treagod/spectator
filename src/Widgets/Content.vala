@@ -30,7 +30,7 @@ namespace HTTPInspector.Widgets {
 
         public signal void url_changed (string url);
         public signal void method_changed (Method method);
-        public signal void request_activated ();
+        public async signal void request_activated ();
         public signal void cancel_process ();
 
         public signal void item_changed (RequestItem item);

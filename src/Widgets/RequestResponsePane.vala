@@ -20,7 +20,7 @@
 */
 
 namespace HTTPInspector.Widgets {
-    class RequestResponsePane : Gtk.Paned, View.Request {
+    class RequestResponsePane : Gtk.Paned {
         private Request.Container request_view;
         private Response.Container response_view;
 
