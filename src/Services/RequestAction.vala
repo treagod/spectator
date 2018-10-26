@@ -27,6 +27,7 @@ namespace HTTPInspector {
         private Timer? timer;
 
         public signal void finished_request ();
+        public signal void request_failed (RequestItem item);
 
         public RequestAction(RequestItem it) {
             item = it;
@@ -83,6 +84,10 @@ namespace HTTPInspector {
             }
 
             session.queue_message (msg, (sess, mess) => {
+                if (mess.response_body.data == null) {
+                    request_failed (item);
+                    return;
+                }
                 // Performance new request to redirected location
                 if (mess.status_code == 302 && settings.follow_redirects && performed_redirects < settings.maximum_redirects) {
                     performed_redirects += 1;

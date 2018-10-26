@@ -72,6 +72,12 @@ namespace HTTPInspector.Controllers {
                     }
                 });
 
+                action.request_failed.connect ((item) => {
+                    item.status = RequestStatus.SENT;
+                    content.show_request (item);
+                    content.set_error ("Request failed: %s".printf (item.name));
+                });
+
                 action.make_request ();
             });
 

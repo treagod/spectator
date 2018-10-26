@@ -20,10 +20,13 @@
 */
 
 namespace HTTPInspector.Widgets {
-    public class Content : Gtk.Stack, View.Request {
+    public class Content : Gtk.Box {
+        private Gtk.Stack stack;
         private Granite.Widgets.Welcome welcome;
         private RequestResponsePane req_res_pane;
         private Request.Container request_view;
+        private Gtk.InfoBar infobar;
+        private Gtk.Label infolabel;
 
         public signal void url_changed (string url);
         public signal void method_changed (Method method);
@@ -36,6 +39,9 @@ namespace HTTPInspector.Widgets {
         public signal void header_deleted (Header header);
 
         public Content () {
+            stack = new Gtk.Stack ();
+            infobar = new Gtk.InfoBar ();
+            infolabel = new Gtk.Label("");
             welcome = new Granite.Widgets.Welcome (_("HTTP Inspector"), _("Inspect your HTTP transmissions to the web"));
             welcome.hexpand = true;
             welcome.append ("bookmark-new", _("Create Request"), _("Create a new request to the web."));
@@ -87,27 +93,62 @@ namespace HTTPInspector.Widgets {
                 header_deleted (header);
             });
 
-            add_named (welcome, "welcome");
-            add_named (req_res_pane, "req_res_pane");
-            add_named (request_view, "response_view");
+            stack.add_named (welcome, "welcome");
+            stack.add_named (req_res_pane, "req_res_pane");
+            stack.add_named (request_view, "response_view");
 
-            set_visible_child (welcome);
+            stack.set_visible_child (welcome);
+            infobar.show_close_button = true;
+            infobar.revealed = false;
+
+            infobar.response.connect (() => {
+                infobar.revealed = false;
+            });
+
+            Gtk.Container content = infobar.get_content_area ();
+            content.add (infolabel);
+		    content.show_all ();
+
+            add  (infobar);
+            add (stack);
 
             show_all ();
+        }
+
+        construct {
+            orientation = Gtk.Orientation.VERTICAL;
+            margin = 0;
+        }
+
+        public void set_warning (string message) {
+            infobar.message_type = Gtk.MessageType.WARNING;
+
+            reveal_infobar (message);
+        }
+
+        public void set_error (string message) {
+            infobar.message_type = Gtk.MessageType.ERROR;
+
+            reveal_infobar (message);
+        }
+
+        private void reveal_infobar (string message) {
+            infolabel.label = message;
+		    infobar.revealed = true;
         }
 
         public void show_request (RequestItem item) {
             if (item.response == null) {
                 request_view.set_item (item);
-                set_visible_child (request_view);
+                stack.set_visible_child (request_view);
             } else {
                 req_res_pane.set_item (item);
-                set_visible_child (req_res_pane);
+                stack.set_visible_child (req_res_pane);
             }
         }
 
         public void show_welcome () {
-            set_visible_child (welcome);
+            stack.set_visible_child (welcome);
         }
     }
 
