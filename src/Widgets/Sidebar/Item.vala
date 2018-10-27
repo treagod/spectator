@@ -69,16 +69,11 @@ namespace HTTPInspector.Widgets.Sidebar {
             request_name.ellipsize = Pango.EllipsizeMode.END;
 
             url = new Gtk.Label ("");
-
-            if (item.uri.length > 0) {
-                url.label = "<small><i>" + item.uri + "</i></small>";
-            } else {
-                url.label = no_url;
-            }
-
             url.halign = Gtk.Align.START;
             url.use_markup = true;
             url.ellipsize = Pango.EllipsizeMode.END;
+
+            set_formatted_uri (item.uri);
 
             info_box.add (request_name);
             info_box.add (url);
@@ -118,14 +113,17 @@ namespace HTTPInspector.Widgets.Sidebar {
 
             request_name.label = item.name;
 
-            var escaped_url = escape_url (item.uri);
+            set_formatted_uri (item.uri);
+
+            show_all ();
+        }
+
+        private void set_formatted_uri (string uri) {
             if (item.uri.length > 0) {
-                url.label = "<small><i>" + escaped_url + "</i></small>";
+                url.label = "<small><i>" + escape_url (uri) + "</i></small>";
             } else {
                 url.label = no_url;
             }
-
-            show_all ();
         }
 
         private void create_box_menu () {

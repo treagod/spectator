@@ -34,6 +34,10 @@ namespace HTTPInspector.Widgets {
                 response_view.update (res);
             });
 
+            request_view.url_params_updated.connect ((items) => {
+                url_params_updated (items);
+            });
+
             request_view.url_changed.connect ((url) => {
                 url_changed (url);
             });

@@ -30,15 +30,17 @@ namespace HTTPInspector.Widgets.Request {
         public signal void request_activated ();
         public signal void cancel_process ();
 
+        private void notify_url_change () {
+            url_changed (url_entry.text);
+        }
+
         public UrlEntry () {
             init_method_box ();
             init_url_entry ();
             margin_top = 4;
             margin_bottom = 4;
 
-            url_entry.changed.connect (() => {
-                url_changed (url_entry.text);
-            });
+            url_entry.changed.connect (notify_url_change);
 
         }
 
@@ -61,7 +63,9 @@ namespace HTTPInspector.Widgets.Request {
         }
 
         public void set_text (string url) {
+            url_entry.changed.disconnect (notify_url_change);
             url_entry.text = url;
+            url_entry.changed.connect (notify_url_change);
         }
 
         public string get_text () {

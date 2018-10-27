@@ -28,6 +28,8 @@ namespace HTTPInspector.Widgets.Request {
         public string key { get { return key_field.text; }}
         public string val { get { return value_field.text; }}
 
+        public signal void updated (Pair item);
+
         construct {
             orientation = Gtk.Orientation.HORIZONTAL;
         }
@@ -43,6 +45,9 @@ namespace HTTPInspector.Widgets.Request {
 
             key_field.text = item.key;
             value_field.text = item.val;
+
+            key_field.changed.connect (() => { updated (item); });
+            value_field.changed.connect (() => { updated (item); });
         }
 
         private void setup () {

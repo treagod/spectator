@@ -24,8 +24,9 @@ namespace HTTPInspector.Widgets.Request {
         private Gtk.Grid rows;
         private uint id;
 
-        public signal void item_deleted (Pair header);
-        public signal void item_added (Pair header);
+        public signal void item_deleted (Pair item);
+        public signal void item_added (Pair item);
+        public signal void item_updated (Pair item);
 
         public KeyValueList (string add_label) {
             orientation = Gtk.Orientation.VERTICAL;
@@ -52,13 +53,17 @@ namespace HTTPInspector.Widgets.Request {
         }
 
         public void change_rows (Gee.ArrayList<Pair> items) {
-            rows.forall ((widget) => {
-                rows.remove (widget);
-            });
+            clear ();
 
             foreach (var item in items) {
                 add_field (item);
             }
+        }
+
+        public void clear () {
+            rows.forall ((widget) => {
+                rows.remove (widget);
+            });
         }
 
         public void add_field (Pair header) {
@@ -75,8 +80,24 @@ namespace HTTPInspector.Widgets.Request {
             show_all ();
         }
 
+        public Gee.ArrayList<Pair> get_all_items() {
+            var items = new Gee.ArrayList<Pair> ();
+
+            rows.forall ((widget) => {
+                if (widget is KeyValueField) {
+                    items.add (((KeyValueField) widget).item);
+                }
+            });
+
+            return items;
+        }
+
         private void setup_row (KeyValueField field) {
             var del_button = new Gtk.Button.from_icon_name ("window-close");
+
+            field.updated.connect ((item) => {
+                item_updated (item);
+            });
 
             del_button.clicked.connect (() => {
                 item_deleted (field.item);

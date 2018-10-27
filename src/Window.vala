@@ -120,7 +120,6 @@ namespace HTTPInspector {
             settings.window_height = height;
             settings.maximized = is_maximized;
             var s = controller.serialize_data ();
-            stdout.printf ("%s\n", s);
             settings.data = s;
 
             return false;
