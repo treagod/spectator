@@ -62,38 +62,32 @@ namespace HTTPInspector.Widgets.Request {
         }
 
         public void add_field (Pair header) {
-            var header_field = new HeaderField.with_value (header);
-            var del_button = new Gtk.Button.from_icon_name ("window-close");
-
-            del_button.clicked.connect (() => {
-                item_deleted (header_field.header);
-                rows.remove (header_field);
-                rows.remove (del_button);
-            });
-
-            rows.attach (header_field, 0, (int) id, 1, 1);
-            rows.attach (del_button, 2, (int) id, 1, 1);
-
-            id++;
+            var field = new KeyValueField.with_value (header);
+            setup_row (field);
             show_all ();
         }
 
         public void add_row () {
-            var header_field = new HeaderField ();
+            var field = new KeyValueField ();
+            setup_row (field);
+
+            item_added (field.item);
+            show_all ();
+        }
+
+        private void setup_row (KeyValueField field) {
             var del_button = new Gtk.Button.from_icon_name ("window-close");
 
             del_button.clicked.connect (() => {
-                item_deleted (header_field.header);
-                rows.remove (header_field);
+                item_deleted (field.item);
+                rows.remove (field);
                 rows.remove (del_button);
             });
 
-            rows.attach (header_field, 0, (int) id, 1, 1);
+            rows.attach (field, 0, (int) id, 1, 1);
             rows.attach (del_button, 2, (int) id, 1, 1);
 
-            item_added (header_field.header);
             id++;
-            show_all ();
         }
     }
 }

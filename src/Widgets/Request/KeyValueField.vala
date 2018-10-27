@@ -40,6 +40,9 @@ namespace HTTPInspector.Widgets.Request {
         public KeyValueField.with_value (Pair item) {
             this.item = item;
             setup ();
+
+            key_field.text = item.key;
+            value_field.text = item.val;
         }
 
         private void setup () {
