@@ -4,7 +4,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
 	Application.vala
 	Window.vala
 
-	Models/Header.vala
+	Models/Pair.vala
 	Models/RequestItem.vala
 	Models/ResponseItem.vala
 
@@ -48,6 +48,9 @@ vala_precompile(VALA_C ${EXEC_NAME}
 	Widgets/Request/HeaderField.vala
 	Widgets/Request/HeaderView.vala
 	Widgets/Request/BodyView.vala
+    Widgets/Request/KeyValueList.vala
+    Widgets/Request/KeyValueField.vala
+    Widgets/Request/Interface.vala
 
 	config.vala
 

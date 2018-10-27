@@ -20,16 +20,9 @@
 */
 
 namespace HTTPInspector.Widgets {
-    class RequestResponsePane : Gtk.Paned {
+    class RequestResponsePane : Gtk.Paned, Request.Interface {
         private Request.Container request_view;
         private Response.Container response_view;
-
-        public signal void url_changed (string url);
-        public signal void method_changed (Method method);
-        public signal void request_activated ();
-        public signal void cancel_process ();
-        public signal void header_added (Header header);
-        public signal void header_deleted (Header header);
 
         public signal void item_changed (RequestItem item);
 

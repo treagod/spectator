@@ -23,7 +23,7 @@ namespace HTTPInspector.Widgets.Request {
     class HeaderField : Gtk.Box {
         private Gtk.Entry header_key_field;
         private Gtk.Entry header_value_field;
-        public Header header;
+        public Pair header;
 
         public string key { get { return header_key_field.text; }}
         public string val { get { return header_value_field.text; }}
@@ -33,11 +33,11 @@ namespace HTTPInspector.Widgets.Request {
         }
 
         public HeaderField () {
-            header = new Header ("", "");
+            header = new Pair ("", "");
             setup ();
         }
 
-        public HeaderField.with_value (Header header) {
+        public HeaderField.with_value (Pair header) {
             this.header = header;
             setup ();
 

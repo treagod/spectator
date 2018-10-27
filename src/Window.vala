@@ -85,7 +85,7 @@ namespace HTTPInspector {
 
                         foreach (var header_element in headers.get_elements ()) {
                             var header = header_element.get_object ();
-                            request.add_header (new Header (header.get_string_member ("key"), header.get_string_member ("value")));
+                            request.add_header (new Pair (header.get_string_member ("key"), header.get_string_member ("value")));
                         }
 
                         controller.add_request (request);

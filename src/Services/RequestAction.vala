@@ -90,6 +90,7 @@ namespace HTTPInspector {
                     request_failed (item);
                     return;
                 }
+
                 // Performance new request to redirected location
                 if (mess.status_code == 302 && settings.follow_redirects && performed_redirects < settings.maximum_redirects) {
                     performed_redirects += 1;

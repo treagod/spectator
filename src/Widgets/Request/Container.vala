@@ -20,21 +20,14 @@
 */
 
 namespace HTTPInspector.Widgets.Request {
-    class Container : Gtk.Box {
+    class Container : Gtk.Box, Interface {
         private UrlEntry url_entry;
-        private HeaderView header_view;
+        private KeyValueList header_view;
         private BodyView body_view;
-        private HeaderView url_params_view;
+        private KeyValueList url_params_view;
         private Granite.Widgets.ModeButton tabs;
         private Gtk.Stack stack;
         private Gtk.Label body_label;
-
-        public signal void url_changed (string url);
-        public signal void method_changed (Method method);
-        public signal void request_activated ();
-        public signal void cancel_process ();
-        public signal void header_added (Header header);
-        public signal void header_deleted (Header header);
 
         public signal void response_received(ResponseItem it);
 
@@ -45,15 +38,15 @@ namespace HTTPInspector.Widgets.Request {
 
         public Container () {
             url_entry = new UrlEntry ();
-            header_view = new HeaderView ();
-            url_params_view = new HeaderView ();
+            header_view = new KeyValueList (_("Add Header"));
+            url_params_view = new KeyValueList (_("Add URL Parameter"));
             url_entry.margin_bottom = 10;
 
-            header_view.header_added.connect ((header) => {
+            header_view.item_added.connect ((header) => {
                 header_added (header);
             });
 
-            header_view.header_deleted.connect ((header) => {
+            header_view.item_deleted.connect ((header) => {
                 header_deleted (header);
             });
 
@@ -142,8 +135,8 @@ namespace HTTPInspector.Widgets.Request {
             }
         }
 
-        private void set_headers (Gee.ArrayList<Header> headers) {
-            header_view.change_headers (headers);
+        private void set_headers (Gee.ArrayList<Pair> headers) {
+            header_view.change_rows (headers);
         }
 
         public void set_item (RequestItem item) {

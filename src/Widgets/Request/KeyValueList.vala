@@ -20,25 +20,23 @@
 */
 
 namespace HTTPInspector.Widgets.Request {
-    class HeaderView : Gtk.Box {
-        private Gee.ArrayList<Gtk.Button> buttons;
-        private Gtk.Grid header_fields;
+    class KeyValueList : Gtk.Box {
+        private Gtk.Grid rows;
         private uint id;
 
-        public signal void header_deleted (Pair header);
-        public signal void header_added (Pair header);
+        public signal void item_deleted (Pair header);
+        public signal void item_added (Pair header);
 
-        public HeaderView () {
+        public KeyValueList (string add_label) {
             orientation = Gtk.Orientation.VERTICAL;
             margin_left = 7;
             margin_right = 7;
             id = 0;
 
-            header_fields = new Gtk.Grid ();
-            buttons = new Gee.ArrayList<Gtk.Button> ();
-            header_fields.column_spacing = 3;
-            header_fields.row_spacing = 3;
-            var add_row_button = new Gtk.Button.with_label ("Add header");
+            rows = new Gtk.Grid ();
+            rows.column_spacing = 3;
+            rows.row_spacing = 3;
+            var add_row_button = new Gtk.Button.with_label (add_label);
 
             add_row_button.margin_top = 7;
             add_row_button.margin_left = 128;
@@ -49,32 +47,32 @@ namespace HTTPInspector.Widgets.Request {
             });
 
 
-            add (header_fields);
+            add (rows);
             add (add_row_button);
         }
 
-        public void change_headers (Gee.ArrayList<Pair> headers) {
-            header_fields.forall ((widget) => {
-                header_fields.remove (widget);
+        public void change_rows (Gee.ArrayList<Pair> items) {
+            rows.forall ((widget) => {
+                rows.remove (widget);
             });
 
-            foreach (var header in headers) {
-                add_header (header);
+            foreach (var item in items) {
+                add_field (item);
             }
         }
 
-        public void add_header (Pair header) {
+        public void add_field (Pair header) {
             var header_field = new HeaderField.with_value (header);
             var del_button = new Gtk.Button.from_icon_name ("window-close");
 
             del_button.clicked.connect (() => {
-                header_deleted (header_field.header);
-                header_fields.remove (header_field);
-                header_fields.remove (del_button);
+                item_deleted (header_field.header);
+                rows.remove (header_field);
+                rows.remove (del_button);
             });
 
-            header_fields.attach (header_field, 0, (int) id, 1, 1);
-            header_fields.attach (del_button, 2, (int) id, 1, 1);
+            rows.attach (header_field, 0, (int) id, 1, 1);
+            rows.attach (del_button, 2, (int) id, 1, 1);
 
             id++;
             show_all ();
@@ -85,15 +83,15 @@ namespace HTTPInspector.Widgets.Request {
             var del_button = new Gtk.Button.from_icon_name ("window-close");
 
             del_button.clicked.connect (() => {
-                header_deleted (header_field.header);
-                header_fields.remove (header_field);
-                header_fields.remove (del_button);
+                item_deleted (header_field.header);
+                rows.remove (header_field);
+                rows.remove (del_button);
             });
 
-            header_fields.attach (header_field, 0, (int) id, 1, 1);
-            header_fields.attach (del_button, 2, (int) id, 1, 1);
+            rows.attach (header_field, 0, (int) id, 1, 1);
+            rows.attach (del_button, 2, (int) id, 1, 1);
 
-            header_added (header_field.header);
+            item_added (header_field.header);
             id++;
             show_all ();
         }

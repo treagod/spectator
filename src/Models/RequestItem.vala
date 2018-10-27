@@ -92,7 +92,7 @@ namespace HTTPInspector {
         public Method method { get; set; }
         public RequestStatus status { get; set; }
         public ResponseItem? response { get; set; }
-        public Gee.ArrayList<Header> headers { get; private set; }
+        public Gee.ArrayList<Pair> headers { get; private set; }
 
         public string uri {
             get {
@@ -105,7 +105,7 @@ namespace HTTPInspector {
         }
 
         public RequestItem (string nam, Method meth) {
-            headers = new Gee.ArrayList<Header> ();
+            headers = new Gee.ArrayList<Pair> ();
             name = nam;
             uri = "";
             method = meth;
@@ -113,7 +113,7 @@ namespace HTTPInspector {
         }
 
         public RequestItem.with_uri (string nam, string url, Method meth) {
-            headers = new Gee.ArrayList<Header> ();
+            headers = new Gee.ArrayList<Pair> ();
             name = nam;
             uri = url;
             method = meth;
@@ -127,7 +127,7 @@ namespace HTTPInspector {
                 header.val = val;
             } else {
                 //Index does not exist, create new entry;
-                add_header (new Header (key, val));
+                add_header (new Pair (key, val));
             }
         }
 
@@ -135,11 +135,11 @@ namespace HTTPInspector {
             return _uri != null;
         }
 
-        public void add_header (Header header) {
+        public void add_header (Pair header) {
             headers.add (header);
         }
 
-        public void remove_header (Header header) {
+        public void remove_header (Pair header) {
             headers.remove (header);
         }
     }

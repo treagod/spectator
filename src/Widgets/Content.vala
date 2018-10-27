@@ -35,8 +35,8 @@ namespace HTTPInspector.Widgets {
 
         public signal void item_changed (RequestItem item);
         public signal void welcome_activated(int index);
-        public signal void header_added (Header header);
-        public signal void header_deleted (Header header);
+        public signal void header_added (Pair header);
+        public signal void header_deleted (Pair header);
 
         public Content () {
             stack = new Gtk.Stack ();
@@ -52,46 +52,9 @@ namespace HTTPInspector.Widgets {
 
             request_view = new Request.Container ();
             req_res_pane = new RequestResponsePane ();
-            req_res_pane.url_changed.connect ((url) => {
-                url_changed (url);
-            });
 
-            req_res_pane.request_activated.connect (() => {
-                request_activated ();
-            });
-
-            req_res_pane.method_changed.connect((method) => {
-                method_changed (method);
-            });
-
-            req_res_pane.header_added.connect ((header) => {
-                header_added (header);
-            });
-
-            req_res_pane.header_deleted.connect ((header) => {
-                header_deleted (header);
-            });
-
-            // Request View
-            request_view.url_changed.connect ((url) => {
-                url_changed (url);
-            });
-
-            request_view.request_activated.connect (() => {
-                request_activated ();
-            });
-
-            request_view.method_changed.connect((method) => {
-                method_changed (method);
-            });
-
-            request_view.header_added.connect ((header) => {
-                header_added (header);
-            });
-
-            request_view.header_deleted.connect ((header) => {
-                header_deleted (header);
-            });
+            setup_request_signals (req_res_pane);
+            setup_request_signals (request_view);
 
             stack.add_named (welcome, "welcome");
             stack.add_named (req_res_pane, "req_res_pane");
@@ -113,6 +76,28 @@ namespace HTTPInspector.Widgets {
             add (stack);
 
             show_all ();
+        }
+
+        private void setup_request_signals (Request.Interface request) {
+            request.url_changed.connect ((url) => {
+                url_changed (url);
+            });
+
+            request.request_activated.connect (() => {
+                request_activated ();
+            });
+
+            request.method_changed.connect((method) => {
+                method_changed (method);
+            });
+
+            request.header_added.connect ((header) => {
+                header_added (header);
+            });
+
+            request.header_deleted.connect ((header) => {
+                header_deleted (header);
+            });
         }
 
         construct {

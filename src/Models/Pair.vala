@@ -20,11 +20,11 @@
 */
 
 namespace HTTPInspector {
-   public class Header {
+   public class Pair {
        public string key { get; set; }
        public string val { get; set; }
 
-       public Header (string k, string v) {
+       public Pair (string k, string v) {
            key = k;
            val = v;
        }
