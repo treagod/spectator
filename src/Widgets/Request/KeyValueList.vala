@@ -29,8 +29,7 @@ namespace HTTPInspector.Widgets.Request {
 
         public KeyValueList (string add_label) {
             orientation = Gtk.Orientation.VERTICAL;
-            margin_left = 7;
-            margin_right = 7;
+            get_style_context ().add_class ("key-value-list");
             id = 0;
 
             rows = new Gtk.Grid ();
@@ -38,9 +37,7 @@ namespace HTTPInspector.Widgets.Request {
             rows.row_spacing = 3;
             var add_row_button = new Gtk.Button.with_label (add_label);
 
-            add_row_button.margin_top = 7;
-            add_row_button.margin_left = 128;
-            add_row_button.margin_right = 128;
+            add_row_button.get_style_context ().add_class ("add-row-btn");
 
             add_row_button.clicked.connect (() => {
                 add_row ();

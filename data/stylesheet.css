@@ -1,0 +1,92 @@
+.ok-status-box {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #3a9104;
+    color: #3a9104;
+    background-color: #fafafa;
+}
+
+.error-status-box {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #a10705;
+    color: #a10705;
+    background-color: #fafafa;
+}
+
+.redirect-status-box {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #d48e15;
+    color: #d48e15;
+    background-color: #fafafa;
+}
+
+.response-info-box {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #273445;
+    color: #273445 ;
+    background-color: #fafafa;
+}
+
+.no-info-box {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #fafafa;
+    color: #fafafa;
+    background-color: #273445;
+}
+
+.dark-ok-status-box {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #68b723;
+    color: #68b723;
+    background-color: #333333;
+}
+
+.dark-error-status-box {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #c6262e;
+    color: #c6262e;
+    background-color: #333333;
+}
+
+.dark-redirect-status-box {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #f9c440;
+    color: #f9c440;
+    background-color: #333333;
+}
+
+.dark-response-info-box {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #d4d4d4;
+    color: #d4d4d4 ;
+    background-color: #333333;
+}
+
+.dialog-title {
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+.response-statusbar {
+    margin-left: 15px;
+}
+
+.key-value-list {
+    margin: 0px 10px;
+}
+
+.add-row-btn {
+    margin: 10px 130px 0px;
+}
+
+.sidebar-item-method {
+    margin-left: 10px;
+}

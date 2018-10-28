@@ -67,8 +67,11 @@ CUSTOM_VAPIS
 	Duktape/duktape.vapi
 )
 
+include (gresource)
+glib_compile_resources(GLIB_RESOURCES_ICONS SOURCE ../data/assets.gresource.xml)
+
 # tell cmake what to call the executable we just made
-add_executable(${EXEC_NAME} ${VALA_C})
+add_executable(${EXEC_NAME} ${VALA_C} ${GLIB_RESOURCES_ICONS})
 
 target_link_libraries(${EXEC_NAME} m)
 target_link_libraries(${EXEC_NAME} duktape)
