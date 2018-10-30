@@ -23,11 +23,13 @@ namespace HTTPInspector.Widgets.Request {
     class KeyValueList : Gtk.Box {
         private Gtk.Grid rows;
         private uint id;
+        public ItemProvider provider;
 
         public signal void item_deleted (Pair header);
         public signal void item_added (Pair header);
 
         public KeyValueList (string add_label) {
+            provider = new ItemProvider ();
             orientation = Gtk.Orientation.VERTICAL;
             get_style_context ().add_class ("key-value-list");
             id = 0;
@@ -58,14 +60,14 @@ namespace HTTPInspector.Widgets.Request {
             }
         }
 
-        public void add_field (Pair header) {
-            var field = new KeyValueField.with_value (header);
+        public void add_field (Pair item) {
+            var field = provider.create_item_field_with_value (item);
             setup_row (field);
             show_all ();
         }
 
         public void add_row () {
-            var field = new KeyValueField ();
+            var field = provider.create_item_field ();
             setup_row (field);
 
             item_added (field.item);

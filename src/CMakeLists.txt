@@ -50,6 +50,8 @@ vala_precompile(VALA_C ${EXEC_NAME}
     Widgets/Request/KeyValueList.vala
     Widgets/Request/KeyValueField.vala
     Widgets/Request/Interface.vala
+    Widgets/Request/ItemProvider.vala
+    Widgets/Request/HeaderProvider.vala
 
 	config.vala
 

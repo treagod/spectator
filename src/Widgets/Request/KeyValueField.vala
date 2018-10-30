@@ -20,9 +20,9 @@
 */
 
 namespace HTTPInspector.Widgets.Request {
-    class KeyValueField : Gtk.Box {
-        private Gtk.Entry key_field;
-        private Gtk.Entry value_field;
+    public class KeyValueField : Gtk.Box {
+        protected Gtk.Entry key_field;
+        protected Gtk.Entry value_field;
         public Pair item;
 
         public string key { get { return key_field.text; }}

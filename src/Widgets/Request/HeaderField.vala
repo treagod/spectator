@@ -20,86 +20,65 @@
 */
 
 namespace HTTPInspector.Widgets.Request {
-    class HeaderField : Gtk.Box {
-        private Gtk.Entry header_key_field;
-        private Gtk.Entry header_value_field;
-        public Pair header;
-
-        public string key { get { return header_key_field.text; }}
-        public string val { get { return header_value_field.text; }}
-
-        construct {
-            orientation = Gtk.Orientation.HORIZONTAL;
-        }
-
+    class HeaderField : KeyValueField {
         public HeaderField () {
-            header = new Pair ("", "");
+            base ();
             setup ();
         }
-
         public HeaderField.with_value (Pair header) {
-            this.header = header;
+            base.with_value (header);
             setup ();
-
-            header_key_field.text = header.key;
-            header_value_field.text = header.val;
         }
 
         private void setup () {
-            header_key_field = new Gtk.Entry ();
-            header_value_field = new Gtk.Entry ();
-
-            header_value_field.focus_in_event.connect (() => {
+            value_field.focus_in_event.connect (() => {
                 // Change Completion According to header key
-                switch (header_key_field.text) {
+                switch (key_field.text) {
                     case "Content-Type":
-                        header_value_field.set_completion (common_content_type_completion ());
+                        value_field.set_completion (common_content_type_completion ());
                         break;
                     case "User-Agent":
-                        header_value_field.set_completion (common_user_agent_completion ());
+                        value_field.set_completion (common_user_agent_completion ());
                         break;
                     default:
-                        header_value_field.set_completion (null);
+                        value_field.set_completion (null);
                         break;
                 }
 
                 return false;
             });
 
-            header_value_field.focus_out_event.connect (() => {
+            value_field.focus_out_event.connect (() => {
                 // Only emit if both entries are filled
-                if (header_key_field.text != "" && header_key_field.text != null) {
-                    header.val = val;
+                if (key_field.text != "" && key_field.text != null) {
+                    item.val = val;
                 }
 
                 return false;
             });
 
-            header_value_field.changed.connect (() => {
+            value_field.changed.connect (() => {
                 // Only emit if both entries are filled
-                if (header_key_field.text != "" && header_key_field.text != null) {
-                    header.val = val;
+                if (key_field.text != "" && key_field.text != null) {
+                    item.val = val;
                 }
             });
 
-            header_key_field.focus_out_event.connect (() => {
+            key_field.focus_out_event.connect (() => {
                 // Only emit if both entries are filled
-                header.key = key;
+                item.key = key;
 
                 return false;
             });
 
-            header_key_field.changed.connect (() => {
-                header.key = key;
+            key_field.changed.connect (() => {
+                item.key = key;
             });
 
-            header_key_field.hexpand = true;
-            header_value_field.hexpand = true;
+            key_field.hexpand = true;
+            value_field.hexpand = true;
 
-            header_key_field.set_completion (common_header_key_completion ());
-
-            add (header_key_field);
-            add (header_value_field);
+            key_field.set_completion (common_header_key_completion ());
         }
 
         private static Gtk.EntryCompletion common_header_key_completion () {
