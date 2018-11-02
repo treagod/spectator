@@ -78,17 +78,32 @@ namespace Duktape {
         [CCode (cname = "duk_get_top")]
         public int get_top ();
 
+        [CCode (cname = "duk_get_top_index")]
+        public int get_top_index ();
+
+        [CCode (cname = "duk_get_global_string")]
+        public void get_global_string (string name);
+
+        [CCode (cname = "duk_get_string")]
+        public unowned string get_string (int idx);
+
+        [CCode (cname = "duk_get_pointer",  simple_generics = true)]
+        public unowned T get_pointer<T> (int idx);
+
+        [CCode (cname = "duk_require_pointer",  simple_generics = true)]
+        public unowned T require_pointer<T> (int idx);
+
         [CCode (cname = "duk_safe_to_string")]
         public unowned string safe_to_string (int idx);
 
         [CCode (cname = "duk_pop")]
         public void pop();
 
-        [CCode (cname = "duk_get_global_string")]
-        public void get_global_string (string name);
-
         [CCode (cname = "duk_call")]
         public void call (uint nargs);
+
+        [CCode (cname = "duk_push_pointer",  simple_generics = true)]
+        public void push_ref<T> (T reference);
     }
 
     [CCode (cprefix = "DUK_RET_", cname = "int")]

@@ -27,9 +27,11 @@ namespace HTTPInspector.Controllers {
         }
 
         public unowned Gtk.ApplicationWindow window;
+        public Plugins.Engine plugin_engine { get; private set; }
 
         public MainController (Gtk.ApplicationWindow window, RequestController request_controller) {
             this.window = window;
+            this.plugin_engine = new Plugins.Engine ();
             this.request_controller = request_controller;
             this.request_controller.main = this;
 
