@@ -86,6 +86,8 @@ namespace HTTPInspector.Widgets.Response {
             } else if (node.get_node_type () == Json.NodeType.ARRAY) {
                 store.set (root.iter, 0, "Array", 1, "", -1);
                 add_array_content (node.get_array (), root);
+            } else if (node.is_null ()) {
+                store.set (root.iter, 0, "", 1, "null", -1);
             } else {
                 add_key_value ("", node, root);
             }
@@ -116,6 +118,8 @@ namespace HTTPInspector.Widgets.Response {
             } else if (node.get_node_type () == Json.NodeType.ARRAY) {
                 store.set (iter.iter, 0, key, 1, "", -1);
                 add_array_content (node.get_array (), iter);
+            } else if (node.is_null ()) {
+                store.set (iter.iter, 0, key, 1, "null", -1);
             } else {
                 add_value (key, node.get_value (), iter);
             }

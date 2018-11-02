@@ -22,7 +22,7 @@
 namespace HTTPInspector.Dialogs {
     public class Alert : Gtk.Dialog {
         private Gtk.Box container;
-        public Alert (Gtk.ApplicationWindow parent, string title, string description) {
+        public Alert (Gtk.Window parent, string title, string description) {
             deletable = false;
             resizable = false;
             transient_for = parent;

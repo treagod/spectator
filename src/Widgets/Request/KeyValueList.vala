@@ -23,15 +23,16 @@ namespace HTTPInspector.Widgets.Request {
     class KeyValueList : Gtk.Box {
         private Gtk.Grid rows;
         private uint id;
+        public ItemProvider provider;
 
         public signal void item_deleted (Pair item);
         public signal void item_added (Pair item);
         public signal void item_updated (Pair item);
 
         public KeyValueList (string add_label) {
+            provider = new ItemProvider ();
             orientation = Gtk.Orientation.VERTICAL;
-            margin_left = 7;
-            margin_right = 7;
+            get_style_context ().add_class ("key-value-list");
             id = 0;
 
             rows = new Gtk.Grid ();
@@ -39,9 +40,7 @@ namespace HTTPInspector.Widgets.Request {
             rows.row_spacing = 3;
             var add_row_button = new Gtk.Button.with_label (add_label);
 
-            add_row_button.margin_top = 7;
-            add_row_button.margin_left = 128;
-            add_row_button.margin_right = 128;
+            add_row_button.get_style_context ().add_class ("add-row-btn");
 
             add_row_button.clicked.connect (() => {
                 add_row ();
@@ -59,7 +58,7 @@ namespace HTTPInspector.Widgets.Request {
                 add_field (item);
             }
         }
-
+        
         public void clear () {
             rows.forall ((widget) => {
                 rows.remove (widget);
@@ -67,13 +66,13 @@ namespace HTTPInspector.Widgets.Request {
         }
 
         public void add_field (Pair header) {
-            var field = new KeyValueField.with_value (header);
+            var field = provider.create_item_field_with_value (item);
             setup_row (field);
             show_all ();
         }
 
         public void add_row () {
-            var field = new KeyValueField ();
+            var field = provider.create_item_field ();
             setup_row (field);
 
             item_added (field.item);

@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-public Duktape.ReturnType native_print (Duktape.Context ctx) {
+public static Duktape.ReturnType native_print (Duktape.Context ctx) {
     ctx.push_string (" ");
     ctx.insert (0);
     ctx.join (ctx.get_top () - 1);
@@ -62,10 +62,6 @@ namespace HTTPInspector.Plugins {
             }
             context.put_prop_string (obj_idx, "headers");
             context.call (1);
-        }
-
-        public void call_response_recieved (ResponseItem res) {
-
         }
 
         private void setup_context () {

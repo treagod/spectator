@@ -43,6 +43,10 @@ namespace HTTPInspector {
         }
 
         public void show_app () {
+            var provider = new Gtk.CssProvider ();
+            provider.load_from_resource ("/com/github/treagod/httpinspector/stylesheet.css");
+            Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+
             var settings = Settings.get_instance ();
             var grid = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
             grid.width_request = 950;
@@ -119,8 +123,7 @@ namespace HTTPInspector {
             settings.window_width = width;
             settings.window_height = height;
             settings.maximized = is_maximized;
-            var s = controller.serialize_data ();
-            settings.data = s;
+            settings.data = controller.serialize_data ();
 
             return false;
         }

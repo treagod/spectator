@@ -92,7 +92,7 @@ namespace HTTPInspector.Widgets.Sidebar {
             method = new Gtk.Label (get_method_label (item.method));
             method.set_justify (Gtk.Justification.CENTER);
             method.halign = Gtk.Align.END;
-            method.margin_left = 10;
+            method.get_style_context ().add_class ("sidebar-item-method");
             method.margin_end = 10;
             method.use_markup = true;
 

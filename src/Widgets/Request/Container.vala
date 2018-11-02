@@ -42,6 +42,8 @@ namespace HTTPInspector.Widgets.Request {
             url_params_view = new KeyValueList (_("Add Parameter"));
             url_entry.margin_bottom = 10;
 
+            header_view.provider = new HeaderProvider ();
+
             url_params_view.item_updated.connect (() => {
                 url_params_updated (url_params_view.get_all_items ());
             });

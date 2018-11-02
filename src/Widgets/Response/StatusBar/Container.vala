@@ -25,81 +25,6 @@ namespace HTTPInspector.Widgets.Response.StatusBar {
     }
 
     class Container : Gtk.Box {
-        private const string CSS = """
-            .ok-status-box {
-                border-width: 1px;
-                border-style: solid;
-                border-color: #3a9104;
-                color: #3a9104;
-                background-color: #fafafa;
-            }
-
-            .error-status-box {
-                border-width: 1px;
-                border-style: solid;
-                border-color: #a10705;
-                color: #a10705;
-                background-color: #fafafa;
-            }
-
-            .redirect-status-box {
-                border-width: 1px;
-                border-style: solid;
-                border-color: #d48e15;
-                color: #d48e15;
-                background-color: #fafafa;
-            }
-
-            .response-info-box {
-                border-width: 1px;
-                border-style: solid;
-                border-color: #273445;
-                color: #273445 ;
-                background-color: #fafafa;
-            }
-
-            .no-info-box {
-                border-width: 1px;
-                border-style: solid;
-                border-color: #fafafa;
-                color: #fafafa;
-                background-color: #273445;
-            }
-
-            .dark-ok-status-box {
-                border-width: 1px;
-                border-style: solid;
-                border-color: #68b723;
-                color: #68b723;
-                background-color: #333333;
-            }
-
-            .dark-error-status-box {
-                border-width: 1px;
-                border-style: solid;
-                border-color: #c6262e;
-                color: #c6262e;
-                background-color: #333333;
-            }
-
-            .dark-redirect-status-box {
-                border-width: 1px;
-                border-style: solid;
-                border-color: #f9c440;
-                color: #f9c440;
-                background-color: #333333;
-            }
-
-            .dark-response-info-box {
-                border-width: 1px;
-                border-style: solid;
-                border-color: #d4d4d4;
-                color: #d4d4d4 ;
-                background-color: #333333;
-            }
-        """;
-
-
         private Gtk.Box http_status_box;
         private Gtk.Label http_status_label;
         private Gtk.Box request_time_box;
@@ -111,21 +36,10 @@ namespace HTTPInspector.Widgets.Response.StatusBar {
 
         public signal void view_changed (int i);
 
-        static construct {
-            var provider = new Gtk.CssProvider ();
-            try {
-                provider.load_from_data (CSS, CSS.length);
-                Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider,
-                                                            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-            } catch (Error e) {
-                critical (e.message);
-            }
-        }
-
         construct {
             orientation = Gtk.Orientation.HORIZONTAL;
             spacing = 7;
-            margin_left = 15;
+            get_style_context ().add_class ("response-statusbar");
             content_type = new Gtk.Stack ();
 
             content_type.add_named (new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0),

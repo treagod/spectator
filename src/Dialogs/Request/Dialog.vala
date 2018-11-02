@@ -96,8 +96,7 @@ namespace HTTPInspector.Dialogs.Request {
                 icon = new Gtk.Image.from_icon_name ("find-location", Gtk.IconSize.DIALOG);
                 label = new Gtk.Label ("<b>" + text + "</b>");
                 label.use_markup = true;
-                label.margin_left = 10;
-                label.margin_bottom = 10;
+                label.get_style_context ().add_class ("dialog-title");
                 label.xalign = 0;
                 label.get_style_context ().add_class ("h2");
 
