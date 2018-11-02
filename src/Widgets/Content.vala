@@ -24,7 +24,6 @@ namespace HTTPInspector.Widgets {
         private Gtk.Stack stack;
         private Granite.Widgets.Welcome welcome;
         private RequestResponsePane req_res_pane;
-        private Request.Container request_view;
         private Gtk.InfoBar infobar;
         private Gtk.Label infolabel;
 
@@ -51,15 +50,12 @@ namespace HTTPInspector.Widgets {
                 welcome_activated (index);
             });
 
-            request_view = new Request.Container ();
             req_res_pane = new RequestResponsePane ();
 
             setup_request_signals (req_res_pane);
-            setup_request_signals (request_view);
 
             stack.add_named (welcome, "welcome");
             stack.add_named (req_res_pane, "req_res_pane");
-            stack.add_named (request_view, "response_view");
 
             stack.set_visible_child (welcome);
             infobar.show_close_button = true;
@@ -85,7 +81,6 @@ namespace HTTPInspector.Widgets {
         }
 
         public void update_url_bar (string uri) {
-            request_view.update_url_bar (uri);
             req_res_pane.update_url_bar (uri);
         }
 
@@ -107,20 +102,15 @@ namespace HTTPInspector.Widgets {
         }
 
         public void show_request (RequestItem item) {
-            if (item.response == null) {
-                request_view.set_item (item);
-                stack.set_visible_child (request_view);
-            } else {
-                req_res_pane.set_item (item);
-                stack.set_visible_child (req_res_pane);
-            }
+            req_res_pane.set_item (item);
+            stack.set_visible_child (req_res_pane);
         }
 
         public void update_url_params (RequestItem item) {
-            request_view.update_url_params (item);
+            req_res_pane.update_url_params (item);
         }
 
-        private void setup_request_signals (Request.Interface request) {
+        private void setup_request_signals (RequestResponsePane request) {
             request.url_changed.connect ((url) => {
                 url_changed (url);
             });

@@ -58,14 +58,14 @@ namespace HTTPInspector.Widgets.Request {
                 add_field (item);
             }
         }
-        
+
         public void clear () {
             rows.forall ((widget) => {
                 rows.remove (widget);
             });
         }
 
-        public void add_field (Pair header) {
+        public void add_field (Pair item) {
             var field = provider.create_item_field_with_value (item);
             setup_row (field);
             show_all ();

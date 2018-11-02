@@ -59,16 +59,30 @@ namespace HTTPInspector.Widgets {
             });
 
             pack1 (request_view, true, false);
-            pack2 (response_view, true, false);
         }
 
         public void update_url_bar (string uri) {
             request_view.update_url_bar (uri);
         }
 
+        public void update_url_params (RequestItem item) {
+            request_view.update_url_params (item);
+        }
+
         public void set_item (RequestItem item) {
             request_view.set_item (item);
-            response_view.update (item.response);
+            if (item.response != null) {
+                response_view.update (item.response);
+                if (get_child2 () == null) {
+                    pack2 (response_view, true, false);
+                    show_all ();
+                }
+            } else {
+                if (get_child2 () != null) {
+                    remove (response_view);
+                }
+            }
+
         }
 
         construct {
