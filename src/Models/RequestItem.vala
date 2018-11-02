@@ -100,7 +100,7 @@ namespace HTTPInspector {
                 }
                 return _uri.query;
             } public set {
-                _uri.query = value;
+                _uri.set_query (value);
                 _raw_uri = _uri.to_string (false);
             }
         }

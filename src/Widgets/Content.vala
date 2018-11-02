@@ -86,6 +86,7 @@ namespace HTTPInspector.Widgets {
 
         public void update_url_bar (string uri) {
             request_view.update_url_bar (uri);
+            req_res_pane.update_url_bar (uri);
         }
 
         public void set_warning (string message) {

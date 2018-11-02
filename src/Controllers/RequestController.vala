@@ -70,18 +70,27 @@ namespace HTTPInspector.Controllers {
             content.url_params_updated.connect ((items) => {
                 var query_builder = new StringBuilder ();
                 var request = sidebar.get_active_item ();
-                var first = true;
 
-                foreach (var item in items) {
-                    if (first) {
-                        first = false;
-                    } else {
-                        query_builder.append ("&");
+                for (int i = 0; i < items.size; i++) {
+                    var item = items.get (i);
+
+                    if (item.key == "" && item.val == "") {
+                        continue;
                     }
                     query_builder.append ("%s=%s".printf (item.key, item.val));
+
+                    if (i < items.size - 1) {
+                        query_builder.append ("&");
+                    }
                 }
 
-                request.query = query_builder.str;
+                var querystr = query_builder.str;
+                request.query = querystr;
+
+                if (querystr == "") {
+                    request.uri = request.uri.replace("?", "");
+                }
+
                 sidebar.update_active (request);
                 content.update_url_bar (request.uri);
             });

@@ -62,6 +62,10 @@ namespace HTTPInspector.Widgets {
             pack2 (response_view, true, false);
         }
 
+        public void update_url_bar (string uri) {
+            request_view.update_url_bar (uri);
+        }
+
         public void set_item (RequestItem item) {
             request_view.set_item (item);
             response_view.update (item.response);

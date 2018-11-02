@@ -85,7 +85,7 @@ namespace HTTPInspector.Widgets.Request {
 
             rows.forall ((widget) => {
                 if (widget is KeyValueField) {
-                    items.add (((KeyValueField) widget).item);
+                    items.insert (0, ((KeyValueField) widget).item);
                 }
             });
 
