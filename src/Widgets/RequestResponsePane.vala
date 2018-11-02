@@ -34,6 +34,10 @@ namespace HTTPInspector.Widgets {
                 response_view.update (res);
             });
 
+            request_view.url_params_updated.connect ((items) => {
+                url_params_updated (items);
+            });
+
             request_view.url_changed.connect ((url) => {
                 url_changed (url);
             });
@@ -56,6 +60,10 @@ namespace HTTPInspector.Widgets {
 
             pack1 (request_view, true, false);
             pack2 (response_view, true, false);
+        }
+
+        public void update_url_bar (string uri) {
+            request_view.update_url_bar (uri);
         }
 
         public void set_item (RequestItem item) {

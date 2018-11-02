@@ -28,52 +28,35 @@ namespace HTTPInspector.Widgets.Request {
         public string key { get { return key_field.text; }}
         public string val { get { return value_field.text; }}
 
+        public signal void updated (Pair item);
+
         construct {
             orientation = Gtk.Orientation.HORIZONTAL;
         }
 
         public KeyValueField () {
             item = new Pair ("", "");
+            key_field = new Gtk.Entry ();
+            value_field = new Gtk.Entry ();
             setup ();
         }
 
         public KeyValueField.with_value (Pair item) {
             this.item = item;
-            setup ();
-
+            key_field = new Gtk.Entry ();
+            value_field = new Gtk.Entry ();
             key_field.text = item.key;
             value_field.text = item.val;
+            setup ();
         }
 
         private void setup () {
-            key_field = new Gtk.Entry ();
-            value_field = new Gtk.Entry ();
-
-            value_field.focus_out_event.connect (() => {
-                // Only emit if both entries are filled
-                if (key_field.text != "" && key_field.text != null) {
-                    item.val = val;
-                }
-
-                return false;
-            });
-
             value_field.changed.connect (() => {
-                // Only emit if both entries are filled
-                if (key_field.text != "" && key_field.text != null) {
-                    item.val = val;
-                }
-            });
-
-            key_field.focus_out_event.connect (() => {
-                // Only emit if both entries are filled
-                item.key = key;
-
-                return false;
+                update_item ();
             });
 
             key_field.changed.connect (() => {
-                item.key = key;
+                update_item ();
             });
 
             key_field.hexpand = true;
@@ -82,6 +65,12 @@ namespace HTTPInspector.Widgets.Request {
 
             add (key_field);
             add (value_field);
+        }
+
+        private void update_item () {
+            item.key = key;
+            item.val = val;
+            updated (item);
         }
     }
 

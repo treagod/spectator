@@ -39,10 +39,24 @@ namespace HTTPInspector.Widgets.Request {
         public Container () {
             url_entry = new UrlEntry ();
             header_view = new KeyValueList (_("Add Header"));
-            url_params_view = new KeyValueList (_("Add URL Parameter"));
+            url_params_view = new KeyValueList (_("Add Parameter"));
             url_entry.margin_bottom = 10;
 
             header_view.provider = new HeaderProvider ();
+
+            url_params_view.item_updated.connect (() => {
+                url_params_updated (url_params_view.get_all_items ());
+            });
+
+            url_params_view.item_added.connect ((url) => {
+                url_params_updated (url_params_view.get_all_items ());
+            });
+
+            url_params_view.item_deleted.connect ((url) => {
+                var items = url_params_view.get_all_items ();
+                items.remove (url);
+                url_params_updated (items);
+            });
 
             header_view.item_added.connect ((header) => {
                 header_added (header);
@@ -50,6 +64,12 @@ namespace HTTPInspector.Widgets.Request {
 
             header_view.item_deleted.connect ((header) => {
                 header_deleted (header);
+            });
+
+            url_params_view.item_added.connect ((url_param) => {
+            });
+
+            url_params_view.item_deleted.connect ((url_param) => {
             });
 
             url_entry.url_changed.connect ((url) => {
@@ -72,15 +92,15 @@ namespace HTTPInspector.Widgets.Request {
             stack.margin_bottom = 18;
             stack.margin_top = 18;
 
-            stack.add_titled (header_view, "header", _("Header"));
-            stack.add_titled (url_params_view, "url_params", _("URL Params"));
-            stack.add_titled (body_view, "body", _("Body"));
+            stack.add_titled (header_view, "header", "header");
+            stack.add_titled (url_params_view, "url_params", "parameters");
+            stack.add_titled (body_view, "body", "body");
 
             add (url_entry);
 
-            var header_params_label = new Gtk.Label ("Headers");
-            var url_params_label = new Gtk.Label ("URL Params");
-            body_label = new Gtk.Label ("Body");
+            var header_params_label = new Gtk.Label (_("Headers"));
+            var url_params_label = new Gtk.Label (_("Parameters"));
+            body_label = new Gtk.Label (_("Body"));
 
             setup_tabs (header_params_label, url_params_label, body_label);
 
@@ -90,6 +110,24 @@ namespace HTTPInspector.Widgets.Request {
 
             add (tabs);
             add (stack);
+        }
+
+        public void update_url_params (RequestItem item) {
+            var query = item.query;
+            var params = query.split("&");
+            url_params_view.clear ();
+
+            foreach (var param in params) {
+                if (param != "") {
+                    var kv = param.split("=");
+                    if(kv.length == 2){
+                        url_params_view.add_field (new Pair(kv[0], kv[1]));
+                    } else if (kv.length == 1) {
+                        url_params_view.add_field (new Pair(kv[0], ""));
+                    }
+
+                }
+            }
         }
 
         private void setup_tabs (Gtk.Label header_params_label,
@@ -141,10 +179,15 @@ namespace HTTPInspector.Widgets.Request {
             header_view.change_rows (headers);
         }
 
+        public void update_url_bar (string uri) {
+            url_entry.set_text (uri);
+        }
+
         public void set_item (RequestItem item) {
             url_entry.change_status (item.status);
             url_entry.set_text (item.uri);
             url_entry.set_method (item.method);
+            update_url_params (item);
             update_tabs (item.method);
             set_headers (item.headers);
             show_all ();

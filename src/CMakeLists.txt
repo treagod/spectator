@@ -82,5 +82,7 @@ configure_file (
     ${CMAKE_SOURCE_DIR}/src/config.vala.cmake
     ${CMAKE_SOURCE_DIR}/src/config.vala)
 
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
+
 # install the binaries we just made
 install (TARGETS ${EXEC_NAME} RUNTIME DESTINATION bin)

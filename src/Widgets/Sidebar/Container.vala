@@ -66,8 +66,8 @@ namespace HTTPInspector.Widgets.Sidebar {
             });
 
             item_box.child_activated.connect ((child) => {
-                var history_item = child as Sidebar.Item;
-                selection_changed (history_item.item);
+                var sidebar_item = child as Sidebar.Item;
+                selection_changed (sidebar_item.item);
             });
 
             orientation = Gtk.Orientation.VERTICAL;

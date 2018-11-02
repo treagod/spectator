@@ -93,6 +93,17 @@ namespace HTTPInspector {
         public RequestStatus status { get; set; }
         public ResponseItem? response { get; set; }
         public Gee.ArrayList<Pair> headers { get; private set; }
+        public string query {
+            get {
+                if (_uri == null || _uri.query == null) {
+                    return "";
+                }
+                return _uri.query;
+            } public set {
+                _uri.set_query (value);
+                _raw_uri = _uri.to_string (false);
+            }
+        }
 
         public string uri {
             get {

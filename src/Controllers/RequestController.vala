@@ -54,7 +54,45 @@ namespace HTTPInspector.Controllers {
             });
 
             content.url_changed.connect ((url) => {
-                sidebar.update_active_url (url);
+                var request = sidebar.get_active_item ();
+                var uri = new Soup.URI (url);
+                var old_query = request.query;
+
+                if (request != null) {
+                    request.uri = url;
+
+                    if ((uri == null || old_query != uri.query)) {
+                        content.update_url_params (request);
+                    }
+                }
+            });
+
+            content.url_params_updated.connect ((items) => {
+                var query_builder = new StringBuilder ();
+                var request = sidebar.get_active_item ();
+
+                for (int i = 0; i < items.size; i++) {
+                    var item = items.get (i);
+
+                    if (item.key == "" && item.val == "") {
+                        continue;
+                    }
+                    query_builder.append ("%s=%s".printf (item.key, item.val));
+
+                    if (i < items.size - 1) {
+                        query_builder.append ("&");
+                    }
+                }
+
+                var querystr = query_builder.str;
+                request.query = querystr;
+
+                if (querystr == "") {
+                    request.uri = request.uri.replace("?", "");
+                }
+
+                sidebar.update_active (request);
+                content.update_url_bar (request.uri);
             });
 
             content.method_changed.connect ((method) => {
@@ -137,9 +175,6 @@ namespace HTTPInspector.Controllers {
         }
 
         public void add_item (RequestItem item) {
-            if (items.size == 0) {
-                content.show_request (item);
-            }
             items.add (item);
             sidebar.add_item (item);
         }

@@ -37,6 +37,7 @@ namespace HTTPInspector.Widgets {
         public signal void welcome_activated(int index);
         public signal void header_added (Pair header);
         public signal void header_deleted (Pair header);
+        public signal void url_params_updated(Gee.ArrayList<Pair> items);
 
         public Content () {
             stack = new Gtk.Stack ();
@@ -78,31 +79,14 @@ namespace HTTPInspector.Widgets {
             show_all ();
         }
 
-        private void setup_request_signals (Request.Interface request) {
-            request.url_changed.connect ((url) => {
-                url_changed (url);
-            });
-
-            request.request_activated.connect (() => {
-                request_activated ();
-            });
-
-            request.method_changed.connect((method) => {
-                method_changed (method);
-            });
-
-            request.header_added.connect ((header) => {
-                header_added (header);
-            });
-
-            request.header_deleted.connect ((header) => {
-                header_deleted (header);
-            });
-        }
-
         construct {
             orientation = Gtk.Orientation.VERTICAL;
             margin = 0;
+        }
+
+        public void update_url_bar (string uri) {
+            request_view.update_url_bar (uri);
+            req_res_pane.update_url_bar (uri);
         }
 
         public void set_warning (string message) {
@@ -130,6 +114,36 @@ namespace HTTPInspector.Widgets {
                 req_res_pane.set_item (item);
                 stack.set_visible_child (req_res_pane);
             }
+        }
+
+        public void update_url_params (RequestItem item) {
+            request_view.update_url_params (item);
+        }
+
+        private void setup_request_signals (Request.Interface request) {
+            request.url_changed.connect ((url) => {
+                url_changed (url);
+            });
+
+            request.request_activated.connect (() => {
+                request_activated ();
+            });
+
+            request.method_changed.connect((method) => {
+                method_changed (method);
+            });
+
+            request.header_added.connect ((header) => {
+                header_added (header);
+            });
+
+            request.header_deleted.connect ((header) => {
+                header_deleted (header);
+            });
+
+            request.url_params_updated.connect ((items) => {
+                url_params_updated (items);
+            });
         }
 
         public void show_welcome () {
