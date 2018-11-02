@@ -28,6 +28,13 @@ namespace HTTPInspector.Widgets.Request {
         private Granite.Widgets.ModeButton tabs;
         private Gtk.Stack stack;
         private Gtk.Label body_label;
+        public int tab_index {
+            get {
+                return tabs.selected;
+            } set {
+                tabs.selected = value;
+            }
+        }
 
         public signal void response_received(ResponseItem it);
 

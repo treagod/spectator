@@ -23,12 +23,13 @@ namespace HTTPInspector.Widgets {
     class RequestResponsePane : Gtk.Paned, Request.Interface {
         private Request.Container request_view;
         private Response.Container response_view;
-
-        public signal void item_changed (RequestItem item);
+        private Gee.HashMap<RequestItem, int> tab_indecies;
+        private RequestItem last_item;
 
         public RequestResponsePane () {
             request_view  = new Request.Container ();
             response_view = new Response.Container ();
+            tab_indecies = new Gee.HashMap<RequestItem, int> ();
 
             request_view.response_received.connect ((res) => {
                 response_view.update (res);
@@ -70,7 +71,16 @@ namespace HTTPInspector.Widgets {
         }
 
         public void set_item (RequestItem item) {
+            tab_indecies[last_item] = request_view.tab_index;
+            last_item = item;
             request_view.set_item (item);
+            if (!tab_indecies.has_key (item)) {
+                request_view.tab_index = 0;
+                tab_indecies[item] = 0;
+            } else {
+                request_view.tab_index = tab_indecies[item];
+            }
+
             if (item.response != null) {
                 response_view.update (item.response);
                 if (get_child2 () == null) {
@@ -82,7 +92,6 @@ namespace HTTPInspector.Widgets {
                     remove (response_view);
                 }
             }
-
         }
 
         construct {
