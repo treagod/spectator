@@ -26,6 +26,8 @@ namespace HTTPInspector.Widgets {
         private Gee.HashMap<RequestItem, int> tab_indecies;
         private RequestItem last_item;
 
+        public signal void type_changed (RequestBody.ContentType type);
+
         public RequestResponsePane () {
             request_view  = new Request.Container ();
             response_view = new Response.Container ();
@@ -57,6 +59,10 @@ namespace HTTPInspector.Widgets {
 
             request_view.header_deleted.connect ((header) => {
                 header_deleted (header);
+            });
+
+            request_view.type_changed.connect ((type) => {
+                type_changed (type);
             });
 
             pack1 (request_view, true, false);

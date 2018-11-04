@@ -28,6 +28,8 @@ namespace HTTPInspector.Widgets.Request {
         private KeyValueList urlencoded;
         private Gtk.ScrolledWindow raw_body;
 
+        public signal void type_changed (RequestBody.ContentType type);
+
         construct {
             orientation = Gtk.Orientation.VERTICAL;
             margin = 2;
@@ -74,7 +76,26 @@ namespace HTTPInspector.Widgets.Request {
                     source_view.set_lang ("plain");
                     break;
                 }
+
+                send_language_box_signal (index);
             });
+        }
+
+        private void send_language_box_signal (int idx) {
+            switch (idx) {
+                case 1:
+                type_changed (RequestBody.ContentType.XML);
+                break;
+                case 2:
+                type_changed (RequestBody.ContentType.JSON);
+                break;
+                case 3:
+                type_changed (RequestBody.ContentType.HTML);
+                break;
+                default:
+                type_changed (RequestBody.ContentType.PLAIN);
+                break;
+            }
         }
 
         private void setup_body_type_box () {
@@ -98,15 +119,18 @@ namespace HTTPInspector.Widgets.Request {
                     case 0:
                     body_content_type_selections.add (body_type_box);
                     body_content.set_visible_child (form_data);
+                    type_changed (RequestBody.ContentType.FORM_DATA);
                     break;
                     case 1:
                     body_content_type_selections.add (body_type_box);
                     body_content.set_visible_child (urlencoded);
+                    type_changed (RequestBody.ContentType.URLENCODED);
                     break;
                     case 2:
                     body_content_type_selections.add (language_box);
                     body_content_type_selections.add (body_type_box);
                     body_content.set_visible_child (raw_body);
+                    send_language_box_signal (language_box.active);
                     break;
                     default:
                     assert_not_reached ();
@@ -136,6 +160,36 @@ namespace HTTPInspector.Widgets.Request {
             var raw_body_source_view = new BodySourceView ();
             raw_body.add (raw_body_source_view);
             body_content.add (raw_body);
+        }
+
+        public void set_body (RequestBody body) {
+            // FORM_DATA, URLENCODED, PLAIN, JSON, XML, HTML
+            switch (body.type) {
+                case RequestBody.ContentType.FORM_DATA:
+                    body_type_box.active = 0;
+                    break;
+                case RequestBody.ContentType.URLENCODED:
+                    body_type_box.active = 1;
+                    break;
+                case RequestBody.ContentType.PLAIN:
+                    body_type_box.active = 2;
+                    language_box.active = 0;
+                    break;
+                case RequestBody.ContentType.JSON:
+                    body_type_box.active = 2;
+                    language_box.active = 2;
+                    break;
+                case RequestBody.ContentType.XML:
+                    body_type_box.active = 2;
+                    language_box.active = 1;
+                    break;
+                case RequestBody.ContentType.HTML:
+                    body_type_box.active = 2;
+                    language_box.active = 3;
+                    break;
+                default:
+                assert_not_reached ();
+            }
         }
     }
 }

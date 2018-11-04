@@ -99,6 +99,11 @@ namespace HTTPInspector.Controllers {
                 sidebar.update_active_method (method);
             });
 
+            content.type_changed.connect ((type) => {
+                var item = sidebar.get_active_item ();
+                item.request_body.type = type;
+            });
+
             content.request_activated.connect (() => {
                 var item = sidebar.get_active_item ();
                 item.status = RequestStatus.SENDING;

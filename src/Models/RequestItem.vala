@@ -52,19 +52,21 @@ namespace HTTPInspector {
         }
 
         public RequestItem (string nam, Method meth) {
+            setup (nam, meth);
+        }
+
+        public RequestItem.with_uri (string nam, string url, Method meth) {
+            setup (nam, meth);
+            uri = url;
+        }
+
+        private void setup (string nam, Method meth) {
             headers = new Gee.ArrayList<Pair> ();
             name = nam;
             uri = "";
             method = meth;
             status = RequestStatus.NOT_SENT;
-        }
-
-        public RequestItem.with_uri (string nam, string url, Method meth) {
-            headers = new Gee.ArrayList<Pair> ();
-            name = nam;
-            uri = url;
-            method = meth;
-            status = RequestStatus.NOT_SENT;
+            request_body = new RequestBody ();
         }
 
         public void update_header (int i, string key, string val) {

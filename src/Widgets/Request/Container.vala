@@ -36,7 +36,8 @@ namespace HTTPInspector.Widgets.Request {
             }
         }
 
-        public signal void response_received(ResponseItem it);
+        public signal void response_received (ResponseItem it);
+        public signal void type_changed (RequestBody.ContentType type);
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -93,6 +94,10 @@ namespace HTTPInspector.Widgets.Request {
             });
 
             body_view = new BodyView ();
+
+            body_view.type_changed.connect ((type) => {
+                type_changed (type);
+            });
 
             stack = new Gtk.Stack ();
             stack.margin = 0;
@@ -194,6 +199,7 @@ namespace HTTPInspector.Widgets.Request {
             url_entry.change_status (item.status);
             url_entry.set_text (item.uri);
             url_entry.set_method (item.method);
+            body_view.set_body (item.request_body);
             update_url_params (item);
             update_tabs (item.method);
             set_headers (item.headers);
