@@ -112,23 +112,20 @@ namespace HTTPInspector.Widgets.Request {
 
             body_type_box.changed.connect (() => {
                 var index = body_type_box.get_active ();
-                body_content_type_selections.remove (body_type_box);
                 body_content_type_selections.remove (language_box);
 
                 switch (index) {
                     case 0:
-                    body_content_type_selections.add (body_type_box);
                     body_content.set_visible_child (form_data);
                     type_changed (RequestBody.ContentType.FORM_DATA);
                     break;
                     case 1:
-                    body_content_type_selections.add (body_type_box);
                     body_content.set_visible_child (urlencoded);
                     type_changed (RequestBody.ContentType.URLENCODED);
                     break;
                     case 2:
                     body_content_type_selections.add (language_box);
-                    body_content_type_selections.add (body_type_box);
+                    body_content_type_selections.reorder_child (language_box, 0);
                     body_content.set_visible_child (raw_body);
                     send_language_box_signal (language_box.active);
                     break;
