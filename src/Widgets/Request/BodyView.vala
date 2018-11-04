@@ -21,23 +21,75 @@
 
 namespace HTTPInspector.Widgets.Request {
     class BodyView : Gtk.Box {
+        private Gtk.Stack body_content;
+        private Gtk.ComboBoxText body_type_box;
+        private Gtk.ComboBoxText language_box;
+
+        construct {
+            orientation = Gtk.Orientation.VERTICAL;
+            margin = 2;
+        }
+
         public BodyView () {
-            var grid = new Gtk.Grid ();
-            var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
-            var label = new UrlEntry ();
-            box.add (label);
-            var method_box = new Gtk.ComboBoxText ();
-            method_box.append_text ("form-data");
-            method_box.append_text ("x-www-form-urlencoded");
-            method_box.append_text ("raw");
-            method_box.halign = Gtk.Align.END;
-            method_box.active = 0;
+            body_content = new Gtk.Stack ();
+            body_content.add_named (new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0), "form-data");
+            body_content.add_named (new Gtk.Label ("x-www-form-urlencoded"), "x-www-form-urlencoded");
+            body_content.set_visible_child_name ("form-data");
+            body_content.hexpand = true;
 
-            grid.attach (method_box, 1, 0, 1, 1);
-            grid.attach (box, 0, 1, 2, 1);
+            setup_body_type_box ();
+            setup_language_box ();
+            setup_body_type_behaviour ();
 
+            add (body_content);
+        }
 
-            add (grid);
+        private void setup_language_box () {
+            language_box = new Gtk.ComboBoxText ();
+            language_box.append_text ("Plain");
+            language_box.append_text ("XML");
+            language_box.append_text ("JSON");
+            language_box.append_text ("HTML");
+            language_box.active = 0;
+        }
+
+        private void setup_body_type_box () {
+            body_type_box = new Gtk.ComboBoxText ();
+            body_type_box.append_text ("form-data");
+            body_type_box.append_text ("x-www-form-urlencoded");
+            body_type_box.append_text ("raw");
+            body_type_box.active = 0;
+        }
+
+        private void setup_body_type_behaviour () {
+            var body_content_type_selections = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 4);
+            body_content_type_selections.halign = Gtk.Align.END;
+
+            body_type_box.changed.connect (() => {
+                var index = body_type_box.get_active ();
+                body_content_type_selections.remove (body_type_box);
+                body_content_type_selections.remove (language_box);
+
+                switch (index) {
+                    case 0:
+                    body_content_type_selections.add (body_type_box);
+                    break;
+                    case 1:
+                    body_content_type_selections.add (body_type_box);
+                    break;
+                    case 2:
+                    body_content_type_selections.add (language_box);
+                    body_content_type_selections.add (body_type_box);
+                    break;
+                    default:
+                    assert_not_reached ();
+                }
+                body_content_type_selections.show_all ();
+            });
+
+            body_content_type_selections.add (body_type_box);
+
+            add (body_content_type_selections);
         }
     }
 }
