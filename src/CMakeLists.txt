@@ -6,6 +6,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
 
 	Models/Pair.vala
 	Models/RequestItem.vala
+    Models/RequestBody.vala
 	Models/ResponseItem.vala
 
 	Controllers/RequestController.vala

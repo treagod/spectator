@@ -20,75 +20,11 @@
 */
 
 namespace HTTPInspector {
-    public enum Method {
-        GET, POST, PUT, PATCH, DELETE, HEAD;
-
-        public static Method convert (int i) {
-            switch (i) {
-                case 0:
-                    return GET;
-                case 1:
-                    return POST;
-                case 2:
-                    return PUT;
-                case 3:
-                    return PATCH;
-                case 4:
-                    return DELETE;
-                case 5:
-                    return HEAD;
-                default:
-                    assert_not_reached ();
-            }
-        }
-
-        public int to_i () {
-            switch (this) {
-                case GET:
-                    return 0;
-                case POST:
-                    return 1;
-                case PUT:
-                    return 2;
-                case PATCH:
-                    return 3;
-                case DELETE:
-                    return 4;
-                case HEAD:
-                    return 5;
-                default:
-                    assert_not_reached ();
-            }
-        }
-
-        public string to_str () {
-            switch (this) {
-                case GET:
-                    return "GET";
-                case POST:
-                    return "POST";
-                case PUT:
-                    return "PUT";
-                case PATCH:
-                    return "PATCH";
-                case DELETE:
-                    return "DELETE";
-                case HEAD:
-                    return "HEAD";
-                default:
-                    assert_not_reached ();
-            }
-        }
-    }
-
-    public enum RequestStatus {
-        NOT_SENT, SENT, SENDING
-    }
-
     public class RequestItem : Object  {
         public string name { get; set; }
         private string _raw_uri { get; set; }
         private Soup.URI? _uri { get; set; }
+        public RequestBody request_body { get; private set; }
         public Method method { get; set; }
         public RequestStatus status { get; set; }
         public ResponseItem? response { get; set; }
@@ -152,6 +88,71 @@ namespace HTTPInspector {
 
         public void remove_header (Pair header) {
             headers.remove (header);
+        }
+    }
+
+    public enum RequestStatus {
+        NOT_SENT, SENT, SENDING
+    }
+
+    public enum Method {
+        GET, POST, PUT, PATCH, DELETE, HEAD;
+
+        public static Method convert (int i) {
+            switch (i) {
+                case 0:
+                    return GET;
+                case 1:
+                    return POST;
+                case 2:
+                    return PUT;
+                case 3:
+                    return PATCH;
+                case 4:
+                    return DELETE;
+                case 5:
+                    return HEAD;
+                default:
+                    assert_not_reached ();
+            }
+        }
+
+        public int to_i () {
+            switch (this) {
+                case GET:
+                    return 0;
+                case POST:
+                    return 1;
+                case PUT:
+                    return 2;
+                case PATCH:
+                    return 3;
+                case DELETE:
+                    return 4;
+                case HEAD:
+                    return 5;
+                default:
+                    assert_not_reached ();
+            }
+        }
+
+        public string to_str () {
+            switch (this) {
+                case GET:
+                    return "GET";
+                case POST:
+                    return "POST";
+                case PUT:
+                    return "PUT";
+                case PATCH:
+                    return "PATCH";
+                case DELETE:
+                    return "DELETE";
+                case HEAD:
+                    return "HEAD";
+                default:
+                    assert_not_reached ();
+            }
         }
     }
 }
