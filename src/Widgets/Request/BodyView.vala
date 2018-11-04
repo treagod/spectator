@@ -24,6 +24,9 @@ namespace HTTPInspector.Widgets.Request {
         private Gtk.Stack body_content;
         private Gtk.ComboBoxText body_type_box;
         private Gtk.ComboBoxText language_box;
+        private KeyValueList form_data;
+        private KeyValueList urlencoded;
+        private Gtk.ScrolledWindow raw_body;
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -32,15 +35,16 @@ namespace HTTPInspector.Widgets.Request {
 
         public BodyView () {
             body_content = new Gtk.Stack ();
-            body_content.add_named (new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0), "form-data");
-            body_content.add_named (new Gtk.Label ("x-www-form-urlencoded"), "x-www-form-urlencoded");
-            body_content.set_visible_child_name ("form-data");
             body_content.hexpand = true;
 
             setup_body_type_box ();
             setup_language_box ();
             setup_body_type_behaviour ();
+            setup_form_data ();
+            setup_urlencoded ();
+            setup_raw_body ();
 
+            body_content.set_visible_child (form_data);
             add (body_content);
         }
 
@@ -51,6 +55,26 @@ namespace HTTPInspector.Widgets.Request {
             language_box.append_text ("JSON");
             language_box.append_text ("HTML");
             language_box.active = 0;
+
+            language_box.changed.connect (() => {
+                var index = language_box.get_active ();
+                var source_view = (BodySourceView) raw_body.get_child ();
+
+                switch (index) {
+                    case 1:
+                    source_view.set_lang ("xml");
+                    break;
+                    case 2:
+                    source_view.set_lang ("json");
+                    break;
+                    case 3:
+                    source_view.set_lang ("html");
+                    break;
+                    default:
+                    source_view.set_lang ("plain");
+                    break;
+                }
+            });
         }
 
         private void setup_body_type_box () {
@@ -73,13 +97,16 @@ namespace HTTPInspector.Widgets.Request {
                 switch (index) {
                     case 0:
                     body_content_type_selections.add (body_type_box);
+                    body_content.set_visible_child (form_data);
                     break;
                     case 1:
                     body_content_type_selections.add (body_type_box);
+                    body_content.set_visible_child (urlencoded);
                     break;
                     case 2:
                     body_content_type_selections.add (language_box);
                     body_content_type_selections.add (body_type_box);
+                    body_content.set_visible_child (raw_body);
                     break;
                     default:
                     assert_not_reached ();
@@ -90,6 +117,25 @@ namespace HTTPInspector.Widgets.Request {
             body_content_type_selections.add (body_type_box);
 
             add (body_content_type_selections);
+        }
+
+        private void setup_form_data () {
+            form_data = new KeyValueList (_("Add"));
+            body_content.add (form_data);
+        }
+
+        private void setup_urlencoded () {
+            urlencoded = new KeyValueList (_("Add"));
+            body_content.add (urlencoded);
+        }
+
+        private void setup_raw_body () {
+            raw_body = new Gtk.ScrolledWindow (null, null);
+            raw_body.margin_top = 12;
+            raw_body.vexpand = true;
+            var raw_body_source_view = new BodySourceView ();
+            raw_body.add (raw_body_source_view);
+            body_content.add (raw_body);
         }
     }
 }

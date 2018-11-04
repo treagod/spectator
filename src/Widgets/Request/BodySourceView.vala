@@ -19,25 +19,14 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets.Response {
-    class SourceView : Gtk.SourceView {
-        public new Gtk.SourceBuffer buffer;
-        public Gtk.SourceLanguageManager manager;
+namespace HTTPInspector.Widgets.Request {
+    public class BodySourceView : Gtk.SourceView {
+        private new Gtk.SourceBuffer buffer;
+        private Gtk.SourceLanguageManager manager;
         public Gtk.SourceStyleSchemeManager style_scheme_manager;
-
         private string font { set; get; default = "Roboto Mono Regular 11"; }
 
-        private Gtk.SourceLanguage? language {
-            set {
-                buffer.language = value;
-            }
-        }
-
-        public void set_lang (string lang) {
-            language = manager.get_language (lang);
-        }
-
-        public SourceView () {
+        public BodySourceView () {
             Object (
                 highlight_current_line: false,
                 show_right_margin: false,
@@ -45,29 +34,12 @@ namespace HTTPInspector.Widgets.Response {
             );
         }
 
-        public void insert_text (string res) {
-            try {
-               buffer.text = convert_with_fallback (res, res.length, "UTF-8", "ISO-8859-1");
-           } catch (ConvertError e) {
-               stderr.printf ("Error converting markup for" + res + ", "+ e.message);
-           }
-        }
-
-        public void insert (ResponseItem? res) {
-            if (res == null) {
-                buffer.text = "";
-            }
-
-            try {
-                buffer.text = convert_with_fallback (res.data, res.data.length, "UTF-8", "ISO-8859-1");
-            } catch (ConvertError e) {
-                stderr.printf ("Error converting markup for" + res.data + ", "+ e.message);
-            }
+        public void set_lang (string lang) {
+            buffer.language = manager.get_language (lang);
         }
 
         construct {
             manager = Gtk.SourceLanguageManager.get_default ();
-            editable = false;
             style_scheme_manager = new Gtk.SourceStyleSchemeManager ();
             var style_id = (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) ? "solarized-dark" : "solarized-light";
             var scheme = style_scheme_manager.get_scheme (style_id);
@@ -85,7 +57,16 @@ namespace HTTPInspector.Widgets.Response {
             set_buffer (buffer);
             set_show_line_numbers (false);
 
-            language = manager.get_language ("html");
+            buffer.language = manager.get_language ("plain");
+            auto_indent = true;
+        }
+
+        public void insert (string text) {
+            try {
+               buffer.text = convert_with_fallback (text, text.length, "UTF-8", "ISO-8859-1");
+           } catch (ConvertError e) {
+               stderr.printf ("Error converting markup for" + text + ", "+ e.message);
+           }
         }
     }
 }

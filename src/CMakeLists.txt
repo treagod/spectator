@@ -47,6 +47,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
 	Widgets/Request/UrlEntry.vala
 	Widgets/Request/HeaderField.vala
 	Widgets/Request/BodyView.vala
+    Widgets/Request/BodySourceView.vala
     Widgets/Request/KeyValueList.vala
     Widgets/Request/KeyValueField.vala
     Widgets/Request/Interface.vala
