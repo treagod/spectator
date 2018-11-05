@@ -26,6 +26,10 @@ namespace HTTPInspector.Widgets.Request {
         public Gtk.SourceStyleSchemeManager style_scheme_manager;
         private string font { set; get; default = "Roboto Mono Regular 11"; }
 
+        // Not optimal as every single keystroke invokes this signal.
+        // Better would be a strategy which sends only chunks of the buffer
+        public signal void body_buffer_changed (string content);
+
         public BodySourceView () {
             Object (
                 highlight_current_line: false,
@@ -36,6 +40,10 @@ namespace HTTPInspector.Widgets.Request {
 
         public void set_lang (string lang) {
             buffer.language = manager.get_language (lang);
+        }
+
+        public void set_content (string content) {
+            buffer.text = content;
         }
 
         construct {
@@ -58,6 +66,9 @@ namespace HTTPInspector.Widgets.Request {
             set_show_line_numbers (false);
 
             buffer.language = manager.get_language ("plain");
+            buffer.changed.connect (() => {
+                body_buffer_changed (buffer.text);
+            });
             auto_indent = true;
         }
 

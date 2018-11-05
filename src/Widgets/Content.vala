@@ -32,6 +32,7 @@ namespace HTTPInspector.Widgets {
         public async signal void request_activated ();
         public signal void cancel_process ();
         public signal void type_changed (RequestBody.ContentType type);
+        public signal void body_buffer_changed (string content);
 
         public signal void item_changed (RequestItem item);
         public signal void welcome_activated(int index);
@@ -55,6 +56,10 @@ namespace HTTPInspector.Widgets {
 
             req_res_pane.type_changed.connect ((type) => {
                 type_changed (type);
+            });
+
+            req_res_pane.body_buffer_changed.connect ((content) => {
+                body_buffer_changed (content);
             });
 
             setup_request_signals (req_res_pane);

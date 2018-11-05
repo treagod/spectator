@@ -27,6 +27,7 @@ namespace HTTPInspector {
         public string raw;
 
         public RequestBody () {
+            raw = "";
             type = FORM_DATA;
             form_data = new Gee.ArrayList<Pair> ();
             urlencoded = new Gee.ArrayList<Pair> ();

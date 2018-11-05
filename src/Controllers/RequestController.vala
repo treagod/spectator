@@ -95,6 +95,11 @@ namespace HTTPInspector.Controllers {
                 content.update_url_bar (request.uri);
             });
 
+            content.body_buffer_changed.connect ((content) => {
+                var item = sidebar.get_active_item ();
+                item.request_body.raw = content;
+            });
+
             content.method_changed.connect ((method) => {
                 sidebar.update_active_method (method);
             });

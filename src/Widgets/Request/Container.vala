@@ -38,6 +38,7 @@ namespace HTTPInspector.Widgets.Request {
 
         public signal void response_received (ResponseItem it);
         public signal void type_changed (RequestBody.ContentType type);
+        public signal void body_buffer_changed (string content);
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -97,6 +98,10 @@ namespace HTTPInspector.Widgets.Request {
 
             body_view.type_changed.connect ((type) => {
                 type_changed (type);
+            });
+
+            body_view.body_buffer_changed.connect ((content) => {
+                body_buffer_changed (content);
             });
 
             stack = new Gtk.Stack ();

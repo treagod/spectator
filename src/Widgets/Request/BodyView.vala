@@ -29,6 +29,7 @@ namespace HTTPInspector.Widgets.Request {
         private Gtk.ScrolledWindow raw_body;
 
         public signal void type_changed (RequestBody.ContentType type);
+        public signal void body_buffer_changed (string content);
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -155,6 +156,9 @@ namespace HTTPInspector.Widgets.Request {
             raw_body.margin_top = 12;
             raw_body.vexpand = true;
             var raw_body_source_view = new BodySourceView ();
+            raw_body_source_view.body_buffer_changed.connect ((content) => {
+                body_buffer_changed (content);
+            });
             raw_body.add (raw_body_source_view);
             body_content.add (raw_body);
         }
@@ -187,6 +191,9 @@ namespace HTTPInspector.Widgets.Request {
                 default:
                 assert_not_reached ();
             }
+
+            var source_view = (BodySourceView) raw_body.get_child ();
+            source_view.set_content (body.raw);
         }
     }
 }

@@ -27,6 +27,7 @@ namespace HTTPInspector.Widgets {
         private RequestItem last_item;
 
         public signal void type_changed (RequestBody.ContentType type);
+        public signal void body_buffer_changed (string content);
 
         public RequestResponsePane () {
             request_view  = new Request.Container ();
@@ -43,6 +44,10 @@ namespace HTTPInspector.Widgets {
 
             request_view.url_changed.connect ((url) => {
                 url_changed (url);
+            });
+
+            request_view.body_buffer_changed.connect ((content) => {
+                body_buffer_changed (content);
             });
 
             request_view.request_activated.connect (() => {
