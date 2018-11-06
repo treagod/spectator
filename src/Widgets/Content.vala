@@ -39,6 +39,9 @@ namespace HTTPInspector.Widgets {
         public signal void header_added (Pair header);
         public signal void header_deleted (Pair header);
         public signal void url_params_updated(Gee.ArrayList<Pair> items);
+        public signal void key_value_added (Pair item);
+        public signal void key_value_removed (Pair item);
+        public signal void key_value_updated (Pair item);
 
         public Content () {
             stack = new Gtk.Stack ();
@@ -60,6 +63,18 @@ namespace HTTPInspector.Widgets {
 
             req_res_pane.body_buffer_changed.connect ((content) => {
                 body_buffer_changed (content);
+            });
+
+            req_res_pane.key_value_added.connect((item) => {
+                key_value_added (item);
+            });
+
+            req_res_pane.key_value_updated.connect((item) => {
+                key_value_updated (item);
+            });
+
+            req_res_pane.key_value_removed.connect((item) => {
+                key_value_removed (item);
             });
 
             setup_request_signals (req_res_pane);

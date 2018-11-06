@@ -28,6 +28,10 @@ namespace HTTPInspector.Widgets {
 
         public signal void type_changed (RequestBody.ContentType type);
         public signal void body_buffer_changed (string content);
+        public signal void key_value_added (Pair item);
+        public signal void key_value_removed (Pair item);
+        public signal void key_value_updated (Pair item);
+
 
         public RequestResponsePane () {
             request_view  = new Request.Container ();
@@ -68,6 +72,18 @@ namespace HTTPInspector.Widgets {
 
             request_view.type_changed.connect ((type) => {
                 type_changed (type);
+            });
+
+            request_view.key_value_added.connect((item) => {
+                key_value_added (item);
+            });
+
+            request_view.key_value_updated.connect((item) => {
+                key_value_updated (item);
+            });
+
+            request_view.key_value_removed.connect((item) => {
+                key_value_removed (item);
             });
 
             pack1 (request_view, true, false);

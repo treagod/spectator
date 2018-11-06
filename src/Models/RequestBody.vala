@@ -33,11 +33,31 @@ namespace HTTPInspector {
             urlencoded = new Gee.ArrayList<Pair> ();
         }
 
-        public void add (ContentType type, Pair pair) {
+        public void add_key_value (Pair pair) {
             if (type == FORM_DATA) {
                 form_data.add (pair);
             } else if (type == URLENCODED) {
                 urlencoded.add (pair);
+            }
+        }
+
+        public void update_key_value (Pair pair) {
+            if (type == FORM_DATA) {
+                if (form_data.contains (pair)) {
+                    // do something..
+                }
+            } else if (type == URLENCODED) {
+                if (urlencoded.contains (pair)) {
+                    // do something..
+                }
+            }
+        }
+
+        public void remove_key_value (Pair pair) {
+            if (type == FORM_DATA) {
+                form_data.remove (pair);
+            } else if (type == URLENCODED) {
+                urlencoded.remove (pair);
             }
         }
 

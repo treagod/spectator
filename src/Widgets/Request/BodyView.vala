@@ -31,6 +31,10 @@ namespace HTTPInspector.Widgets.Request {
         public signal void type_changed (RequestBody.ContentType type);
         public signal void body_buffer_changed (string content);
 
+        public signal void key_value_added (Pair item);
+        public signal void key_value_removed (Pair item);
+        public signal void key_value_updated (Pair item);
+
         construct {
             orientation = Gtk.Orientation.VERTICAL;
             margin = 2;
@@ -143,11 +147,37 @@ namespace HTTPInspector.Widgets.Request {
 
         private void setup_form_data () {
             form_data = new KeyValueList (_("Add"));
+
+            form_data.item_added.connect((item) => {
+                key_value_added (item);
+            });
+
+            form_data.item_updated.connect((item) => {
+                key_value_updated (item);
+            });
+
+            form_data.item_deleted.connect((item) => {
+                key_value_removed (item);
+            });
+
             body_content.add (form_data);
         }
 
         private void setup_urlencoded () {
             urlencoded = new KeyValueList (_("Add"));
+
+            urlencoded.item_added.connect((item) => {
+                key_value_added (item);
+            });
+
+            urlencoded.item_updated.connect((item) => {
+                key_value_updated (item);
+            });
+
+            urlencoded.item_deleted.connect((item) => {
+                key_value_removed (item);
+            });
+
             body_content.add (urlencoded);
         }
 
@@ -194,6 +224,9 @@ namespace HTTPInspector.Widgets.Request {
 
             var source_view = (BodySourceView) raw_body.get_child ();
             source_view.set_content (body.raw);
+
+            form_data.change_rows (body.form_data);
+            urlencoded.change_rows (body.urlencoded);
         }
     }
 }

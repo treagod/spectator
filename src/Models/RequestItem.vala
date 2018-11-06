@@ -69,17 +69,6 @@ namespace HTTPInspector {
             request_body = new RequestBody ();
         }
 
-        public void update_header (int i, string key, string val) {
-            if (headers.size > i && headers.size != 0) {
-                var header = headers.@get (i);
-                header.key = key;
-                header.val = val;
-            } else {
-                //Index does not exist, create new entry;
-                add_header (new Pair (key, val));
-            }
-        }
-
         public bool has_valid_uri () {
             return _uri != null;
         }

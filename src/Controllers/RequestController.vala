@@ -104,6 +104,21 @@ namespace HTTPInspector.Controllers {
                 sidebar.update_active_method (method);
             });
 
+            content.key_value_added.connect((kv) => {
+                var item = sidebar.get_active_item ();
+                item.request_body.add_key_value (kv);
+            });
+
+            content.key_value_updated.connect((kv) => {
+                var item = sidebar.get_active_item ();
+                item.request_body.update_key_value (kv);
+            });
+
+            content.key_value_removed.connect((kv) => {
+                var item = sidebar.get_active_item ();
+                item.request_body.remove_key_value (kv);
+            });
+
             content.type_changed.connect ((type) => {
                 var item = sidebar.get_active_item ();
                 item.request_body.type = type;

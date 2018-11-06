@@ -39,6 +39,9 @@ namespace HTTPInspector.Widgets.Request {
         public signal void response_received (ResponseItem it);
         public signal void type_changed (RequestBody.ContentType type);
         public signal void body_buffer_changed (string content);
+        public signal void key_value_added (Pair item);
+        public signal void key_value_removed (Pair item);
+        public signal void key_value_updated (Pair item);
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -102,6 +105,18 @@ namespace HTTPInspector.Widgets.Request {
 
             body_view.body_buffer_changed.connect ((content) => {
                 body_buffer_changed (content);
+            });
+
+            body_view.key_value_added.connect((item) => {
+                key_value_added (item);
+            });
+
+            body_view.key_value_updated.connect((item) => {
+                key_value_updated (item);
+            });
+
+            body_view.key_value_removed.connect((item) => {
+                key_value_removed (item);
             });
 
             stack = new Gtk.Stack ();
