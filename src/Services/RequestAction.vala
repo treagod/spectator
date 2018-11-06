@@ -39,6 +39,13 @@ namespace HTTPInspector {
 	        item.status = RequestStatus.SENDING;
         }
 
+        private bool is_raw_type (RequestBody.ContentType type) {
+            return type == RequestBody.ContentType.JSON ||
+                   type == RequestBody.ContentType.XML ||
+                   type == RequestBody.ContentType.HTML ||
+                   type == RequestBody.ContentType.PLAIN;
+        }
+
         private async void perform_request (string? location = null) {
             ulong microseconds = 0;
             double seconds = 0.0;
@@ -67,15 +74,62 @@ namespace HTTPInspector {
 
             session.timeout = (uint) settings.timeout;
 
-            var msg = new Soup.Message (item.method.to_str (), location);
+            var method = item.method;
+
+            var msg = new Soup.Message (method.to_str (), location);
 
             var user_agent = "";
+            var content_type_set = false;
             foreach (var header in item.headers) {
                 if (header.key == "User-Agent") {
                     user_agent = header.val;
                     continue;
                 }
+
+                // TODO: better handling of user defined content type
+                if (header.key == "Content-Type") {
+                    content_type_set = true;
+                    continue;
+                }
+
+                if (header.key == "")
                 msg.request_headers.append (header.key, header.val);
+            }
+
+            if (method == Method.POST || method == Method.PUT || method == Method.PATCH) {
+                var body = item.request_body;
+                if (is_raw_type (body.type)) {
+                    if (content_type_set) {
+                        msg.set_request (null, Soup.MemoryUse.COPY, body.raw.data);
+                    } else {
+                        msg.set_request (RequestBody.ContentType.to_mime (body.type), Soup.MemoryUse.COPY, body.raw.data);
+                    }
+                } else if (body.type == RequestBody.ContentType.FORM_DATA) {
+                    stdout.printf("woot?\n");
+                    var multipart = new Soup.Multipart ("multipart/form-data");
+
+                    // TODO: Support file upload
+                    foreach (var pair in body.form_data) {
+                        multipart.append_form_string (pair.key, pair.val);
+                    }
+
+                    multipart.to_message (msg.request_headers, msg.request_body);
+                } else if (body.type == RequestBody.ContentType.URLENCODED) {
+                    var builder = new StringBuilder ();
+                    var first = true;
+                    foreach (var pair in body.urlencoded) {
+                        if (first) {
+                            first = false;
+                        } else {
+                            builder.append ("&");
+                        }
+                        builder.append ("%s=%s".printf (
+                            Soup.URI.encode(pair.key, "&"),
+                            Soup.URI.encode(pair.val, "&")
+                        ));
+                    }
+                    msg.set_request ("application/x-www-form-urlencoded", Soup.MemoryUse.COPY, builder.str.data);
+                }
             }
 
             // Use applications User-Agent if none was defined

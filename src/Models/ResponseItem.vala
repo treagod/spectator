@@ -41,5 +41,6 @@ namespace HTTPInspector {
 
         private void process_raw_response () {
 
-        }    }
+        }
+    }
 }

@@ -101,6 +101,25 @@ namespace HTTPInspector {
                     assert_not_reached ();
                 }
             }
+
+            public static string to_mime (ContentType type) {
+                switch (type) {
+                    case ContentType.FORM_DATA:
+                    return "multipart/form-data";
+                    case ContentType.URLENCODED:
+                    return "text/plain";
+                    case ContentType.PLAIN:
+                    return "text/plain";
+                    case ContentType.JSON:
+                    return "application/json";
+                    case ContentType.XML:
+                    return "text/xml";
+                    case ContentType.HTML:
+                    return "text/html";
+                    default:
+                    assert_not_reached ();
+                }
+            }
         }
     }
 }
