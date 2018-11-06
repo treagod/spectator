@@ -107,15 +107,15 @@ namespace HTTPInspector {
                     case ContentType.FORM_DATA:
                     return "multipart/form-data";
                     case ContentType.URLENCODED:
-                    return "text/plain";
+                    return "application/x-www-form-urlencoded";
                     case ContentType.PLAIN:
                     return "text/plain";
                     case ContentType.JSON:
                     return "application/json";
                     case ContentType.XML:
-                    return "text/xml";
+                    return "application/xml";
                     case ContentType.HTML:
-                    return "text/html";
+                    return "application/html";
                     default:
                     assert_not_reached ();
                 }

@@ -67,7 +67,7 @@ namespace HTTPInspector.Widgets.Response.StatusBar {
             });
 
             http_status_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL,9);
-            http_status_label = new Gtk.Label ("No Status");
+            http_status_label = new Gtk.Label (_("No Status"));
             http_status_box.get_style_context ().add_class ("no-info-box");
             http_status_label.halign = Gtk.Align.CENTER;
             http_status_label.margin = 3;
@@ -75,7 +75,7 @@ namespace HTTPInspector.Widgets.Response.StatusBar {
             http_status_box.add (http_status_label);
 
             request_time_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL,9);
-            request_time_label = new Gtk.Label ("No duration");
+            request_time_label = new Gtk.Label (_("No duration"));
             request_time_box.get_style_context ().add_class ("no-info-box");
             request_time_label.halign = Gtk.Align.CENTER;
             request_time_label.margin = 3;
@@ -83,7 +83,7 @@ namespace HTTPInspector.Widgets.Response.StatusBar {
             request_time_box.add (request_time_label);
 
             response_size_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL,9);
-            response_size_label = new Gtk.Label ("No size");
+            response_size_label = new Gtk.Label (_("No size"));
             response_size_box.get_style_context ().add_class ("no-info-box");
             response_size_label.halign = Gtk.Align.CENTER;
             response_size_label.margin = 3;
@@ -164,16 +164,16 @@ namespace HTTPInspector.Widgets.Response.StatusBar {
         public void set_active_type (Type typ) {
             switch (typ) {
                 case Type.HTML:
-                    content_type.set_visible_child_name ("html_selection");
+                    content_type.visible_child_name = "html_selection";
                     break;
                 case Type.JSON:
-                    content_type.set_visible_child_name ("json_selection");
+                    content_type.visible_child_name = "json_selection";
                     break;
                 case Type.XML:
-                    content_type.set_visible_child_name ("xml_selection");
+                    content_type.visible_child_name = "xml_selection";
                     break;
                 default:
-                    content_type.set_visible_child_name ("no-type");
+                    content_type.visible_child_name = "no-type";
                     break;
             }
 

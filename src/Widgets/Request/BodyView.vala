@@ -113,6 +113,7 @@ namespace HTTPInspector.Widgets.Request {
 
         private void setup_body_type_behaviour () {
             var body_content_type_selections = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 4);
+            body_content_type_selections.margin_bottom = 12;
             body_content_type_selections.halign = Gtk.Align.END;
 
             body_type_box.changed.connect (() => {
@@ -183,7 +184,6 @@ namespace HTTPInspector.Widgets.Request {
 
         private void setup_raw_body () {
             raw_body = new Gtk.ScrolledWindow (null, null);
-            raw_body.margin_top = 12;
             raw_body.vexpand = true;
             var raw_body_source_view = new BodySourceView ();
             raw_body_source_view.body_buffer_changed.connect ((content) => {
