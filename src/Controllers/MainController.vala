@@ -87,6 +87,36 @@ namespace HTTPInspector.Controllers {
                     }
                     builder.end_array ();
 
+                    builder.set_member_name ("body");
+                    builder.begin_object ();
+                    builder.set_member_name ("active_type");
+                    builder.add_int_value (RequestBody.ContentType.to_i (item.request_body.type));
+                    builder.set_member_name ("form_data");
+                    builder.begin_array ();
+                    foreach (var pair in item.request_body.form_data) {
+                        builder.begin_object ();
+                        builder.set_member_name ("key");
+                        builder.add_string_value (pair.key);
+                        builder.set_member_name ("value");
+                        builder.add_string_value (pair.val);
+                        builder.end_object ();
+                    }
+                    builder.end_array (); // Form data
+                    builder.set_member_name ("urlencoded");
+                    builder.begin_array ();
+                    foreach (var pair in item.request_body.urlencoded) {
+                        builder.begin_object ();
+                        builder.set_member_name ("key");
+                        builder.add_string_value (pair.key);
+                        builder.set_member_name ("value");
+                        builder.add_string_value (pair.val);
+                        builder.end_object ();
+                    }
+                    builder.end_array (); // Urlencoded
+                    builder.set_member_name ("raw");
+                    builder.add_string_value (item.request_body.raw);
+                    builder.end_object (); // body
+
                     builder.end_object ();
                 }
             }

@@ -92,6 +92,31 @@ namespace HTTPInspector {
                             request.add_header (new Pair (header.get_string_member ("key"), header.get_string_member ("value")));
                         }
 
+                        var body = item.get_object_member ("body");
+
+                        request.request_body.type = RequestBody.ContentType.FORM_DATA;
+                        foreach (var form_data_element in body.get_array_member ("form_data").get_elements ()) {
+                            var form_data_item = form_data_element.get_object ();
+                            request.request_body.add_key_value (new Pair(
+                                    form_data_item.get_string_member ("key"),
+                                    form_data_item.get_string_member ("value")
+                            ));
+                        }
+
+                        request.request_body.type = RequestBody.ContentType.URLENCODED;
+                        foreach (var form_data_element in body.get_array_member ("urlencoded").get_elements ()) {
+                            var form_data_item = form_data_element.get_object ();
+                            request.request_body.add_key_value (new Pair(
+                                    form_data_item.get_string_member ("key"),
+                                    form_data_item.get_string_member ("value")
+                            ));
+                        }
+
+                        request.request_body.type =
+                                RequestBody.ContentType.convert ((int) body.get_int_member ("active_type"));
+
+                        request.request_body.raw = body.get_string_member ("raw");
+
                         controller.add_request (request);
                     }
                 } catch (Error e) {
