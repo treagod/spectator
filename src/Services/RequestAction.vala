@@ -105,7 +105,6 @@ namespace HTTPInspector {
                         msg.set_request (RequestBody.ContentType.to_mime (body.type), Soup.MemoryUse.COPY, body.raw.data);
                     }
                 } else if (body.type == RequestBody.ContentType.FORM_DATA) {
-                    stdout.printf("woot?\n");
                     var multipart = new Soup.Multipart ("multipart/form-data");
 
                     // TODO: Support file upload

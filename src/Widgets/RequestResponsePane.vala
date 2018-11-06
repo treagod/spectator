@@ -109,11 +109,11 @@ namespace HTTPInspector.Widgets {
             }
 
             if (item.response != null) {
-                response_view.update (item.response);
                 if (get_child2 () == null) {
                     pack2 (response_view, true, false);
                     show_all ();
                 }
+                response_view.update (item.response);
             } else {
                 if (get_child2 () != null) {
                     remove (response_view);
