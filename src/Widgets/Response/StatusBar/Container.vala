@@ -49,6 +49,7 @@ namespace HTTPInspector.Widgets.Response.StatusBar {
 
             html_selection.append_text (_("Preview"));
             html_selection.append_text (_("Source Code"));
+            html_selection.append_text (_("Headers"));
             html_selection.active = 0;
 
             html_selection.changed.connect (() => {
@@ -59,6 +60,7 @@ namespace HTTPInspector.Widgets.Response.StatusBar {
 
             json_selection.append_text (_("JSON Tree"));
             json_selection.append_text (_("Prettified"));
+            json_selection.append_text (_("Headers"));
             json_selection.append_text (_("Raw"));
             json_selection.active = 0;
 

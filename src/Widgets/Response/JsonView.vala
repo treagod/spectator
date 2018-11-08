@@ -24,29 +24,35 @@ namespace HTTPInspector.Widgets.Response {
         private SourceView response_text;
         private SourceView response_text_raw;
         private JsonTreeView tree_view;
+        private HeaderList header_list;
         private Gtk.ScrolledWindow scrolled;
         private Gtk.ScrolledWindow scrolled_raw;
         private Gtk.ScrolledWindow tree_scrolled;
+        private Gtk.ScrolledWindow header_scrolled;
 
         public JsonView () {
             tree_view = new JsonTreeView.empty ();
+            header_list = new HeaderList ();
             scrolled = new Gtk.ScrolledWindow (null, null);
             scrolled_raw = new Gtk.ScrolledWindow (null, null);
             tree_scrolled = new Gtk.ScrolledWindow (null, null);
+            header_scrolled = new Gtk.ScrolledWindow (null, null);
             response_text = new SourceView ();
             response_text_raw = new SourceView ();
             scrolled.add (response_text);
             scrolled_raw.add (response_text_raw);
             tree_scrolled.add (tree_view);
+            header_scrolled.add (header_list);
 
             response_text.set_lang ("json");
 
 
-            add_named (tree_scrolled, "tree_scrolled");
-            add_named (scrolled, "response_text");
-            add_named (scrolled_raw, "response_text_raw");
+            add (tree_scrolled);
+            add (header_scrolled);
+            add (scrolled);
+            add (scrolled_raw);
 
-            set_visible_child (tree_scrolled);
+            set_visible_child (header_scrolled);
 
             show_all ();
         }
@@ -57,6 +63,9 @@ namespace HTTPInspector.Widgets.Response {
                     set_visible_child (scrolled);
                     break;
                 case 2:
+                    set_visible_child (header_scrolled);
+                    break;
+                case 3:
                     set_visible_child (scrolled_raw);
                     break;
                 default:
@@ -72,6 +81,14 @@ namespace HTTPInspector.Widgets.Response {
                 tree_view.clear ();
                 return;
             }
+
+            header_list.clear ();
+
+            foreach (var entry in it.headers.entries) {
+                header_list.add_header (entry.key, entry.value);
+            }
+
+            header_list.show_all ();
 
             try {
                 // Pretty Print Version of response JSON

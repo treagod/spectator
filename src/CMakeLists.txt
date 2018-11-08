@@ -41,7 +41,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
 	Widgets/Response/HtmlView.vala
 	Widgets/Response/JsonView.vala
 	Widgets/Response/JsonTreeView.vala
-
+    Widgets/Response/HeaderList.vala
 	Widgets/Response/StatusBar/Container.vala
 
 	Widgets/Request/Container.vala

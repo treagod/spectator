@@ -24,9 +24,16 @@ namespace HTTPInspector.Widgets.Response {
         private WebKit.WebView web_view;
         private SourceView response_text;
         private Gtk.ScrolledWindow scrolled;
+        private HeaderList header_list;
+        private Gtk.ScrolledWindow header_scrolled;
 
         public HtmlView () {
             scrolled = new Gtk.ScrolledWindow (null, null);
+            header_list = new HeaderList ();
+            header_scrolled = new Gtk.ScrolledWindow (null, null);
+
+            header_scrolled.add (header_list);
+
             var settings = Settings.get_instance ();
 
             if (settings.use_proxy) {
@@ -46,8 +53,9 @@ namespace HTTPInspector.Widgets.Response {
             web_view.load_plain_text ("");
             scrolled.add (response_text);
 
-            add_named (web_view, "web_view");
-            add_named (scrolled, "response_text");
+            add (web_view);
+            add (scrolled);
+            add (header_scrolled);
 
             set_visible_child (web_view);
 
@@ -76,6 +84,9 @@ namespace HTTPInspector.Widgets.Response {
                 case 1:
                     set_visible_child (scrolled);
                     break;
+                case 2:
+                    set_visible_child (header_scrolled);
+                    break;
                 default:
                     set_visible_child (web_view);
                     break;
@@ -88,6 +99,14 @@ namespace HTTPInspector.Widgets.Response {
             } else {
                 web_view.load_plain_text ("");
             }
+
+            header_list.clear ();
+
+            foreach (var entry in it.headers.entries) {
+                header_list.add_header (entry.key, entry.value);
+            }
+
+            header_list.show_all ();
 
 
             response_text.insert (it);
