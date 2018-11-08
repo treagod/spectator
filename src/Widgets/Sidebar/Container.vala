@@ -22,14 +22,18 @@
 namespace HTTPInspector.Widgets.Sidebar {
     public class TitleBar : Gtk.Box {
         public TitleBar (string text) {
-            orientation = Gtk.Orientation.HORIZONTAL;
+            orientation = Gtk.Orientation.VERTICAL;
 
             var title = new Gtk.Label (text);
             title.get_style_context ().add_class ("h3");
-            title.halign = Gtk.Align.START;
-            title.margin = 4;
+            title.halign = Gtk.Align.CENTER;
+            title.margin = 5;
+
+            var separator = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
+            separator.margin_top = 2;
 
             pack_start (title, true, true, 0);
+            pack_start (separator, true, true, 0);
         }
     }
 
@@ -47,7 +51,7 @@ namespace HTTPInspector.Widgets.Sidebar {
             scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
 
-            var titlebar = new TitleBar (_("Request History"));
+            var titlebar = new TitleBar (_("Requests"));
 
             item_box = new Gtk.FlowBox ();
             item_box.activate_on_single_click = true;
