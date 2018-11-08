@@ -30,17 +30,18 @@ namespace HTTPInspector.Widgets.Response {
 
         public JsonTreeView (Json.Node node) {
             init_tree (node);
+            expand_all ();
         }
 
         public JsonTreeView.from_string (string json) {
-            var parser = new Json.Parser ();
             try {
-
+                var parser = new Json.Parser ();
                 parser.load_from_data (json);
                 init_tree (parser.get_root ());
             } catch (Error e) {
                 print ("Unable to parse the string: %s\n", e.message);
             }
+            expand_all ();
         }
 
         public JsonTreeView.empty () {
@@ -56,14 +57,16 @@ namespace HTTPInspector.Widgets.Response {
 
         public void update_from_string (string json) {
             clear ();
-            var parser = new Json.Parser ();
+
             try {
+                var parser = new Json.Parser ();
                 parser.load_from_data (json);
 
                 init_top_level (parser.get_root ());
             } catch (Error e) {
                 print ("Unable to parse the string: %s\n", e.message);
             }
+            expand_all ();
         }
 
         private void init_tree (Json.Node node) {
