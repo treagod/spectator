@@ -24,6 +24,7 @@ namespace HTTPInspector.Widgets {
         private Request.Container request_view;
         private Response.Container response_view;
         private Gee.HashMap<RequestItem, int> tab_indecies;
+        private Gee.HashMap<RequestItem, ResponseViewCache> cache;
         private RequestItem last_item;
 
         public signal void type_changed (RequestBody.ContentType type);
@@ -37,6 +38,7 @@ namespace HTTPInspector.Widgets {
             request_view  = new Request.Container ();
             response_view = new Response.Container ();
             tab_indecies = new Gee.HashMap<RequestItem, int> ();
+            cache = new Gee.HashMap<RequestItem, ResponseViewCache>();
 
             request_view.response_received.connect ((res) => {
                 response_view.update (res);
@@ -109,15 +111,33 @@ namespace HTTPInspector.Widgets {
             }
         }
 
+        private void create_or_get_cached_view (RequestItem item) {
+            remove (response_view);
+
+            if (cache.has_key(item)) {
+                response_view = cache[item].view;
+                response_view.show_all ();
+            } else {
+                response_view = new Response.Container ();
+                cache[item] = new ResponseViewCache (item.response, response_view);
+                response_view.show_all ();
+                response_view.update (item.response);
+            }
+
+            pack2 (response_view, true, false);
+            show_all ();
+
+            if (cache[item].response != item.response) {
+                cache[item].response = item.response;
+                response_view.update (item.response);
+            }
+        }
+
         public void set_item (RequestItem item) {
             adjust_tab (item);
 
             if (item.response != null) {
-                if (get_child2 () == null) {
-                    pack2 (response_view, true, false);
-                    show_all ();
-                }
-                response_view.update (item.response);
+                create_or_get_cached_view (item);
             } else {
                 if (get_child2 () != null) {
                     remove (response_view);
@@ -127,6 +147,16 @@ namespace HTTPInspector.Widgets {
 
         construct {
             orientation = Gtk.Orientation.HORIZONTAL;
+        }
+
+        private class ResponseViewCache {
+            public ResponseItem response;
+            public Response.Container view;
+
+            public ResponseViewCache (ResponseItem i, Response.Container v) {
+                response = i;
+                view = v;
+            }
         }
     }
 }
