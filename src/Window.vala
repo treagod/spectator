@@ -124,7 +124,6 @@ namespace HTTPInspector {
                 }
 
                 request_item_view.show_welcome ();
-                sidebar.clear_selection ();
             }
 
             grid.add (sidebar);
@@ -134,6 +133,8 @@ namespace HTTPInspector {
             show_all ();
             show ();
             present ();
+
+            sidebar.clear_selection ();
         }
 
         protected override bool delete_event (Gdk.EventAny event) {
