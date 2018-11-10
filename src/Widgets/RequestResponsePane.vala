@@ -97,7 +97,7 @@ namespace HTTPInspector.Widgets {
             request_view.update_url_params (item);
         }
 
-        public void set_item (RequestItem item) {
+        private void adjust_tab (RequestItem item) {
             tab_indecies[last_item] = request_view.tab_index;
             last_item = item;
             request_view.set_item (item);
@@ -107,6 +107,10 @@ namespace HTTPInspector.Widgets {
             } else {
                 request_view.tab_index = tab_indecies[item];
             }
+        }
+
+        public void set_item (RequestItem item) {
+            adjust_tab (item);
 
             if (item.response != null) {
                 if (get_child2 () == null) {
