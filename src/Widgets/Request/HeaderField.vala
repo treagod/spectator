@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets.Request {
+namespace Spectator.Widgets.Request {
     class HeaderField : KeyValueField {
         public HeaderField () {
             base ();

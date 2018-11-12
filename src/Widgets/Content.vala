@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets {
+namespace Spectator.Widgets {
     public class Content : Gtk.Box {
         private Gtk.Stack stack;
         private Granite.Widgets.Welcome welcome;
@@ -47,7 +47,7 @@ namespace HTTPInspector.Widgets {
             stack = new Gtk.Stack ();
             infobar = new Gtk.InfoBar ();
             infolabel = new Gtk.Label("");
-            welcome = new Granite.Widgets.Welcome (_("HTTP Inspector"), _("Inspect your HTTP transmissions to the web"));
+            welcome = new Granite.Widgets.Welcome (_(Constants.RELEASE_NAME), _("Inspect your HTTP transmissions to the web"));
             welcome.hexpand = true;
             welcome.append ("bookmark-new", _("Create Request"), _("Create a new request to the web."));
 

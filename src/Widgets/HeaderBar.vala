@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets {
+namespace Spectator.Widgets {
     public class HeaderBar : Gtk.HeaderBar {
         private Gtk.Button _new_request;
         public Gtk.MenuButton app_menu;
@@ -67,7 +67,7 @@ namespace HTTPInspector.Widgets {
             app_menu.tooltip_text = _("Menu");
             app_menu.popover = menu;
 
-            title = "HTTP Inspector";
+            title = Constants.RELEASE_NAME;
             subtitle = "";
             pack_start (_new_request);
             pack_end (app_menu);

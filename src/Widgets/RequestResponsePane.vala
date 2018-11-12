@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets {
+namespace Spectator.Widgets {
     class RequestResponsePane : Gtk.Paned, Request.Interface {
         private Request.Container request_view;
         private Response.Container response_view;

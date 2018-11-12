@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets.Sidebar {
+namespace Spectator.Widgets.Sidebar {
     public class TitleBar : Gtk.Box {
         public TitleBar (string text) {
             orientation = Gtk.Orientation.VERTICAL;

@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace Spectator {
     public class RequestAction {
         private RequestItem item;
         private Settings settings = Settings.get_instance ();
@@ -133,7 +133,7 @@ namespace HTTPInspector {
 
             // Use applications User-Agent if none was defined
             if (user_agent == "") {
-                session.user_agent = "HTTPInspector-%s".printf (Constants.VERSION);
+                session.user_agent = "Spectator-%s".printf (Constants.VERSION);
             } else {
                 session.user_agent = user_agent;
             }

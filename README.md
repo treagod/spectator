@@ -1,4 +1,4 @@
-# HTTP Inspector
+# Spectator
 
 ![Screenshot](data/screenshot.png?raw=true)
 
@@ -24,7 +24,7 @@ Run `cmake` to configure the build environment and then `make` to build
     cmake -DCMAKE_INSTALL_PREFIX=/usr ..
     make
 
-To install, use `make install`, then execute with `com.github.treagod.httpinspector`
+To install, use `make install`, then execute with `com.github.treagod.spectator`
 
     sudo make install
     com.github.treagod.httpinspecter

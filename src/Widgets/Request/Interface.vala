@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets.Request {
+namespace Spectator.Widgets.Request {
     interface Interface {
         public signal void url_changed (string url);
         public signal void method_changed (Method method);

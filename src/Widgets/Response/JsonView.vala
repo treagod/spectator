@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets.Response {
+namespace Spectator.Widgets.Response {
     class JsonView : AbstractTypeView {
         private SourceView response_text;
         private SourceView response_text_raw;

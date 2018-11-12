@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets.Request {
+namespace Spectator.Widgets.Request {
     class Container : Gtk.Box, Interface {
         private UrlEntry url_entry;
         private KeyValueList header_view;

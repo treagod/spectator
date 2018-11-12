@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets.Request {
+namespace Spectator.Widgets.Request {
     public class KeyValueField : Gtk.Box {
         protected Gtk.Entry key_field;
         protected Gtk.Entry value_field;

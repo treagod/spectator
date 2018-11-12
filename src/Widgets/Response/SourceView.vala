@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets.Response {
+namespace Spectator.Widgets.Response {
     class SourceView : Gtk.SourceView {
         public new Gtk.SourceBuffer buffer;
         public Gtk.SourceLanguageManager manager;

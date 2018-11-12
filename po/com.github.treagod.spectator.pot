@@ -1,101 +1,120 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.treagod.spectator package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.treagod.spectator\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-11-12 21:38+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
 #: src/Dialogs/Request/Dialog.vala:39
 msgid "Name:"
-msgstr "Name:"
+msgstr ""
 
 #: src/Dialogs/Request/Dialog.vala:44 src/Dialogs/Alert.vala:42
 #: src/Dialogs/Preferences.vala:47
 msgid "Close"
-msgstr "Schliessen"
+msgstr ""
 
 #: src/Dialogs/Request/CreateDialog.vala:27 src/Widgets/Content.vala:52
 #: src/Widgets/HeaderBar.vala:42
 msgid "Create Request"
-msgstr "Anfrage Erstellen"
+msgstr ""
 
 #: src/Dialogs/Request/CreateDialog.vala:30
 msgid "Create"
-msgstr "Erstellen"
+msgstr ""
 
 #: src/Dialogs/Request/CreateDialog.vala:53
 #: src/Dialogs/Request/UpdateDialog.vala:53
 msgid "Request name must not be empty."
-msgstr "Der Name der Anfrage darf nicht leer sein."
+msgstr ""
 
 #: src/Dialogs/Request/UpdateDialog.vala:27
 msgid "Update Request"
-msgstr "Anfrage aktualisieren"
+msgstr ""
 
 #: src/Dialogs/Request/UpdateDialog.vala:35
 msgid "Update"
-msgstr "Aktualisieren"
+msgstr ""
 
 #: src/Dialogs/Preferences.vala:26 src/Widgets/HeaderBar.vala:45
 msgid "Preferences"
-msgstr "Einstellungen"
+msgstr ""
 
 #: src/Dialogs/Preferences.vala:37
 msgid "General"
-msgstr "Allgemein"
+msgstr ""
 
 #: src/Dialogs/Preferences.vala:38
 msgid "Network"
-msgstr "Netzwerk"
+msgstr ""
 
 #: src/Dialogs/Preferences.vala:39
 msgid "Plugins"
-msgstr "Plugins"
+msgstr ""
 
 #: src/Dialogs/Preferences.vala:69
 msgid "Enable Plugins"
-msgstr "Plugins aktivieren"
+msgstr ""
 
 #: src/Dialogs/Preferences.vala:74
 msgid "Plugin Folder"
-msgstr "Plugin Ordner"
+msgstr ""
 
 #: src/Dialogs/Preference/General.vala:37
 msgid "Dark Theme"
-msgstr "Dunkles Farbschema"
+msgstr ""
 
 #: src/Dialogs/Preference/General.vala:42
 msgid "Follow redirects automatically"
-msgstr "Umleitungen automatisch folgen"
+msgstr ""
 
 #: src/Dialogs/Preference/General.vala:61
 msgid "Maximum Redirects"
-msgstr "Maximale Umleitungen"
+msgstr ""
 
 #: src/Dialogs/Preference/General.vala:72
 msgid "Network Request Timeout"
-msgstr "Netzwerkanfrage Timeout"
+msgstr ""
 
 #: src/Dialogs/Preference/Network.vala:36
 msgid "Use Proxy"
-msgstr "Proxy benutzen"
+msgstr ""
 
 #: src/Dialogs/Preference/Network.vala:44
 msgid "HTTP Proxy"
-msgstr "HTTP Proxy"
+msgstr ""
 
 #: src/Dialogs/Preference/Network.vala:54
 msgid "HTTPS Proxy"
-msgstr "HTTPS Proxy"
+msgstr ""
 
 #: src/Dialogs/Preference/Network.vala:64
 msgid "No Proxy"
-msgstr "Kein Proxy"
+msgstr ""
 
 #: src/Dialogs/Preference/Network.vala:75
 msgid "Use User Information"
-msgstr "Benutzerinformationen benutzen"
+msgstr ""
 
 #: src/Dialogs/Preference/Network.vala:81
 msgid "Username"
-msgstr "Benutzername"
+msgstr ""
 
 #: src/Dialogs/Preference/Network.vala:92
 msgid "Password"
-msgstr "Passwort"
+msgstr ""
 
 #: src/Widgets/Content.vala:50
 msgid "Inspect your HTTP transmissions to the web"
@@ -199,16 +218,14 @@ msgstr ""
 
 #: data/com.github.treagod.spectator.appdata.xml.in:8
 msgid "Comfortably test your REST APIs!"
-msgstr "Teste bequem deine REST APIs!"
+msgstr ""
 
 #: data/com.github.treagod.spectator.appdata.xml.in:10
 msgid "Gives you the possibilty to test your REST application."
-msgstr "Ermglicht es deine REST Anwendung zu testen."
+msgstr ""
 
 #: data/com.github.treagod.spectator.appdata.xml.in:11
 msgid ""
 "Send custom headers and self defined bodies to your application and displays "
 "the response in a clean way."
 msgstr ""
-"Schickt eigene Headers und selbst definierte Anfrage-Body an deine Anwendung "
-"und zeigt strukturierte Antworten an."

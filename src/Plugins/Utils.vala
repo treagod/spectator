@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Plugins.Utils {
+namespace Spectator.Plugins.Utils {
     public string read_file (string path) {
         var file = File.new_for_path (path);
         var builder = new StringBuilder ();

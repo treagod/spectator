@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Dialogs.Request {
+namespace Spectator.Dialogs.Request {
     public abstract class Dialog : Gtk.Dialog {
         protected Gtk.Entry request_name_entry;
         protected Gtk.ComboBoxText method_box;

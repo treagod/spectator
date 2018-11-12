@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets.Response {
+namespace Spectator.Widgets.Response {
     class HeaderList : Gtk.Grid {
         private int idx;
         public HeaderList () {

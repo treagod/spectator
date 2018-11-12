@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets.Request {
+namespace Spectator.Widgets.Request {
     public class HeaderProvider : ItemProvider {
         public override KeyValueField create_item_field () {
             return new HeaderField ();

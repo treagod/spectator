@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Spectator
+GenericName=Spectator
+Comment=REST Client
+Categories=Network;Development;
+Exec=com.github.treagod.spectator
+Icon=com.github.treagod.spectator
+Terminal=false
+Type=Application
+X-GNOME-Gettext-Domain=spectator
+Keywords=REST;HTTP;Client;

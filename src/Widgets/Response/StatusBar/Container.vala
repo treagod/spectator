@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets.Response.StatusBar {
+namespace Spectator.Widgets.Response.StatusBar {
     public enum Type {
         HTML, JSON, XML, UNKOWN
     }

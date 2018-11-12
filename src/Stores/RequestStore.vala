@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace Spectator {
     public class RequestStore {
         public Gee.ArrayList<RequestItem> items { get; private set; }
 

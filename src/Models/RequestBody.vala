@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace Spectator {
     public class RequestBody {
         public ContentType type;
         public Gee.ArrayList<Pair> form_data { get; private set; }

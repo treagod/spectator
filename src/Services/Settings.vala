@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace Spectator {
     public class Settings : Granite.Services.Settings {
         private static Settings? instance = null;
 
@@ -54,7 +54,7 @@ namespace HTTPInspector {
         }
 
         private Settings () {
-            base ("com.github.treagod.httpinspector");
+            base ("com.github.treagod.spectator");
         }
     }
 }

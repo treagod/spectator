@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets.Request {
+namespace Spectator.Widgets.Request {
     public class ItemProvider : Object {
         public virtual KeyValueField create_item_field () {
             return new KeyValueField ();

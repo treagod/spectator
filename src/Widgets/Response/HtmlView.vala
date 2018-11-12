@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets.Response {
+namespace Spectator.Widgets.Response {
     public class HtmlView : AbstractTypeView {
         private WebKit.WebView web_view;
         private SourceView response_text;

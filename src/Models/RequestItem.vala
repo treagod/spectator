@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace Spectator {
     public class RequestItem : Object  {
         public string name { get; set; }
         private string _raw_uri { get; set; }

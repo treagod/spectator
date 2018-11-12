@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Plugins {
+namespace Spectator.Plugins {
     public class Engine : Object {
         public Gee.ArrayList<Plugin> plugins { get; private set; }
 
@@ -36,7 +36,7 @@ namespace HTTPInspector.Plugins {
         private void load_plugins () {
             plugins = new Gee.ArrayList<Plugin> ();
             var plugin_dir = Path.build_filename (Environment.get_home_dir (), ".local", "share",
-                                                    Constants.APP_ID, "plugins");
+                                                    Constants.PROJECT_NAME, "plugins");
 
             if (!valid_plugin_dir (plugin_dir)) {
                 // throw something

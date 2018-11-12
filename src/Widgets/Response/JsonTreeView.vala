@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets.Response {
+namespace Spectator.Widgets.Response {
     public class JsonTreeView  : Gtk.TreeView {
         // Workaround to keep Gtk.TreeIter in memory to do recursive creation
         private class TreeIter {

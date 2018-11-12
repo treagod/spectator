@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Dialogs {
+namespace Spectator.Dialogs {
     public class Alert : Gtk.Dialog {
         private Gtk.Box container;
         public Alert (Gtk.Window parent, string title, string description) {

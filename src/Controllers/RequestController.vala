@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Controllers {
+namespace Spectator.Controllers {
     public class RequestController {
         // Models
         private Gee.ArrayList<RequestItem> items;

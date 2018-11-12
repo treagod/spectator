@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace Spectator {
     public class Window : Gtk.ApplicationWindow {
         private Widgets.Content request_item_view;
         private Widgets.Sidebar.Container sidebar;
@@ -44,7 +44,7 @@ namespace HTTPInspector {
 
         public void show_app () {
             var provider = new Gtk.CssProvider ();
-            provider.load_from_resource ("/com/github/treagod/httpinspector/stylesheet.css");
+            provider.load_from_resource ("/com/github/treagod/spectator/stylesheet.css");
             Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
 
             var settings = Settings.get_instance ();

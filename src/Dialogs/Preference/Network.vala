@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Dialogs.Preference {
+namespace Spectator.Dialogs.Preference {
     public class Network : Gtk.Box {
         construct {
             orientation = Gtk.Orientation.VERTICAL;

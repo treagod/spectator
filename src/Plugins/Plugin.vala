@@ -28,7 +28,7 @@ public static Duktape.ReturnType native_print (Duktape.Context ctx) {
     return 0;
 }
 
-namespace HTTPInspector.Plugins {
+namespace Spectator.Plugins {
     public class Plugin {
         private string source;
         private Duktape.Context context;
@@ -75,7 +75,7 @@ namespace HTTPInspector.Plugins {
             obj_idx = context.push_object ();
             context.push_string (Constants.VERSION);
             context.put_prop_string (obj_idx, "version");
-            context.put_global_string ("HttpInspector");
+            context.put_global_string ("Spectator");
 
             setup_plugin_information ();
         }

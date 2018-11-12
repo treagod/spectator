@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Dialogs {
+namespace Spectator.Dialogs {
     public class Preferences : Gtk.Dialog {
 
         public Preferences (Gtk.Window? parent) {

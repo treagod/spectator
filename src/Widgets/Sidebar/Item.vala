@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets.Sidebar {
+namespace Spectator.Widgets.Sidebar {
     public class Item : Gtk.FlowBoxChild {
         static string no_url = "<small><i>No URL specified</i></small>";
         Gtk.EventBox item_box { get; set;}

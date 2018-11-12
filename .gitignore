@@ -1,3 +1,8 @@
 *~
 build/
 .buildconfig
+.vscode
+com.github.treagod.spectator.desktop
+com.github.treagod.spectator.appdata.xml
+config.vala
+meson/

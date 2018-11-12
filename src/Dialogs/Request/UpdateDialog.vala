@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Dialogs.Request {
+namespace Spectator.Dialogs.Request {
     public class UpdateDialog : Dialog {
         public signal void updated (RequestItem item);
 

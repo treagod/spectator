@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector {
+namespace Spectator {
     public class Application : Gtk.Application {
         // Avoid multiple instances
         public bool running = false;
@@ -27,7 +27,7 @@ namespace HTTPInspector {
 
         construct {
             flags |= ApplicationFlags.HANDLES_OPEN;
-            application_id = "com.github.treagod.httpinspector";
+            application_id = "com.github.treagod.spectator";
         }
 
         protected override void activate () {

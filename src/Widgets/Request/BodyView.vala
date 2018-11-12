@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace HTTPInspector.Widgets.Request {
+namespace Spectator.Widgets.Request {
     class BodyView : Gtk.Box {
         private Gtk.Stack body_content;
         private Gtk.ComboBoxText body_type_box;
