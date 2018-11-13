@@ -41,36 +41,17 @@ namespace Spectator.Widgets {
             _new_request = new Gtk.Button.from_icon_name ("bookmark-new", Gtk.IconSize.LARGE_TOOLBAR);
             _new_request.tooltip_text = _("Create Request");
 
-            var preferences_menuitem = new Gtk.ModelButton ();
-            preferences_menuitem.text = _("Preferences");
+            var preference_button = new Gtk.Button.from_icon_name ("open-menu", Gtk.IconSize.LARGE_TOOLBAR);
+            preference_button.tooltip_text = _("Preferences");
 
-            preferences_menuitem.clicked.connect (() => {
-               preference_clicked ();
+            preference_button.clicked.connect (() => {
+                preference_clicked ();
             });
-
-            var about_menuitem = new Gtk.ModelButton ();
-            about_menuitem.text = _("About");
-
-            var menu_grid = new Gtk.Grid ();
-            menu_grid.margin = 7;
-            menu_grid.orientation = Gtk.Orientation.VERTICAL;
-            menu_grid.add (about_menuitem);
-            menu_grid.add (preferences_menuitem);
-
-            menu_grid.show_all ();
-
-            var menu = new Gtk.Popover (null);
-            menu.add (menu_grid);
-
-            app_menu = new Gtk.MenuButton ();
-            app_menu.image = new Gtk.Image.from_icon_name ("open-menu", Gtk.IconSize.LARGE_TOOLBAR);
-            app_menu.tooltip_text = _("Menu");
-            app_menu.popover = menu;
 
             title = Constants.RELEASE_NAME;
             subtitle = "";
             pack_start (_new_request);
-            pack_end (app_menu);
+            pack_end (preference_button);
         }
     }
 }
