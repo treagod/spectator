@@ -28,6 +28,7 @@ namespace Spectator {
 
         public signal void finished_request ();
         public signal void request_failed (RequestItem item);
+        public signal void invalid_uri (RequestItem item);
 
         public RequestAction(RequestItem it) {
             item = it;
@@ -49,6 +50,12 @@ namespace Spectator {
         private async void perform_request (string? location = null) {
             ulong microseconds = 0;
             double seconds = 0.0;
+
+            if (!item.has_valid_uri ()) {
+                invalid_uri (item);
+                return;
+            }
+
             location = (location == null) ? item.uri : location;
             MainLoop loop = new MainLoop ();
             var session = new Soup.Session ();
