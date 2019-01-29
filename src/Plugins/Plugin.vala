@@ -132,22 +132,30 @@ namespace Spectator.Plugins {
 
         public void call_request_sent (RequestItem req) {
             context.get_global_string ("request_sent");
-            var obj_idx = context.push_object ();
-            context.push_string (req.name);
-            context.put_prop_string (obj_idx, "name");
-            context.push_string (req.uri);
-            context.put_prop_string (obj_idx, "uri");
-            context.push_string (req.method.to_str ());
-            context.put_prop_string (obj_idx, "method");
+            if (context.is_function(-1)) {
+                var obj_idx = context.push_object ();
+                context.push_string (req.name);
+                context.put_prop_string (obj_idx, "name");
+                context.push_string (req.uri);
+                context.put_prop_string (obj_idx, "uri");
+                context.push_string (req.method.to_str ());
+                context.put_prop_string (obj_idx, "method");
 
-            var header_obj = context.push_object ();
-            foreach (var header in req.headers) {
-                // TODO: If header already exists, append it
-                context.push_string (header.val);
-                context.put_prop_string (header_obj, header.key);
+                var header_obj = context.push_object ();
+                foreach (var header in req.headers) {
+                    // TODO: If header already exists, append it
+                    context.push_string (header.val);
+                    context.put_prop_string (header_obj, header.key);
+                }
+                context.put_prop_string (obj_idx, "headers");
+                context.call (1);
+            } else {
+                report_failing_call("request_sent");
             }
-            context.put_prop_string (obj_idx, "headers");
-            context.call (1);
+        }
+
+        private void report_failing_call (string fn_name) {
+            stdout.printf("Failed to call '%s' on plugin %s\n", fn_name, name);
         }
 
         public void set_window(Gtk.Window window) {

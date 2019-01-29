@@ -127,6 +127,7 @@ namespace Spectator.Controllers {
             content.request_activated.connect (() => {
                 var item = sidebar.get_active_item ();
                 item.status = RequestStatus.SENDING;
+
                 var action = new RequestAction (item);
 
                 main.plugin_engine.run_plugin (item);

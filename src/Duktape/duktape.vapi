@@ -135,6 +135,9 @@ namespace Duktape {
         [CCode (cname = "duk_call")]
         public void call (uint nargs);
 
+        [CCode (cname = "duk_is_function")]
+        public bool is_function(int idx);
+
         [CCode (cname = "duk_push_pointer",  simple_generics = true)]
         public void push_ref<T> (T reference);
     }
