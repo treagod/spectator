@@ -28,20 +28,106 @@ public static Duktape.ReturnType native_print (Duktape.Context ctx) {
     return 0;
 }
 
+public static Duktape.ReturnType set_window_width (Duktape.Context ctx) {
+    var width = ctx.get_int(-1);
+    int height, _;
+    ctx.get_global_string (Duktape.hidden_symbol("application_window"));
+    unowned Gtk.ApplicationWindow window = ctx.get_pointer<Gtk.ApplicationWindow>(-1);
+
+    window.get_size (out _, out height);
+    window.resize(width, height);
+
+    return 0;
+}
+
+public static Duktape.ReturnType set_window_height (Duktape.Context ctx) {
+    var height = ctx.get_int(-1);
+    int width, _;
+    ctx.get_global_string (Duktape.hidden_symbol("application_window"));
+    unowned Gtk.ApplicationWindow window = ctx.get_pointer<Gtk.ApplicationWindow>(-1);
+
+    window.get_size (out width, out _);
+    window.resize(width, height);
+
+    return 0;
+}
+
+public static Duktape.ReturnType get_window_width (Duktape.Context ctx) {
+    int width, _;
+    ctx.get_global_string (Duktape.hidden_symbol("application_window"));
+    unowned Gtk.ApplicationWindow window = ctx.get_pointer<Gtk.ApplicationWindow>(-1);
+
+    window.get_size (out width, out _);
+
+    ctx.push_int (width);
+
+    return (Duktape.ReturnType) 1;
+}
+
+public static Duktape.ReturnType get_window_height (Duktape.Context ctx) {
+    int height, _;
+    ctx.get_global_string (Duktape.hidden_symbol("application_window"));
+    unowned Gtk.ApplicationWindow window = ctx.get_pointer<Gtk.ApplicationWindow>(-1);
+
+    window.get_size (out _, out height);
+
+    ctx.push_int (height);
+
+    return (Duktape.ReturnType) 1;
+}
+
+public static Duktape.ReturnType show_alert (Duktape.Context ctx) {
+    var title = ctx.get_string (-2);
+    var description = ctx.get_string (-1);
+    ctx.get_global_string (Duktape.hidden_symbol("application_window"));
+    unowned Gtk.ApplicationWindow window = ctx.get_pointer<Gtk.ApplicationWindow>(-1);
+
+    var alert = new Spectator.Dialogs.Alert (window, title, description);
+
+    alert.show_all();
+
+    return (Duktape.ReturnType) 1;
+}
+
+public static Duktape.ReturnType get_window (Duktape.Context ctx) {
+    var obj_idx = ctx.push_object ();
+
+    ctx.push_vala_function (set_window_height, 1);
+    ctx.put_prop_string (obj_idx, "set_height");
+
+    ctx.push_vala_function (set_window_width, 1);
+    ctx.put_prop_string (obj_idx, "set_width");
+
+    ctx.push_vala_function (get_window_height, 0);
+    ctx.put_prop_string (obj_idx, "get_height");
+
+    ctx.push_vala_function (get_window_width, 0);
+    ctx.put_prop_string (obj_idx, "get_width");
+
+    return (Duktape.ReturnType) 1;
+}
+
 namespace Spectator.Plugins {
     public class Plugin {
         private string source;
+        private unowned GtkWrapper wrapper;
         private Duktape.Context context;
         public string? author;
         public string? name;
         public string? description;
         public string? version;
+        public bool valid { get; private set; }
 
-        public Plugin (string src_code, string json) {
+        public Plugin (string src_code, string json, GtkWrapper wrap) {
             Utils.set_information (this, json);
             source = src_code;
+            wrapper = wrap;
             setup_context ();
-            context.eval_string (source);
+            valid = true;
+
+            if (context.peval_string (source) != 0) {
+                valid = false;
+            }
         }
 
         public void call_request_sent (RequestItem req) {
@@ -64,6 +150,10 @@ namespace Spectator.Plugins {
             context.call (1);
         }
 
+        public void set_window(Gtk.Window window) {
+            //
+        }
+
         private void setup_context () {
             context = new Duktape.Context ();
             var obj_idx = context.push_object ();
@@ -75,7 +165,14 @@ namespace Spectator.Plugins {
             obj_idx = context.push_object ();
             context.push_string (Constants.VERSION);
             context.put_prop_string (obj_idx, "version");
-            context.put_global_string ("Spectator");
+            context.push_vala_function (get_window, 0);
+            context.put_prop_string (obj_idx, "get_window");
+            context.push_vala_function (show_alert, 2);
+            context.put_prop_string (obj_idx, "show_alert");
+            context.put_global_string (Constants.RELEASE_NAME);
+
+            context.push_ref (wrapper.window);
+            context.put_global_string (Duktape.hidden_symbol("application_window"));
 
             setup_plugin_information ();
         }

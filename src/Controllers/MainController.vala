@@ -31,7 +31,8 @@ namespace Spectator.Controllers {
 
         public MainController (Gtk.ApplicationWindow window, RequestController request_controller) {
             this.window = window;
-            this.plugin_engine = new Plugins.Engine ();
+
+            this.plugin_engine = new Plugins.Engine (new Plugins.GtkWrapper (window));
             this.request_controller = request_controller;
             this.request_controller.main = this;
 

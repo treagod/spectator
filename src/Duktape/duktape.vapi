@@ -21,6 +21,9 @@
 
 [CCode (lower_case_cprefix = "duk_", cheader_filename = "duktape.h")]
 namespace Duktape {
+    [CCode (cname = "DUK_HIDDEN_SYMBOL")]
+    public unowned string hidden_symbol(string symbol);
+
     [CCode (cname = "duk_context", free_function = "duk_destroy_heap")]
     [Compact]
     public class Context {
@@ -29,6 +32,24 @@ namespace Duktape {
 
         [CCode (cname = "duk_eval_string")]
         public void eval_string (string src);
+
+        [CCode (cname = "duk_peval")]
+        public int peval ();
+
+        [CCode (cname = "duk_peval_noresult")]
+        public int peval_noresult ();
+
+        [CCode (cname = "duk_peval_string")]
+        public int peval_string (string src);
+
+        [CCode (cname = "duk_peval_string_noresult")]
+        public int peval_string_noresult (string str);
+
+        [CCode (cname = "duk_peval_lstring")]
+        public int peval_lstring (string src, int length);
+
+        [CCode (cname = "duk_peval_lstring_noresult")]
+        public int peval_lstring_noresult (string str, int length);
 
         [CCode (cname = "duk_push_string")]
         public void push_string (string str);
@@ -57,6 +78,9 @@ namespace Duktape {
         [CCode (cname = "duk_push_object")]
         public int push_object ();
 
+        [CCode (cname = "duk_push_this")]
+        public int push_this ();
+
         [CCode (cname = "duk_put_prop_string")]
         public void put_prop_string (int idx, string str);
 
@@ -68,6 +92,9 @@ namespace Duktape {
 
         [CCode (cname = "duk_push_array")]
         public uint push_array();
+
+        [CCode (cname = "duk_push_context_dump")]
+        public uint push_context_dump();
 
         [CCode (cname = "duk_insert")]
         public void insert (int idx);
@@ -86,6 +113,12 @@ namespace Duktape {
 
         [CCode (cname = "duk_get_string")]
         public unowned string get_string (int idx);
+
+        [CCode (cname = "duk_get_int")]
+        public int get_int (int idx);
+
+        [CCode (cname = "duk_get_number")]
+        public double get_number (int idx);
 
         [CCode (cname = "duk_get_pointer",  simple_generics = true)]
         public unowned T get_pointer<T> (int idx);

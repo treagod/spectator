@@ -20,10 +20,18 @@
 */
 
 namespace Spectator.Plugins {
+    public class GtkWrapper : Object {
+        public Gtk.ApplicationWindow window { get; private set; }
+        public GtkWrapper (Gtk.ApplicationWindow win) {
+            window = win;
+        }
+    }
     public class Engine : Object {
         public Gee.ArrayList<Plugin> plugins { get; private set; }
+        private GtkWrapper wrapper;
 
-        public Engine () {
+        public Engine (GtkWrapper wrap) {
+            wrapper = wrap;
             load_plugins ();
         }
 
@@ -35,6 +43,7 @@ namespace Spectator.Plugins {
 
         private void load_plugins () {
             plugins = new Gee.ArrayList<Plugin> ();
+
             var plugin_dir = Path.build_filename (Environment.get_home_dir (), ".local", "share",
                                                     Constants.PROJECT_NAME, "plugins");
 
@@ -60,19 +69,25 @@ namespace Spectator.Plugins {
 
         private bool load_plugin (string dir, string name) {
             string path = Path.build_filename (dir, name);
+            bool success = true;
             if (FileUtils.test (path, FileTest.IS_DIR)) {
                 string js_path = Path.build_filename (path, "plugin.js");
                 string json_path = Path.build_filename (path, "plugin.json");
 
                 if (plugin_files_exist (js_path, json_path)) {
-                    var plugin = new Plugin (Utils.read_file (js_path), json_path);
-                    plugins.add (plugin);
+                    var plugin = new Plugin (Utils.read_file (js_path), json_path, wrapper);
+                    if (plugin.valid) {
+                        plugins.add (plugin);
+                    } else {
+                        stdout.printf ("Failed loading plugin '%s'\n", plugin.name);
+                        success = false;
+                    }
                 } else {
-                    return false;
+                    success = false;
                 }
             }
 
-            return true;
+            return success;
         }
 
         private bool plugin_files_exist (string js_path, string json_path) {
