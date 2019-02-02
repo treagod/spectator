@@ -47,13 +47,9 @@ namespace Spectator {
                    type == RequestBody.ContentType.PLAIN;
         }
 
-        private async void perform_request (Soup.Message? m = null) {
+        private async void perform_request () {
             ulong microseconds = 0;
             double seconds = 0.0;
-
-            if (m != null) {
-                stdout.printf ("%ul\n", m.status_code);
-            }
 
             if (!item.has_valid_uri ()) {
                 invalid_uri (item);
@@ -68,7 +64,7 @@ namespace Spectator {
 
             var method = item.method;
 
-            var msg = m != null ? m : new Soup.Message (method.to_str (), item.uri);
+            var msg = new Soup.Message (method.to_str (), item.uri);
 
             if (settings.use_proxy) {
                 var proxy_resolver = new SimpleProxyResolver (null, null);
