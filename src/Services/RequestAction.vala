@@ -23,12 +23,12 @@ namespace Spectator {
     public class RequestAction {
         private RequestItem item;
         private Settings settings = Settings.get_instance ();
-        private uint performed_redirects = 0;
         private Timer? timer;
 
         public signal void finished_request ();
         public signal void request_failed (RequestItem item);
         public signal void invalid_uri (RequestItem item);
+        public signal void proxy_failed (RequestItem item);
 
         public RequestAction(RequestItem it) {
             item = it;
@@ -47,18 +47,28 @@ namespace Spectator {
                    type == RequestBody.ContentType.PLAIN;
         }
 
-        private async void perform_request (string? location = null) {
+        private async void perform_request (Soup.Message? m = null) {
             ulong microseconds = 0;
             double seconds = 0.0;
+
+            if (m != null) {
+                stdout.printf ("%ul\n", m.status_code);
+            }
 
             if (!item.has_valid_uri ()) {
                 invalid_uri (item);
                 return;
             }
 
-            location = (location == null) ? item.uri : location;
             MainLoop loop = new MainLoop ();
             var session = new Soup.Session ();
+            session.prefetch_dns (item.uri, null, null);
+
+            session.timeout = (uint) settings.timeout;
+
+            var method = item.method;
+
+            var msg = m != null ? m : new Soup.Message (method.to_str (), item.uri);
 
             if (settings.use_proxy) {
                 var proxy_resolver = new SimpleProxyResolver (null, null);
@@ -73,17 +83,9 @@ namespace Spectator {
                 var http_proxy = settings.http_proxy;
                 var https_proxy = settings.https_proxy;
 
-                proxy_resolver.set_uri_proxy ("http", http_proxy);
-                proxy_resolver.set_uri_proxy ("https", https_proxy);
-
-                session.proxy_resolver = proxy_resolver;
+                session.proxy_uri = new Soup.URI (http_proxy);
+                // msg.request_headers.append ("Proxy-Authorization", "Basic bWFydjppbg==");
             }
-
-            session.timeout = (uint) settings.timeout;
-
-            var method = item.method;
-
-            var msg = new Soup.Message (method.to_str (), location);
 
             var user_agent = "";
             var content_type_set = false;
@@ -140,7 +142,7 @@ namespace Spectator {
 
             // Use applications User-Agent if none was defined
             if (user_agent == "") {
-                session.user_agent = "Spectator-%s".printf (Constants.VERSION);
+                session.user_agent = "%s-%s".printf (Constants.RELEASE_NAME, Constants.VERSION);
             } else {
                 session.user_agent = user_agent;
             }
@@ -151,18 +153,37 @@ namespace Spectator {
                     return;
                 }
 
+                if (mess.status_code == 407) {
+                    if (settings.use_proxy) {
+                        var http_proxy = new Soup.URI (settings.http_proxy);
+                        var auth_string = "%s:%s".printf (http_proxy.get_user(), http_proxy.get_password ());
+                        var auth_string_b64 = Base64.encode ((uchar[]) auth_string.to_utf8 ());
+                        mess.request_headers.append ("Proxy-Authorization", "Basic %s".printf (auth_string_b64));
+                        sess.send_message (mess);
+                    } else {
+                        proxy_failed (item);
+                    }
+                }
+
                 // Performance new request to redirected location
-                if (mess.status_code == 302 && settings.follow_redirects && performed_redirects < settings.maximum_redirects) {
-                    performed_redirects += 1;
-                    perform_request.begin (mess.response_headers.get_one ("Location"));
-                    return;
+                if (mess.status_code == 302 && settings.follow_redirects) {
+                    uint performed_redirects = 0;
+                    while (performed_redirects < settings.maximum_redirects) {
+                        performed_redirects += 1;
+                        var new_uri = new Soup.URI (mess.response_headers.get_one ("Location"));
+
+                        if (new_uri != null) {
+                            mess.set_uri (new_uri);
+                            sess.send_message (mess);
+                        }
+                    }
                 }
 
                 var res = new ResponseItem ();
 
                 res.status_code = mess.status_code;
                 res.size = mess.response_body.length;
-                res.url = location;
+                //res.url = location;
 
                 var builder = new StringBuilder ();
 

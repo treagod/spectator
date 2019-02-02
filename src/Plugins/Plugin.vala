@@ -207,3 +207,25 @@ namespace Spectator.Plugins {
         }
     }
 }
+
+///------
+/*
+void concept_duk () {
+    var context = new Duk.Context ();
+
+    context.add_object ("my_obj", (obj) => {
+        obj.add_int ("age", 23);
+        obj.add_string ("firstname", "Marvin");
+        obj.add_object ("address", (o) => {
+            o.add_string ("street", "Whatever");
+        });
+    });
+
+    context.register_function ("my_func", 2, (ctx) => {
+        var arg1 = ctx.int_arg(0);
+        var arg2 = ctx.int_arg(1);
+
+        ctx.return_int (arg1 + arg2);
+    });
+}
+*/
