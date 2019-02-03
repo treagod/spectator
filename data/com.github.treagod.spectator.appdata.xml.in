@@ -13,4 +13,15 @@
         displays the response in a clean way.
     </p>
   </description>
+  <screenshots>
+		<screenshot type="default">
+			<image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-02-03%2013.16.49.png</image>
+		</screenshot>
+		<screenshot>
+			<image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-02-03%2013.20.32.png</image>
+		</screenshot>
+		<screenshot>
+			<image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-02-03%2013.20.54.png</image>
+		</screenshot>
+  </screenshots>
 </component>
