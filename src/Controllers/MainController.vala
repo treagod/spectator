@@ -54,7 +54,102 @@ namespace Spectator.Controllers {
             request_controller.add_item (item);
         }
 
-        public string serialize_data () {
+        public void load_data () {
+            var parser = new Json.Parser ();
+            try {
+                var filename = Path.build_filename (Environment.get_home_dir (), ".local", "share",
+                                                Constants.PROJECT_NAME, "settings.json");
+
+                var file = File.new_for_path (filename);
+
+                if (file.query_exists ()) {
+                    // Open file for reading and wrap returned FileInputStream into a
+                    // DataInputStream, so we can read line by line
+                    var dis = new DataInputStream (file.read ());
+                    string line;
+                    var builder = new StringBuilder ();
+                    // Read lines until end of file (null) is reached
+                    while ((line = dis.read_line (null)) != null) {
+                        builder.append (line);
+                    }
+
+                    parser.load_from_data (builder.str);
+                    var object = parser.get_root ().get_object ();
+
+                    var items = object.get_member ("request_items");
+                    var request_items = items.get_array ();
+
+                    foreach (var request_item in request_items.get_elements ()) {
+                        var request = deserialize_item (request_item.get_object ());
+
+                        add_request (request);
+                    }
+                }
+            } catch (Error e) {
+                // Do something funny
+            }
+        }
+
+        public void save_data () {
+            try {
+                var filename = Path.build_filename (Environment.get_home_dir (), ".local", "share",
+                                                    Constants.PROJECT_NAME, "settings.json");
+                var file = File.new_for_path (filename);
+
+                // Test for the existence of file
+                if (file.query_exists ()) {
+                    file.delete ();
+                }
+
+                // Write text data to file
+                var data_stream = new DataOutputStream (file.create (FileCreateFlags.REPLACE_DESTINATION));
+                data_stream.put_string (serialize_data ());
+            } catch (Error e) {
+                stderr.printf ("Error: %s\n", e.message);
+            }
+        }
+
+        private RequestItem deserialize_item (Json.Object request_object) {
+            var name = request_object.get_string_member ("name");
+            var uri = request_object.get_string_member ("uri");
+            var method = (int) request_object.get_int_member ("method");
+            var request = new RequestItem.with_uri (name, uri, Method.convert (method));
+            var headers = request_object.get_array_member ("headers");
+
+            foreach (var header_element in headers.get_elements ()) {
+                var header = header_element.get_object ();
+                request.add_header (new Pair (header.get_string_member ("key"), header.get_string_member ("value")));
+            }
+
+            var body = request_object.get_object_member ("body");
+
+            request.request_body.type = RequestBody.ContentType.FORM_DATA;
+            foreach (var form_data_element in body.get_array_member ("form_data").get_elements ()) {
+                var form_data_item = form_data_element.get_object ();
+                request.request_body.add_key_value (new Pair(
+                        form_data_item.get_string_member ("key"),
+                        form_data_item.get_string_member ("value")
+                ));
+            }
+
+            request.request_body.type = RequestBody.ContentType.URLENCODED;
+            foreach (var form_data_element in body.get_array_member ("urlencoded").get_elements ()) {
+                var form_data_item = form_data_element.get_object ();
+                request.request_body.add_key_value (new Pair(
+                        form_data_item.get_string_member ("key"),
+                        form_data_item.get_string_member ("value")
+                ));
+            }
+
+            request.request_body.type =
+                    RequestBody.ContentType.convert ((int) body.get_int_member ("active_type"));
+
+            request.request_body.raw = body.get_string_member ("raw") ?? "";
+
+            return request;
+        }
+
+        private string serialize_data () {
             Json.Builder builder = new Json.Builder ();
             var items = request_controller.get_items_reference ();
             builder.begin_object ();
