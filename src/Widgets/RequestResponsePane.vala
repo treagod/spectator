@@ -52,6 +52,10 @@ namespace Spectator.Widgets {
                 url_changed (url);
             });
 
+            request_view.cancel_process.connect (() => {
+                cancel_process ();
+            });
+
             request_view.body_buffer_changed.connect ((content) => {
                 body_buffer_changed (content);
             });

@@ -77,6 +77,10 @@ namespace Spectator.Widgets {
                 key_value_removed (item);
             });
 
+            req_res_pane.cancel_process.connect (() => {
+                cancel_process ();
+            });
+
             setup_request_signals (req_res_pane);
 
             stack.add_named (welcome, "welcome");

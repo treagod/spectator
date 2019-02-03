@@ -27,6 +27,7 @@ namespace Spectator {
         private ulong microseconds;
         private Soup.Session session;
         private MainLoop loop;
+        private bool is_canceled;
 
         public signal void finished_request ();
         public signal void request_failed (RequestItem item);
@@ -36,12 +37,24 @@ namespace Spectator {
         public RequestAction(RequestItem it) {
             item = it;
             session = new Soup.Session ();
+            is_canceled = false;
         }
 
         public async void make_request () {
             timer = new Timer ();
             yield perform_request ();
 	        item.status = RequestStatus.SENDING;
+        }
+
+        public RequestItem get_item () {
+            return item;
+        }
+
+        public void cancel () {
+            is_canceled = true;
+            session.flush_queue ();
+            session.abort ();
+            loop.quit ();
         }
 
         private bool is_raw_type (RequestBody.ContentType type) {
@@ -68,7 +81,9 @@ namespace Spectator {
 
         private void read_response(Soup.Session sess, Soup.Message mess) {
             if (mess.response_body.data == null) {
-                request_failed (item);
+                if (!is_canceled) {
+                    request_failed (item);
+                }
                 return;
             }
 
@@ -111,21 +126,22 @@ namespace Spectator {
             item.response = res;
             timer.stop ();
 
-            timer.elapsed (out microseconds);
+            ulong _;
+            var seconds = timer.elapsed (out _);
 
-            item.response.duration = microseconds;
+            item.response.duration = seconds;
 
             finished_request ();
             loop.quit ();
         }
 
         private async void perform_request () {
-            loop = new MainLoop ();
-
             if (!item.has_valid_uri ()) {
                 invalid_uri (item);
                 return;
             }
+
+            loop = new MainLoop ();
 
             session.timeout = (uint) settings.timeout;
 

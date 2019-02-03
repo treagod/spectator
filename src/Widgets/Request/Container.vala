@@ -97,6 +97,10 @@ namespace Spectator.Widgets.Request {
                 request_activated ();
             });
 
+            url_entry.cancel_process.connect (() => {
+                cancel_process ();
+            });
+
             body_view = new BodyView ();
 
             body_view.type_changed.connect ((type) => {

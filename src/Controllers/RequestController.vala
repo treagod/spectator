@@ -30,6 +30,7 @@ namespace Spectator.Controllers {
         private Widgets.HeaderBar headerbar;
         // \Views
         public MainController main;
+        private RequestAction action;
 
         public signal void preference_clicked ();
 
@@ -128,7 +129,7 @@ namespace Spectator.Controllers {
                 var item = sidebar.get_active_item ();
                 item.status = RequestStatus.SENDING;
 
-                var action = new RequestAction (item);
+                action = new RequestAction (item);
 
                 main.plugin_engine.run_plugin (item);
 
@@ -162,6 +163,15 @@ namespace Spectator.Controllers {
             content.header_added.connect((header) =>  {
                 var item = sidebar.get_active_item ();
                 item.add_header (header);
+            });
+
+            content.cancel_process.connect (() => {
+                if (action != null) {
+                    action.cancel ();
+                    var item = action.get_item ();
+                    item.status = RequestStatus.SENT;
+                    content.show_request (item);
+                }
             });
 
             content.header_deleted.connect ((header) => {

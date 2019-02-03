@@ -79,7 +79,6 @@ namespace Spectator.Plugins {
                     if (plugin.valid) {
                         plugins.add (plugin);
                     } else {
-                        stdout.printf ("Failed loading plugin '%s'\n", plugin.name);
                         success = false;
                     }
                 } else {
