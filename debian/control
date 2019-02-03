@@ -17,5 +17,5 @@ Standards-Version: 4.1.1
 Package: com.github.treagod.spectator
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
-Description: Spectator is a native application written in Vala using GTK. It's enables you to test the
-API endpoints of your HTTP server.
+Description: Spectator
+ Application to check endpoints
