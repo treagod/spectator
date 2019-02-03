@@ -1,6 +1,20 @@
 # Spectator
 
+Spectator is a native application written in Vala using GTK. It's enables you to test the
+API endpoints of your HTTP server.
+
 ![Screenshot GET JSON](screenshots/Screenshot%20from%202019-02-03%2013.16.49.png)
+
+## Features
+
+- [x] Do requests to a web server
+- [ ] Create request enviroments
+- [ ] Create collections of requests
+- [ ] Create test enviroments for your collections
+
+Right now Spectator allows you to make single requests to a web endpoint. In the long run
+it shall give you to give you the ability to create enviroments and collections to make
+your workflow more fluent.
 
 ## Building, Testing, and Installation
 
