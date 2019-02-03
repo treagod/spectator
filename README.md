@@ -1,6 +1,8 @@
 # Spectator
 
-![Screenshot](data/screenshot.png?raw=true)
+![Screenshot GET JSON](screenshots/Screenshot%20from%202019-02-03%2013.16.49.png)
+![Screenshot POST](screenshots/Screenshot%20from%202019-02-03%2013.20.32.png)
+![Screenshot HTML View](screenshots/Screenshot%20from%202019-02-03%2013.20.54.png)
 
 ## Building, Testing, and Installation
 
