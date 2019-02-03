@@ -101,14 +101,11 @@ namespace Spectator.Widgets.Response {
                 web_view.load_plain_text ("");
             }
 
-
-
             foreach (var entry in it.headers.entries) {
                 header_list.add_header (entry.key, entry.value);
             }
 
             header_list.show_all ();
-
 
             response_text.insert (it);
         }
