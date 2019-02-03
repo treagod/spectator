@@ -20,7 +20,7 @@ your workflow more fluent.
 ## Building, Testing, and Installation
 
 You'll need the following dependencies:
-* cmake
+* meson
 * libgee-0.8-dev
 * libgranite-dev
 * libgtksourceview-3.0-dev
