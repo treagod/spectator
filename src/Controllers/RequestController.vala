@@ -199,6 +199,7 @@ namespace Spectator.Controllers {
             dialog.creation.connect ((item) => {
                 add_item (item);
                 update_headerbar (item);
+                content.show_request (item);
             });
         }
 

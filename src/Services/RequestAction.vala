@@ -99,6 +99,7 @@ namespace Spectator {
             }
 
             var res = new ResponseItem ();
+            res.url = item.uri;
 
             // Performance new request to redirected location
             if (mess.status_code == 302 && settings.follow_redirects) {

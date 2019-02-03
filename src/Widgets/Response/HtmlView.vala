@@ -94,13 +94,14 @@ namespace Spectator.Widgets.Response {
         }
 
         public override void update (ResponseItem? it) {
+            header_list.clear ();
             if (it != null) {
-                web_view.load_alternate_html (it.data, it.url, it.url);
+                web_view.load_html (it.data, it.url);
             } else {
                 web_view.load_plain_text ("");
             }
 
-            header_list.clear ();
+
 
             foreach (var entry in it.headers.entries) {
                 header_list.add_header (entry.key, entry.value);
