@@ -14,17 +14,13 @@ You'll need the following dependencies:
 * duktape-dev
 * valac
 
-It's recommended to create a clean build environment
+Run `meson build` to configure the build environment. Change to the build directory and run `ninja test` to build
 
-    mkdir build
-    cd build/
+    meson build --prefix=/usr
+    cd build
+    ninja test
 
-Run `cmake` to configure the build environment and then `make` to build
+To install, use `ninja install`, then execute with `com.github.treagod.spectator`
 
-    cmake -DCMAKE_INSTALL_PREFIX=/usr ..
-    make
-
-To install, use `make install`, then execute with `com.github.treagod.spectator`
-
-    sudo make install
-    com.github.treagod.httpinspecter
+    sudo ninja install
+    com.github.treagod.spectator
