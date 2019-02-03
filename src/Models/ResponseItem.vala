@@ -27,6 +27,7 @@ namespace Spectator {
         public uint status_code { get; set; }
         public double duration { get; set; }
         public int64 size { get; set; }
+        public uint redirects { get; set; }
 
         public Gee.HashMap<string, string> headers { get; private set; }
 

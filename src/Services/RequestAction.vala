@@ -24,6 +24,9 @@ namespace Spectator {
         private RequestItem item;
         private Settings settings = Settings.get_instance ();
         private Timer? timer;
+        private ulong microseconds;
+        private Soup.Session session;
+        private MainLoop loop;
 
         public signal void finished_request ();
         public signal void request_failed (RequestItem item);
@@ -32,6 +35,7 @@ namespace Spectator {
 
         public RequestAction(RequestItem it) {
             item = it;
+            session = new Soup.Session ();
         }
 
         public async void make_request () {
@@ -47,18 +51,81 @@ namespace Spectator {
                    type == RequestBody.ContentType.PLAIN;
         }
 
+        private uint redirect_request (Soup.Message msg) {
+            uint performed_redirects = 0;
+            while (performed_redirects < settings.maximum_redirects) {
+                performed_redirects += 1;
+                var new_uri = new Soup.URI (msg.response_headers.get_one ("Location"));
+
+                if (new_uri != null) {
+                    msg.set_uri (new_uri);
+                    session.send_message (msg);
+                }
+            }
+
+            return performed_redirects;
+        }
+
+        private void read_response(Soup.Session sess, Soup.Message mess) {
+            if (mess.response_body.data == null) {
+                request_failed (item);
+                return;
+            }
+
+            if (mess.status_code == 407) {
+                if (settings.use_proxy) {
+                    var http_proxy = new Soup.URI (settings.http_proxy);
+                    var auth_string = "%s:%s".printf (http_proxy.get_user(), http_proxy.get_password ());
+                    var auth_string_b64 = Base64.encode ((uchar[]) auth_string.to_utf8 ());
+                    mess.request_headers.append ("Proxy-Authorization", "Basic %s".printf (auth_string_b64));
+                    sess.send_message (mess);
+                } else {
+                    proxy_failed (item);
+                }
+            }
+
+            var res = new ResponseItem ();
+
+            // Performance new request to redirected location
+            if (mess.status_code == 302 && settings.follow_redirects) {
+                res.redirects = redirect_request (mess);
+            }
+
+            res.status_code = mess.status_code;
+            res.size = mess.response_body.length;
+
+            var builder = new StringBuilder ();
+
+            mess.response_headers.foreach ((key, val) => {
+                res.add_header (key, val);
+                builder.append ("%s: %s\r\n".printf (key, val));
+            });
+
+            builder.append ("\r\n");
+            builder.append ((string) mess.response_body.data);
+
+            res.raw = builder.str;
+            res.data = (string) mess.response_body.data;
+
+            item.status = RequestStatus.SENT;
+            item.response = res;
+            timer.stop ();
+
+            timer.elapsed (out microseconds);
+
+            item.response.duration = microseconds;
+
+            finished_request ();
+            loop.quit ();
+        }
+
         private async void perform_request () {
-            ulong microseconds = 0;
-            double seconds = 0.0;
+            loop = new MainLoop ();
 
             if (!item.has_valid_uri ()) {
                 invalid_uri (item);
                 return;
             }
-
-            MainLoop loop = new MainLoop ();
-            var session = new Soup.Session ();
-            session.prefetch_dns (item.uri, null, null);
 
             session.timeout = (uint) settings.timeout;
 
@@ -80,7 +147,6 @@ namespace Spectator {
                 var https_proxy = settings.https_proxy;
 
                 session.proxy_uri = new Soup.URI (http_proxy);
-                // msg.request_headers.append ("Proxy-Authorization", "Basic bWFydjppbg==");
             }
 
             var user_agent = "";
@@ -143,68 +209,7 @@ namespace Spectator {
                 session.user_agent = user_agent;
             }
 
-            session.queue_message (msg, (sess, mess) => {
-                if (mess.response_body.data == null) {
-                    request_failed (item);
-                    return;
-                }
-
-                if (mess.status_code == 407) {
-                    if (settings.use_proxy) {
-                        var http_proxy = new Soup.URI (settings.http_proxy);
-                        var auth_string = "%s:%s".printf (http_proxy.get_user(), http_proxy.get_password ());
-                        var auth_string_b64 = Base64.encode ((uchar[]) auth_string.to_utf8 ());
-                        mess.request_headers.append ("Proxy-Authorization", "Basic %s".printf (auth_string_b64));
-                        sess.send_message (mess);
-                    } else {
-                        proxy_failed (item);
-                    }
-                }
-
-                // Performance new request to redirected location
-                if (mess.status_code == 302 && settings.follow_redirects) {
-                    uint performed_redirects = 0;
-                    while (performed_redirects < settings.maximum_redirects) {
-                        performed_redirects += 1;
-                        var new_uri = new Soup.URI (mess.response_headers.get_one ("Location"));
-
-                        if (new_uri != null) {
-                            mess.set_uri (new_uri);
-                            sess.send_message (mess);
-                        }
-                    }
-                }
-
-                var res = new ResponseItem ();
-
-                res.status_code = mess.status_code;
-                res.size = mess.response_body.length;
-                //res.url = location;
-
-                var builder = new StringBuilder ();
-
-                mess.response_headers.foreach ((key, val) => {
-                    res.add_header (key, val);
-                    builder.append ("%s: %s\r\n".printf (key, val));
-                });
-
-                builder.append ("\r\n");
-                builder.append ((string) mess.response_body.data);
-
-                res.raw = builder.str;
-                res.data = (string) mess.response_body.data;
-
-                item.status = RequestStatus.SENT;
-                item.response = res;
-                timer.stop ();
-
-                seconds = timer.elapsed (out microseconds);
-
-                item.response.duration = seconds;
-
-                finished_request ();
-                loop.quit ();
-	        });
+            session.queue_message (msg, read_response);
         }
     }
 }
