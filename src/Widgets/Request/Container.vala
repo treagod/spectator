@@ -49,26 +49,32 @@ namespace Spectator.Widgets.Request {
         }
 
         public Container () {
-            url_entry = new UrlEntry ();
-            header_view = new KeyValueList (_("Add Header"));
-            url_params_view = new KeyValueList (_("Add Parameter"));
-            url_entry.margin_bottom = 10;
+            header_view = create_header_view ();
+            url_params_view = create_url_params_view ();
+            url_entry = create_url_entry ();
+            body_view = create_body_view ();
 
+            init_stack ();
+
+            add (url_entry);
+
+            var header_params_label = new Gtk.Label (_("Headers"));
+            var url_params_label = new Gtk.Label (_("Parameters"));
+            body_label = new Gtk.Label (_("Body"));
+
+            setup_tabs (header_params_label, url_params_label, body_label);
+
+            body_label.sensitive = false;
+
+            stack.set_visible_child_name ("header");
+
+            add (tabs);
+            add (stack);
+        }
+
+        private KeyValueList create_header_view () {
+            var header_view = new KeyValueList (_("Add Header"));
             header_view.provider = new HeaderProvider ();
-
-            url_params_view.item_updated.connect (() => {
-                url_params_updated (url_params_view.get_all_items ());
-            });
-
-            url_params_view.item_added.connect ((url) => {
-                url_params_updated (url_params_view.get_all_items ());
-            });
-
-            url_params_view.item_deleted.connect ((url) => {
-                var items = url_params_view.get_all_items ();
-                items.remove (url);
-                url_params_updated (items);
-            });
 
             header_view.item_added.connect ((header) => {
                 header_added (header);
@@ -78,11 +84,12 @@ namespace Spectator.Widgets.Request {
                 header_deleted (header);
             });
 
-            url_params_view.item_added.connect ((url_param) => {
-            });
+            return header_view;
+        }
 
-            url_params_view.item_deleted.connect ((url_param) => {
-            });
+        private UrlEntry create_url_entry () {
+            var url_entry = new UrlEntry ();
+            url_entry.margin_bottom = 10;
 
             url_entry.url_changed.connect ((url) => {
                 url_changed (url);
@@ -101,7 +108,37 @@ namespace Spectator.Widgets.Request {
                 cancel_process ();
             });
 
-            body_view = new BodyView ();
+            return url_entry;
+        }
+
+        private KeyValueList create_url_params_view () {
+            var url_params_view = new KeyValueList (_("Add Parameter"));
+
+            url_params_view.item_updated.connect (() => {
+                url_params_updated (url_params_view.get_all_items ());
+            });
+
+            url_params_view.item_added.connect ((url) => {
+                url_params_updated (url_params_view.get_all_items ());
+            });
+
+            url_params_view.item_deleted.connect ((url) => {
+                var items = url_params_view.get_all_items ();
+                items.remove (url);
+                url_params_updated (items);
+            });
+
+            url_params_view.item_added.connect ((url_param) => {
+            });
+
+            url_params_view.item_deleted.connect ((url_param) => {
+            });
+
+            return url_params_view;
+        }
+
+        private BodyView create_body_view () {
+            var body_view = new BodyView ();
 
             body_view.type_changed.connect ((type) => {
                 type_changed (type);
@@ -123,6 +160,10 @@ namespace Spectator.Widgets.Request {
                 key_value_removed (item);
             });
 
+            return body_view;
+        }
+
+        private void init_stack () {
             stack = new Gtk.Stack ();
             stack.margin = 0;
             stack.margin_bottom = 18;
@@ -131,21 +172,6 @@ namespace Spectator.Widgets.Request {
             stack.add_titled (header_view, "header", "header");
             stack.add_titled (url_params_view, "url_params", "parameters");
             stack.add_titled (body_view, "body", "body");
-
-            add (url_entry);
-
-            var header_params_label = new Gtk.Label (_("Headers"));
-            var url_params_label = new Gtk.Label (_("Parameters"));
-            body_label = new Gtk.Label (_("Body"));
-
-            setup_tabs (header_params_label, url_params_label, body_label);
-
-            body_label.sensitive = false;
-
-            stack.set_visible_child_name ("header");
-
-            add (tabs);
-            add (stack);
         }
 
         public void update_url_params (RequestItem item) {

@@ -23,8 +23,7 @@ namespace Spectator {
     public class RequestAction {
         private RequestItem item;
         private Settings settings = Settings.get_instance ();
-        private Timer? timer;
-        private ulong microseconds;
+        private Timer timer;
         private Soup.Session session;
         private MainLoop loop;
         private bool is_canceled;
