@@ -8,6 +8,7 @@ API endpoints of your HTTP server.
 ## Features
 
 - [x] Do requests to a web server
+- [x] Handle Basic Proxy Server
 - [ ] Create request enviroments
 - [ ] Create collections of requests
 - [ ] Create test enviroments for your collections

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2019 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -88,8 +88,14 @@ namespace Spectator {
 
             if (mess.status_code == 407) {
                 if (settings.use_proxy) {
-                    var http_proxy = new Soup.URI (settings.http_proxy);
-                    var auth_string = "%s:%s".printf (http_proxy.get_user(), http_proxy.get_password ());
+                    var auth_string = "";
+                    if (settings.use_userinformation) {
+                        auth_string = "%s:%s".printf (settings.proxy_username, settings.proxy_password);
+                    } else {
+                        // try to extract info from url string
+                        var http_proxy = new Soup.URI (settings.http_proxy);
+                        auth_string = "%s:%s".printf (http_proxy.get_user(), http_proxy.get_password ());
+                    }
                     var auth_string_b64 = Base64.encode ((uchar[]) auth_string.to_utf8 ());
                     mess.request_headers.append ("Proxy-Authorization", "Basic %s".printf (auth_string_b64));
                     sess.send_message (mess);
@@ -162,7 +168,10 @@ namespace Spectator {
                 var http_proxy = settings.http_proxy;
                 var https_proxy = settings.https_proxy;
 
-                session.proxy_uri = new Soup.URI (http_proxy);
+                proxy_resolver.set_uri_proxy ("http", http_proxy);
+                proxy_resolver.set_uri_proxy ("https", https_proxy);
+
+                session.proxy_resolver = proxy_resolver;
             }
 
             var user_agent = "";
