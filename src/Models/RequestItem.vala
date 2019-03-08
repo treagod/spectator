@@ -20,7 +20,9 @@
 */
 
 namespace Spectator {
+    private uint64 max_id = 0;
     public class RequestItem : Object  {
+        private uint64 id;
         public string name { get; set; }
         private string _raw_uri { get; set; }
         private Soup.URI? _uri { get; set; }
@@ -53,11 +55,22 @@ namespace Spectator {
 
         public RequestItem (string nam, Method meth) {
             setup (nam, meth);
+            id = max_id++;
+
+        }
+
+        public RequestItem.with_id (string nam, Method meth, uint64 i) {
+            setup (nam, meth);
+            if (i > max_id) {
+                max_id = i;
+            }
+            id = max_id++;
         }
 
         public RequestItem.with_uri (string nam, string url, Method meth) {
             setup (nam, meth);
             uri = url;
+            id = max_id++;
         }
 
         private void setup (string nam, Method meth) {
