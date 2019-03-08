@@ -31,6 +31,8 @@ executable(
 	'Plugins/Plugin.vala',
 	'Plugins/Utils.vala',
 	'Services/Settings.vala',
+	'Services/JsonSerializer.vala',
+	'Services/JsonDeserializer.vala',
 	'Services/RequestAction.vala',
 	'Dialogs/Request/Dialog.vala',
 	'Dialogs/Request/CreateDialog.vala',
