@@ -22,15 +22,18 @@
 namespace Spectator.Controllers {
     public class Main {
         private Request request_controller;
+        private Collection collection_controller;
         public unowned Gtk.ApplicationWindow window;
         public Plugins.Engine plugin_engine { get; private set; }
         private string setting_file_path;
 
-        public Main (Gtk.ApplicationWindow window, Request request_controller) {
+        public Main (Gtk.ApplicationWindow window, Request req_controller, Collection col_controller) {
             this.window = window;
             this.plugin_engine = new Plugins.Engine (new Plugins.GtkWrapper (window));
-            this.request_controller = request_controller;
+            this.request_controller = req_controller;
             this.request_controller.main = this;
+            this.collection_controller = col_controller;
+            this.collection_controller.main = this;
             this.setting_file_path = Path.build_filename (Environment.get_home_dir (), ".local", "share",
                                                           Constants.PROJECT_NAME, "settings.json");
 

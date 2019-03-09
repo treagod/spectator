@@ -19,19 +19,18 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace Spectator.Controllers {
+namespace Spectator.Models {
     public class Collection {
-        public Main main;
+        private Gee.ArrayList<RequestItem> requests;
+        public string name { get; private set; }
 
-        public Collection () {
-
+        public Collection (string nam) {
+            name = nam;
+            requests = new Gee.ArrayList<RequestItem> ();
         }
 
-        public void add_collection (Models.Collection collection) {
-        }
-
-        public void add_request_to_collection () {
-
+        public void add_request (RequestItem request) {
+            requests.add (request);
         }
     }
 }

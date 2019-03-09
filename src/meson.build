@@ -21,6 +21,7 @@ executable(
     'Application.vala',
 	'Window.vala',
 	'Models/Pair.vala',
+	'Models/Collection.vala',
 	'Models/RequestItem.vala',
     'Models/RequestBody.vala',
 	'Models/ResponseItem.vala',
