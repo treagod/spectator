@@ -53,6 +53,7 @@
 		<content_attribute id="money-purchasing">none</content_attribute>
 		<content_attribute id="money-gambling">none</content_attribute>
 	</content_rating>
+	<developer_name>Marvin Ahlgrimm</developer_name>
 	<custom>
 		<value key="x-appcenter-suggested-price">6</value>
   </custom>
