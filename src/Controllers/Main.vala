@@ -20,13 +20,13 @@
 */
 
 namespace Spectator.Controllers {
-    public class MainController {
-        private RequestController request_controller;
+    public class Main {
+        private Request request_controller;
         public unowned Gtk.ApplicationWindow window;
         public Plugins.Engine plugin_engine { get; private set; }
         private string setting_file_path;
 
-        public MainController (Gtk.ApplicationWindow window, RequestController request_controller) {
+        public Main (Gtk.ApplicationWindow window, Request request_controller) {
             this.window = window;
             this.plugin_engine = new Plugins.Engine (new Plugins.GtkWrapper (window));
             this.request_controller = request_controller;

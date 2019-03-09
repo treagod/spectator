@@ -23,7 +23,7 @@ namespace Spectator {
     public class Window : Gtk.ApplicationWindow {
         private Widgets.Content request_item_view;
         private Widgets.Sidebar.Container sidebar;
-        private Controllers.MainController controller;
+        private Controllers.Main controller;
 
         public Window (Gtk.Application app) {
             var settings = Settings.get_instance ();
@@ -62,9 +62,9 @@ namespace Spectator {
             request_item_view = new Widgets.Content ();
             sidebar = new Widgets.Sidebar.Container ();
 
-            var req_controller = new Controllers.RequestController (headerbar, sidebar, request_item_view);
+            var req_controller = new Controllers.Request (headerbar, sidebar, request_item_view);
 
-            controller = new Controllers.MainController (this, req_controller);
+            controller = new Controllers.Main (this, req_controller);
 
             controller.load_data ();
 

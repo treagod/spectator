@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2019 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -20,7 +20,7 @@
 */
 
 namespace Spectator.Controllers {
-    public class RequestController {
+    public class Request {
         // Models
         private Gee.ArrayList<RequestItem> items;
         // \Models
@@ -29,12 +29,12 @@ namespace Spectator.Controllers {
         private Widgets.Content content;
         private Widgets.HeaderBar headerbar;
         // \Views
-        public MainController main;
+        public Main main;
         private RequestAction action;
 
         public signal void preference_clicked ();
 
-        public RequestController (Widgets.HeaderBar headerbar, Widgets.Sidebar.Container sidebar,
+        public Request (Widgets.HeaderBar headerbar, Widgets.Sidebar.Container sidebar,
                                   Widgets.Content content) {
             this.sidebar = sidebar;
             this.content = content;
