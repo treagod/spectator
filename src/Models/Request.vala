@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2019 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -19,9 +19,9 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace Spectator {
+namespace Spectator.Models {
     private uint64 max_id = 0;
-    public class RequestItem : Object  {
+    public class Request : Object  {
         private uint64 id;
         public string name { get; set; }
         private string _raw_uri { get; set; }
@@ -53,13 +53,13 @@ namespace Spectator {
             }
         }
 
-        public RequestItem (string nam, Method meth) {
+        public Request (string nam, Method meth) {
             setup (nam, meth);
             id = max_id++;
 
         }
 
-        public RequestItem.with_id (string nam, Method meth, uint64 i) {
+        public Request.with_id (string nam, Method meth, uint64 i) {
             setup (nam, meth);
             if (i > max_id) {
                 max_id = i;
@@ -67,7 +67,7 @@ namespace Spectator {
             id = max_id++;
         }
 
-        public RequestItem.with_uri (string nam, string url, Method meth) {
+        public Request.with_uri (string nam, string url, Method meth) {
             setup (nam, meth);
             uri = url;
             id = max_id++;

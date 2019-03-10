@@ -21,7 +21,7 @@
 
 namespace Spectator.Dialogs.Request {
     public class CreateDialog : Dialog {
-        public signal void creation(RequestItem item);
+        public signal void creation(Models.Request request);
 
         public CreateDialog (Gtk.ApplicationWindow parent) {
             base (_("Create Request"), parent);
@@ -53,7 +53,7 @@ namespace Spectator.Dialogs.Request {
                 show_warning (_("Request name must not be empty."));
             } else {
                 var index = method_box.get_active ();
-                creation (new RequestItem (name, Method.convert (index)));
+                creation (new Models.Request (name, Models.Method.convert (index)));
                 destroy ();
             }
         }

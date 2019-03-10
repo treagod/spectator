@@ -30,7 +30,7 @@ namespace Spectator.Controllers {
         public void add_collection (Models.Collection collection) {
         }
 
-        public void add_request_to_collection () {
+        public void add_request_to_collection (Models.Collection collection, Models.Request request) {
 
         }
     }

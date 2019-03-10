@@ -21,7 +21,7 @@
 
 namespace Spectator {
     public class RequestAction {
-        private RequestItem item;
+        private Models.Request item;
         private Settings settings = Settings.get_instance ();
         private Timer timer;
         private Soup.Session session;
@@ -29,11 +29,11 @@ namespace Spectator {
         private bool is_canceled;
 
         public signal void finished_request ();
-        public signal void request_failed (RequestItem item);
-        public signal void invalid_uri (RequestItem item);
-        public signal void proxy_failed (RequestItem item);
+        public signal void request_failed (Models.Request item);
+        public signal void invalid_uri (Models.Request item);
+        public signal void proxy_failed (Models.Request item);
 
-        public RequestAction(RequestItem it) {
+        public RequestAction(Models.Request it) {
             item = it;
             session = new Soup.Session ();
             is_canceled = false;
@@ -42,10 +42,10 @@ namespace Spectator {
         public async void make_request () {
             timer = new Timer ();
             yield perform_request ();
-	        item.status = RequestStatus.SENDING;
+	        item.status = Models.RequestStatus.SENDING;
         }
 
-        public RequestItem get_item () {
+        public Models.Request get_item () {
             return item;
         }
 
@@ -128,7 +128,7 @@ namespace Spectator {
             res.raw = builder.str;
             res.data = (string) mess.response_body.data;
 
-            item.status = RequestStatus.SENT;
+            item.status = Models.RequestStatus.SENT;
             item.response = res;
             timer.stop ();
 
@@ -192,7 +192,7 @@ namespace Spectator {
                 msg.request_headers.append (header.key, header.val);
             }
 
-            if (method == Method.POST || method == Method.PUT || method == Method.PATCH) {
+            if (method == Models.Method.POST || method == Models.Method.PUT || method == Models.Method.PATCH) {
                 var body = item.request_body;
                 if (is_raw_type (body.type)) {
                     if (content_type_set) {

@@ -21,15 +21,15 @@
 
 namespace Spectator.Models {
     public class Collection {
-        private Gee.ArrayList<RequestItem> requests;
+        private Gee.ArrayList<Request> requests;
         public string name { get; private set; }
 
         public Collection (string nam) {
             name = nam;
-            requests = new Gee.ArrayList<RequestItem> ();
+            requests = new Gee.ArrayList<Request> ();
         }
 
-        public void add_request (RequestItem request) {
+        public void add_request (Request request) {
             requests.add (request);
         }
     }

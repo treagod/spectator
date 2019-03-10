@@ -22,7 +22,7 @@
 namespace Spectator.Controllers {
     public class Request {
         // Models
-        private Gee.ArrayList<RequestItem> items;
+        private Gee.ArrayList<Models.Request> items;
         // \Models
         // Views
         private Widgets.Sidebar.Container sidebar;
@@ -39,7 +39,7 @@ namespace Spectator.Controllers {
             this.sidebar = sidebar;
             this.content = content;
             this.headerbar = headerbar;
-            this.items = new Gee.ArrayList<RequestItem> ();
+            this.items = new Gee.ArrayList<Models.Request> ();
 
             setup ();
         }
@@ -127,7 +127,7 @@ namespace Spectator.Controllers {
 
             content.request_activated.connect (() => {
                 var item = sidebar.get_active_item ();
-                item.status = RequestStatus.SENDING;
+                item.status = Models.RequestStatus.SENDING;
 
                 action = new RequestAction (item);
 
@@ -140,19 +140,19 @@ namespace Spectator.Controllers {
                 });
 
                 action.request_failed.connect ((item) => {
-                    item.status = RequestStatus.SENT;
+                    item.status = Models.RequestStatus.SENT;
                     content.show_request (item);
                     content.set_error ("Request failed: %s".printf (item.name));
                 });
 
                 action.invalid_uri.connect ((item) => {
-                    item.status = RequestStatus.SENT;
+                    item.status = Models.RequestStatus.SENT;
                     //content.show_request (item);
                     content.set_error ("Invalid URI: %s".printf (item.name));
                 });
 
                 action.proxy_failed.connect ((item) => {
-                    item.status = RequestStatus.SENT;
+                    item.status = Models.RequestStatus.SENT;
                     //content.show_request (item);
                     content.set_error ("Proxy denied request: %s".printf (item.name));
                 });
@@ -169,7 +169,7 @@ namespace Spectator.Controllers {
                 if (action != null) {
                     action.cancel ();
                     var item = action.get_item ();
-                    item.status = RequestStatus.SENT;
+                    item.status = Models.RequestStatus.SENT;
                     content.show_request (item);
                 }
             });
@@ -203,7 +203,7 @@ namespace Spectator.Controllers {
             });
         }
 
-        private void show_update_request_dialog (RequestItem item) {
+        private void show_update_request_dialog (Models.Request item) {
            var dialog = new Dialogs.Request.UpdateDialog (main.window, item);
            dialog.show_all ();
            dialog.updated.connect ((item) => {
@@ -215,20 +215,20 @@ namespace Spectator.Controllers {
            });
         }
 
-        private void update_headerbar (RequestItem item) {
+        private void update_headerbar (Models.Request item) {
             headerbar.subtitle = item.name;
         }
 
-        private void update_content (RequestItem item) {
+        private void update_content (Models.Request item) {
             content.show_request (item);
         }
 
-        public void add_item (RequestItem item) {
+        public void add_item (Models.Request item) {
             items.add (item);
             sidebar.add_item (item);
         }
 
-        public unowned Gee.ArrayList<RequestItem> get_items_reference () {
+        public unowned Gee.ArrayList<Models.Request> get_items_reference () {
             return items;
         }
     }

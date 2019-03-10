@@ -40,7 +40,7 @@ namespace Spectator.Services {
             builder.end_object ();
         }
 
-        private void serialize_headers (RequestItem request) {
+        private void serialize_headers (Models.Request request) {
             builder.set_member_name ("headers");
             builder.begin_array ();
             foreach (var header in request.headers) {
@@ -49,7 +49,7 @@ namespace Spectator.Services {
             builder.end_array ();
         }
 
-        private void serialize_body (RequestItem request) {
+        private void serialize_body (Models.Request request) {
             builder.set_member_name ("body");
             builder.begin_object ();
             builder.set_member_name ("active_type");
@@ -81,7 +81,7 @@ namespace Spectator.Services {
             builder.end_object (); // body
         }
 
-        private void serialize_request(RequestItem request) {
+        private void serialize_request(Models.Request request) {
             builder.begin_object ();
             builder.set_member_name ("name");
             builder.add_string_value (request.name);
@@ -96,7 +96,7 @@ namespace Spectator.Services {
             builder.end_object ();
         }
 
-        public void serialize (Gee.ArrayList<RequestItem> items) {
+        public void serialize (Gee.ArrayList<Models.Request> items) {
             builder.begin_object ();
             builder.set_member_name ("version");
             builder.add_string_value ("0.1");

@@ -35,7 +35,7 @@ namespace Spectator.Plugins {
             load_plugins ();
         }
 
-        public void run_plugin (RequestItem item) {
+        public void run_plugin (Models.Request item) {
             foreach (var plugin in plugins) {
                 plugin.call_request_sent (item);
             }

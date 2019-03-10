@@ -28,13 +28,13 @@ namespace Spectator.Widgets {
         private Gtk.Label infolabel;
 
         public signal void url_changed (string url);
-        public signal void method_changed (Method method);
+        public signal void method_changed (Models.Method method);
         public async signal void request_activated ();
         public signal void cancel_process ();
         public signal void type_changed (RequestBody.ContentType type);
         public signal void body_buffer_changed (string content);
 
-        public signal void item_changed (RequestItem item);
+        public signal void item_changed (Models.Request item);
         public signal void welcome_activated(int index);
         public signal void header_added (Pair header);
         public signal void header_deleted (Pair header);
@@ -130,12 +130,12 @@ namespace Spectator.Widgets {
 		    infobar.revealed = true;
         }
 
-        public void show_request (RequestItem item) {
+        public void show_request (Models.Request item) {
             req_res_pane.set_item (item);
             stack.set_visible_child (req_res_pane);
         }
 
-        public void update_url_params (RequestItem item) {
+        public void update_url_params (Models.Request item) {
             req_res_pane.update_url_params (item);
         }
 

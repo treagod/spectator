@@ -51,7 +51,7 @@ namespace Spectator.Controllers {
             dialog.show_all ();
         }
 
-        public void add_request (RequestItem item) {
+        public void add_request (Models.Request item) {
             request_controller.add_item (item);
         }
 

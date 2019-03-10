@@ -22,7 +22,7 @@
 namespace Spectator.Widgets.Request {
     interface Interface {
         public signal void url_changed (string url);
-        public signal void method_changed (Method method);
+        public signal void method_changed (Models.Method method);
         public signal void request_activated ();
         public signal void cancel_process ();
         public signal void header_added (Pair header);

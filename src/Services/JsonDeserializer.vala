@@ -21,7 +21,7 @@
 
 namespace Spectator.Services {
     public class JsonDeserializer {
-        public signal void request_loaded (RequestItem request);
+        public signal void request_loaded (Models.Request request);
 
         public void load_data_from_file (string filepath) {
             var parser = new Json.Parser ();
@@ -57,11 +57,11 @@ namespace Spectator.Services {
         }
     }
 
-    private RequestItem deserialize_item (Json.Object request_object) {
+    private Models.Request deserialize_item (Json.Object request_object) {
         var name = request_object.get_string_member ("name");
         var uri = request_object.get_string_member ("uri");
         var method = (int) request_object.get_int_member ("method");
-        var request = new RequestItem.with_uri (name, uri, Method.convert (method));
+        var request = new Models.Request.with_uri (name, uri, Models.Method.convert (method));
         var headers = request_object.get_array_member ("headers");
 
         foreach (var header_element in headers.get_elements ()) {

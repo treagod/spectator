@@ -22,7 +22,7 @@ executable(
 	'Window.vala',
 	'Models/Pair.vala',
 	'Models/Collection.vala',
-	'Models/RequestItem.vala',
+	'Models/Request.vala',
     'Models/RequestBody.vala',
 	'Models/ResponseItem.vala',
 	'Controllers/Request.vala',
