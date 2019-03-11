@@ -23,9 +23,9 @@ namespace Spectator.Widgets {
     class RequestResponsePane : Gtk.Paned, Request.Interface {
         private Request.Container request_view;
         private Response.Container response_view;
-        private Gee.HashMap<RequestItem, int> tab_indecies;
-        private Gee.HashMap<RequestItem, ResponseViewCache> cache;
-        private RequestItem last_item;
+        private Gee.HashMap<Models.Request, int> tab_indecies;
+        private Gee.HashMap<Models.Request, ResponseViewCache> cache;
+        private Models.Request last_item;
 
         public signal void type_changed (RequestBody.ContentType type);
         public signal void body_buffer_changed (string content);
@@ -37,8 +37,8 @@ namespace Spectator.Widgets {
         public RequestResponsePane () {
             request_view  = new Request.Container ();
             response_view = new Response.Container ();
-            tab_indecies = new Gee.HashMap<RequestItem, int> ();
-            cache = new Gee.HashMap<RequestItem, ResponseViewCache>();
+            tab_indecies = new Gee.HashMap<Models.Request, int> ();
+            cache = new Gee.HashMap<Models.Request, ResponseViewCache>();
 
             request_view.response_received.connect ((res) => {
                 response_view.update (res);
@@ -99,11 +99,11 @@ namespace Spectator.Widgets {
             request_view.update_url_bar (uri);
         }
 
-        public void update_url_params (RequestItem item) {
+        public void update_url_params (Models.Request item) {
             request_view.update_url_params (item);
         }
 
-        private void adjust_tab (RequestItem item) {
+        private void adjust_tab (Models.Request item) {
             tab_indecies[last_item] = request_view.tab_index;
             last_item = item;
             request_view.set_item (item);
@@ -115,7 +115,7 @@ namespace Spectator.Widgets {
             }
         }
 
-        private void create_or_get_cached_view (RequestItem item) {
+        private void create_or_get_cached_view (Models.Request item) {
             remove (response_view);
 
             if (cache.has_key(item)) {
@@ -137,7 +137,7 @@ namespace Spectator.Widgets {
             }
         }
 
-        public void set_item (RequestItem item) {
+        public void set_item (Models.Request item) {
             adjust_tab (item);
 
             if (item.response != null) {

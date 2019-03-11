@@ -130,7 +130,7 @@ namespace Spectator.Plugins {
             }
         }
 
-        public void call_request_sent (RequestItem req) {
+        public void call_request_sent (Models.Request req) {
             context.get_global_string ("request_sent");
             if (context.is_function(-1)) {
                 var obj_idx = context.push_object ();

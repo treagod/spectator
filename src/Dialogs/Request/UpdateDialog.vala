@@ -21,9 +21,9 @@
 
 namespace Spectator.Dialogs.Request {
     public class UpdateDialog : Dialog {
-        public signal void updated (RequestItem item);
+        public signal void updated (Models.Request item);
 
-        public UpdateDialog (Gtk.ApplicationWindow parent, RequestItem item) {
+        public UpdateDialog (Gtk.ApplicationWindow parent, Models.Request item) {
             base (_("Update Request"), parent);
             request_name_entry.text = item.name;
             method_box.active = item.method.to_i ();
@@ -46,14 +46,14 @@ namespace Spectator.Dialogs.Request {
             });
         }
 
-        private void update_request (RequestItem item) {
+        private void update_request (Models.Request item) {
             var name = request_name_entry.text;
 
             if (name.length == 0) {
                 show_warning (_("Request name must not be empty."));
             } else {
                 item.name = request_name_entry.text;
-                item.method = Method.convert (method_box.active);
+                item.method = Models.Method.convert (method_box.active);
                 updated (item);
                 destroy ();
             }

@@ -21,29 +21,29 @@
 
 namespace Spectator {
     public class RequestStore {
-        public Gee.ArrayList<RequestItem> items { get; private set; }
+        public Gee.ArrayList<Models.Request> items { get; private set; }
 
         public RequestStore () {
-            items = new Gee.ArrayList<RequestItem> ();
+            items = new Gee.ArrayList<Models.Request> ();
         }
 
-        public void add_request (RequestItem item) {
+        public void add_request (Models.Request item) {
             items.add (item);
         }
 
-        public int index_of (RequestItem item) {
+        public int index_of (Models.Request item) {
             return items.index_of (item);
         }
 
-        public RequestItem get_request (int idx) {
+        public Models.Request get_request (int idx) {
             return items.@get (idx);
         }
 
-        public void update_request (int idx, RequestItem item) {
+        public void update_request (int idx, Models.Request item) {
             items.insert (idx, item);
         }
 
-        public bool destroy (RequestItem item) {
+        public bool destroy (Models.Request item) {
             if (items.contains(item)) {
                 items.remove (item);
                 return true;

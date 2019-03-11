@@ -26,29 +26,29 @@ namespace Spectator.Widgets.Sidebar {
         Gtk.Label method;
         Gtk.Label request_name;
         Gtk.Label url;
-        public RequestItem item { get; set; }
-        public signal void item_deleted (RequestItem item);
-        public signal void item_edit (RequestItem item);
+        public Models.Request item { get; set; }
+        public signal void item_deleted (Models.Request item);
+        public signal void item_edit (Models.Request item);
 
-        private string get_method_label(Method method) {
+        private string get_method_label(Models.Method method) {
             var dark_theme = Gtk.Settings.get_default ().gtk_application_prefer_dark_theme;
             switch (method) {
-                case Method.GET:
+                case Models.Method.GET:
                     var color = dark_theme ? "64baff" : "0d52bf";
                     return "<span color=\"#" + color + "\">GET</span>";
-                case Method.POST:
+                case Models.Method.POST:
                     var color = dark_theme ? "9bdb4d" : "3a9104";
                     return "<span color=\"#" + color + "\">POST</span>";
-                case Method.PUT:
+                case Models.Method.PUT:
                     var color = dark_theme ? "ffe16b" : "ad5f00";
                     return "<span color=\"#" + color + "\">PUT</span>";
-                case Method.PATCH:
+                case Models.Method.PATCH:
                     var color = dark_theme ? "ffa154" : "cc3b02";
                     return "<span color=\"#" + color + "\">PATCH</span>";
-                case Method.DELETE:
+                case Models.Method.DELETE:
                     var color = dark_theme ? "ed5353" : "a10705";
                     return "<span color=\"#" + color + "\">DELETE</span>";
-                case Method.HEAD:
+                case Models.Method.HEAD:
                     var color = dark_theme ? "ad65d6" : "4c158a";
                     return "<span color=\"#" + color + "\">HEAD</span>";
                 default:
@@ -56,7 +56,7 @@ namespace Spectator.Widgets.Sidebar {
             }
         }
 
-        public Item (RequestItem it) {
+        public Item (Models.Request it) {
             item = it;
             item.notify.connect (() => {
                 refresh ();
@@ -107,7 +107,7 @@ namespace Spectator.Widgets.Sidebar {
             add (item_box);
         }
 
-        public void update (RequestItem it) {
+        public void update (Models.Request it) {
             item = it;
             method.label = get_method_label (item.method);
 

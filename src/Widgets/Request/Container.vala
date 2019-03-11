@@ -174,7 +174,7 @@ namespace Spectator.Widgets.Request {
             stack.add_titled (body_view, "body", "body");
         }
 
-        public void update_url_params (RequestItem item) {
+        public void update_url_params (Models.Request item) {
             var query = item.query;
             var params = query.split("&");
             url_params_view.clear ();
@@ -226,8 +226,8 @@ namespace Spectator.Widgets.Request {
         // select the Body Tab
         // For all other methods this method checks if the Body Tab was selected. If
         // the Body tab was selected, select Headers Tab. Furthermore disable Body Tab
-        private void update_tabs(Method method) {
-            if (method == Method.POST || method == Method.PUT || method == Method.PATCH) {
+        private void update_tabs(Models.Method method) {
+            if (method == Models.Method.POST || method == Models.Method.PUT || method == Models.Method.PATCH) {
                 body_label.sensitive = true;
             } else {
                 if (tabs.selected == 2) {
@@ -245,7 +245,7 @@ namespace Spectator.Widgets.Request {
             url_entry.set_text (uri);
         }
 
-        public void set_item (RequestItem item) {
+        public void set_item (Models.Request item) {
             url_entry.change_status (item.status);
             url_entry.set_text (item.uri);
             url_entry.set_method (item.method);

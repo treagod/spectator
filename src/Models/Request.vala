@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2019 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -19,45 +19,57 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace Spectator {
-    public class RequestItem : Object  {
+namespace Spectator.Models {
+    private uint64 max_id = 0;
+    public class Request : Object  {
+        private uint64 id;
         public string name { get; set; }
-        private string _raw_uri { get; set; }
-        private Soup.URI? _uri { get; set; }
         public RequestBody request_body { get; private set; }
         public Method method { get; set; }
         public RequestStatus status { get; set; }
         public ResponseItem? response { get; set; }
         public Gee.ArrayList<Pair> headers { get; private set; }
         public string query {
-            get {
-                if (_uri == null || _uri.query == null) {
+            owned get {
+                var idx = uri.index_of_char ('?');
+
+                if (idx < 0) {
                     return "";
                 }
-                return _uri.query;
+
+                return uri.substring(idx + 1);
             } public set {
-                _uri.set_query (value);
-                _raw_uri = _uri.to_string (false);
+                var idx = uri.index_of_char ('?');
+
+                if (idx < 0) {
+                    uri = "%s?%s".printf (uri, value);
+                } else {
+                    var tmp = uri.substring(0, idx);
+                    uri = "%s?%s".printf (tmp, value);
+                }
             }
         }
 
-        public string uri {
-            get {
-               return _raw_uri;
-            }
-            set {
-                _uri = new Soup.URI (value);
-               _raw_uri = value;
-            }
-        }
+        public string uri;
 
-        public RequestItem (string nam, Method meth) {
+        public Request (string nam, Method meth) {
             setup (nam, meth);
+            id = max_id++;
+
         }
 
-        public RequestItem.with_uri (string nam, string url, Method meth) {
+        public Request.with_id (string nam, Method meth, uint64 i) {
+            setup (nam, meth);
+            if (i > max_id) {
+                max_id = i;
+            }
+            id = max_id++;
+        }
+
+        public Request.with_uri (string nam, string url, Method meth) {
             setup (nam, meth);
             uri = url;
+            id = max_id++;
         }
 
         private void setup (string nam, Method meth) {
@@ -70,7 +82,8 @@ namespace Spectator {
         }
 
         public bool has_valid_uri () {
-            return _uri != null;
+            var tmp = new Soup.URI (uri);
+            return tmp != null;
         }
 
         public void add_header (Pair header) {

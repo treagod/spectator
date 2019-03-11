@@ -19,14 +19,20 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace Spectator.Widgets.Request {
-    interface Interface {
-        public signal void url_changed (string url);
-        public signal void method_changed (Models.Method method);
-        public signal void request_activated ();
-        public signal void cancel_process ();
-        public signal void header_added (Pair header);
-        public signal void header_deleted (Pair header);
-        public signal void url_params_updated(Gee.ArrayList<Pair> items);
+namespace Spectator.Models {
+    public class Collection {
+        private Gee.ArrayList<Request> requests;
+        public string name { get; private set; }
+
+        public Collection (string nam) {
+            name = nam;
+            requests = new Gee.ArrayList<Request> ();
+        }
+
+        public void add_request (Request request) {
+            if (!requests.contains (request)) {
+                requests.add (request);
+            }
+        }
     }
 }

@@ -41,9 +41,9 @@ namespace Spectator.Widgets.Sidebar {
         private Gtk.FlowBox item_box;
         private Gtk.ScrolledWindow scroll;
 
-        public signal void item_deleted (RequestItem item);
-        public signal void item_edited (RequestItem item);
-        public signal void selection_changed (RequestItem item);
+        public signal void item_deleted (Models.Request item);
+        public signal void item_edited (Models.Request item);
+        public signal void selection_changed (Models.Request item);
         public signal void notify_delete ();
 
         public Container () {
@@ -83,7 +83,7 @@ namespace Spectator.Widgets.Sidebar {
             this.pack_start (scroll, true, true, 0);
         }
 
-        public void update_active_method (Method method) {
+        public void update_active_method (Models.Method method) {
             var sidebar_item = get_active ();
 
             if (sidebar_item != null) {
@@ -99,7 +99,7 @@ namespace Spectator.Widgets.Sidebar {
             }
         }
 
-        public void add_item (RequestItem item) {
+        public void add_item (Models.Request item) {
             var box_item = new Sidebar.Item (item);
 
             item_box.add (box_item);
@@ -116,7 +116,7 @@ namespace Spectator.Widgets.Sidebar {
             });
         }
 
-        public void update_active (RequestItem item) {
+        public void update_active (Models.Request item) {
             Sidebar.Item? sidebar_item = get_active ();
 
             if (sidebar_item != null) {
@@ -134,7 +134,7 @@ namespace Spectator.Widgets.Sidebar {
             return null;
         }
 
-        public RequestItem? get_active_item () {
+        public Models.Request? get_active_item () {
             var sidebar_item = get_active ();
 
             if (sidebar_item != null) {

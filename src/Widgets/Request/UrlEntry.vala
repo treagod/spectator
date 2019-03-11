@@ -26,7 +26,7 @@ namespace Spectator.Widgets.Request {
         private bool processing = false;
 
         public signal void url_changed (string url);
-        public signal void method_changed(Method method);
+        public signal void method_changed(Models.Method method);
         public signal void request_activated ();
         public signal void cancel_process ();
 
@@ -56,7 +56,7 @@ namespace Spectator.Widgets.Request {
 
             method_box.changed.connect (() => {
                 var index = method_box.get_active ();
-                method_changed (Method.convert(index));
+                method_changed (Models.Method.convert(index));
             });
 
             add (method_box);
@@ -72,21 +72,21 @@ namespace Spectator.Widgets.Request {
             return url_entry.text;
         }
 
-        public void set_method (Method method) {
+        public void set_method (Models.Method method) {
             method_box.active = method.to_i ();
         }
 
-        public void change_status (RequestStatus status) {
+        public void change_status (Models.RequestStatus status) {
             switch (status) {
-                case RequestStatus.SENT:
+                case Models.RequestStatus.SENT:
                     url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "view-refresh-symbolic");
                     processing = false;
                     break;
-                case RequestStatus.NOT_SENT:
+                case Models.RequestStatus.NOT_SENT:
                     url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "media-playback-start-symbolic");
                     processing = false;
                     break;
-                case RequestStatus.SENDING:
+                case Models.RequestStatus.SENDING:
                     url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "window-close-symbolic");
                     processing = true;
                     break;
@@ -115,7 +115,7 @@ namespace Spectator.Widgets.Request {
         }
 
         private void widget_activate () {
-            change_status (RequestStatus.SENDING);
+            change_status (Models.RequestStatus.SENDING);
             request_activated ();
         }
     }
