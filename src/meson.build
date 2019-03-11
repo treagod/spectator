@@ -5,8 +5,8 @@ conf_data.set('DATADIR', get_option('datadir'))
 conf_data.set('PKGDATADIR', get_option('datadir') + '/' + meson.project_name())
 conf_data.set('GETTEXT_PACKAGE', meson.project_name())
 conf_data.set('RELEASE_NAME', 'Spectator')
-conf_data.set('VERSION', '0.1.0')
-conf_data.set('VERSION_INFO', 'Initial release')
+conf_data.set('VERSION', '0.1.9')
+conf_data.set('VERSION_INFO', 'Preview')
 conf_data.set('PREFIX', get_option('prefix'))
 
 config_header = configure_file(
