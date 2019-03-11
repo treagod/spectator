@@ -30,7 +30,9 @@ namespace Spectator.Models {
         }
 
         public void add_request (Request request) {
-            requests.add (request);
+            if (!requests.contains (request)) {
+                requests.add (request);
+            }
         }
     }
 }

@@ -22,16 +22,20 @@
 namespace Spectator.Controllers {
     public class Collection {
         public Main main;
+        private Gee.ArrayList<Models.Collection> collections;
 
         public Collection () {
-
+            collections = new Gee.ArrayList<Models.Collection> ();
         }
 
         public void add_collection (Models.Collection collection) {
+            collections.add (collection);
         }
 
         public void add_request_to_collection (Models.Collection collection, Models.Request request) {
-
+            if (collections.contains (collection)) {
+                collection.add_request (request);
+            }
         }
     }
 }
