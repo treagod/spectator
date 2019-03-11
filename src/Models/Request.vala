@@ -24,34 +24,33 @@ namespace Spectator.Models {
     public class Request : Object  {
         private uint64 id;
         public string name { get; set; }
-        private string _raw_uri { get; set; }
-        private Soup.URI? _uri { get; set; }
         public RequestBody request_body { get; private set; }
         public Method method { get; set; }
         public RequestStatus status { get; set; }
         public ResponseItem? response { get; set; }
         public Gee.ArrayList<Pair> headers { get; private set; }
         public string query {
-            get {
-                if (_uri == null || _uri.query == null) {
+            owned get {
+                var idx = uri.index_of_char ('?');
+
+                if (idx < 0) {
                     return "";
                 }
-                return _uri.query;
+
+                return uri.substring(idx + 1);
             } public set {
-                _uri.set_query (value);
-                _raw_uri = _uri.to_string (false);
+                var idx = uri.index_of_char ('?');
+
+                if (idx < 0) {
+                    uri = "%s?%s".printf (uri, value);
+                } else {
+                    var tmp = uri.substring(0, idx);
+                    uri = "%s?%s".printf (tmp, value);
+                }
             }
         }
 
-        public string uri {
-            get {
-               return _raw_uri;
-            }
-            set {
-                _uri = new Soup.URI (value);
-               _raw_uri = value;
-            }
-        }
+        public string uri;
 
         public Request (string nam, Method meth) {
             setup (nam, meth);
@@ -83,7 +82,8 @@ namespace Spectator.Models {
         }
 
         public bool has_valid_uri () {
-            return _uri != null;
+            var tmp = new Soup.URI (uri);
+            return tmp != null;
         }
 
         public void add_header (Pair header) {
