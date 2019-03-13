@@ -19,6 +19,20 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
+public Duktape.ReturnType add_request_header (Duktape.Context ctx) {
+    ctx.get_global_string (Duktape.hidden_symbol("request"));
+    unowned Spectator.Models.Request request = ctx.get_pointer<Spectator.Models.Request>(-1);
+    ctx.pop();
+
+    if (request == null) return 0;
+
+    if (ctx.is_string (-1) && ctx.is_string (-2)) {
+        stdout.printf ("asdasd\n");
+        request.add_header (new Spectator.Pair(ctx.get_string (-2), ctx.get_string (-1)));
+    }
+    return 0;
+}
+
 public static Duktape.ReturnType http_get (Duktape.Context ctx) {
     if (!ctx.is_string (-2)) return 0;
 
@@ -34,7 +48,7 @@ public static Duktape.ReturnType http_get (Duktape.Context ctx) {
             if (!ctx.is_undefined (-1) && ctx.is_object (-1)) {
                 ctx.enum (-1, 0);
                 while (ctx.next (-1, true)) {
-                    msg.request_headers.append (ctx.get_string (-1), ctx.get_string (-2));
+                    msg.request_headers.append (ctx.get_string (-2), ctx.get_string (-1));
                     ctx.pop_n (2);
                 }
                 ctx.pop();
@@ -184,6 +198,9 @@ namespace Spectator.Models {
             evaluate_code ();
             context.get_global_string ("before_sending");
             if (context.is_function(-1)) {
+                context.push_ref (request);
+                context.put_global_string (Duktape.hidden_symbol("request"));
+
                 var obj_idx = context.push_object ();
                 context.push_string (request.name);
                 context.put_prop_string (obj_idx, "name");
@@ -199,7 +216,10 @@ namespace Spectator.Models {
                     context.put_prop_string (header_obj, header.key);
                 }
                 context.put_prop_string (obj_idx, "headers");
+                context.push_vala_function (add_request_header, 2);
+                context.put_prop_string (obj_idx, "add_header");
                 context.call (1);
+                context.pop ();
             }
         }
     }
