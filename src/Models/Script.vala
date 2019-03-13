@@ -63,6 +63,56 @@ public static Duktape.ReturnType http_get (Duktape.Context ctx) {
     return 0;
 }
 
+public static Duktape.ReturnType http_post (Duktape.Context ctx) {
+    if (!ctx.is_string (-2)) return 0;
+
+    var uri_string = ctx.get_string (-2);
+
+    var session = new Soup.Session ();
+    var uri = new Soup.URI (uri_string);
+
+    if (uri != null) {
+        var msg = new Soup.Message ("POST", uri_string);
+        if (ctx.is_object (-1)) {
+            ctx.get_prop_string(-1, "headers");
+            if (!ctx.is_undefined (-1) && ctx.is_object (-1)) {
+                ctx.enum (-1, 0);
+                while (ctx.next (-1, true)) {
+                    msg.request_headers.append (ctx.get_string (-1), ctx.get_string (-2));
+                    ctx.pop_n (2);
+                }
+                ctx.pop();
+            }
+            ctx.pop();
+
+            ctx.get_prop_string(-1, "body");
+            if (!ctx.is_undefined (-1) && ctx.is_string (-1)) {
+                msg.set_request ("undefined", Soup.MemoryUse.COPY, ctx.get_string (-1).data);
+            }
+            ctx.pop();
+        }
+
+        session.send_message (msg);
+
+        var obj_idx = ctx.push_object ();
+        ctx.push_int ((int) msg.status_code);
+        ctx.put_prop_string (obj_idx, "status");
+        var header_idx = ctx.push_object ();
+        msg.response_headers.foreach ((key, val) => {
+            ctx.push_string (val);
+            ctx.put_prop_string (header_idx, key);
+        });
+        ctx.put_prop_string (obj_idx, "headers");
+        ctx.push_string ((string) msg.response_body.data);
+        ctx.put_prop_string (obj_idx, "data");
+
+        return (Duktape.ReturnType) 1;
+    }
+
+
+    return 0;
+}
+
 namespace Spectator.Models {
     public class Script  {
         private Duktape.Context context;
@@ -112,6 +162,8 @@ namespace Spectator.Models {
             var obj_idx = context.push_object ();
             context.push_vala_function (http_get, 2);
             context.put_prop_string (obj_idx, "get");
+            context.push_vala_function (http_post, 2);
+            context.put_prop_string (obj_idx, "post");
             context.push_vala_function (native_print, Duktape.VARARGS);
             context.put_prop_string (obj_idx, "print"); // Only for debugging
             context.put_global_string ("HTTP");
