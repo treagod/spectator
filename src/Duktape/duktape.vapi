@@ -33,6 +33,9 @@ namespace Duktape {
         [CCode (cname = "duk_eval_string")]
         public void eval_string (string src);
 
+        [CCode (cname = "duk_pcompile_string")]
+        public int pcompile_string (int flag, string src);
+
         [CCode (cname = "duk_peval")]
         public int peval ();
 
@@ -105,6 +108,12 @@ namespace Duktape {
         [CCode (cname = "duk_get_top")]
         public int get_top ();
 
+        [CCode (cname = "duk_enum")]
+        public int enum (int idx, EnumeratorFlag flag);
+
+        [CCode (cname = "duk_next")]
+        public bool next (int idx, bool get_value);
+
         [CCode (cname = "duk_get_top_index")]
         public int get_top_index ();
 
@@ -113,6 +122,9 @@ namespace Duktape {
 
         [CCode (cname = "duk_get_string")]
         public unowned string get_string (int idx);
+
+        [CCode (cname = "duk_get_prop_string")]
+        public bool get_prop_string (int idx, string name);
 
         [CCode (cname = "duk_get_int")]
         public int get_int (int idx);
@@ -132,11 +144,26 @@ namespace Duktape {
         [CCode (cname = "duk_pop")]
         public void pop();
 
+        [CCode (cname = "duk_pop_n")]
+        public void pop_n(uint count);
+
         [CCode (cname = "duk_call")]
         public void call (uint nargs);
 
         [CCode (cname = "duk_is_function")]
         public bool is_function(int idx);
+
+        [CCode (cname = "duk_is_string")]
+        public bool is_string(int idx);
+
+        [CCode (cname = "duk_is_object")]
+        public bool is_object(int idx);
+
+        [CCode (cname = "duk_is_array")]
+        public bool is_array(int idx);
+
+        [CCode (cname = "duk_is_undefined")]
+        public bool is_undefined(int idx);
 
         [CCode (cname = "duk_push_pointer",  simple_generics = true)]
         public void push_ref<T> (T reference);
@@ -151,6 +178,18 @@ namespace Duktape {
         SYNTAX_ERROR,
         TYPE_ERROR,
         URI_ERROR
+    }
+
+    [CCode (cprefix = "DUK_ENUM_", cname = "int")]
+    public enum EnumeratorFlag {
+        INCLUDE_NONENUMERABLE,
+        INCLUDE_HIDDEN,
+        INCLUDE_SYMBOLS,
+        EXCLUDE_STRINGS,
+        OWN_PROPERTIES_ONLY,
+        ARRAY_INDICES_ONLY,
+        SORT_ARRAY_INDICES,
+        NO_PROXY_BEHAVIOR
     }
 
     [CCode (cname = "duk_c_function", has_target = false)]
