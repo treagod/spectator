@@ -40,6 +40,7 @@ namespace Spectator.Widgets.Request {
         public signal void response_received (ResponseItem it);
         public signal void type_changed (RequestBody.ContentType type);
         public signal void body_buffer_changed (string content);
+        public signal void script_changed (string script);
         public signal void key_value_added (Pair item);
         public signal void key_value_removed (Pair item);
         public signal void key_value_updated (Pair item);
@@ -92,6 +93,11 @@ namespace Spectator.Widgets.Request {
 
         private ScriptingView create_scripting_view () {
             var view = new ScriptingView ();
+
+            view.changed.connect ((script) => {
+                script_changed (script);
+            });
+
             return view;
         }
 

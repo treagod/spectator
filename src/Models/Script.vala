@@ -35,6 +35,15 @@ namespace Spectator.Models {
         }
 
         public Script () {
+            init ();
+        }
+
+        public Script.with_code (string c) {
+            init ();
+            code = c;
+        }
+
+        private void init () {
             code = "";
             evaluated = false;
             init_context ();

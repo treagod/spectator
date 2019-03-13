@@ -29,6 +29,7 @@ namespace Spectator.Widgets {
 
         public signal void type_changed (RequestBody.ContentType type);
         public signal void body_buffer_changed (string content);
+        public signal void script_changed (string script);
         public signal void key_value_added (Pair item);
         public signal void key_value_removed (Pair item);
         public signal void key_value_updated (Pair item);
@@ -70,6 +71,10 @@ namespace Spectator.Widgets {
 
             request_view.header_added.connect ((header) => {
                 header_added (header);
+            });
+
+            request_view.script_changed.connect ((script) => {
+                script_changed (script);
             });
 
             request_view.header_deleted.connect ((header) => {

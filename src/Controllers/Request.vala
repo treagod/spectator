@@ -101,6 +101,11 @@ namespace Spectator.Controllers {
                 item.request_body.raw = content;
             });
 
+            content.script_changed.connect ((script) => {
+                var item = sidebar.get_active_item ();
+                item.script.code = script;
+            });
+
             content.method_changed.connect ((method) => {
                 sidebar.update_active_method (method);
             });
