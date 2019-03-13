@@ -264,6 +264,10 @@ namespace Spectator.Widgets.Request {
             url_entry.set_text (uri);
         }
 
+        private void update_script (Models.Script script) {
+            scripting_view.update_buffer (script.code);
+        }
+
         public void set_item (Models.Request item) {
             url_entry.change_status (item.status);
             url_entry.set_text (item.uri);
@@ -271,6 +275,7 @@ namespace Spectator.Widgets.Request {
             body_view.set_body (item.request_body);
             update_url_params (item);
             update_tabs (item.method);
+            update_script (item.script);
             set_headers (item.headers);
             show_all ();
         }

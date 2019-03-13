@@ -47,5 +47,9 @@ namespace Spectator.Widgets.Request {
                 changed (buffer.text);
             });
         }
+
+        public void update_buffer (string code) {
+            buffer.text = code;
+        }
     }
 }

@@ -61,8 +61,11 @@ namespace Spectator.Services {
         var name = request_object.get_string_member ("name");
         var uri = request_object.get_string_member ("uri");
         var method = (int) request_object.get_int_member ("method");
+        var script = request_object.get_string_member ("script");
         var request = new Models.Request.with_uri (name, uri, Models.Method.convert (method));
         var headers = request_object.get_array_member ("headers");
+
+        request.script.code = script;
 
         foreach (var header_element in headers.get_elements ()) {
             var header = header_element.get_object ();
