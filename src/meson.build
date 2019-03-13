@@ -60,6 +60,7 @@ executable(
 	'Widgets/Request/UrlEntry.vala',
 	'Widgets/Request/HeaderField.vala',
 	'Widgets/Request/BodyView.vala',
+	'Widgets/Request/ScriptingView.vala',
     'Widgets/Request/BodySourceView.vala',
     'Widgets/Request/KeyValueList.vala',
     'Widgets/Request/KeyValueField.vala',
