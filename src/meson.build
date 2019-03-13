@@ -25,6 +25,7 @@ executable(
 	'Models/Request.vala',
     'Models/RequestBody.vala',
 	'Models/ResponseItem.vala',
+    'Models/Script.vala',
 	'Controllers/Request.vala',
 	'Controllers/Main.vala',
 	'Controllers/Collection.vala',

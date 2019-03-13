@@ -21,6 +21,7 @@
 
 namespace Spectator.Widgets.Request {
     class ScriptingView : Gtk.SourceView {
+        public signal void changed (string script);
         public new Gtk.SourceBuffer buffer;
         private string font { set; get; default = "Roboto Mono Regular 11"; }
 
@@ -41,6 +42,10 @@ namespace Spectator.Widgets.Request {
 
             buffer.language = manager.get_language ("js");
             set_buffer (buffer);
+
+            buffer.changed.connect (() => {
+                changed (buffer.text);
+            });
         }
     }
 }
