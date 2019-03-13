@@ -23,6 +23,18 @@ namespace Spectator.Models {
     public class Script  {
         private Duktape.Context context;
         private bool evaluated;
+        private bool _valid;
+        public  bool valid {
+            get {
+                if (!evaluated) {
+                    evaluate_code ();
+                }
+
+                return _valid;
+            } private set{
+                _valid = value;
+            }
+        }
         private string _code;
 
         public string code {
@@ -44,6 +56,7 @@ namespace Spectator.Models {
         }
 
         private void init () {
+            valid = true;
             code = "";
             evaluated = false;
             init_context ();
@@ -56,7 +69,9 @@ namespace Spectator.Models {
         private void evaluate_code () {
             if (!evaluated) {
                 if (context.peval_string (code) != 0) {
-                    // error reporting
+                    valid = false;
+                } else {
+                    valid = true;
                 }
                 evaluated = true;
             }
@@ -82,8 +97,6 @@ namespace Spectator.Models {
                 }
                 context.put_prop_string (obj_idx, "headers");
                 context.call (1);
-            } else {
-                // error handling report_failing_call("request_sent");
             }
         }
     }

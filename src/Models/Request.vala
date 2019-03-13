@@ -83,6 +83,12 @@ namespace Spectator.Models {
             request_body = new RequestBody ();
         }
 
+        public void execute_script () {
+            if (script.valid) {
+                script.execute (this);
+            }
+        }
+
         public bool has_valid_uri () {
             var tmp = new Soup.URI (uri);
             return tmp != null;

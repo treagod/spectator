@@ -234,6 +234,8 @@ namespace Spectator {
                 session.user_agent = user_agent;
             }
 
+            item.execute_script ();
+
             session.queue_message (msg, read_response);
         }
     }
