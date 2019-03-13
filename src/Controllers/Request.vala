@@ -101,6 +101,11 @@ namespace Spectator.Controllers {
                 item.request_body.raw = content;
             });
 
+            content.script_changed.connect ((script) => {
+                var item = sidebar.get_active_item ();
+                item.script.code = script;
+            });
+
             content.method_changed.connect ((method) => {
                 sidebar.update_active_method (method);
             });
@@ -147,13 +152,11 @@ namespace Spectator.Controllers {
 
                 action.invalid_uri.connect ((item) => {
                     item.status = Models.RequestStatus.SENT;
-                    //content.show_request (item);
                     content.set_error ("Invalid URI: %s".printf (item.name));
                 });
 
                 action.proxy_failed.connect ((item) => {
                     item.status = Models.RequestStatus.SENT;
-                    //content.show_request (item);
                     content.set_error ("Proxy denied request: %s".printf (item.name));
                 });
 

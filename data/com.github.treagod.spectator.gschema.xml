@@ -24,7 +24,7 @@
             <description>The saved height of the window. Must be greater than 500, or it will not take effect.</description>
         </key>
 
-	    <key name="maximized" type="b">
+	      <key name="maximized" type="b">
             <default>false</default>
             <summary>Maximize the main window.</summary>
             <description>Wether the main window was maximized or not.</description>

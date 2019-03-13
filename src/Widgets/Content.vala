@@ -33,6 +33,7 @@ namespace Spectator.Widgets {
         public signal void cancel_process ();
         public signal void type_changed (RequestBody.ContentType type);
         public signal void body_buffer_changed (string content);
+        public signal void script_changed (string script);
 
         public signal void item_changed (Models.Request item);
         public signal void welcome_activated(int index);
@@ -63,6 +64,10 @@ namespace Spectator.Widgets {
 
             req_res_pane.body_buffer_changed.connect ((content) => {
                 body_buffer_changed (content);
+            });
+
+            req_res_pane.script_changed.connect ((script) => {
+                script_changed (script);
             });
 
             req_res_pane.key_value_added.connect((item) => {

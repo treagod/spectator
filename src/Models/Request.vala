@@ -24,6 +24,7 @@ namespace Spectator.Models {
     public class Request : Object  {
         private uint64 id;
         public string name { get; set; }
+        public Models.Script script { get; private set; }
         public RequestBody request_body { get; private set; }
         public Method method { get; set; }
         public RequestStatus status { get; set; }
@@ -73,12 +74,19 @@ namespace Spectator.Models {
         }
 
         private void setup (string nam, Method meth) {
+            script = new Models.Script ();
             headers = new Gee.ArrayList<Pair> ();
             name = nam;
             uri = "";
             method = meth;
             status = RequestStatus.NOT_SENT;
             request_body = new RequestBody ();
+        }
+
+        public void execute_script () {
+            if (script.valid) {
+                script.execute (this);
+            }
         }
 
         public bool has_valid_uri () {
