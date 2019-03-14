@@ -195,30 +195,31 @@ namespace Spectator.Models {
 
         public void execute_before_sending (Models.Request request) {
             evaluate_code ();
-            context.get_global_string ("before_sending");
-            if (context.is_function(-1)) {
-                context.push_ref (request);
-                context.put_global_string (Duktape.hidden_symbol("request"));
+            if (valid) {
+                context.get_global_string ("before_sending");
+                if (context.is_function(-1)) {
+                    context.push_ref (request);
+                    context.put_global_string (Duktape.hidden_symbol("request"));
 
-                var obj_idx = context.push_object ();
-                context.push_string (request.name);
-                context.put_prop_string (obj_idx, "name");
-                context.push_string (request.uri);
-                context.put_prop_string (obj_idx, "uri");
-                context.push_string (request.method.to_str ());
-                context.put_prop_string (obj_idx, "method");
+                    var obj_idx = context.push_object ();
+                    context.push_string (request.name);
+                    context.put_prop_string (obj_idx, "name");
+                    context.push_string (request.uri);
+                    context.put_prop_string (obj_idx, "uri");
+                    context.push_string (request.method.to_str ());
+                    context.put_prop_string (obj_idx, "method");
 
-                var header_obj = context.push_object ();
-                foreach (var header in request.headers) {
-                    // TODO: If header already exists, append it
-                    context.push_string (header.val);
-                    context.put_prop_string (header_obj, header.key);
+                    var header_obj = context.push_object ();
+                    foreach (var header in request.headers) {
+                        context.push_string (header.val);
+                        context.put_prop_string (header_obj, header.key);
+                    }
+                    context.put_prop_string (obj_idx, "headers");
+                    context.push_vala_function (add_request_header, 2);
+                    context.put_prop_string (obj_idx, "add_header");
+                    context.call (1);
+                    context.pop ();
                 }
-                context.put_prop_string (obj_idx, "headers");
-                context.push_vala_function (add_request_header, 2);
-                context.put_prop_string (obj_idx, "add_header");
-                context.call (1);
-                context.pop ();
             }
         }
     }
