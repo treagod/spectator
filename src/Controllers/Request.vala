@@ -141,6 +141,7 @@ namespace Spectator.Controllers {
                 action.finished_request.connect (() => {
                     if (item == sidebar.get_active_item ()) {
                         content.update_response (item);
+                        content.update_status (item);
                     }
                 });
 
