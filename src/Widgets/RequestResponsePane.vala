@@ -142,16 +142,23 @@ namespace Spectator.Widgets {
             }
         }
 
-        public void set_item (Models.Request item) {
-            adjust_tab (item);
+        public void set_item (Models.Request request) {
+            adjust_tab (request);
+            update_response (request);
+        }
 
-            if (item.response != null) {
-                create_or_get_cached_view (item);
+        public void update_response (Models.Request request) {
+            if (request.response != null) {
+                create_or_get_cached_view (request);
             } else {
                 if (get_child2 () != null) {
                     remove (response_view);
                 }
             }
+        }
+
+        public void update_status (Models.Request request) {
+            request_view.update_status (request);
         }
 
         construct {

@@ -140,7 +140,7 @@ namespace Spectator.Controllers {
 
                 action.finished_request.connect (() => {
                     if (item == sidebar.get_active_item ()) {
-                        content.show_request (item);
+                        content.update_response (item);
                     }
                 });
 
@@ -173,7 +173,9 @@ namespace Spectator.Controllers {
                     action.cancel ();
                     var item = action.get_item ();
                     item.status = Models.RequestStatus.SENT;
-                    content.show_request (item);
+                    if (item == sidebar.get_active_item ()) {
+                        content.update_status (item);
+                    }
                 }
             });
 

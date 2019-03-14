@@ -140,6 +140,14 @@ namespace Spectator.Widgets {
             stack.set_visible_child (req_res_pane);
         }
 
+        public void update_response (Models.Request request) {
+            req_res_pane.update_response (request);
+        }
+
+        public void update_status (Models.Request request) {
+            req_res_pane.update_status (request);
+        }
+
         public void update_url_params (Models.Request item) {
             req_res_pane.update_url_params (item);
         }

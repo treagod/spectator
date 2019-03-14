@@ -268,6 +268,10 @@ namespace Spectator.Widgets.Request {
             scripting_view.update_buffer (script.code);
         }
 
+        public void update_status (Models.Request request) {
+            url_entry.change_status (request.status);
+        }
+
         public void set_item (Models.Request item) {
             url_entry.change_status (item.status);
             url_entry.set_text (item.uri);

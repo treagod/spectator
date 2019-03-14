@@ -24,6 +24,7 @@ namespace Spectator.Widgets.Request {
         public signal void changed (string script);
         public new Gtk.SourceBuffer buffer;
         private string font { set; get; default = "Roboto Mono Regular 11"; }
+        private int64 last_key_input;
 
         public ScriptingView () {
             Object (
@@ -44,7 +45,20 @@ namespace Spectator.Widgets.Request {
             set_buffer (buffer);
 
             buffer.changed.connect (() => {
-                changed (buffer.text);
+                signal_change_after_delay ();
+            });
+        }
+
+        private void signal_change_after_delay () {
+            last_key_input = GLib.get_monotonic_time () / 1000;
+            new Thread<bool> ("typing_check", () => {
+                Thread.usleep (1000000);
+                var time_now = GLib.get_monotonic_time () / 1000;;
+                if (time_now - last_key_input >= 1000) {
+                    changed (buffer.text);
+                }
+
+                return true;
             });
         }
 
