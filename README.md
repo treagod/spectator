@@ -3,7 +3,7 @@
 Spectator is a native application written in Vala using GTK. It's enables you to test the
 API endpoints of your HTTP server.
 
-![Screenshot GET JSON](screenshots/Screenshot%from%2019-03-14%21.56.17.png)
+![Screenshot GET JSON](screenshots/Screenshot%20from%202019-03-14%2021.56.17.png)
 
 ## Features
 
