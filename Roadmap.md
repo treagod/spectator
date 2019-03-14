@@ -3,6 +3,8 @@
 ## Rough Overview
 
 * Allow Scripting ✔️
+  * Error Reporting
+  * Script Debug
 * Create Collections
   * Basic grouping of requests
   * Add collection variables
