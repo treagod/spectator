@@ -91,7 +91,7 @@ public static Duktape.ReturnType http_post (Duktape.Context ctx) {
             if (!ctx.is_undefined (-1) && ctx.is_object (-1)) {
                 ctx.enum (-1, 0);
                 while (ctx.next (-1, true)) {
-                    msg.request_headers.append (ctx.get_string (-1), ctx.get_string (-2));
+                    msg.request_headers.append (ctx.get_string (-2), ctx.get_string (-1));
                     ctx.pop_n (2);
                 }
                 ctx.pop();
@@ -99,8 +99,60 @@ public static Duktape.ReturnType http_post (Duktape.Context ctx) {
             ctx.pop();
 
             ctx.get_prop_string(-1, "body");
-            if (!ctx.is_undefined (-1) && ctx.is_string (-1)) {
-                msg.set_request ("undefined", Soup.MemoryUse.COPY, ctx.get_string (-1).data);
+            if (!ctx.is_undefined (-1)) {
+                if (ctx.is_string (-1)) {
+                    msg.set_request ("undefined", Soup.MemoryUse.COPY, ctx.get_string (-1).data);
+                } else if (ctx.is_object (-1)) {
+                    ctx.get_prop_string(-1, "type");
+                    var type = "";
+                    if (!ctx.is_undefined (-1) && ctx.is_string (-1)) {
+                        type = ctx.get_string (-1);
+                    }
+                    ctx.pop ();
+                    ctx.get_prop_string(-1, "data");
+                    if (!ctx.is_undefined (-1) && ctx.is_object (-1)) {
+                        if (type == "json") {
+                            msg.set_request ("application/json", Soup.MemoryUse.COPY, ctx.json_encode (-1).data);
+                        } else if (type == "form_data") {
+                            var multipart = new Soup.Multipart ("multipart/form-data");
+
+                            ctx.enum (-1, 0);
+                            while (ctx.next (-1, true)) {
+                                if (ctx.is_string (-1) && ctx.is_string (-2)) {
+                                    multipart.append_form_string (ctx.get_string (-2), ctx.get_string (-1));
+                                }
+                                ctx.pop_n (2);
+                            }
+                            ctx.pop();
+
+                            multipart.to_message (msg.request_headers, msg.request_body);
+                        } else if (type == "encoded") {
+                            var builder = new StringBuilder ();
+                            var first = true;
+                            ctx.enum (-1, 0);
+                            while (ctx.next (-1, true)) {
+                                if (ctx.is_string (-1) && ctx.is_string (-2)) {
+                                    if (first) {
+                                        first = false;
+                                    } else {
+                                        builder.append ("&");
+                                    }
+                                    builder.append ("%s=%s".printf (
+                                        Soup.URI.encode(ctx.get_string (-2), "&"),
+                                        Soup.URI.encode(ctx.get_string (-1), "&")
+                                    ));
+                                }
+
+                                ctx.pop_n (2);
+                            }
+                            ctx.pop();
+
+                            msg.set_request ("application/x-www-form-urlencoded", Soup.MemoryUse.COPY, builder.str.data);
+                        }
+                    }
+                    ctx.pop ();
+                }
+
             }
             ctx.pop();
         }
@@ -169,6 +221,18 @@ namespace Spectator.Models {
             evaluated = false;
             init_context ();
             create_http_object ();
+            create_content_type_object ();
+        }
+
+        private void create_content_type_object () {
+            var obj_idx = context.push_object ();
+            context.push_string ("json");
+            context.put_prop_string (obj_idx, "Json");
+            context.push_string ("form_data");
+            context.put_prop_string (obj_idx, "FormData");
+            context.push_string ("encoded");
+            context.put_prop_string (obj_idx, "UrlEncoded");
+            context.put_global_string ("ContentType");
         }
 
         private void create_http_object () {
