@@ -19,6 +19,19 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
+public Duktape.ReturnType add_request_header (Duktape.Context ctx) {
+    ctx.get_global_string (Duktape.hidden_symbol("request"));
+    unowned Spectator.Models.Request request = ctx.get_pointer<Spectator.Models.Request>(-1);
+    ctx.pop();
+
+    if (request == null) return 0;
+
+    if (ctx.is_string (-1) && ctx.is_string (-2)) {
+        request.add_header (new Spectator.Pair(ctx.get_string (-2), ctx.get_string (-1)));
+    }
+    return 0;
+}
+
 public static Duktape.ReturnType http_get (Duktape.Context ctx) {
     if (!ctx.is_string (-2)) return 0;
 
@@ -34,7 +47,7 @@ public static Duktape.ReturnType http_get (Duktape.Context ctx) {
             if (!ctx.is_undefined (-1) && ctx.is_object (-1)) {
                 ctx.enum (-1, 0);
                 while (ctx.next (-1, true)) {
-                    msg.request_headers.append (ctx.get_string (-1), ctx.get_string (-2));
+                    msg.request_headers.append (ctx.get_string (-2), ctx.get_string (-1));
                     ctx.pop_n (2);
                 }
                 ctx.pop();
@@ -78,7 +91,7 @@ public static Duktape.ReturnType http_post (Duktape.Context ctx) {
             if (!ctx.is_undefined (-1) && ctx.is_object (-1)) {
                 ctx.enum (-1, 0);
                 while (ctx.next (-1, true)) {
-                    msg.request_headers.append (ctx.get_string (-1), ctx.get_string (-2));
+                    msg.request_headers.append (ctx.get_string (-2), ctx.get_string (-1));
                     ctx.pop_n (2);
                 }
                 ctx.pop();
@@ -86,8 +99,60 @@ public static Duktape.ReturnType http_post (Duktape.Context ctx) {
             ctx.pop();
 
             ctx.get_prop_string(-1, "body");
-            if (!ctx.is_undefined (-1) && ctx.is_string (-1)) {
-                msg.set_request ("undefined", Soup.MemoryUse.COPY, ctx.get_string (-1).data);
+            if (!ctx.is_undefined (-1)) {
+                if (ctx.is_string (-1)) {
+                    msg.set_request ("undefined", Soup.MemoryUse.COPY, ctx.get_string (-1).data);
+                } else if (ctx.is_object (-1)) {
+                    ctx.get_prop_string(-1, "type");
+                    var type = "";
+                    if (!ctx.is_undefined (-1) && ctx.is_string (-1)) {
+                        type = ctx.get_string (-1);
+                    }
+                    ctx.pop ();
+                    ctx.get_prop_string(-1, "data");
+                    if (!ctx.is_undefined (-1) && ctx.is_object (-1)) {
+                        if (type == "json") {
+                            msg.set_request ("application/json", Soup.MemoryUse.COPY, ctx.json_encode (-1).data);
+                        } else if (type == "form_data") {
+                            var multipart = new Soup.Multipart ("multipart/form-data");
+
+                            ctx.enum (-1, 0);
+                            while (ctx.next (-1, true)) {
+                                if (ctx.is_string (-1) && ctx.is_string (-2)) {
+                                    multipart.append_form_string (ctx.get_string (-2), ctx.get_string (-1));
+                                }
+                                ctx.pop_n (2);
+                            }
+                            ctx.pop();
+
+                            multipart.to_message (msg.request_headers, msg.request_body);
+                        } else if (type == "encoded") {
+                            var builder = new StringBuilder ();
+                            var first = true;
+                            ctx.enum (-1, 0);
+                            while (ctx.next (-1, true)) {
+                                if (ctx.is_string (-1) && ctx.is_string (-2)) {
+                                    if (first) {
+                                        first = false;
+                                    } else {
+                                        builder.append ("&");
+                                    }
+                                    builder.append ("%s=%s".printf (
+                                        Soup.URI.encode(ctx.get_string (-2), "&"),
+                                        Soup.URI.encode(ctx.get_string (-1), "&")
+                                    ));
+                                }
+
+                                ctx.pop_n (2);
+                            }
+                            ctx.pop();
+
+                            msg.set_request ("application/x-www-form-urlencoded", Soup.MemoryUse.COPY, builder.str.data);
+                        }
+                    }
+                    ctx.pop ();
+                }
+
             }
             ctx.pop();
         }
@@ -156,6 +221,18 @@ namespace Spectator.Models {
             evaluated = false;
             init_context ();
             create_http_object ();
+            create_content_type_object ();
+        }
+
+        private void create_content_type_object () {
+            var obj_idx = context.push_object ();
+            context.push_string ("json");
+            context.put_prop_string (obj_idx, "Json");
+            context.push_string ("form_data");
+            context.put_prop_string (obj_idx, "FormData");
+            context.push_string ("encoded");
+            context.put_prop_string (obj_idx, "UrlEncoded");
+            context.put_global_string ("ContentType");
         }
 
         private void create_http_object () {
@@ -180,26 +257,33 @@ namespace Spectator.Models {
             }
         }
 
-        public void execute (Models.Request request) {
+        public void execute_before_sending (Models.Request request) {
             evaluate_code ();
-            context.get_global_string ("before_sending");
-            if (context.is_function(-1)) {
-                var obj_idx = context.push_object ();
-                context.push_string (request.name);
-                context.put_prop_string (obj_idx, "name");
-                context.push_string (request.uri);
-                context.put_prop_string (obj_idx, "uri");
-                context.push_string (request.method.to_str ());
-                context.put_prop_string (obj_idx, "method");
+            if (valid) {
+                context.get_global_string ("before_sending");
+                if (context.is_function(-1)) {
+                    context.push_ref (request);
+                    context.put_global_string (Duktape.hidden_symbol("request"));
 
-                var header_obj = context.push_object ();
-                foreach (var header in request.headers) {
-                    // TODO: If header already exists, append it
-                    context.push_string (header.val);
-                    context.put_prop_string (header_obj, header.key);
+                    var obj_idx = context.push_object ();
+                    context.push_string (request.name);
+                    context.put_prop_string (obj_idx, "name");
+                    context.push_string (request.uri);
+                    context.put_prop_string (obj_idx, "uri");
+                    context.push_string (request.method.to_str ());
+                    context.put_prop_string (obj_idx, "method");
+
+                    var header_obj = context.push_object ();
+                    foreach (var header in request.headers) {
+                        context.push_string (header.val);
+                        context.put_prop_string (header_obj, header.key);
+                    }
+                    context.put_prop_string (obj_idx, "headers");
+                    context.push_vala_function (add_request_header, 2);
+                    context.put_prop_string (obj_idx, "add_header");
+                    context.call (1);
+                    context.pop ();
                 }
-                context.put_prop_string (obj_idx, "headers");
-                context.call (1);
             }
         }
     }

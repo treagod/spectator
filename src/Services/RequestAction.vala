@@ -149,11 +149,14 @@ namespace Spectator {
 
             loop = new MainLoop ();
 
+            var tmp_req = new Models.Request.duplicate (item);
+            tmp_req.execute_pre_script ();
+
             session.timeout = (uint) settings.timeout;
 
-            var method = item.method;
+            var method = tmp_req.method;
 
-            var msg = new Soup.Message (method.to_str (), item.uri);
+            var msg = new Soup.Message (method.to_str (), tmp_req.uri);
 
             if (settings.use_proxy) {
                 var proxy_resolver = new SimpleProxyResolver (null, null);
@@ -176,7 +179,8 @@ namespace Spectator {
 
             var user_agent = "";
             var content_type_set = false;
-            foreach (var header in item.headers) {
+
+            foreach (var header in tmp_req.headers) {
                 if (header.key == "User-Agent") {
                     user_agent = header.val;
                     continue;
@@ -188,12 +192,12 @@ namespace Spectator {
                     continue;
                 }
 
-                if (header.key == "")
+                if (header.key == "") continue;
                 msg.request_headers.append (header.key, header.val);
             }
 
             if (method == Models.Method.POST || method == Models.Method.PUT || method == Models.Method.PATCH) {
-                var body = item.request_body;
+                var body = tmp_req.request_body;
                 if (is_raw_type (body.type)) {
                     if (content_type_set) {
                         msg.set_request (null, Soup.MemoryUse.COPY, body.raw.data);
@@ -233,8 +237,6 @@ namespace Spectator {
             } else {
                 session.user_agent = user_agent;
             }
-
-            item.execute_script ();
 
             session.queue_message (msg, read_response);
         }

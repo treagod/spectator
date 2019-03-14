@@ -165,6 +165,9 @@ namespace Duktape {
         [CCode (cname = "duk_is_undefined")]
         public bool is_undefined(int idx);
 
+        [CCode (cname = "duk_json_encode")]
+        public unowned string json_encode(int idx);
+
         [CCode (cname = "duk_push_pointer",  simple_generics = true)]
         public void push_ref<T> (T reference);
     }
