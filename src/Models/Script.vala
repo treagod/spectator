@@ -27,7 +27,6 @@ public Duktape.ReturnType add_request_header (Duktape.Context ctx) {
     if (request == null) return 0;
 
     if (ctx.is_string (-1) && ctx.is_string (-2)) {
-        stdout.printf ("asdasd\n");
         request.add_header (new Spectator.Pair(ctx.get_string (-2), ctx.get_string (-1)));
     }
     return 0;
@@ -194,7 +193,7 @@ namespace Spectator.Models {
             }
         }
 
-        public void execute (Models.Request request) {
+        public void execute_before_sending (Models.Request request) {
             evaluate_code ();
             context.get_global_string ("before_sending");
             if (context.is_function(-1)) {

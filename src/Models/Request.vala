@@ -56,7 +56,6 @@ namespace Spectator.Models {
         public Request (string nam, Method meth) {
             setup (nam, meth);
             id = max_id++;
-
         }
 
         public Request.with_id (string nam, Method meth, uint64 i) {
@@ -65,6 +64,16 @@ namespace Spectator.Models {
                 max_id = i;
             }
             id = max_id++;
+        }
+
+        public Request.duplicate (Request old_req) {
+            setup (old_req.name, old_req.method);
+            uri = old_req.uri;
+            request_body = old_req.request_body;
+            script = old_req.script;
+            foreach (var header in old_req.headers) {
+                add_header (header);
+            }
         }
 
         public Request.with_uri (string nam, string url, Method meth) {
@@ -83,9 +92,9 @@ namespace Spectator.Models {
             request_body = new RequestBody ();
         }
 
-        public void execute_script () {
+        public void execute_pre_script () {
             if (script.valid) {
-                script.execute (this);
+                script.execute_before_sending (this);
             }
         }
 
