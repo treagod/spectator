@@ -2,7 +2,7 @@
 
 ## Rough Overview
 
-* Allow Scripting
+* Allow Scripting ✔️
 * Create Collections
   * Basic grouping of requests
   * Add collection variables
