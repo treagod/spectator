@@ -41,6 +41,15 @@ namespace Spectator.Plugins.Utils {
         return builder.str;
     }
 
+//#define   SOUP_URI_VALID_FOR_HTTP(uri) ((uri) && ((uri)->scheme == SOUP_URI_SCHEME_HTTP || (uri)->scheme == SOUP_URI_SCHEME_HTTPS) && (uri)->host && (uri)->path)
+
+    public bool valid_uri (Soup.URI uri) {
+        return uri != null &&
+               (uri.get_scheme () == "http" || uri.get_scheme () == "https") &&
+               uri.get_host ().length > 0 &&
+               uri.get_path ().length >= 0;
+    }
+
     public void set_information (Plugin plugin, string json_path) {
         string json = read_file (json_path);
 

@@ -150,6 +150,9 @@ namespace Duktape {
         [CCode (cname = "duk_call")]
         public void call (uint nargs);
 
+        [CCode (cname = "duk_pcall")]
+        public int pcall (uint nargs);
+
         [CCode (cname = "duk_is_function")]
         public bool is_function(int idx);
 
