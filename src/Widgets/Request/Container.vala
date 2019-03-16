@@ -64,7 +64,7 @@ namespace Spectator.Widgets.Request {
             var header_params_label = new Gtk.Label (_("Headers"));
             var url_params_label = new Gtk.Label (_("Parameters"));
             body_label = new Gtk.Label (_("Body"));
-            var script_label = new Gtk.Label (_("Scripting"));
+            var script_label = new Gtk.Label (_("Script"));
 
             setup_tabs (header_params_label, url_params_label, body_label, script_label);
 

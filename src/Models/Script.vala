@@ -19,17 +19,26 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-public Duktape.ReturnType add_request_header (Duktape.Context ctx) {
+public unowned Spectator.Models.Request get_requst (Duktape.Context ctx) {
     ctx.get_global_string (Duktape.hidden_symbol("request"));
     unowned Spectator.Models.Request request = ctx.get_pointer<Spectator.Models.Request>(-1);
     ctx.pop();
+    return request;
+}
 
-    if (request == null) return 0;
+public Duktape.ReturnType add_request_header (Duktape.Context ctx) {
+    var request = get_requst (ctx);
 
     if (ctx.is_string (-1) && ctx.is_string (-2)) {
         request.add_header (new Spectator.Pair(ctx.get_string (-2), ctx.get_string (-1)));
     }
     return 0;
+}
+
+public Duktape.ReturnType abort_request (Duktape.Context ctx) {
+    ctx.push_true ();
+    ctx.put_global_string (Duktape.hidden_symbol("abort"));
+    return (Duktape.ReturnType) (-1);
 }
 
 public static void http_create_response_object (Duktape.Context ctx, Soup.Message msg) {
@@ -262,17 +271,19 @@ namespace Spectator.Models {
                     script_error (err);
                 }
 
-                context.pop ();
+                context.pop (); // pops error string
             }
         }
 
-        public void execute_before_sending (Models.Request request) {
+        public bool execute_before_sending (Models.Request request) {
             evaluate_code ();
             if (valid) {
                 context.get_global_string ("before_sending");
                 if (context.is_function(-1)) {
                     context.push_ref (request);
                     context.put_global_string (Duktape.hidden_symbol("request"));
+                    context.push_false ();
+                    context.put_global_string (Duktape.hidden_symbol("abort"));
 
                     var obj_idx = context.push_object ();
                     context.push_string (request.name);
@@ -290,17 +301,27 @@ namespace Spectator.Models {
                     context.put_prop_string (obj_idx, "headers");
                     context.push_vala_function (add_request_header, 2);
                     context.put_prop_string (obj_idx, "add_header");
+                    context.push_vala_function (abort_request, 0);
+                    context.put_prop_string (obj_idx, "abort");
 
                     if (context.pcall (1) != 0) {
-                        var err = context.safe_to_string (-1);
-                        script_error (err);
+                        context.get_global_string (Duktape.hidden_symbol("abort"));
+                        if (context.get_boolean (-1)) {
+                            return false;
+                        } else  {
+                            if (context.is_error (-1)) {
+                                var err = context.safe_to_string (-1);
+                                script_error (err);
+                                context.pop ();
+                            }
+                        }
 
                         valid = false;
                     }
-
-                    context.pop ();
                 }
             }
+
+            return true;
         }
     }
 }
