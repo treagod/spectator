@@ -22,10 +22,6 @@
 namespace Spectator.Services {
     [Compact]
     public class ScriptContext : Duktape.Context {
-        public ScriptContext () {
-            //
-        }
-
         public void push_request (Models.Request request) {
             push_ref (request);
             put_global_string (Duktape.hidden_symbol("request"));
