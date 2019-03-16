@@ -36,6 +36,7 @@ executable(
 	'Services/Settings.vala',
 	'Services/JsonSerializer.vala',
 	'Services/JsonDeserializer.vala',
+    'Services/ScriptContext.vala',
 	'Services/RequestAction.vala',
 	'Dialogs/Request/Dialog.vala',
 	'Dialogs/Request/CreateDialog.vala',
