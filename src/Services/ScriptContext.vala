@@ -54,8 +54,16 @@ namespace Spectator.Services {
             var obj_idx = push_object ();
             push_vala_function (http_get, 2);
             put_prop_string (obj_idx, "get");
+            push_vala_function (http_delete, 2);
+            put_prop_string (obj_idx, "destroy");
+            push_vala_function (http_head, 2);
+            put_prop_string (obj_idx, "head");
             push_vala_function (http_post, 2);
             put_prop_string (obj_idx, "post");
+            push_vala_function (http_put, 2);
+            put_prop_string (obj_idx, "put");
+            push_vala_function (http_patch, 2);
+            put_prop_string (obj_idx, "patch");
             push_vala_function (native_print, Duktape.VARARGS);
             put_prop_string (obj_idx, "print"); // Only for debugging
             put_global_string ("HTTP");
@@ -148,19 +156,21 @@ namespace Spectator.Services {
         return builder.str;
     }
 
-    private static void http_with_body (Duktape.Context ctx, Soup.Message msg) {
-        if (ctx.is_object (-1)) {
-            ctx.get_prop_string(-1, "headers");
-            if (!ctx.is_undefined (-1) && ctx.is_object (-1)) {
-                ctx.enum (-1, 0);
-                while (ctx.next (-1, true)) {
-                    msg.request_headers.append (ctx.get_string (-2), ctx.get_string (-1));
-                    ctx.pop_n (2);
-                }
-                ctx.pop();
+    private void append_headers_to_msg (Duktape.Context ctx, Soup.Message msg) {
+        ctx.get_prop_string(-1, "headers");
+        if (!ctx.is_undefined (-1) && ctx.is_object (-1)) {
+            ctx.enum (-1, 0);
+            while (ctx.next (-1, true)) {
+                msg.request_headers.append (ctx.get_string (-2), ctx.get_string (-1));
+                ctx.pop_n (2);
             }
             ctx.pop();
+        }
+        ctx.pop();
+    }
 
+    private static void append_body_to_msg (Duktape.Context ctx, Soup.Message msg) {
+        if (ctx.is_object (-1)) {
             ctx.get_prop_string(-1, "body");
             if (!ctx.is_undefined (-1)) {
                 if (ctx.is_string (-1)) {
@@ -168,33 +178,46 @@ namespace Spectator.Services {
                 } else if (ctx.is_object (-1)) {
                     handle_body_object (ctx, msg);
                 }
-
             }
             ctx.pop();
         }
     }
 
+    public static Duktape.ReturnType http_patch (Duktape.Context ctx) {
+        return http_body (ctx, "PATCH");
+    }
+
+    public static Duktape.ReturnType http_put (Duktape.Context ctx) {
+        return http_body (ctx, "PUT");
+    }
+
+    public static Duktape.ReturnType http_post (Duktape.Context ctx) {
+        return http_body (ctx, "POST");
+    }
+
     public static Duktape.ReturnType http_get (Duktape.Context ctx) {
+        return http_no_body (ctx, "GET");
+    }
+
+    public static Duktape.ReturnType http_head (Duktape.Context ctx) {
+        return http_no_body (ctx, "HEAD");
+    }
+
+    public static Duktape.ReturnType http_delete (Duktape.Context ctx) {
+        return http_no_body (ctx, "DELETE");
+    }
+
+    public static Duktape.ReturnType http_no_body (Duktape.Context ctx, string method) {
         if (!ctx.is_string (-2)) return 0;
 
         var uri_string = ctx.get_string (-2);
-
         var uri = new Soup.URI (uri_string);
 
         if (Spectator.Plugins.Utils.valid_uri (uri)) {
             var session = new Soup.Session ();
-            var msg = new Soup.Message ("GET", uri_string);
+            var msg = new Soup.Message (method, uri_string);
             if (ctx.is_object (-1)) {
-                ctx.get_prop_string(-1, "headers");
-                if (!ctx.is_undefined (-1) && ctx.is_object (-1)) {
-                    ctx.enum (-1, 0);
-                    while (ctx.next (-1, true)) {
-                        msg.request_headers.append (ctx.get_string (-2), ctx.get_string (-1));
-                        ctx.pop_n (2);
-                    }
-                    ctx.pop();
-                }
-                ctx.pop();
+                append_headers_to_msg (ctx, msg);
             }
 
             session.send_message (msg);
@@ -207,27 +230,25 @@ namespace Spectator.Services {
         return 0;
     }
 
-    public static Duktape.ReturnType http_post (Duktape.Context ctx) {
+
+    public static Duktape.ReturnType http_body (Duktape.Context ctx, string method) {
         if (!ctx.is_string (-2)) return 0;
 
         var uri_string = ctx.get_string (-2);
-
         var uri = new Soup.URI (uri_string);
 
         if (Spectator.Plugins.Utils.valid_uri (uri)) {
             var session = new Soup.Session ();
-            var msg = new Soup.Message ("POST", uri_string);
-            http_with_body (ctx, msg);
+            var msg = new Soup.Message (method, uri_string);
+            append_headers_to_msg (ctx, msg);
+            append_body_to_msg (ctx, msg);
 
             session.send_message (msg);
 
             http_create_response_object (ctx, msg);
 
             return (Duktape.ReturnType) 1;
-        } else {
-            // context.push_error
         }
-
 
         return 0;
     }
