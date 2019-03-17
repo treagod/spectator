@@ -238,6 +238,9 @@ namespace Spectator.Controllers {
 
         public void add_item (Models.Request item) {
             items.add (item);
+            item.script.script_error.connect ((err) => {
+                content.set_script_error (err);
+            });
             sidebar.add_item (item);
         }
 

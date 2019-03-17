@@ -101,6 +101,11 @@ namespace Spectator.Widgets.Request {
             return view;
         }
 
+        public void set_script_error (string error) {
+            stack.set_visible_child_name ("scripting");
+            scripting_view.grab_focus ();
+        }
+
         private UrlEntry create_url_entry () {
             var url_entry = new UrlEntry ();
             url_entry.margin_bottom = 10;
