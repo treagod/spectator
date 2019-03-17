@@ -147,6 +147,10 @@ namespace Spectator.Widgets {
             update_response (request);
         }
 
+        public void set_script_error (string error) {
+            request_view.set_script_error (error);
+        }
+
         public void update_response (Models.Request request) {
             if (request.response != null) {
                 create_or_get_cached_view (request);

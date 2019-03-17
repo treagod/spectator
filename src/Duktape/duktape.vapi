@@ -81,6 +81,9 @@ namespace Duktape {
         [CCode (cname = "duk_push_object")]
         public int push_object ();
 
+        [CCode (cname = "duk_push_error_object")]
+        public int push_error_object (ErrorCode code, string msg);
+
         [CCode (cname = "duk_push_this")]
         public int push_this ();
 
@@ -129,6 +132,9 @@ namespace Duktape {
         [CCode (cname = "duk_get_int")]
         public int get_int (int idx);
 
+        [CCode (cname = "duk_get_boolean")]
+        public bool get_boolean (int idx);
+
         [CCode (cname = "duk_get_number")]
         public double get_number (int idx);
 
@@ -150,6 +156,9 @@ namespace Duktape {
         [CCode (cname = "duk_call")]
         public void call (uint nargs);
 
+        [CCode (cname = "duk_pcall")]
+        public int pcall (uint nargs);
+
         [CCode (cname = "duk_is_function")]
         public bool is_function(int idx);
 
@@ -158,6 +167,9 @@ namespace Duktape {
 
         [CCode (cname = "duk_is_object")]
         public bool is_object(int idx);
+
+        [CCode (cname = "duk_is_error")]
+        public bool is_error(int idx);
 
         [CCode (cname = "duk_is_array")]
         public bool is_array(int idx);
@@ -174,6 +186,17 @@ namespace Duktape {
 
     [CCode (cprefix = "DUK_RET_", cname = "int")]
     public enum ReturnType {
+        ERROR,
+        EVAL_ERROR,
+        RANGE_ERROR,
+        REFERENCE_ERROR,
+        SYNTAX_ERROR,
+        TYPE_ERROR,
+        URI_ERROR
+    }
+
+    [CCode (cprefix = "DUK_ERR_", cname = "int")]
+    public enum ErrorCode {
         ERROR,
         EVAL_ERROR,
         RANGE_ERROR,

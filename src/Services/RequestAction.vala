@@ -32,6 +32,8 @@ namespace Spectator {
         public signal void request_failed (Models.Request item);
         public signal void invalid_uri (Models.Request item);
         public signal void proxy_failed (Models.Request item);
+        public signal void aborted ();
+
 
         public RequestAction(Models.Request it) {
             item = it;
@@ -147,10 +149,14 @@ namespace Spectator {
                 return;
             }
 
-            loop = new MainLoop ();
-
             var tmp_req = new Models.Request.duplicate (item);
-            tmp_req.execute_pre_script ();
+
+            if (!tmp_req.execute_pre_script ()) {
+                aborted ();
+                return;
+            }
+
+            loop = new MainLoop ();
 
             session.timeout = (uint) settings.timeout;
 

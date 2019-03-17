@@ -22,7 +22,6 @@
 namespace Spectator.Widgets.Request {
     public class BodySourceView : Gtk.SourceView {
         private new Gtk.SourceBuffer buffer;
-        private int64 last_key_input;
         private Gtk.SourceLanguageManager manager;
         public Gtk.SourceStyleSchemeManager style_scheme_manager;
         private string font { set; get; default = "Roboto Mono Regular 11"; }
@@ -68,22 +67,9 @@ namespace Spectator.Widgets.Request {
 
             buffer.language = manager.get_language ("plain");
             buffer.changed.connect (() => {
-                signal_change_after_delay ();
+                body_buffer_changed (buffer.text);
             });
             auto_indent = true;
-        }
-
-        private void signal_change_after_delay () {
-            last_key_input = GLib.get_monotonic_time () / 1000;
-            new Thread<bool> ("typing_check", () => {
-                Thread.usleep (1000000);
-                var time_now = GLib.get_monotonic_time () / 1000;;
-                if (time_now - last_key_input >= 1000) {
-                    body_buffer_changed (buffer.text);
-                }
-
-                return true;
-            });
         }
 
         public void insert (string text) {

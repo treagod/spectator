@@ -92,10 +92,11 @@ namespace Spectator.Models {
             request_body = new RequestBody ();
         }
 
-        public void execute_pre_script () {
+        public bool execute_pre_script () {
             if (script.valid) {
-                script.execute_before_sending (this);
+                return script.execute_before_sending (this);
             }
+            return true;
         }
 
         public bool has_valid_uri () {
