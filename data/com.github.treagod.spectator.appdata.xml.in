@@ -13,15 +13,44 @@
         displays the response in a clean way.
     </p>
   </description>
+  <releases>
+    <release version="0.2.0" date="2019-03-17">
+      <p>JavaScript Integration</p>
+				<ul>
+					<li>Adds the possibility to augment your requests with scripting.</li>
+					<li>The developer can use the 'before_sending' JavaScript function to augment the request.</li>
+					<li>HTTP.get(url), HTTP.post(url, config) and other request methods are available from script</li>
+				</ul>
+    </release>
+    <release version="0.1.10" date="2019-03-13 ">
+      <p>URL Params fixes</p>
+				<ul>
+					<li>Fixes a bug where the application crashes if a URL param is entered from key-value view without a URL</li>
+				</ul>
+    </release>
+    <release version="0.1.8" date="2019-02-26">
+      <p>Initial Release</p>
+				<ul>
+					<li>Comfortably test your REST APIs!</li>
+					<li>Send custom headers and self defined bodies to your application and displays the response in a clean way.</li>
+				</ul>
+    </release>
+  </releases>
   <screenshots>
     <screenshot>
-			<image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-14%2021.56.17.png</image>
+			<image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-19%2018.12.17.png</image>
 		</screenshot>
 		<screenshot type="default">
-			<image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-14%2021.53.49.png</image>
+			<image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-19%2018.12.07.png</image>
 		</screenshot>
 		<screenshot>
-			<image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-14%2021.55.28.png</image>
+			<image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-19%2018.13.26.png</image>
+		</screenshot>
+    <screenshot>
+			<image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-19%2018.16.56.png</image>
+		</screenshot>
+    <screenshot>
+			<image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-19%2018.23.48.png</image>
 		</screenshot>
   </screenshots>
   <content_rating type="oars-1.1">
