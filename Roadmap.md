@@ -5,6 +5,7 @@
 * Allow Scripting ✔️
   * Error Reporting
   * Script Debug
+  * Asynchronous HTTP requests
 * Create Collections
   * Basic grouping of requests
   * Add collection variables
