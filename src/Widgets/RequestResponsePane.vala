@@ -29,6 +29,7 @@ namespace Spectator.Widgets {
 
         public signal void type_changed (RequestBody.ContentType type);
         public signal void body_buffer_changed (string content);
+        public signal void script_changed (string script);
         public signal void key_value_added (Pair item);
         public signal void key_value_removed (Pair item);
         public signal void key_value_updated (Pair item);
@@ -70,6 +71,10 @@ namespace Spectator.Widgets {
 
             request_view.header_added.connect ((header) => {
                 header_added (header);
+            });
+
+            request_view.script_changed.connect ((script) => {
+                script_changed (script);
             });
 
             request_view.header_deleted.connect ((header) => {
@@ -137,16 +142,27 @@ namespace Spectator.Widgets {
             }
         }
 
-        public void set_item (Models.Request item) {
-            adjust_tab (item);
+        public void set_item (Models.Request request) {
+            adjust_tab (request);
+            update_response (request);
+        }
 
-            if (item.response != null) {
-                create_or_get_cached_view (item);
+        public void set_script_error (string error) {
+            request_view.set_script_error (error);
+        }
+
+        public void update_response (Models.Request request) {
+            if (request.response != null) {
+                create_or_get_cached_view (request);
             } else {
                 if (get_child2 () != null) {
                     remove (response_view);
                 }
             }
+        }
+
+        public void update_status (Models.Request request) {
+            request_view.update_status (request);
         }
 
         construct {

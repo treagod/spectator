@@ -3,7 +3,7 @@
 Spectator is a native application written in Vala using GTK. It's enables you to test the
 API endpoints of your HTTP server.
 
-![Screenshot GET JSON](screenshots/Screenshot%20from%202019-02-03%2013.16.49.png)
+![Screenshot GET JSON](screenshots/Screenshot%20from%202019-03-19%2018.12.17.png)
 
 ## Features
 
@@ -39,3 +39,7 @@ To install, use `ninja install`, then execute with `com.github.treagod.spectator
 
     sudo ninja install
     com.github.treagod.spectator
+
+## Git Policy
+
+As of 11th March 2019 a new [git policy](https://nvie.com/posts/a-successful-git-branching-model/) should be used.

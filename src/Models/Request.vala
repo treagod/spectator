@@ -24,6 +24,7 @@ namespace Spectator.Models {
     public class Request : Object  {
         private uint64 id;
         public string name { get; set; }
+        public Models.Script script { get; private set; }
         public RequestBody request_body { get; private set; }
         public Method method { get; set; }
         public RequestStatus status { get; set; }
@@ -55,7 +56,6 @@ namespace Spectator.Models {
         public Request (string nam, Method meth) {
             setup (nam, meth);
             id = max_id++;
-
         }
 
         public Request.with_id (string nam, Method meth, uint64 i) {
@@ -66,6 +66,16 @@ namespace Spectator.Models {
             id = max_id++;
         }
 
+        public Request.duplicate (Request old_req) {
+            setup (old_req.name, old_req.method);
+            uri = old_req.uri;
+            request_body = old_req.request_body;
+            script = old_req.script;
+            foreach (var header in old_req.headers) {
+                add_header (header);
+            }
+        }
+
         public Request.with_uri (string nam, string url, Method meth) {
             setup (nam, meth);
             uri = url;
@@ -73,12 +83,20 @@ namespace Spectator.Models {
         }
 
         private void setup (string nam, Method meth) {
+            script = new Models.Script ();
             headers = new Gee.ArrayList<Pair> ();
             name = nam;
             uri = "";
             method = meth;
             status = RequestStatus.NOT_SENT;
             request_body = new RequestBody ();
+        }
+
+        public bool execute_pre_script () {
+            if (script.valid) {
+                return script.execute_before_sending (this);
+            }
+            return true;
         }
 
         public bool has_valid_uri () {

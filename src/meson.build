@@ -5,7 +5,7 @@ conf_data.set('DATADIR', get_option('datadir'))
 conf_data.set('PKGDATADIR', get_option('datadir') + '/' + meson.project_name())
 conf_data.set('GETTEXT_PACKAGE', meson.project_name())
 conf_data.set('RELEASE_NAME', 'Spectator')
-conf_data.set('VERSION', '0.1.9')
+conf_data.set('VERSION', '0.2.0')
 conf_data.set('VERSION_INFO', 'Preview')
 conf_data.set('PREFIX', get_option('prefix'))
 
@@ -25,6 +25,7 @@ executable(
 	'Models/Request.vala',
     'Models/RequestBody.vala',
 	'Models/ResponseItem.vala',
+    'Models/Script.vala',
 	'Controllers/Request.vala',
 	'Controllers/Main.vala',
 	'Controllers/Collection.vala',
@@ -35,6 +36,7 @@ executable(
 	'Services/Settings.vala',
 	'Services/JsonSerializer.vala',
 	'Services/JsonDeserializer.vala',
+    'Services/ScriptContext.vala',
 	'Services/RequestAction.vala',
 	'Dialogs/Request/Dialog.vala',
 	'Dialogs/Request/CreateDialog.vala',
@@ -60,6 +62,7 @@ executable(
 	'Widgets/Request/UrlEntry.vala',
 	'Widgets/Request/HeaderField.vala',
 	'Widgets/Request/BodyView.vala',
+	'Widgets/Request/ScriptingView.vala',
     'Widgets/Request/BodySourceView.vala',
     'Widgets/Request/KeyValueList.vala',
     'Widgets/Request/KeyValueField.vala',

@@ -155,9 +155,6 @@ namespace Spectator.Plugins {
         }
 
         private void report_failing_call (string fn_name) {
-            if (false) { // TODO: Implement JS-Debug Mode to show errors
-                stdout.printf("Failed to call '%s' on plugin %s\n", fn_name, name);
-            }
         }
 
         public void set_window(Gtk.Window window) {

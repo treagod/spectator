@@ -1,3 +1,17 @@
+com.github.treagod.spectator (0.2.9) bionic; urgency=medium
+
+  * Add the possibility to augment your requests with scripting.
+  * The developer can use the 'before_sending' JavaScript function to augment the request.
+  * HTTP.get(url), HTTP.post(url, config) and other request methods are available from script
+
+ -- Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>  Tue, 19 Mar 2019 17:58:21 +0100
+
+com.github.treagod.spectator (0.1.10) bionic; urgency=medium
+
+  * Fixes a bug where the application crashes if a URL param is entered from key-value view without a URL
+
+ -- Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>  Wed, 13 Mar 2019 21:20:39 +0100
+
 com.github.treagod.spectator (0.1) bionic; urgency=medium
 
   * Initial Release.

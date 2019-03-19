@@ -101,6 +101,11 @@ namespace Spectator.Controllers {
                 item.request_body.raw = content;
             });
 
+            content.script_changed.connect ((script) => {
+                var item = sidebar.get_active_item ();
+                item.script.code = script;
+            });
+
             content.method_changed.connect ((method) => {
                 sidebar.update_active_method (method);
             });
@@ -135,7 +140,8 @@ namespace Spectator.Controllers {
 
                 action.finished_request.connect (() => {
                     if (item == sidebar.get_active_item ()) {
-                        content.show_request (item);
+                        content.update_response (item);
+                        content.update_status (item);
                     }
                 });
 
@@ -147,14 +153,19 @@ namespace Spectator.Controllers {
 
                 action.invalid_uri.connect ((item) => {
                     item.status = Models.RequestStatus.SENT;
-                    //content.show_request (item);
+                    content.update_status (item);
                     content.set_error ("Invalid URI: %s".printf (item.name));
                 });
 
                 action.proxy_failed.connect ((item) => {
                     item.status = Models.RequestStatus.SENT;
-                    //content.show_request (item);
+                    content.update_status (item);
                     content.set_error ("Proxy denied request: %s".printf (item.name));
+                });
+
+                action.aborted.connect (() => {
+                    item.status = Models.RequestStatus.SENT;
+                    content.update_status (item);
                 });
 
                 action.make_request.begin ();
@@ -170,7 +181,9 @@ namespace Spectator.Controllers {
                     action.cancel ();
                     var item = action.get_item ();
                     item.status = Models.RequestStatus.SENT;
-                    content.show_request (item);
+                    if (item == sidebar.get_active_item ()) {
+                        content.update_status (item);
+                    }
                 }
             });
 
@@ -225,6 +238,9 @@ namespace Spectator.Controllers {
 
         public void add_item (Models.Request item) {
             items.add (item);
+            item.script.script_error.connect ((err) => {
+                content.set_script_error (err);
+            });
             sidebar.add_item (item);
         }
 

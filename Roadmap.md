@@ -2,6 +2,9 @@
 
 ## Rough Overview
 
+* Allow Scripting ✔️
+  * Error Reporting
+  * Script Debug
 * Create Collections
   * Basic grouping of requests
   * Add collection variables
@@ -11,6 +14,13 @@
   * Bearer-Token
   * OAuth
 * Creating Workspaces
+
+## Allow Scripting
+
+Sometimes the request is more complex than adding headers and stuff. In order to give the developer more
+flexibility in this regards, Spectator shall support execution of JavaScript Scripts before and after the
+request is made. These scripts shall allow the developer to alter the request or do other HTTP requests first, e.g. 
+for obtaining a JWT Token.
 
 ## Create Collections
 
