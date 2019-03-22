@@ -26,6 +26,7 @@ namespace Spectator.Widgets.Request {
         private BodyView body_view;
         private KeyValueList url_params_view;
         private ScriptingView scripting_view;
+        private Gtk.Box console_box;
         private Granite.Widgets.ModeButton tabs;
         private Gtk.Stack stack;
         private Gtk.Label body_label;
@@ -56,6 +57,28 @@ namespace Spectator.Widgets.Request {
             url_entry = create_url_entry ();
             body_view = create_body_view ();
             scripting_view = create_scripting_view ();
+            console_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
+            console_box.get_style_context ().add_class ("console-box");
+
+            var button_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 1);
+            var js_console_button = new Gtk.Button.from_icon_name ("utilities-terminal", Gtk.IconSize.LARGE_TOOLBAR);
+            js_console_button.tooltip_text = _("JavaScript Console");
+            var js_info_button = new Gtk.Button.from_icon_name ("dialog-information", Gtk.IconSize.LARGE_TOOLBAR);
+            js_info_button.tooltip_text = _("JavaScript Info");
+
+            js_console_button.clicked.connect (() => {
+                if (js_console_button.relief == Gtk.ReliefStyle.NONE) {
+                    js_console_button.relief = Gtk.ReliefStyle.NORMAL;
+                } else {
+                    js_console_button.relief = Gtk.ReliefStyle.NONE;
+                }
+            });
+
+
+            console_box.pack_start (scripting_view, true, true);
+            button_box.pack_end (js_console_button, false, false);
+            button_box.pack_end (js_info_button, false, false);
+            console_box.add (button_box);
 
             init_stack ();
 
@@ -191,7 +214,7 @@ namespace Spectator.Widgets.Request {
             stack.add_titled (header_view, "header", "header");
             stack.add_titled (url_params_view, "url_params", "parameters");
             stack.add_titled (body_view, "body", "body");
-            stack.add_titled (scripting_view, "scripting", "scripting");
+            stack.add_titled (console_box, "scripting", "scripting");
         }
 
         public void update_url_params (Models.Request item) {
