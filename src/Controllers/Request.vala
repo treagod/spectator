@@ -136,8 +136,6 @@ namespace Spectator.Controllers {
 
                 action = new RequestAction (item);
 
-                main.plugin_engine.run_plugin (item);
-
                 action.finished_request.connect (() => {
                     if (item == sidebar.get_active_item ()) {
                         content.update_response (item);

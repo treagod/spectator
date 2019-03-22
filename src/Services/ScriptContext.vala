@@ -77,6 +77,15 @@ namespace Spectator.Services {
         }
     }
 
+    public static Duktape.ReturnType native_print (Duktape.Context ctx) {
+        ctx.push_string (" ");
+        ctx.insert (0);
+        ctx.join (ctx.get_top () - 1);
+        stdout.printf ("%s\n", ctx.safe_to_string (-1));
+
+        return 0;
+    }
+
     public static void http_create_response_object (Duktape.Context ctx, Soup.Message msg) {
         var obj_idx = ctx.push_object ();
         ctx.push_int ((int) msg.status_code);
@@ -209,7 +218,7 @@ namespace Spectator.Services {
         var uri_string = ctx.get_string (-2);
         var uri = new Soup.URI (uri_string);
 
-        if (Spectator.Plugins.Utils.valid_uri (uri)) {
+        if (Spectator.Services.Utilities.valid_uri (uri)) {
             var session = new Soup.Session ();
             var msg = new Soup.Message (method, uri_string);
             if (ctx.is_object (-1)) {
@@ -233,7 +242,7 @@ namespace Spectator.Services {
         var uri_string = ctx.get_string (-2);
         var uri = new Soup.URI (uri_string);
 
-        if (Spectator.Plugins.Utils.valid_uri (uri)) {
+        if (Spectator.Services.Utilities.valid_uri (uri)) {
             var session = new Soup.Session ();
             var msg = new Soup.Message (method, uri_string);
             append_headers_to_msg (ctx, msg);

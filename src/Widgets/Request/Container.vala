@@ -69,6 +69,7 @@ namespace Spectator.Widgets.Request {
 
             var console = new Gtk.TextView ();
             console.buffer.text = "";
+            console.wrap_mode = Gtk.WrapMode.WORD;
             console.pixels_below_lines = 3;
             console.border_width = 12;
             console.editable = false;
