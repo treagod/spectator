@@ -59,6 +59,7 @@ namespace Spectator.Widgets.Request {
             scripting_view = create_scripting_view ();
             console_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
             console_box.get_style_context ().add_class ("console-box");
+            var paned = new Gtk.Paned (Gtk.Orientation.VERTICAL);
 
             var button_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 1);
             var js_console_button = new Gtk.Button.from_icon_name ("utilities-terminal", Gtk.IconSize.LARGE_TOOLBAR);
@@ -66,16 +67,27 @@ namespace Spectator.Widgets.Request {
             var js_info_button = new Gtk.Button.from_icon_name ("dialog-information", Gtk.IconSize.LARGE_TOOLBAR);
             js_info_button.tooltip_text = _("JavaScript Info");
 
+            var console = new Gtk.TextView ();
+            console.buffer.text = "";
+            console.pixels_below_lines = 3;
+            console.border_width = 12;
+            console.editable = false;
+            console.get_style_context ().add_class (Granite.STYLE_CLASS_TERMINAL);
+            console_box.get_style_context ().add_class ("console-box");
+
             js_console_button.clicked.connect (() => {
                 if (js_console_button.relief == Gtk.ReliefStyle.NONE) {
+                    paned.remove (console);
                     js_console_button.relief = Gtk.ReliefStyle.NORMAL;
                 } else {
+                    paned.pack2 (console, false, true);
+                    console.show_all ();
                     js_console_button.relief = Gtk.ReliefStyle.NONE;
                 }
             });
 
-
-            console_box.pack_start (scripting_view, true, true);
+            paned.pack1 (scripting_view, false, true);
+            console_box.pack_start (paned, true, true);
             button_box.pack_end (js_console_button, false, false);
             button_box.pack_end (js_info_button, false, false);
             console_box.add (button_box);
