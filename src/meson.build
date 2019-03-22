@@ -31,6 +31,7 @@ executable(
 	'Controllers/Collection.vala',
 	'Stores/RequestStore.vala',
 	'Services/Utilities.vala',
+    'Services/ScriptWriter.vala',
 	'Services/Settings.vala',
 	'Services/JsonSerializer.vala',
 	'Services/JsonDeserializer.vala',

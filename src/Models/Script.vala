@@ -33,6 +33,7 @@ namespace Spectator.Models {
         private bool evaluated;
         private bool _valid;
         private string _code;
+        private Services.ScriptWriter writer;
 
         public  bool valid {
             get {
@@ -68,7 +69,8 @@ namespace Spectator.Models {
             valid = true;
             code = "";
             evaluated = false;
-            context = new Services.ScriptContext ();
+            writer = new Services.StdoutWriter ();
+            context = new Services.ScriptContext (writer);
             context.push_http_object ();
             context.push_content_type_object ();
         }

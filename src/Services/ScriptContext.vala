@@ -22,9 +22,13 @@
 namespace Spectator.Services {
     [Compact]
     public class ScriptContext : Duktape.Context {
+        public ScriptContext (ScriptWriter writer) {
+            push_ref (writer);
+            put_global_string (Duktape.hidden_symbol ("writer"));
+        }
         public void push_request (Models.Request request) {
             push_ref (request);
-            put_global_string (Duktape.hidden_symbol("request"));
+            put_global_string (Duktape.hidden_symbol ("request"));
 
             var obj_idx = push_object ();
             push_string (request.name);
@@ -60,9 +64,12 @@ namespace Spectator.Services {
             put_prop_string (obj_idx, "put");
             push_vala_function (http_patch, 2);
             put_prop_string (obj_idx, "patch");
-            push_vala_function (native_print, Duktape.VARARGS);
-            put_prop_string (obj_idx, "print"); // Only for debugging
             put_global_string ("HTTP");
+
+            obj_idx = push_object ();
+            push_vala_function (console_log, Duktape.VARARGS);
+            put_prop_string (obj_idx, "log");
+            put_global_string ("console");
         }
 
         public void push_content_type_object () {
@@ -77,11 +84,12 @@ namespace Spectator.Services {
         }
     }
 
-    public static Duktape.ReturnType native_print (Duktape.Context ctx) {
+    public static Duktape.ReturnType console_log (Duktape.Context ctx) {
+        var writer = get_writer (ctx);
         ctx.push_string (" ");
         ctx.insert (0);
         ctx.join (ctx.get_top () - 1);
-        stdout.printf ("%s\n", ctx.safe_to_string (-1));
+        writer.write ("%s".printf ( ctx.safe_to_string (-1)));
 
         return 0;
     }
@@ -256,6 +264,13 @@ namespace Spectator.Services {
         }
 
         return 0;
+    }
+
+    public unowned Spectator.Services.ScriptWriter get_writer (Duktape.Context ctx) {
+        ctx.get_global_string (Duktape.hidden_symbol("writer"));
+        unowned Spectator.Services.ScriptWriter writer = ctx.get_pointer<Spectator.Services.ScriptWriter>(-1);
+        ctx.pop();
+        return writer;
     }
 
     public unowned Spectator.Models.Request get_request (Duktape.Context ctx) {
