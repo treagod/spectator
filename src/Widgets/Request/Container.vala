@@ -91,12 +91,12 @@ namespace Spectator.Widgets.Request {
                 }
             });
 
-            console.buffer.changed.connect (() => {
+            console.buffer.notify["text"].connect (() => {
                 scrolled.vadjustment.value = scrolled.vadjustment.upper;
             });
 
             paned.pack1 (scripting_view, true, true);
-            paned.pack2 (scrolled, false, false);
+            paned.pack2 (scrolled, true, false);
             console_box.pack_start (paned, true, true);
             button_box.pack_end (js_console_button, false, false);
             button_box.pack_end (js_info_button, false, false);

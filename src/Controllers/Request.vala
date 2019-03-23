@@ -29,7 +29,7 @@ namespace Spectator.Controllers {
         private Widgets.Content content;
         private Widgets.HeaderBar headerbar;
         // \Views
-        public Main main;
+        public unowned Main main;
         private Services.RequestAction action;
 
         public signal void preference_clicked ();

@@ -21,7 +21,7 @@
 
 namespace Spectator.Controllers {
     public class Collection {
-        public Main main;
+        public unowned Main main;
         private Gee.ArrayList<Models.Collection> collections;
 
         public Collection () {
