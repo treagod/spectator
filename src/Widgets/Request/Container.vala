@@ -66,12 +66,12 @@ namespace Spectator.Widgets.Request {
             var button_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 1);
             var js_console_button = new Gtk.Button.from_icon_name ("utilities-terminal", Gtk.IconSize.LARGE_TOOLBAR);
             js_console_button.tooltip_text = _("JavaScript Console");
-            js_console_button.relief = Gtk.ReliefStyle.NONE;
             var js_info_button = new Gtk.Button.from_icon_name ("dialog-information", Gtk.IconSize.LARGE_TOOLBAR);
             js_info_button.tooltip_text = _("JavaScript Info");
 
             var scrolled_scripting_view = new Gtk.ScrolledWindow (null, null);
             var scrolled_console = new Gtk.ScrolledWindow (null, null);
+            scrolled_console.get_style_context ().add_class ("scrolled-console");
             console = new Gtk.TextView ();
             console.buffer.text = "";
             console.wrap_mode = Gtk.WrapMode.WORD;
@@ -86,7 +86,7 @@ namespace Spectator.Widgets.Request {
                     paned.remove (scrolled_console);
                     js_console_button.relief = Gtk.ReliefStyle.NORMAL;
                 } else {
-                    paned.pack2 (scrolled_console, false, true);
+                    paned.pack2 (scrolled_console, true, true);
                     scrolled_console.show_all ();
                     js_console_button.relief = Gtk.ReliefStyle.NONE;
                 }
@@ -100,7 +100,6 @@ namespace Spectator.Widgets.Request {
             scrolled_scripting_view.add (scripting_view);
 
             paned.pack1 (scrolled_scripting_view, true, true);
-            paned.pack2 (scrolled_console, false, true);
             console_box.pack_start (paned, true, true);
             button_box.pack_end (js_console_button, false, false);
             button_box.pack_end (js_info_button, false, false);
@@ -123,6 +122,7 @@ namespace Spectator.Widgets.Request {
 
             add (tabs);
             add (stack);
+            show_all ();
         }
 
         private KeyValueList create_header_view () {

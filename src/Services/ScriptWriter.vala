@@ -31,7 +31,7 @@ namespace Spectator.Services {
     }
 
     public class TextBufferWriter : ScriptWriter, Object {
-        private Gtk.TextBuffer buffer;
+        private unowned Gtk.TextBuffer buffer;
 
         public TextBufferWriter (Gtk.TextBuffer b) {
             buffer = b;
