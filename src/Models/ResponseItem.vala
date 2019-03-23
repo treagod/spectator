@@ -33,7 +33,6 @@ namespace Spectator {
 
         public ResponseItem () {
             headers = new Gee.HashMap<string, string> ();
-            process_raw_response ();
         }
 
         public void add_header (string key, string val) {

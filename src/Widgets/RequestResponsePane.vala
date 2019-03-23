@@ -36,7 +36,7 @@ namespace Spectator.Widgets {
 
 
         public RequestResponsePane () {
-            request_view = new Request.<Container ();
+            request_view = new Request.Container ();
             response_view = new Response.Container ();
             tab_indecies = new Gee.HashMap<Models.Request, int> ();
             cache = new Gee.HashMap<Models.Request, ResponseViewCache> ();
