@@ -19,23 +19,11 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace Spectator.Controllers {
-    public class Collection {
-        public unowned Main main;
-        private Gee.ArrayList<Models.Collection> collections;
-
-        public Collection () {
-            collections = new Gee.ArrayList<Models.Collection> ();
-        }
-
-        public void add_collection (Models.Collection collection) {
-            collections.add (collection);
-        }
-
-        public void add_request_to_collection (Models.Collection collection, Models.Request request) {
-            if (collections.contains (collection)) {
-                collection.add_request (request);
-            }
-        }
+namespace Spectator.Services.Utilities {
+    public bool valid_uri (Soup.URI? uri) {
+        return uri != null &&
+               (uri.get_scheme () == "http" || uri.get_scheme () == "https") &&
+               uri.get_host ().length > 0 &&
+               uri.get_path ().length >= 0;
     }
 }

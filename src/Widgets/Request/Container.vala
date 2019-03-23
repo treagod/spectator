@@ -26,9 +26,12 @@ namespace Spectator.Widgets.Request {
         private BodyView body_view;
         private KeyValueList url_params_view;
         private ScriptingView scripting_view;
+        private Gtk.Box console_box;
         private Granite.Widgets.ModeButton tabs;
         private Gtk.Stack stack;
         private Gtk.Label body_label;
+        private Gtk.TextView console;
+
         public int tab_index {
             get {
                 return tabs.selected;
@@ -56,6 +59,51 @@ namespace Spectator.Widgets.Request {
             url_entry = create_url_entry ();
             body_view = create_body_view ();
             scripting_view = create_scripting_view ();
+            console_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
+            console_box.get_style_context ().add_class ("console-box");
+            var paned = new Gtk.Paned (Gtk.Orientation.VERTICAL);
+
+            var button_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 1);
+            var js_console_button = new Gtk.Button.from_icon_name ("utilities-terminal", Gtk.IconSize.LARGE_TOOLBAR);
+            js_console_button.tooltip_text = _("JavaScript Console");
+            var js_info_button = new Gtk.Button.from_icon_name ("dialog-information", Gtk.IconSize.LARGE_TOOLBAR);
+            js_info_button.tooltip_text = _("JavaScript Info");
+
+            var scrolled_scripting_view = new Gtk.ScrolledWindow (null, null);
+            var scrolled_console = new Gtk.ScrolledWindow (null, null);
+            scrolled_console.get_style_context ().add_class ("scrolled-console");
+            console = new Gtk.TextView ();
+            console.buffer.text = "";
+            console.wrap_mode = Gtk.WrapMode.WORD;
+            console.pixels_below_lines = 3;
+            console.border_width = 12;
+            console.editable = false;
+            console.get_style_context ().add_class (Granite.STYLE_CLASS_TERMINAL);
+            console_box.get_style_context ().add_class ("console-box");
+
+            js_console_button.clicked.connect (() => {
+                if (js_console_button.relief == Gtk.ReliefStyle.NONE) {
+                    paned.remove (scrolled_console);
+                    js_console_button.relief = Gtk.ReliefStyle.NORMAL;
+                } else {
+                    paned.pack2 (scrolled_console, true, true);
+                    scrolled_console.show_all ();
+                    js_console_button.relief = Gtk.ReliefStyle.NONE;
+                }
+            });
+
+            console.buffer.notify["text"].connect (() => {
+                scrolled_console.vadjustment.value = scrolled_console.vadjustment.upper;
+            });
+
+            scrolled_console.add (console);
+            scrolled_scripting_view.add (scripting_view);
+
+            paned.pack1 (scrolled_scripting_view, true, true);
+            console_box.pack_start (paned, true, true);
+            button_box.pack_end (js_console_button, false, false);
+            button_box.pack_end (js_info_button, false, false);
+            console_box.add (button_box);
 
             init_stack ();
 
@@ -74,6 +122,7 @@ namespace Spectator.Widgets.Request {
 
             add (tabs);
             add (stack);
+            show_all ();
         }
 
         private KeyValueList create_header_view () {
@@ -191,7 +240,7 @@ namespace Spectator.Widgets.Request {
             stack.add_titled (header_view, "header", "header");
             stack.add_titled (url_params_view, "url_params", "parameters");
             stack.add_titled (body_view, "body", "body");
-            stack.add_titled (scripting_view, "scripting", "scripting");
+            stack.add_titled (console_box, "scripting", "scripting");
         }
 
         public void update_url_params (Models.Request item) {
@@ -269,12 +318,16 @@ namespace Spectator.Widgets.Request {
             url_entry.set_text (uri);
         }
 
-        private void update_script (Models.Script script) {
-            scripting_view.update_buffer (script.code);
+        private void update_script (string script) {
+            scripting_view.update_buffer (script);
         }
 
         public void update_status (Models.Request request) {
             url_entry.change_status (request.status);
+        }
+
+        public Services.ScriptWriter get_console_writer () {
+            return new Services.TextBufferWriter (console.buffer);
         }
 
         public void set_item (Models.Request item) {
@@ -284,7 +337,7 @@ namespace Spectator.Widgets.Request {
             body_view.set_body (item.request_body);
             update_url_params (item);
             update_tabs (item.method);
-            update_script (item.script);
+            update_script (item.script_code);
             set_headers (item.headers);
             show_all ();
         }

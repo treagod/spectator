@@ -108,6 +108,10 @@ namespace Spectator.Widgets {
             request_view.update_url_params (item);
         }
 
+        public Services.ScriptWriter get_console_writer () {
+            return request_view.get_console_writer ();
+        }
+
         private void adjust_tab (Models.Request item) {
             tab_indecies[last_item] = request_view.tab_index;
             last_item = item;

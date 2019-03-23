@@ -160,6 +160,10 @@ namespace Spectator.Widgets {
             req_res_pane.update_url_params (item);
         }
 
+        public Services.ScriptWriter get_console_writer () {
+            return req_res_pane.get_console_writer ();
+        }
+
         private void setup_request_signals (RequestResponsePane request) {
             request.url_changed.connect ((url) => {
                 url_changed (url);

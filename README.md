@@ -40,6 +40,3 @@ To install, use `ninja install`, then execute with `com.github.treagod.spectator
     sudo ninja install
     com.github.treagod.spectator
 
-## Git Policy
-
-As of 11th March 2019 a new [git policy](https://nvie.com/posts/a-successful-git-branching-model/) should be used.

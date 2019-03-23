@@ -90,7 +90,7 @@ namespace Spectator.Services {
             builder.set_member_name ("method");
             builder.add_int_value (request.method.to_i ());
             builder.set_member_name ("script");
-            builder.add_string_value (request.script.code);
+            builder.add_string_value (request.script_code);
 
             serialize_headers (request);
             serialize_body (request);

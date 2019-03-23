@@ -1,3 +1,11 @@
+.scrolled-console {
+    margin-top: 2px;
+}
+
+.console-box {
+    margin: 2px 13px;
+}
+
 .ok-status-box {
     border-width: 1px;
     border-style: solid;
