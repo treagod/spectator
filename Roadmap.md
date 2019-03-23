@@ -4,7 +4,7 @@
 
 * Allow Scripting ✔️
   * Error Reporting
-  * Script Debug
+  * Script Debug ✅ (built in console output for debugging)
   * Asynchronous HTTP requests
 * Create Collections
   * Basic grouping of requests
