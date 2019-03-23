@@ -21,12 +21,12 @@
 
 public Duktape.ReturnType abort_request (Duktape.Context ctx) {
     ctx.push_true ();
-    ctx.put_global_string (Duktape.hidden_symbol("abort"));
+    ctx.put_global_string (Duktape.hidden_symbol ("abort"));
     return (Duktape.ReturnType) (-1);
 }
 
 namespace Spectator.Models {
-    public class Script  {
+    public class Script {
         public signal void script_error (string err);
 
         private Services.ScriptContext context;
@@ -35,14 +35,14 @@ namespace Spectator.Models {
         private string _code;
         private Services.ScriptWriter writer;
 
-        public  bool valid {
+        public bool valid {
             get {
                 if (!evaluated) {
                     evaluate_code ();
                 }
 
                 return _valid;
-            } private set{
+            } private set {
                 _valid = value;
             }
         }
@@ -98,17 +98,17 @@ namespace Spectator.Models {
             evaluate_code ();
             if (valid) {
                 context.get_global_string ("before_sending");
-                if (context.is_function(-1)) {
+                if (context.is_function (-1)) {
                     context.push_false ();
-                    context.put_global_string (Duktape.hidden_symbol("abort"));
+                    context.put_global_string (Duktape.hidden_symbol ("abort"));
 
                     context.push_request (request);
 
                     if (context.pcall (1) != 0) {
-                        context.get_global_string (Duktape.hidden_symbol("abort"));
+                        context.get_global_string (Duktape.hidden_symbol ("abort"));
                         if (context.get_boolean (-1)) {
                             return false;
-                        } else  {
+                        } else {
                             if (context.is_error (-1)) {
                                 var err = context.safe_to_string (-1);
                                 script_error (err);

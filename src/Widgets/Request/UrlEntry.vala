@@ -26,7 +26,7 @@ namespace Spectator.Widgets.Request {
         private bool processing = false;
 
         public signal void url_changed (string url);
-        public signal void method_changed(Models.Method method);
+        public signal void method_changed (Models.Method method);
         public signal void request_activated ();
         public signal void cancel_process ();
 
@@ -56,7 +56,7 @@ namespace Spectator.Widgets.Request {
 
             method_box.changed.connect (() => {
                 var index = method_box.get_active ();
-                method_changed (Models.Method.convert(index));
+                method_changed (Models.Method.convert (index));
             });
 
             add (method_box);
@@ -79,15 +79,18 @@ namespace Spectator.Widgets.Request {
         public void change_status (Models.RequestStatus status) {
             switch (status) {
                 case Models.RequestStatus.SENT:
-                    url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "view-refresh-symbolic");
+                    url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY,
+                                                       "view-refresh-symbolic");
                     processing = false;
                     break;
                 case Models.RequestStatus.NOT_SENT:
-                    url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "media-playback-start-symbolic");
+                    url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY,
+                                                       "media-playback-start-symbolic");
                     processing = false;
                     break;
                 case Models.RequestStatus.SENDING:
-                    url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "window-close-symbolic");
+                    url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY,
+                                                       "window-close-symbolic");
                     processing = true;
                     break;
             }

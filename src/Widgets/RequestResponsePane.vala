@@ -36,10 +36,10 @@ namespace Spectator.Widgets {
 
 
         public RequestResponsePane () {
-            request_view  = new Request.Container ();
+            request_view = new Request.<Container ();
             response_view = new Response.Container ();
             tab_indecies = new Gee.HashMap<Models.Request, int> ();
-            cache = new Gee.HashMap<Models.Request, ResponseViewCache>();
+            cache = new Gee.HashMap<Models.Request, ResponseViewCache> ();
 
             request_view.response_received.connect ((res) => {
                 response_view.update (res);
@@ -85,15 +85,15 @@ namespace Spectator.Widgets {
                 type_changed (type);
             });
 
-            request_view.key_value_added.connect((item) => {
+            request_view.key_value_added.connect ((item) => {
                 key_value_added (item);
             });
 
-            request_view.key_value_updated.connect((item) => {
+            request_view.key_value_updated.connect ((item) => {
                 key_value_updated (item);
             });
 
-            request_view.key_value_removed.connect((item) => {
+            request_view.key_value_removed.connect ((item) => {
                 key_value_removed (item);
             });
 
@@ -127,7 +127,7 @@ namespace Spectator.Widgets {
         private void create_or_get_cached_view (Models.Request item) {
             remove (response_view);
 
-            if (cache.has_key(item)) {
+            if (cache.has_key (item)) {
                 response_view = cache[item].view;
                 response_view.show_all ();
             } else {

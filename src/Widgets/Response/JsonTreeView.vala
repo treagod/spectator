@@ -20,7 +20,7 @@
 */
 
 namespace Spectator.Widgets.Response {
-    public class JsonTreeView  : Gtk.TreeView {
+    public class JsonTreeView : Gtk.TreeView {
         // Workaround to keep Gtk.TreeIter in memory to do recursive creation
         private class TreeIter {
             public Gtk.TreeIter iter;

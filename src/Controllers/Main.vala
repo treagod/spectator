@@ -59,7 +59,7 @@ namespace Spectator.Controllers {
                 add_request (request);
             });
 
-            deserializer.load_data_from_file(setting_file_path);
+            deserializer.load_data_from_file (setting_file_path);
         }
 
         public void save_data () {

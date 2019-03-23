@@ -21,7 +21,7 @@
 
 namespace Spectator.Dialogs.Request {
     public class CreateDialog : Dialog {
-        public signal void creation(Models.Request request);
+        public signal void creation (Models.Request request);
 
         public CreateDialog (Gtk.ApplicationWindow parent) {
             base (_("Create Request"), parent);

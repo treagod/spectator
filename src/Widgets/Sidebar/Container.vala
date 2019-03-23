@@ -104,7 +104,7 @@ namespace Spectator.Widgets.Sidebar {
 
             item_box.add (box_item);
             item_box.show_all ();
-            item_box.select_child(box_item);
+            item_box.select_child (box_item);
 
             box_item.item_deleted.connect ((item) => {
                 item_deleted (item);
@@ -127,7 +127,7 @@ namespace Spectator.Widgets.Sidebar {
         private Sidebar.Item? get_active () {
             var children = item_box.get_selected_children ();
 
-            if (children.length() > 0) {
+            if (children.length () > 0) {
                 return ((Sidebar.Item) children.nth_data (0));
             }
 

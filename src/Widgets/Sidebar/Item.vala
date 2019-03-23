@@ -30,7 +30,7 @@ namespace Spectator.Widgets.Sidebar {
         public signal void item_deleted (Models.Request item);
         public signal void item_edit (Models.Request item);
 
-        private string get_method_label(Models.Method method) {
+        private string get_method_label (Models.Method method) {
             var dark_theme = Gtk.Settings.get_default ().gtk_application_prefer_dark_theme;
             switch (method) {
                 case Models.Method.GET:

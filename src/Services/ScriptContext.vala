@@ -115,13 +115,13 @@ namespace Spectator.Services {
     }
 
     private static void handle_body_object (Duktape.Context ctx, Soup.Message msg) {
-        ctx.get_prop_string(-1, "type");
+        ctx.get_prop_string (-1, "type");
         var type = "";
         if (!ctx.is_undefined (-1) && ctx.is_string (-1)) {
             type = ctx.get_string (-1);
         }
         ctx.pop ();
-        ctx.get_prop_string(-1, "data");
+        ctx.get_prop_string (-1, "data");
         if (!ctx.is_undefined (-1) && ctx.is_object (-1)) {
             if (type == "json") {
                 msg.set_request ("application/json", Soup.MemoryUse.COPY, ctx.json_encode (-1).data);
@@ -146,7 +146,7 @@ namespace Spectator.Services {
             }
             ctx.pop_n (2);
         }
-        ctx.pop();
+        ctx.pop ();
 
         multipart.to_message (msg.request_headers, msg.request_body);
     }
@@ -163,34 +163,34 @@ namespace Spectator.Services {
                     builder.append ("&");
                 }
                 builder.append ("%s=%s".printf (
-                    Soup.URI.encode(ctx.get_string (-2), "&"),
-                    Soup.URI.encode(ctx.get_string (-1), "&")
+                    Soup.URI.encode (ctx.get_string (-2), "&"),
+                    Soup.URI.encode (ctx.get_string (-1), "&")
                 ));
             }
 
             ctx.pop_n (2);
         }
-        ctx.pop();
+        ctx.pop ();
 
         return builder.str;
     }
 
     private void append_headers_to_msg (Duktape.Context ctx, Soup.Message msg) {
-        ctx.get_prop_string(-1, "headers");
+        ctx.get_prop_string (-1, "headers");
         if (!ctx.is_undefined (-1) && ctx.is_object (-1)) {
             ctx.enum (-1, 0);
             while (ctx.next (-1, true)) {
                 msg.request_headers.append (ctx.get_string (-2), ctx.get_string (-1));
                 ctx.pop_n (2);
             }
-            ctx.pop();
+            ctx.pop ();
         }
-        ctx.pop();
+        ctx.pop ();
     }
 
     private static void append_body_to_msg (Duktape.Context ctx, Soup.Message msg) {
         if (ctx.is_object (-1)) {
-            ctx.get_prop_string(-1, "body");
+            ctx.get_prop_string (-1, "body");
             if (!ctx.is_undefined (-1)) {
                 if (ctx.is_string (-1)) {
                     msg.set_request ("undefined", Soup.MemoryUse.COPY, ctx.get_string (-1).data);
@@ -198,7 +198,7 @@ namespace Spectator.Services {
                     handle_body_object (ctx, msg);
                 }
             }
-            ctx.pop();
+            ctx.pop ();
         }
     }
 
@@ -273,16 +273,16 @@ namespace Spectator.Services {
     }
 
     public unowned Spectator.Services.ScriptWriter get_writer (Duktape.Context ctx) {
-        ctx.get_global_string (Duktape.hidden_symbol("writer"));
-        unowned Spectator.Services.ScriptWriter writer = ctx.get_pointer<Spectator.Services.ScriptWriter>(-1);
-        ctx.pop();
+        ctx.get_global_string (Duktape.hidden_symbol ("writer"));
+        unowned Spectator.Services.ScriptWriter writer = ctx.get_pointer<Spectator.Services.ScriptWriter> (-1);
+        ctx.pop ();
         return writer;
     }
 
     public unowned Spectator.Models.Request get_request (Duktape.Context ctx) {
-        ctx.get_global_string (Duktape.hidden_symbol("request"));
-        unowned Spectator.Models.Request request = ctx.get_pointer<Spectator.Models.Request>(-1);
-        ctx.pop();
+        ctx.get_global_string (Duktape.hidden_symbol ("request"));
+        unowned Spectator.Models.Request request = ctx.get_pointer<Spectator.Models.Request> (-1);
+        ctx.pop ();
         return request;
     }
 
@@ -290,7 +290,7 @@ namespace Spectator.Services {
         var request = get_request (ctx);
 
         if (ctx.is_string (-1) && ctx.is_string (-2)) {
-            request.add_header (new Spectator.Pair(ctx.get_string (-2), ctx.get_string (-1)));
+            request.add_header (new Spectator.Pair (ctx.get_string (-2), ctx.get_string (-1)));
         }
         return 0;
     }

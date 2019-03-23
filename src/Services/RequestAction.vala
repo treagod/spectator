@@ -54,7 +54,7 @@ namespace Spectator.Services {
         public async void make_request () {
             timer = new Timer ();
             yield perform_request ();
-	        item.status = Models.RequestStatus.SENDING;
+            item.status = Models.RequestStatus.SENDING;
         }
 
         public Models.Request get_item () {
@@ -90,7 +90,7 @@ namespace Spectator.Services {
             return performed_redirects;
         }
 
-        private void read_response(Soup.Session sess, Soup.Message mess) {
+        private void read_response (Soup.Session sess, Soup.Message mess) {
             if (mess.response_body.data == null) {
                 if (!is_canceled) {
                     request_failed (item);
@@ -106,7 +106,7 @@ namespace Spectator.Services {
                     } else {
                         // try to extract info from url string
                         var http_proxy = new Soup.URI (settings.http_proxy);
-                        auth_string = "%s:%s".printf (http_proxy.get_user(), http_proxy.get_password ());
+                        auth_string = "%s:%s".printf (http_proxy.get_user (), http_proxy.get_password ());
                     }
                     var auth_string_b64 = Base64.encode ((uchar[]) auth_string.to_utf8 ());
                     mess.request_headers.append ("Proxy-Authorization", "Basic %s".printf (auth_string_b64));
@@ -218,7 +218,8 @@ namespace Spectator.Services {
                     if (content_type_set) {
                         msg.set_request (null, Soup.MemoryUse.COPY, body.raw.data);
                     } else {
-                        msg.set_request (RequestBody.ContentType.to_mime (body.type), Soup.MemoryUse.COPY, body.raw.data);
+                        msg.set_request (RequestBody.ContentType.to_mime (body.type),
+                                         Soup.MemoryUse.COPY, body.raw.data);
                     }
                 } else if (body.type == RequestBody.ContentType.FORM_DATA) {
                     var multipart = new Soup.Multipart ("multipart/form-data");
@@ -239,8 +240,8 @@ namespace Spectator.Services {
                             builder.append ("&");
                         }
                         builder.append ("%s=%s".printf (
-                            Soup.URI.encode(pair.key, "&"),
-                            Soup.URI.encode(pair.val, "&")
+                            Soup.URI.encode (pair.key, "&"),
+                            Soup.URI.encode (pair.val, "&")
                         ));
                     }
                     msg.set_request ("application/x-www-form-urlencoded", Soup.MemoryUse.COPY, builder.str.data);

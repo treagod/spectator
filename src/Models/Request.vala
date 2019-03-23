@@ -21,7 +21,7 @@
 
 namespace Spectator.Models {
     private uint64 max_id = 0;
-    public class Request : Object  {
+    public class Request : Object {
         private uint64 id;
         public string name { get; set; }
         public RequestBody request_body { get; private set; }
@@ -38,14 +38,14 @@ namespace Spectator.Models {
                     return "";
                 }
 
-                return uri.substring(idx + 1);
+                return uri.substring (idx + 1);
             } public set {
                 var idx = uri.index_of_char ('?');
 
                 if (idx < 0) {
                     uri = "%s?%s".printf (uri, value);
                 } else {
-                    var tmp = uri.substring(0, idx);
+                    var tmp = uri.substring (0, idx);
                     uri = "%s?%s".printf (tmp, value);
                 }
             }

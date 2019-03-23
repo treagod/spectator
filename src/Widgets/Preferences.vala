@@ -27,7 +27,7 @@ namespace Spectator.Widgets {
             border_width = 5;
             deletable = false;
             resizable = false;
-            transient_for =  parent;
+            transient_for = parent;
             modal = true;
 
             var main_stack = new Gtk.Stack ();
@@ -136,7 +136,7 @@ namespace Spectator.Widgets {
             option_grid.column_spacing = 12;
             option_grid.row_spacing = 6;
 
-            var use_proxy_label = new Gtk.Label(_("Use Proxy"));
+            var use_proxy_label = new Gtk.Label (_("Use Proxy"));
             use_proxy_label.halign = Gtk.Align.START;
             var use_proxy_switch = new Gtk.Switch ();
             use_proxy_switch.halign = Gtk.Align.END;
@@ -201,7 +201,7 @@ namespace Spectator.Widgets {
             option_grid.column_spacing = 12;
             option_grid.row_spacing = 6;
 
-            var enable_plugins_label = new Gtk.Label(_("Enable Plugins"));
+            var enable_plugins_label = new Gtk.Label (_("Enable Plugins"));
             enable_plugins_label.halign = Gtk.Align.START;
             var enable_plugins_switch = new Gtk.Switch ();
             enable_plugins_switch.halign = Gtk.Align.END;

@@ -27,7 +27,7 @@ namespace Spectator.Dialogs {
             border_width = 5;
             deletable = false;
             resizable = false;
-            transient_for =  parent;
+            transient_for = parent;
             modal = true;
 
             var main_stack = new Gtk.Stack ();

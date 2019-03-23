@@ -44,7 +44,7 @@ namespace Spectator {
         }
 
         public bool destroy (Models.Request item) {
-            if (items.contains(item)) {
+            if (items.contains (item)) {
                 items.remove (item);
                 return true;
             }

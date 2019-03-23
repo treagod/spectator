@@ -20,7 +20,7 @@
 */
 
 namespace Spectator {
-    public class ResponseItem  {
+    public class ResponseItem {
         public string url { get; set; }
         public string raw { get; set; }
         public string data { get; set; }
@@ -36,12 +36,8 @@ namespace Spectator {
             process_raw_response ();
         }
 
-        public void add_header(string key, string val) {
+        public void add_header (string key, string val) {
             headers[key] = val;
-        }
-
-        private void process_raw_response () {
-
         }
     }
 }

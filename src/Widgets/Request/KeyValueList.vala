@@ -79,7 +79,7 @@ namespace Spectator.Widgets.Request {
             show_all ();
         }
 
-        public Gee.ArrayList<Pair> get_all_items() {
+        public Gee.ArrayList<Pair> get_all_items () {
             var items = new Gee.ArrayList<Pair> ();
 
             rows.forall ((widget) => {

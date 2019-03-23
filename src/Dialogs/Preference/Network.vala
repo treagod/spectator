@@ -33,7 +33,7 @@ namespace Spectator.Dialogs.Preference {
             option_grid.column_spacing = 12;
             option_grid.row_spacing = 6;
 
-            var use_proxy_label = new Gtk.Label(_("Use Proxy"));
+            var use_proxy_label = new Gtk.Label (_("Use Proxy"));
             use_proxy_label.halign = Gtk.Align.START;
             var use_proxy_switch = new Gtk.Switch ();
             use_proxy_switch.halign = Gtk.Align.END;
@@ -72,7 +72,7 @@ namespace Spectator.Dialogs.Preference {
                 settings.no_proxy = no_proxy_entry.text;
             });
 
-            var user_information_label = new Gtk.Label(_("Use User Information"));
+            var user_information_label = new Gtk.Label (_("Use User Information"));
             user_information_label.halign = Gtk.Align.START;
             var user_information_switch = new Gtk.Switch ();
             user_information_switch.halign = Gtk.Align.END;

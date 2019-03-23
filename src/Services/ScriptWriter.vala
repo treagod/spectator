@@ -40,14 +40,14 @@ namespace Spectator.Services {
         public void write (string str) {
             var parts = str.split ("\n");
             if (parts.length > 1) {
-                buffer.text += ">> %s\n".printf(parts[0]);
+                buffer.text += ">> %s\n".printf (parts[0]);
                 var builder = new StringBuilder ();
                 for (int i = 1; i < parts.length; i++) {
                     builder.append ("   %s\n".printf (parts[i]));
                 }
                 buffer.text += builder.str;
             } else {
-                   buffer.text += ">> %s\n".printf(str);
+                   buffer.text += ">> %s\n".printf (str);
             }
         }
     }

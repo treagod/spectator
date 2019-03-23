@@ -216,15 +216,15 @@ namespace Spectator.Widgets.Request {
                 body_buffer_changed (content);
             });
 
-            body_view.key_value_added.connect((item) => {
+            body_view.key_value_added.connect ((item) => {
                 key_value_added (item);
             });
 
-            body_view.key_value_updated.connect((item) => {
+            body_view.key_value_updated.connect ((item) => {
                 key_value_updated (item);
             });
 
-            body_view.key_value_removed.connect((item) => {
+            body_view.key_value_removed.connect ((item) => {
                 key_value_removed (item);
             });
 
@@ -245,16 +245,16 @@ namespace Spectator.Widgets.Request {
 
         public void update_url_params (Models.Request item) {
             var query = item.query;
-            var params = query.split("&");
+            var params = query.split ("&");
             url_params_view.clear ();
 
             foreach (var param in params) {
                 if (param != "") {
-                    var kv = param.split("=");
-                    if(kv.length == 2){
-                        url_params_view.add_field (new Pair(kv[0], kv[1]));
+                    var kv = param.split ("=");
+                    if (kv.length == 2) {
+                        url_params_view.add_field (new Pair (kv[0], kv[1]));
                     } else if (kv.length == 1) {
-                        url_params_view.add_field (new Pair(kv[0], ""));
+                        url_params_view.add_field (new Pair (kv[0], ""));
                     }
 
                 }
@@ -269,7 +269,7 @@ namespace Spectator.Widgets.Request {
             tabs.append (header_params_label);
             tabs.append (url_params_label);
             tabs.append (body_label);
-            tabs.append(script_label);
+            tabs.append (script_label);
             tabs.set_active (0);
 
             tabs.mode_changed.connect ((tab) => {
@@ -286,7 +286,7 @@ namespace Spectator.Widgets.Request {
                 } else if (tab == url_params_label) {
                     stack.set_visible_child_name ("url_params");
                     current_index = tabs.selected;
-                }  else if (tab == script_label) {
+                } else if (tab == script_label) {
                     stack.set_visible_child_name ("scripting");
                     scripting_view.grab_focus ();
                     current_index = tabs.selected;
@@ -299,7 +299,7 @@ namespace Spectator.Widgets.Request {
         // select the Body Tab
         // For all other methods this method checks if the Body Tab was selected. If
         // the Body tab was selected, select Headers Tab. Furthermore disable Body Tab
-        private void update_tabs(Models.Method method) {
+        private void update_tabs (Models.Method method) {
             if (method == Models.Method.POST || method == Models.Method.PUT || method == Models.Method.PATCH) {
                 body_label.sensitive = true;
             } else {

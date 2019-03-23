@@ -89,7 +89,7 @@ namespace Spectator.Controllers {
                 request.query = querystr;
 
                 if (querystr == "") {
-                    request.uri = request.uri.replace("?", "");
+                    request.uri = request.uri.replace ("?", "");
                 }
 
                 sidebar.update_active (request);
@@ -110,17 +110,17 @@ namespace Spectator.Controllers {
                 sidebar.update_active_method (method);
             });
 
-            content.key_value_added.connect((kv) => {
+            content.key_value_added.connect ((kv) => {
                 var item = sidebar.get_active_item ();
                 item.request_body.add_key_value (kv);
             });
 
-            content.key_value_updated.connect((kv) => {
+            content.key_value_updated.connect ((kv) => {
                 var item = sidebar.get_active_item ();
                 item.request_body.update_key_value (kv);
             });
 
-            content.key_value_removed.connect((kv) => {
+            content.key_value_removed.connect ((kv) => {
                 var item = sidebar.get_active_item ();
                 item.request_body.remove_key_value (kv);
             });
@@ -169,7 +169,7 @@ namespace Spectator.Controllers {
                 action.make_request.begin ();
             });
 
-            content.header_added.connect((header) =>  {
+            content.header_added.connect ((header) => {
                 var item = sidebar.get_active_item ();
                 item.add_header (header);
             });

@@ -81,7 +81,7 @@ namespace Spectator.Services {
             builder.end_object (); // body
         }
 
-        private void serialize_request(Models.Request request) {
+        private void serialize_request (Models.Request request) {
             builder.begin_object ();
             builder.set_member_name ("name");
             builder.add_string_value (request.name);
@@ -121,7 +121,7 @@ namespace Spectator.Services {
             data = generator.to_data (null);
         }
 
-        public void write_to_file(string filepath) {
+        public void write_to_file (string filepath) {
             var file = File.new_for_path (filepath);
 
             try {

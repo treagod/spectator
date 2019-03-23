@@ -97,7 +97,7 @@ namespace Spectator.Widgets.Response.StatusBar {
             add (response_size_box);
 
             content_type.add_named (html_selection, "html_selection");
-            content_type.add_named (json_selection  , "json_selection");
+            content_type.add_named (json_selection, "json_selection");
             content_type.set_visible_child_name ("no-type");
 
             Settings.get_instance ().theme_changed.connect (() => {
