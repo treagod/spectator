@@ -30,7 +30,7 @@ namespace Spectator.Controllers {
         private Widgets.HeaderBar headerbar;
         // \Views
         public Main main;
-        private RequestAction action;
+        private Services.RequestAction action;
 
         public signal void preference_clicked ();
 
@@ -103,7 +103,7 @@ namespace Spectator.Controllers {
 
             content.script_changed.connect ((script) => {
                 var item = sidebar.get_active_item ();
-                item.script.code = script;
+                item.script_code = script;
             });
 
             content.method_changed.connect ((method) => {
@@ -134,7 +134,7 @@ namespace Spectator.Controllers {
                 var item = sidebar.get_active_item ();
                 item.status = Models.RequestStatus.SENDING;
 
-                action = new RequestAction (item);
+                action = new Services.RequestAction.with_writer (item, content.get_console_writer ());
 
                 action.finished_request.connect (() => {
                     if (item == sidebar.get_active_item ()) {
@@ -236,9 +236,6 @@ namespace Spectator.Controllers {
 
         public void add_item (Models.Request item) {
             items.add (item);
-            item.script.script_error.connect ((err) => {
-                content.set_script_error (err);
-            });
             sidebar.add_item (item);
         }
 

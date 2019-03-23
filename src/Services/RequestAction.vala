@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace Spectator {
+namespace Spectator.Services {
     public class RequestAction {
         private Models.Request item;
         private Settings settings = Settings.get_instance ();
@@ -27,6 +27,7 @@ namespace Spectator {
         private Soup.Session session;
         private MainLoop loop;
         private bool is_canceled;
+        private Models.Script script;
 
         public signal void finished_request ();
         public signal void request_failed (Models.Request item);
@@ -35,8 +36,17 @@ namespace Spectator {
         public signal void aborted ();
 
 
-        public RequestAction(Models.Request it) {
+        public RequestAction (Models.Request it) {
             item = it;
+            script = new Models.Script.with_code (item.script_code);
+            session = new Soup.Session ();
+            is_canceled = false;
+        }
+
+        public RequestAction.with_writer (Models.Request it, Services.ScriptWriter writer) {
+            item = it;
+            script = new Models.Script.with_code (item.script_code);
+            script.set_writer (writer);
             session = new Soup.Session ();
             is_canceled = false;
         }
@@ -151,7 +161,7 @@ namespace Spectator {
 
             var tmp_req = new Models.Request.duplicate (item);
 
-            if (!tmp_req.execute_pre_script ()) {
+            if (!script.execute_before_sending (item)) {
                 aborted ();
                 return;
             }

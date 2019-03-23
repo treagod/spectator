@@ -56,6 +56,11 @@ namespace Spectator.Models {
             }
         }
 
+        public void set_writer (Services.ScriptWriter wri) {
+            writer = wri;
+            context.set_writer (writer);
+        }
+
         public Script () {
             init ();
         }

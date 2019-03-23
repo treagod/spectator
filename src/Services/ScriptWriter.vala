@@ -29,4 +29,26 @@ namespace Spectator.Services {
             stdout.printf (str + "\n");
         }
     }
+
+    public class TextBufferWriter : ScriptWriter, Object {
+        private Gtk.TextBuffer buffer;
+
+        public TextBufferWriter (Gtk.TextBuffer b) {
+            buffer = b;
+        }
+
+        public void write (string str) {
+            var parts = str.split ("\n");
+            if (parts.length > 1) {
+                buffer.text += ">> %s\n".printf(parts[0]);
+                var builder = new StringBuilder ();
+                for (int i = 1; i < parts.length; i++) {
+                    builder.append ("   %s\n".printf (parts[i]));
+                }
+                buffer.text += builder.str;
+            } else {
+                   buffer.text += ">> %s\n".printf(str);
+            }
+        }
+    }
 }

@@ -24,11 +24,11 @@ namespace Spectator.Models {
     public class Request : Object  {
         private uint64 id;
         public string name { get; set; }
-        public Models.Script script { get; private set; }
         public RequestBody request_body { get; private set; }
         public Method method { get; set; }
         public RequestStatus status { get; set; }
         public ResponseItem? response { get; set; }
+        public string script_code;
         public Gee.ArrayList<Pair> headers { get; private set; }
         public string query {
             owned get {
@@ -70,7 +70,7 @@ namespace Spectator.Models {
             setup (old_req.name, old_req.method);
             uri = old_req.uri;
             request_body = old_req.request_body;
-            script = old_req.script;
+            script_code = old_req.script_code;
             foreach (var header in old_req.headers) {
                 add_header (header);
             }
@@ -83,20 +83,12 @@ namespace Spectator.Models {
         }
 
         private void setup (string nam, Method meth) {
-            script = new Models.Script ();
             headers = new Gee.ArrayList<Pair> ();
             name = nam;
             uri = "";
             method = meth;
             status = RequestStatus.NOT_SENT;
             request_body = new RequestBody ();
-        }
-
-        public bool execute_pre_script () {
-            if (script.valid) {
-                return script.execute_before_sending (this);
-            }
-            return true;
         }
 
         public bool has_valid_uri () {

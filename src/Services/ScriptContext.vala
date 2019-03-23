@@ -26,6 +26,12 @@ namespace Spectator.Services {
             push_ref (writer);
             put_global_string (Duktape.hidden_symbol ("writer"));
         }
+
+        public void set_writer (ScriptWriter writer) {
+            push_ref (writer);
+            put_global_string (Duktape.hidden_symbol ("writer"));
+        }
+
         public void push_request (Models.Request request) {
             push_ref (request);
             put_global_string (Duktape.hidden_symbol ("request"));
