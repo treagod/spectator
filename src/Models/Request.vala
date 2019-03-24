@@ -84,6 +84,7 @@ namespace Spectator.Models {
 
         private void setup (string nam, Method meth) {
             headers = new Gee.ArrayList<Pair> ();
+            script_code = "";
             name = nam;
             uri = "";
             method = meth;
