@@ -153,6 +153,10 @@ namespace Spectator.Widgets {
             req_res_pane.update_response (request);
         }
 
+        public void update_chunk_response (Models.Request request) {
+            req_res_pane.update_chunk_response (request);
+        }
+
         public void update_status (Models.Request request) {
             req_res_pane.update_status (request);
         }

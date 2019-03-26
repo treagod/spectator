@@ -30,6 +30,7 @@ namespace Spectator.Services {
         private Models.Script script;
 
         public signal void finished_request ();
+        public signal void request_got_chunk ();
         public signal void request_failed (Models.Request item);
         public signal void invalid_uri (Models.Request item);
         public signal void proxy_failed (Models.Request item);
@@ -173,6 +174,43 @@ namespace Spectator.Services {
             var method = tmp_req.method;
 
             var msg = new Soup.Message (method.to_str (), tmp_req.uri);
+
+            msg.got_headers.connect (() => {
+                var is_chunked = false;
+                var builder = new StringBuilder ();
+                msg.response_headers.foreach ((name, val) => {
+                    if (name == "Transfer-Encoding" && val == "chunked") {
+                        is_chunked = true;
+                        var res = new ResponseItem ();
+                        msg.response_headers.foreach ((key, val) => {
+                            res.add_header (key, val);
+                            builder.append ("%s: %s\r\n".printf (key, val));
+                        });
+                        builder.append ("\r\n");
+                        res.status_code = msg.status_code;
+                        item.response = res;
+                        item.response.data = "";
+                    }
+                });
+                if (is_chunked) {
+                    msg.got_chunk.connect ((chunk) => {
+                        var tmp = (string) chunk.data;
+                        tmp = tmp.substring(0, ((int) chunk.length));
+
+                        item.response.data += tmp;
+                        builder.append (tmp);
+                        item.response.raw = builder.str;
+                        item.response.size += chunk.length;
+                        ulong _;
+                        var seconds = timer.elapsed (out _);
+
+                        item.response.duration = seconds;
+                        request_got_chunk ();
+                    });
+                }
+            });
+
+
 
             if (settings.use_proxy) {
                 var proxy_resolver = new SimpleProxyResolver (null, null);
