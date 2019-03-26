@@ -54,6 +54,7 @@ executable(
 	'Widgets/Response/Container.vala',
 	'Widgets/Response/AbstractTypeView.vala',
 	'Widgets/Response/HtmlView.vala',
+	'Widgets/Response/DefaultView.vala',
 	'Widgets/Response/JsonView.vala',
 	'Widgets/Response/JsonTreeView.vala',
     'Widgets/Response/HeaderList.vala',

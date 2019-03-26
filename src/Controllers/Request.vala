@@ -163,6 +163,12 @@ namespace Spectator.Controllers {
                     content.set_error ("Proxy denied request: %s".printf (item.name));
                 });
 
+                action.request_got_chunk.connect (() => {
+                    if (item == sidebar.get_active_item ()) {
+                        content.update_chunk_response (item);
+                    }
+                });
+
                 action.aborted.connect (() => {
                     item.status = Models.RequestStatus.SENT;
                     content.update_status (item);
