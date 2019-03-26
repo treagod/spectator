@@ -14,6 +14,12 @@
     </p>
   </description>
   <releases>
+    <release version="0.2.1" date="2019-03-26">
+      <p>Fix streamed data behaviour</p>
+				<ul>
+					<li>Solves a bug where streamed data will not be shown until request finished (which might be never)</li>
+				</ul>
+    </release>
     <release version="0.2.0" date="2019-03-17">
       <p>JavaScript Integration</p>
 				<ul>
