@@ -77,6 +77,11 @@ namespace Spectator.Services {
             put_prop_string (obj_idx, "log");
             put_global_string ("console");
         }
+        
+        public void emit_error (string err) {
+            var writer = get_writer (this);
+            writer.error (err);
+        }
 
         public void push_content_type_object () {
             var obj_idx = push_object ();
