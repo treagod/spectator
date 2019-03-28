@@ -131,14 +131,6 @@ namespace Spectator.Widgets {
             reveal_infobar (message);
         }
 
-        public void set_script_error (string message) {
-            infobar.message_type = Gtk.MessageType.ERROR;
-
-            req_res_pane.set_script_error (message);
-
-            reveal_infobar (message);
-        }
-
         private void reveal_infobar (string message) {
             infolabel.label = message;
             infobar.revealed = true;

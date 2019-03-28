@@ -27,8 +27,6 @@ public Duktape.ReturnType abort_request (Duktape.Context ctx) {
 
 namespace Spectator.Models {
     public class Script {
-        public signal void script_error (string err);
-
         private Services.ScriptContext context;
         private bool evaluated;
         private bool _valid;
@@ -87,7 +85,7 @@ namespace Spectator.Models {
 
                 if (!valid) {
                     var err = context.safe_to_string (-1);
-                    script_error (err);
+                    context.emit_error (err);
                 }
 
                 context.pop (); // pops error string
@@ -107,11 +105,13 @@ namespace Spectator.Models {
                     if (context.pcall (1) != 0) {
                         context.get_global_string (Duktape.hidden_symbol ("abort"));
                         if (context.get_boolean (-1)) {
+                            context.pop ();
                             return false;
                         } else {
+                            context.pop ();
                             if (context.is_error (-1)) {
                                 var err = context.safe_to_string (-1);
-                                script_error (err);
+                                context.emit_error (err);
                                 context.pop ();
                             }
                         }

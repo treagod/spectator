@@ -22,11 +22,16 @@
 namespace Spectator.Services {
     public interface ScriptWriter : Object {
         public abstract void write (string str);
+        public abstract void error (string str);
     }
 
     public class StdoutWriter : ScriptWriter, Object {
         public void write (string str) {
             stdout.printf (str + "\n");
+        }
+
+        public void error (string str) {
+            stderr.printf (str + "\n");
         }
     }
 
@@ -39,16 +44,28 @@ namespace Spectator.Services {
 
         public void write (string str) {
             var parts = str.split ("\n");
+            Gtk.TextIter iter;
+            buffer.get_end_iter (out iter);
+
             if (parts.length > 1) {
-                buffer.text += ">> %s\n".printf (parts[0]);
-                var builder = new StringBuilder ();
+                var text = "&gt;&gt; %s\n".printf (parts[0]);
+                buffer.insert_markup (ref iter, text, text.length);
                 for (int i = 1; i < parts.length; i++) {
-                    builder.append ("   %s\n".printf (parts[i]));
+                    buffer.get_end_iter (out iter);
+                    var text_part = "   %s\n".printf (parts[i]);
+                    buffer.insert_markup (ref iter, text_part, text_part.length);
                 }
-                buffer.text += builder.str;
             } else {
-                   buffer.text += ">> %s\n".printf (str);
+                var text = "&gt;&gt; %s\n".printf (str);
+                buffer.insert_markup (ref iter, text, text.length);
             }
+        }
+
+        public void error (string err) {
+            Gtk.TextIter iter;
+            buffer.get_end_iter (out iter);
+            var text = "<span color='red'>&gt;&gt; %s</span>\n".printf (err);
+            buffer.insert_markup (ref iter, text, text.length);
         }
     }
 }
