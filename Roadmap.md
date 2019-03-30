@@ -3,7 +3,7 @@
 ## Rough Overview
 
 * Allow Scripting ✔️
-  * Error Reporting ✔️
+  * Error Reporting ✅
   * Script Debug ✅ (built in console output for debugging)
   * Asynchronous HTTP requests
 * Create Collections
