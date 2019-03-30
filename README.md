@@ -9,8 +9,9 @@ API endpoints of your HTTP server.
 
 - [x] Do requests to a web server
 - [x] Handle Basic Proxy Server
-- [ ] Create request enviroments
+- [x] Scripting capabilities
 - [ ] Create collections of requests
+- [ ] Create request enviroments
 - [ ] Create test enviroments for your collections
 
 Right now Spectator allows you to make single requests to a web endpoint. In the long run
@@ -33,7 +34,7 @@ Run `meson build` to configure the build environment. Change to the build direct
 
     meson build --prefix=/usr
     cd build
-    ninja test
+    ninja
 
 To install, use `ninja install`, then execute with `com.github.treagod.spectator`
 

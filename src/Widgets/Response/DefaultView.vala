@@ -50,7 +50,14 @@ namespace Spectator.Widgets.Response {
         }
 
         public override void show_view (int i) {
-            set_visible_child (scrolled);
+            switch (i) {
+                case 0:
+                    set_visible_child (scrolled);
+                    break;
+                default:
+                    set_visible_child (scrolled_raw);
+                    break;
+            }
         }
 
         public override void update (ResponseItem? it) {

@@ -42,8 +42,14 @@ namespace Spectator.Widgets.Response.StatusBar {
             get_style_context ().add_class ("response-statusbar");
             content_type = new Gtk.Stack ();
 
-            content_type.add_named (new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0),
-                                    "no-type");
+            var plain_selection = new Gtk.ComboBoxText ();
+            plain_selection.append_text (_("Text"));
+            plain_selection.append_text (_("Raw"));
+            plain_selection.active = 0;
+
+            plain_selection.changed.connect (() => {
+                view_changed (plain_selection.get_active ());
+            });
 
             var html_selection = new Gtk.ComboBoxText ();
 
@@ -96,6 +102,7 @@ namespace Spectator.Widgets.Response.StatusBar {
             add (request_time_box);
             add (response_size_box);
 
+            content_type.add_named (plain_selection, "no-type");
             content_type.add_named (html_selection, "html_selection");
             content_type.add_named (json_selection, "json_selection");
             content_type.set_visible_child_name ("no-type");

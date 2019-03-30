@@ -85,20 +85,20 @@ namespace Spectator.Widgets.Response {
 
         private void set_content_type (ResponseItem? it) {
             if (it == null) {
-                status_bar.set_active_type (Type.UNKOWN);
+                status_bar.set_active_type (StatusBar.Type.UNKOWN);
                 return;
             }
 
             var content_type = it.headers["Content-Type"];
             if (content_type != null) {
                 if (is_html (content_type)) {
-                    status_bar.set_active_type (Type.HTML);
+                    status_bar.set_active_type (StatusBar.Type.HTML);
                 } else if (is_json (content_type)) {
-                    status_bar.set_active_type (Type.JSON);
+                    status_bar.set_active_type (StatusBar.Type.JSON);
                 } else if (is_xml (content_type)) {
-                    status_bar.set_active_type (Type.XML);
+                    status_bar.set_active_type (StatusBar.Type.XML);
                 } else {
-                    status_bar.set_active_type (Type.UNKOWN);
+                    status_bar.set_active_type (StatusBar.Type.UNKOWN);
                 }
             }
         }
