@@ -21,8 +21,8 @@
 
 namespace Spectator.Widgets.Response {
     class DefaultView : AbstractTypeView {
-        private Gtk.SourceView response_text;
-        private Gtk.SourceView response_text_raw;
+        private SourceView response_text;
+        private SourceView response_text_raw;
         private HeaderList header_list;
         private Gtk.ScrolledWindow scrolled;
         private Gtk.ScrolledWindow scrolled_raw;
@@ -33,8 +33,10 @@ namespace Spectator.Widgets.Response {
             scrolled = new Gtk.ScrolledWindow (null, null);
             scrolled_raw = new Gtk.ScrolledWindow (null, null);
             header_scrolled = new Gtk.ScrolledWindow (null, null);
-            response_text = new Gtk.SourceView ();
-            response_text_raw = new Gtk.SourceView ();
+            response_text = new SourceView ();
+            response_text.set_lang ("plain");
+            response_text_raw = new SourceView ();
+            response_text_raw.set_lang ("plain");
             scrolled.add (response_text);
             scrolled_raw.add (response_text_raw);
             header_scrolled.add (header_list);
@@ -66,7 +68,7 @@ namespace Spectator.Widgets.Response {
 
             header_list.show_all ();
             response_text.buffer.text = it.data;
-            //response_text_raw.buffer.text = it.raw;
+            response_text_raw.buffer.text = it.raw;
         }
     }
 }
