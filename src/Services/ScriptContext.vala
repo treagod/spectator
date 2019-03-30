@@ -77,7 +77,7 @@ namespace Spectator.Services {
             put_prop_string (obj_idx, "log");
             put_global_string ("console");
         }
-        
+
         public void emit_error (string err) {
             var writer = get_writer (this);
             writer.error (err);
@@ -249,6 +249,9 @@ namespace Spectator.Services {
             http_create_response_object (ctx, msg);
 
             return (Duktape.ReturnType) 1;
+        } else {
+            var writer = get_writer (ctx);
+            writer.error ("URL '%s' is not valid".printf (uri_string));
         }
 
         return 0;
