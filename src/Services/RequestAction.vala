@@ -53,7 +53,6 @@ namespace Spectator.Services {
         }
 
         public async void make_request () {
-            timer = new Timer ();
             yield perform_request ();
             item.status = Models.RequestStatus.SENDING;
         }
@@ -129,6 +128,12 @@ namespace Spectator.Services {
             res.size = mess.response_body.length;
 
             var builder = new StringBuilder ();
+            var http_version = mess.http_version == Soup.HTTPVersion.@1_0 ? "HTTP/1.0"
+                                                                          : "HTTP/1.1";
+
+            builder.append("%s %u %s\r\n".printf(http_version,
+                                                 res.status_code,
+                                                 Soup.Status.get_phrase (res.status_code)));
 
             mess.response_headers.foreach ((key, val) => {
                 res.add_header (key, val);
@@ -136,10 +141,11 @@ namespace Spectator.Services {
             });
 
             builder.append ("\r\n");
-            builder.append ((string) mess.response_body.data);
+            var body_data = (string) mess.response_body.data;
+            builder.append (body_data);
 
             res.raw = builder.str;
-            res.data = (string) mess.response_body.data;
+            res.data = body_data;
 
             item.status = Models.RequestStatus.SENT;
             item.response = res;
@@ -293,6 +299,7 @@ namespace Spectator.Services {
                 session.user_agent = user_agent;
             }
 
+            timer = new Timer ();
             session.queue_message (msg, read_response);
         }
     }
