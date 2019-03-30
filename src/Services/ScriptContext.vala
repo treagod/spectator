@@ -207,6 +207,25 @@ namespace Spectator.Services {
         }
     }
 
+    public static void set_timeout (Duktape.Context ctx, Soup.Session session) {
+        ctx.get_prop_string (-1, "timeout");
+        if (!ctx.is_undefined (-1)) {
+            if (ctx.is_string (-1)) {
+                uint64 result;
+                if (uint64.try_parse (ctx.get_string (-1), out result)) {
+                    session.timeout = (uint) result;
+                } else {
+                    session.timeout = 0;
+                    var writer = get_writer (ctx);
+                    writer.warning ("Invalid timeout paramter. Setting timeout to 0");
+                }
+            } else if (ctx.is_number (-1)) {
+                session.timeout = ctx.get_int (-1);
+            }
+        }
+        ctx.pop ();
+    }
+
     public static Duktape.ReturnType http_patch (Duktape.Context ctx) {
         return http_body (ctx, "PATCH");
     }
@@ -240,9 +259,8 @@ namespace Spectator.Services {
         if (Spectator.Services.Utilities.valid_uri (uri)) {
             var session = new Soup.Session ();
             var msg = new Soup.Message (method, uri_string);
-            if (ctx.is_object (-1)) {
-                append_headers_to_msg (ctx, msg);
-            }
+            append_headers_to_msg (ctx, msg);
+            set_timeout (ctx, session);
 
             session.send_message (msg);
 
@@ -269,6 +287,7 @@ namespace Spectator.Services {
             var msg = new Soup.Message (method, uri_string);
             append_headers_to_msg (ctx, msg);
             append_body_to_msg (ctx, msg);
+            set_timeout (ctx, session);
 
             session.send_message (msg);
 

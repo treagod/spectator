@@ -23,6 +23,7 @@ namespace Spectator.Services {
     public interface ScriptWriter : Object {
         public abstract void write (string str);
         public abstract void error (string str);
+        public abstract void warning (string str);
     }
 
     public class StdoutWriter : ScriptWriter, Object {
@@ -31,6 +32,10 @@ namespace Spectator.Services {
         }
 
         public void error (string str) {
+            stderr.printf (str + "\n");
+        }
+
+        public void warning (string str) {
             stderr.printf (str + "\n");
         }
     }
@@ -61,11 +66,19 @@ namespace Spectator.Services {
             }
         }
 
-        public void error (string err) {
+        private void colored_output (string text, string color) {
             Gtk.TextIter iter;
             buffer.get_end_iter (out iter);
-            var text = "<span color='red'>&gt;&gt; %s</span>\n".printf (err);
-            buffer.insert_markup (ref iter, text, text.length);
+            var colored_text = "<span color='%s'>&gt;&gt; %s</span>\n".printf (color, text);
+            buffer.insert_markup (ref iter, colored_text, colored_text.length);
+        }
+
+        public void error (string err) {
+            colored_output (err, "red");
+        }
+
+        public void warning (string err) {
+            colored_output (err, "yellow");
         }
     }
 }
