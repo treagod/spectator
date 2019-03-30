@@ -24,6 +24,7 @@ namespace Spectator.Widgets.Response {
         private StatusBar.Container status_bar;
         private AbstractTypeView html_view;
         private AbstractTypeView json_view;
+        private AbstractTypeView xml_view;
         private AbstractTypeView plain_view;
         private Gtk.Stack stack;
         private ResponseItem? item;
@@ -36,12 +37,14 @@ namespace Spectator.Widgets.Response {
             stack = new Gtk.Stack ();
             html_view = new HtmlView ();
             json_view = new JsonView ();
+            xml_view = new XmlView ();
             plain_view = new DefaultView ();
 
             stack.add_named (html_view, "html_view");
             stack.add_named (json_view, "json_view");
+            stack.add_named (xml_view, "xml_view");
             stack.add_named (plain_view, "plain_view");
-            stack.set_visible_child (html_view);
+            stack.set_visible_child (plain_view);
 
             status_bar = new StatusBar.Container ();
 
@@ -77,7 +80,7 @@ namespace Spectator.Widgets.Response {
             } else if (is_json (content_type)) {
                 stack.set_visible_child (json_view);
             } else if (is_xml (content_type)) {
-                stack.set_visible_child (html_view);
+                stack.set_visible_child (xml_view);
             } else {
                 stack.set_visible_child (plain_view);
             }

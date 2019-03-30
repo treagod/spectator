@@ -54,6 +54,7 @@ executable(
 	'Widgets/Response/AbstractTypeView.vala',
 	'Widgets/Response/HtmlView.vala',
 	'Widgets/Response/DefaultView.vala',
+	'Widgets/Response/XmlView.vala',
 	'Widgets/Response/JsonView.vala',
 	'Widgets/Response/JsonTreeView.vala',
     'Widgets/Response/HeaderList.vala',
@@ -81,6 +82,7 @@ executable(
         dependency('gtksourceview-3.0'),
         dependency('webkit2gtk-4.0'),
         dependency('json-glib-1.0'),
+        dependency('libxml-2.0'),
         c_deps
     ],
     install: true

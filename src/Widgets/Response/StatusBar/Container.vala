@@ -62,6 +62,19 @@ namespace Spectator.Widgets.Response.StatusBar {
                 view_changed (html_selection.get_active ());
             });
 
+            var xml_selection = new Gtk.ComboBoxText ();
+
+            xml_selection.append_text (_("XML Tree"));
+            xml_selection.append_text (_("Source Code"));
+            xml_selection.append_text (_("Headers"));
+            xml_selection.append_text (_("Raw"));
+
+            xml_selection.active = 0;
+
+            xml_selection.changed.connect (() => {
+                view_changed (xml_selection.get_active ());
+            });
+
             var json_selection = new Gtk.ComboBoxText ();
 
             json_selection.append_text (_("JSON Tree"));
@@ -104,6 +117,7 @@ namespace Spectator.Widgets.Response.StatusBar {
 
             content_type.add_named (plain_selection, "no-type");
             content_type.add_named (html_selection, "html_selection");
+            content_type.add_named (xml_selection, "xml_selection");
             content_type.add_named (json_selection, "json_selection");
             content_type.set_visible_child_name ("no-type");
 
@@ -192,8 +206,6 @@ namespace Spectator.Widgets.Response.StatusBar {
             }
         }
     }
-
-
 
     private string response_info_box () {
         if (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) {
