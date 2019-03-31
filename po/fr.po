@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.treagod.spectator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-31 16:31+0200\n"
+"POT-Creation-Date: 2019-03-31 17:01+0200\n"
 "PO-Revision-Date: 2019-03-31 16:03+0200\n"
 "Last-Translator: NathanBnm\n"
 "Language-Team: Français\n"
@@ -147,6 +147,24 @@ msgstr "Modifier"
 msgid "Delete"
 msgstr "Supprimer"
 
+#: src/Widgets/Response/JsonTreeView.vala:50
+#: src/Widgets/Response/JsonTreeView.vala:75
+msgid "Key"
+msgstr "Clé"
+
+#: src/Widgets/Response/JsonTreeView.vala:51
+#: src/Widgets/Response/JsonTreeView.vala:76
+msgid "Value"
+msgstr "Valeur"
+
+#: src/Widgets/Response/JsonTreeView.vala:87
+msgid "Object"
+msgstr "Objet"
+
+#: src/Widgets/Response/JsonTreeView.vala:90
+msgid "Array"
+msgstr "Tableau"
+
 #: src/Widgets/Response/StatusBar/Container.vala:46
 msgid "Text"
 msgstr "Texte"
@@ -179,14 +197,17 @@ msgid "Prettified"
 msgstr "Mis en forme"
 
 #: src/Widgets/Response/StatusBar/Container.vala:78
-msgid "No Status"
+#: src/Widgets/Response/StatusBar/Container.vala:143
+msgid "No status"
 msgstr "Pas de statut"
 
 #: src/Widgets/Response/StatusBar/Container.vala:86
+#: src/Widgets/Response/StatusBar/Container.vala:140
 msgid "No duration"
 msgstr "Pas de durée"
 
 #: src/Widgets/Response/StatusBar/Container.vala:94
+#: src/Widgets/Response/StatusBar/Container.vala:137
 msgid "No size"
 msgstr "Pas de taille"
 
@@ -208,7 +229,7 @@ msgstr "Ko"
 
 #: src/Widgets/Response/StatusBar/Container.vala:170
 msgid "B"
-msgstr "O"
+msgstr "Octets"
 
 #: src/Widgets/Request/Container.vala:68
 msgid "JavaScript Console"
@@ -241,6 +262,22 @@ msgstr "Ajouter un paramètre"
 #: src/Widgets/Request/UrlEntry.vala:101
 msgid "Type an URL"
 msgstr "Tapez un URL"
+
+#: src/Widgets/Request/BodyView.vala:60
+msgid "Plain"
+msgstr "Texte brut"
+
+#: src/Widgets/Request/BodyView.vala:61
+msgid "XML"
+msgstr "XML"
+
+#: src/Widgets/Request/BodyView.vala:62
+msgid "JSON"
+msgstr "JSON"
+
+#: src/Widgets/Request/BodyView.vala:63
+msgid "HTML"
+msgstr "HTML"
 
 #: src/Widgets/Request/BodyView.vala:150 src/Widgets/Request/BodyView.vala:168
 msgid "Add"

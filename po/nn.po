@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.treagod.spectator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-31 16:31+0200\n"
+"POT-Creation-Date: 2019-03-31 17:01+0200\n"
 "PO-Revision-Date: 2019-03-31 16:03+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -147,6 +147,24 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
+#: src/Widgets/Response/JsonTreeView.vala:50
+#: src/Widgets/Response/JsonTreeView.vala:75
+msgid "Key"
+msgstr ""
+
+#: src/Widgets/Response/JsonTreeView.vala:51
+#: src/Widgets/Response/JsonTreeView.vala:76
+msgid "Value"
+msgstr ""
+
+#: src/Widgets/Response/JsonTreeView.vala:87
+msgid "Object"
+msgstr ""
+
+#: src/Widgets/Response/JsonTreeView.vala:90
+msgid "Array"
+msgstr ""
+
 #: src/Widgets/Response/StatusBar/Container.vala:46
 msgid "Text"
 msgstr ""
@@ -179,14 +197,17 @@ msgid "Prettified"
 msgstr ""
 
 #: src/Widgets/Response/StatusBar/Container.vala:78
-msgid "No Status"
+#: src/Widgets/Response/StatusBar/Container.vala:143
+msgid "No status"
 msgstr ""
 
 #: src/Widgets/Response/StatusBar/Container.vala:86
+#: src/Widgets/Response/StatusBar/Container.vala:140
 msgid "No duration"
 msgstr ""
 
 #: src/Widgets/Response/StatusBar/Container.vala:94
+#: src/Widgets/Response/StatusBar/Container.vala:137
 msgid "No size"
 msgstr ""
 
@@ -240,6 +261,22 @@ msgstr ""
 
 #: src/Widgets/Request/UrlEntry.vala:101
 msgid "Type an URL"
+msgstr ""
+
+#: src/Widgets/Request/BodyView.vala:60
+msgid "Plain"
+msgstr ""
+
+#: src/Widgets/Request/BodyView.vala:61
+msgid "XML"
+msgstr ""
+
+#: src/Widgets/Request/BodyView.vala:62
+msgid "JSON"
+msgstr ""
+
+#: src/Widgets/Request/BodyView.vala:63
+msgid "HTML"
 msgstr ""
 
 #: src/Widgets/Request/BodyView.vala:150 src/Widgets/Request/BodyView.vala:168
