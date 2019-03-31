@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.treagod.spectator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-31 16:03+0200\n"
+"POT-Creation-Date: 2019-03-31 16:06+0200\n"
 "PO-Revision-Date: 2019-03-31 16:03+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -19,90 +19,90 @@ msgstr ""
 
 #: src/Dialogs/Request/Dialog.vala:39
 msgid "Name:"
-msgstr ""
+msgstr "Name:"
 
 #: src/Dialogs/Request/Dialog.vala:44 src/Dialogs/Alert.vala:42
 #: src/Dialogs/Preferences.vala:44
 msgid "Close"
-msgstr ""
+msgstr "Schliessen"
 
 #: src/Dialogs/Request/CreateDialog.vala:27 src/Widgets/Content.vala:54
 #: src/Widgets/HeaderBar.vala:42
 msgid "Create Request"
-msgstr ""
+msgstr "Anfrage Erstellen"
 
 #: src/Dialogs/Request/CreateDialog.vala:30
 msgid "Create"
-msgstr ""
+msgstr "Erstellen"
 
 #: src/Dialogs/Request/CreateDialog.vala:53
 #: src/Dialogs/Request/UpdateDialog.vala:53
 msgid "Request name must not be empty."
-msgstr ""
+msgstr "Der Name der Anfrage darf nicht leer sein."
 
 #: src/Dialogs/Request/UpdateDialog.vala:27
 msgid "Update Request"
-msgstr ""
+msgstr "Anfrage aktualisieren"
 
 #: src/Dialogs/Request/UpdateDialog.vala:35
 msgid "Update"
-msgstr ""
+msgstr "Aktualisieren"
 
 #: src/Dialogs/Preferences.vala:26 src/Widgets/HeaderBar.vala:45
 msgid "Preferences"
-msgstr ""
+msgstr "Einstellungen"
 
 #: src/Dialogs/Preferences.vala:37
 msgid "General"
-msgstr ""
+msgstr "Allgemein"
 
 #: src/Dialogs/Preferences.vala:38
 msgid "Network"
-msgstr ""
+msgstr "Netzwerk"
 
 #: src/Dialogs/Preference/General.vala:37
 msgid "Dark Theme"
-msgstr ""
+msgstr "Dunkles Farbschema"
 
 #: src/Dialogs/Preference/General.vala:42
 msgid "Follow redirects automatically"
-msgstr ""
+msgstr "Umleitungen automatisch folgen"
 
 #: src/Dialogs/Preference/General.vala:61
 msgid "Maximum Redirects"
-msgstr ""
+msgstr "Maximale Umleitungen"
 
 #: src/Dialogs/Preference/General.vala:72
 msgid "Network Request Timeout"
-msgstr ""
+msgstr "Netzwerkanfrage Timeout"
 
 #: src/Dialogs/Preference/Network.vala:36
 msgid "Use Proxy"
-msgstr ""
+msgstr "Proxy benutzen"
 
 #: src/Dialogs/Preference/Network.vala:44
 msgid "HTTP Proxy"
-msgstr ""
+msgstr "HTTP Proxy"
 
 #: src/Dialogs/Preference/Network.vala:54
 msgid "HTTPS Proxy"
-msgstr ""
+msgstr "HTTPS Proxy"
 
 #: src/Dialogs/Preference/Network.vala:64
 msgid "No Proxy"
-msgstr ""
+msgstr "Kein Proxy"
 
 #: src/Dialogs/Preference/Network.vala:75
 msgid "Use User Information"
-msgstr ""
+msgstr "Benutzerinformationen benutzen"
 
 #: src/Dialogs/Preference/Network.vala:81
 msgid "Username"
-msgstr ""
+msgstr "Benutzername"
 
 #: src/Dialogs/Preference/Network.vala:92
 msgid "Password"
-msgstr ""
+msgstr "Passwort"
 
 #: src/Widgets/Content.vala:52
 msgid "Inspect your HTTP transmissions to the web"
