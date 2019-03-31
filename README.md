@@ -27,6 +27,7 @@ You'll need the following dependencies:
 * libgtksourceview-3.0-dev
 * libwebkit2gtk-4.0-dev
 * libjson-glib-dev
+* libxml2-dev
 * duktape-dev
 * valac
 
