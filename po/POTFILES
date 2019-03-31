@@ -2,15 +2,11 @@ src/Application.vala
 src/Application.vala
 src/Window.vala
 src/Models/Pair.vala
-src/Models/RequestItem.vala
 src/Models/RequestBody.vala
 src/Models/ResponseItem.vala
-src/Controllers/RequestController.vala
-src/Controllers/MainController.vala
+src/Controllers/Request.vala
+src/Controllers/Main.vala
 src/Stores/RequestStore.vala
-src/Plugins/Engine.vala
-src/Plugins/Plugin.vala
-src/Plugins/Utils.vala
 src/Services/Settings.vala
 src/Services/RequestAction.vala
 src/Dialogs/Request/Dialog.vala
@@ -43,6 +39,3 @@ src/Widgets/Request/KeyValueField.vala
 src/Widgets/Request/Interface.vala
 src/Widgets/Request/ItemProvider.vala
 src/Widgets/Request/HeaderProvider.vala
-
-data/com.github.treagod.spectator.desktop.in
-data/com.github.treagod.spectator.appdata.xml.in

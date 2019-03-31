@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.treagod.spectator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-12 21:32+0100\n"
+"POT-Creation-Date: 2019-03-31 16:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,11 +22,11 @@ msgid "Name:"
 msgstr ""
 
 #: src/Dialogs/Request/Dialog.vala:44 src/Dialogs/Alert.vala:42
-#: src/Dialogs/Preferences.vala:47
+#: src/Dialogs/Preferences.vala:44
 msgid "Close"
 msgstr ""
 
-#: src/Dialogs/Request/CreateDialog.vala:27 src/Widgets/Content.vala:52
+#: src/Dialogs/Request/CreateDialog.vala:27 src/Widgets/Content.vala:54
 #: src/Widgets/HeaderBar.vala:42
 msgid "Create Request"
 msgstr ""
@@ -58,18 +58,6 @@ msgstr ""
 
 #: src/Dialogs/Preferences.vala:38
 msgid "Network"
-msgstr ""
-
-#: src/Dialogs/Preferences.vala:39
-msgid "Plugins"
-msgstr ""
-
-#: src/Dialogs/Preferences.vala:69
-msgid "Enable Plugins"
-msgstr ""
-
-#: src/Dialogs/Preferences.vala:74
-msgid "Plugin Folder"
 msgstr ""
 
 #: src/Dialogs/Preference/General.vala:37
@@ -116,116 +104,93 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: src/Widgets/Content.vala:50
+#: src/Widgets/Content.vala:52
 msgid "Inspect your HTTP transmissions to the web"
 msgstr ""
 
-#: src/Widgets/Content.vala:52
+#: src/Widgets/Content.vala:54
 msgid "Create a new request to the web."
-msgstr ""
-
-#: src/Widgets/HeaderBar.vala:52
-msgid "About"
-msgstr ""
-
-#: src/Widgets/HeaderBar.vala:67
-msgid "Menu"
 msgstr ""
 
 #: src/Widgets/Sidebar/Container.vala:54
 msgid "Requests"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:50
-msgid "Preview"
+#: src/Widgets/Response/StatusBar/Container.vala:46
+msgid "Text"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:51
-msgid "Source Code"
-msgstr ""
-
-#: src/Widgets/Response/StatusBar/Container.vala:52
-#: src/Widgets/Response/StatusBar/Container.vala:63
-#: src/Widgets/Request/Container.vala:133
-msgid "Headers"
-msgstr ""
-
-#: src/Widgets/Response/StatusBar/Container.vala:61
-msgid "JSON Tree"
-msgstr ""
-
-#: src/Widgets/Response/StatusBar/Container.vala:62
-msgid "Prettified"
-msgstr ""
-
-#: src/Widgets/Response/StatusBar/Container.vala:64
+#: src/Widgets/Response/StatusBar/Container.vala:47
+#: src/Widgets/Response/StatusBar/Container.vala:70
 msgid "Raw"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:72
+#: src/Widgets/Response/StatusBar/Container.vala:56
+msgid "Preview"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:57
+msgid "Source Code"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:58
+#: src/Widgets/Response/StatusBar/Container.vala:69
+#: src/Widgets/Request/Container.vala:112
+msgid "Headers"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:67
+msgid "JSON Tree"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:68
+msgid "Prettified"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:78
 msgid "No Status"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:80
+#: src/Widgets/Response/StatusBar/Container.vala:86
 msgid "No duration"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:88
+#: src/Widgets/Response/StatusBar/Container.vala:94
 msgid "No size"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:140
+#: src/Widgets/Response/StatusBar/Container.vala:147
 msgid "seconds"
 msgstr ""
 
-#: src/Widgets/Request/Container.vala:53
-msgid "Add Header"
+#: src/Widgets/Request/Container.vala:68
+msgid "JavaScript Console"
 msgstr ""
 
-#: src/Widgets/Request/Container.vala:54
-msgid "Add Parameter"
+#: src/Widgets/Request/Container.vala:70
+msgid "JavaScript Info"
 msgstr ""
 
-#: src/Widgets/Request/Container.vala:134
+#: src/Widgets/Request/Container.vala:113
 msgid "Parameters"
 msgstr ""
 
-#: src/Widgets/Request/Container.vala:135
+#: src/Widgets/Request/Container.vala:114
 msgid "Body"
+msgstr ""
+
+#: src/Widgets/Request/Container.vala:115
+msgid "Script"
+msgstr ""
+
+#: src/Widgets/Request/Container.vala:129
+msgid "Add Header"
+msgstr ""
+
+#: src/Widgets/Request/Container.vala:178
+msgid "Add Parameter"
 msgstr ""
 
 #: src/Widgets/Request/BodyView.vala:150 src/Widgets/Request/BodyView.vala:168
 msgid "Add"
-msgstr ""
-
-#: data/com.github.treagod.spectator.desktop.in:3
-#: data/com.github.treagod.spectator.desktop.in:4
-#: data/com.github.treagod.spectator.appdata.xml.in:7
-msgid "Spectator"
-msgstr ""
-
-#: data/com.github.treagod.spectator.desktop.in:5
-msgid "REST Client"
-msgstr ""
-
-#: data/com.github.treagod.spectator.desktop.in:8
-msgid "com.github.treagod.spectator"
-msgstr ""
-
-#: data/com.github.treagod.spectator.desktop.in:12
-msgid "REST;HTTP;Client;"
-msgstr ""
-
-#: data/com.github.treagod.spectator.appdata.xml.in:8
-msgid "Comfortably test your REST APIs!"
-msgstr ""
-
-#: data/com.github.treagod.spectator.appdata.xml.in:10
-msgid "Gives you the possibilty to test your REST application."
-msgstr ""
-
-#: data/com.github.treagod.spectator.appdata.xml.in:11
-msgid ""
-"Send custom headers and self defined bodies to your application and displays "
-"the response in a clean way."
 msgstr ""

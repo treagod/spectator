@@ -1,0 +1,196 @@
+# English translations for com.github.treagod.spectator package.
+# Copyright (C) 2019 THE com.github.treagod.spectator'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.treagod.spectator package.
+# Automatically generated, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.treagod.spectator\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-03-31 16:03+0200\n"
+"PO-Revision-Date: 2019-03-31 16:03+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: en_CA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/Dialogs/Request/Dialog.vala:39
+msgid "Name:"
+msgstr "Name:"
+
+#: src/Dialogs/Request/Dialog.vala:44 src/Dialogs/Alert.vala:42
+#: src/Dialogs/Preferences.vala:44
+msgid "Close"
+msgstr "Close"
+
+#: src/Dialogs/Request/CreateDialog.vala:27 src/Widgets/Content.vala:54
+#: src/Widgets/HeaderBar.vala:42
+msgid "Create Request"
+msgstr "Create Request"
+
+#: src/Dialogs/Request/CreateDialog.vala:30
+msgid "Create"
+msgstr "Create"
+
+#: src/Dialogs/Request/CreateDialog.vala:53
+#: src/Dialogs/Request/UpdateDialog.vala:53
+msgid "Request name must not be empty."
+msgstr "Request name must not be empty."
+
+#: src/Dialogs/Request/UpdateDialog.vala:27
+msgid "Update Request"
+msgstr "Update Request"
+
+#: src/Dialogs/Request/UpdateDialog.vala:35
+msgid "Update"
+msgstr "Update"
+
+#: src/Dialogs/Preferences.vala:26 src/Widgets/HeaderBar.vala:45
+msgid "Preferences"
+msgstr "Preferences"
+
+#: src/Dialogs/Preferences.vala:37
+msgid "General"
+msgstr "General"
+
+#: src/Dialogs/Preferences.vala:38
+msgid "Network"
+msgstr "Network"
+
+#: src/Dialogs/Preference/General.vala:37
+msgid "Dark Theme"
+msgstr "Dark Theme"
+
+#: src/Dialogs/Preference/General.vala:42
+msgid "Follow redirects automatically"
+msgstr "Follow redirects automatically"
+
+#: src/Dialogs/Preference/General.vala:61
+msgid "Maximum Redirects"
+msgstr "Maximum Redirects"
+
+#: src/Dialogs/Preference/General.vala:72
+msgid "Network Request Timeout"
+msgstr "Network Request Timeout"
+
+#: src/Dialogs/Preference/Network.vala:36
+msgid "Use Proxy"
+msgstr "Use Proxy"
+
+#: src/Dialogs/Preference/Network.vala:44
+msgid "HTTP Proxy"
+msgstr "HTTP Proxy"
+
+#: src/Dialogs/Preference/Network.vala:54
+msgid "HTTPS Proxy"
+msgstr "HTTPS Proxy"
+
+#: src/Dialogs/Preference/Network.vala:64
+msgid "No Proxy"
+msgstr "No Proxy"
+
+#: src/Dialogs/Preference/Network.vala:75
+msgid "Use User Information"
+msgstr "Use User Information"
+
+#: src/Dialogs/Preference/Network.vala:81
+msgid "Username"
+msgstr "Username"
+
+#: src/Dialogs/Preference/Network.vala:92
+msgid "Password"
+msgstr "Password"
+
+#: src/Widgets/Content.vala:52
+msgid "Inspect your HTTP transmissions to the web"
+msgstr "Inspect your HTTP transmissions to the web"
+
+#: src/Widgets/Content.vala:54
+msgid "Create a new request to the web."
+msgstr "Create a new request to the web."
+
+#: src/Widgets/Sidebar/Container.vala:54
+msgid "Requests"
+msgstr "Requests"
+
+#: src/Widgets/Response/StatusBar/Container.vala:46
+msgid "Text"
+msgstr "Text"
+
+#: src/Widgets/Response/StatusBar/Container.vala:47
+#: src/Widgets/Response/StatusBar/Container.vala:70
+msgid "Raw"
+msgstr "Raw"
+
+#: src/Widgets/Response/StatusBar/Container.vala:56
+msgid "Preview"
+msgstr "Preview"
+
+#: src/Widgets/Response/StatusBar/Container.vala:57
+msgid "Source Code"
+msgstr "Source Code"
+
+#: src/Widgets/Response/StatusBar/Container.vala:58
+#: src/Widgets/Response/StatusBar/Container.vala:69
+#: src/Widgets/Request/Container.vala:112
+msgid "Headers"
+msgstr "Headers"
+
+#: src/Widgets/Response/StatusBar/Container.vala:67
+msgid "JSON Tree"
+msgstr "JSON Tree"
+
+#: src/Widgets/Response/StatusBar/Container.vala:68
+msgid "Prettified"
+msgstr "Prettified"
+
+#: src/Widgets/Response/StatusBar/Container.vala:78
+msgid "No Status"
+msgstr "No Status"
+
+#: src/Widgets/Response/StatusBar/Container.vala:86
+msgid "No duration"
+msgstr "No duration"
+
+#: src/Widgets/Response/StatusBar/Container.vala:94
+msgid "No size"
+msgstr "No size"
+
+#: src/Widgets/Response/StatusBar/Container.vala:147
+msgid "seconds"
+msgstr "seconds"
+
+#: src/Widgets/Request/Container.vala:68
+msgid "JavaScript Console"
+msgstr "JavaScript Console"
+
+#: src/Widgets/Request/Container.vala:70
+msgid "JavaScript Info"
+msgstr "JavaScript Info"
+
+#: src/Widgets/Request/Container.vala:113
+msgid "Parameters"
+msgstr "Parameters"
+
+#: src/Widgets/Request/Container.vala:114
+msgid "Body"
+msgstr "Body"
+
+#: src/Widgets/Request/Container.vala:115
+msgid "Script"
+msgstr "Script"
+
+#: src/Widgets/Request/Container.vala:129
+msgid "Add Header"
+msgstr "Add Header"
+
+#: src/Widgets/Request/Container.vala:178
+msgid "Add Parameter"
+msgstr "Add Parameter"
+
+#: src/Widgets/Request/BodyView.vala:150 src/Widgets/Request/BodyView.vala:168
+msgid "Add"
+msgstr "Add"
