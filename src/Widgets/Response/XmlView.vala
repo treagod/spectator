@@ -23,7 +23,7 @@ namespace Spectator.Widgets.Response {
     class XmlView : AbstractTypeView {
         private SourceView response_text;
         private SourceView response_text_raw;
-        //private XmlTreeView tree_view;
+        private XmlTreeView tree_view;
         private HeaderList header_list;
         private Gtk.ScrolledWindow scrolled;
         private Gtk.ScrolledWindow scrolled_raw;
@@ -31,7 +31,7 @@ namespace Spectator.Widgets.Response {
         private Gtk.ScrolledWindow header_scrolled;
 
         public XmlView () {
-            //tree_view = new JsonTreeView.empty ();
+            tree_view = new XmlTreeView.empty ();
             header_list = new HeaderList ();
             scrolled = new Gtk.ScrolledWindow (null, null);
             scrolled_raw = new Gtk.ScrolledWindow (null, null);
@@ -41,7 +41,7 @@ namespace Spectator.Widgets.Response {
             response_text_raw = new SourceView ();
             scrolled.add (response_text);
             scrolled_raw.add (response_text_raw);
-            //tree_scrolled.add (tree_view);
+            tree_scrolled.add (tree_view);
             header_scrolled.add (header_list);
 
             response_text.set_lang ("xml");
@@ -69,6 +69,9 @@ namespace Spectator.Widgets.Response {
                 case 3:
                     set_visible_child (scrolled_raw);
                     break;
+                default:
+                    set_visible_child (tree_scrolled);
+                    break;
             }
         }
 
@@ -92,7 +95,7 @@ namespace Spectator.Widgets.Response {
             if (it == null) {
                 response_text.insert_text ("");
                 response_text_raw.insert_text ("");
-                //tree_view.clear ();
+                tree_view.clear ();
                 return;
             }
 
@@ -103,6 +106,7 @@ namespace Spectator.Widgets.Response {
             }
 
             header_list.show_all ();
+            tree_view.update_from_string (it.data);
 
             response_text.insert_text (pretty_xml (it.data));
             response_text_raw.insert_text (it.raw);

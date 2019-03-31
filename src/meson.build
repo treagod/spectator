@@ -18,7 +18,6 @@ config_header = configure_file(
 executable(
     meson.project_name(),
     'Application.vala',
-    'Application.vala',
 	'Window.vala',
 	'Models/Pair.vala',
 	'Models/Collection.vala',
@@ -55,6 +54,7 @@ executable(
 	'Widgets/Response/HtmlView.vala',
 	'Widgets/Response/DefaultView.vala',
 	'Widgets/Response/XmlView.vala',
+    'Widgets/Response/XmlTreeView.vala',
 	'Widgets/Response/JsonView.vala',
 	'Widgets/Response/JsonTreeView.vala',
     'Widgets/Response/HeaderList.vala',
