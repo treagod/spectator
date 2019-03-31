@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.treagod.spectator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-31 16:06+0200\n"
+"POT-Creation-Date: 2019-03-31 16:31+0200\n"
 "PO-Revision-Date: 2019-03-31 16:03+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,6 +16,21 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/Controllers/Request.vala:149
+#, c-format
+msgid "Request failed: %s"
+msgstr ""
+
+#: src/Controllers/Request.vala:155
+#, c-format
+msgid "Invalid URI: %s"
+msgstr ""
+
+#: src/Controllers/Request.vala:161
+#, c-format
+msgid "Proxy denied request: %s"
+msgstr ""
 
 #: src/Dialogs/Request/Dialog.vala:39
 msgid "Name:"
@@ -29,6 +44,11 @@ msgstr "Schliessen"
 #: src/Dialogs/Request/CreateDialog.vala:27 src/Widgets/Content.vala:54
 #: src/Widgets/HeaderBar.vala:42
 msgid "Create Request"
+msgstr "Anfrage Erstellen"
+
+#: src/Dialogs/Request/CreateDialog.vala:28
+#, fuzzy
+msgid "My Request"
 msgstr "Anfrage Erstellen"
 
 #: src/Dialogs/Request/CreateDialog.vala:30
@@ -116,6 +136,18 @@ msgstr ""
 msgid "Requests"
 msgstr ""
 
+#: src/Widgets/Sidebar/Item.vala:24
+msgid "No URL specified"
+msgstr ""
+
+#: src/Widgets/Sidebar/Item.vala:133
+msgid "Edit"
+msgstr ""
+
+#: src/Widgets/Sidebar/Item.vala:134
+msgid "Delete"
+msgstr ""
+
 #: src/Widgets/Response/StatusBar/Container.vala:46
 msgid "Text"
 msgstr ""
@@ -163,6 +195,22 @@ msgstr ""
 msgid "seconds"
 msgstr ""
 
+#: src/Widgets/Response/StatusBar/Container.vala:161
+msgid "GB"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:163
+msgid "MB"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:165
+msgid "KB"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:170
+msgid "B"
+msgstr ""
+
 #: src/Widgets/Request/Container.vala:68
 msgid "JavaScript Console"
 msgstr ""
@@ -189,6 +237,10 @@ msgstr ""
 
 #: src/Widgets/Request/Container.vala:178
 msgid "Add Parameter"
+msgstr ""
+
+#: src/Widgets/Request/UrlEntry.vala:101
+msgid "Type an URL"
 msgstr ""
 
 #: src/Widgets/Request/BodyView.vala:150 src/Widgets/Request/BodyView.vala:168

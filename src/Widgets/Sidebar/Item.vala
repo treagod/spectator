@@ -21,7 +21,7 @@
 
 namespace Spectator.Widgets.Sidebar {
     public class Item : Gtk.FlowBoxChild {
-        static string no_url = "<small><i>No URL specified</i></small>";
+        static string no_url = "<small><i>" + (_("No URL specified")) + "</i></small>";
         Gtk.EventBox item_box { get; set;}
         Gtk.Label method;
         Gtk.Label request_name;
@@ -130,8 +130,8 @@ namespace Spectator.Widgets.Sidebar {
             item_box.button_release_event.connect ((event) => {
                 if (event.button == 3) {
                     var menu = new Gtk.Menu ();
-                    var edit_item = new Gtk.MenuItem.with_label ("Edit");
-                    var delete_item = new Gtk.MenuItem.with_label ("Delete");
+                    var edit_item = new Gtk.MenuItem.with_label (_("Edit"));
+                    var delete_item = new Gtk.MenuItem.with_label (_("Delete"));
 
                     edit_item.activate.connect (() => {
                         item_edit (item);

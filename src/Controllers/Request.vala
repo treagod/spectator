@@ -146,19 +146,19 @@ namespace Spectator.Controllers {
                 action.request_failed.connect ((item) => {
                     item.status = Models.RequestStatus.SENT;
                     content.show_request (item);
-                    content.set_error ("Request failed: %s".printf (item.name));
+                    content.set_error (_("Request failed: %s").printf (item.name));
                 });
 
                 action.invalid_uri.connect ((item) => {
                     item.status = Models.RequestStatus.SENT;
                     content.update_status (item);
-                    content.set_error ("Invalid URI: %s".printf (item.name));
+                    content.set_error (_("Invalid URI: %s").printf (item.name));
                 });
 
                 action.proxy_failed.connect ((item) => {
                     item.status = Models.RequestStatus.SENT;
                     content.update_status (item);
-                    content.set_error ("Proxy denied request: %s".printf (item.name));
+                    content.set_error (_("Proxy denied request: %s").printf (item.name));
                 });
 
                 action.request_got_chunk.connect (() => {

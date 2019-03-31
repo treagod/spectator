@@ -158,16 +158,16 @@ namespace Spectator.Widgets.Response.StatusBar {
 
         private string human_readable_bytes (int64 response_size) {
             if (response_size >= 1000000000) {
-                return ("%" + int64.FORMAT + " GB").printf (response_size / 1000000000);
+                return ("%" + int64.FORMAT + " " + _("GB")).printf (response_size / 1000000000);
             } else if (response_size >= 1000000) {
-                return ("%" + int64.FORMAT + " MB").printf (response_size / 1000000);
+                return ("%" + int64.FORMAT + " " + _("MB")).printf (response_size / 1000000);
             } else if (response_size >= 1000) {
-                return ("%" + int64.FORMAT + " KB").printf (response_size / 1000);
+                return ("%" + int64.FORMAT + " " + _("KB")).printf (response_size / 1000);
             }
 
             // Assuming nobody is downloading more or equal than 1 TB...
             // if you do, please give send me an email with proof (marv.ahlgrimm@gmail.com)
-            return ("%" + int64.FORMAT + " B").printf (response_size);
+            return ("%" + int64.FORMAT + " " + _("B")).printf (response_size);
         }
 
         public void set_active_type (Type typ) {
