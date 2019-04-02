@@ -98,7 +98,7 @@ namespace Spectator.Widgets.Request {
 
         private void init_url_entry () {
             url_entry = new Gtk.Entry ();
-            url_entry.placeholder_text = "Type an URL";
+            url_entry.placeholder_text = _("Type an URL");
             url_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "media-playback-start-symbolic");
 
             url_entry.icon_press.connect (() => {

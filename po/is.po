@@ -1,0 +1,283 @@
+# Icelandic translations for com.github.treagod.spectator package.
+# Copyright (C) 2019 THE com.github.treagod.spectator'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.treagod.spectator package.
+# Automatically generated, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.treagod.spectator\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-03-31 17:01+0200\n"
+"PO-Revision-Date: 2019-03-31 16:03+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/Controllers/Request.vala:149
+#, c-format
+msgid "Request failed: %s"
+msgstr ""
+
+#: src/Controllers/Request.vala:155
+#, c-format
+msgid "Invalid URI: %s"
+msgstr ""
+
+#: src/Controllers/Request.vala:161
+#, c-format
+msgid "Proxy denied request: %s"
+msgstr ""
+
+#: src/Dialogs/Request/Dialog.vala:39
+msgid "Name:"
+msgstr ""
+
+#: src/Dialogs/Request/Dialog.vala:44 src/Dialogs/Alert.vala:42
+#: src/Dialogs/Preferences.vala:44
+msgid "Close"
+msgstr ""
+
+#: src/Dialogs/Request/CreateDialog.vala:27 src/Widgets/Content.vala:54
+#: src/Widgets/HeaderBar.vala:42
+msgid "Create Request"
+msgstr ""
+
+#: src/Dialogs/Request/CreateDialog.vala:28
+msgid "My Request"
+msgstr ""
+
+#: src/Dialogs/Request/CreateDialog.vala:30
+msgid "Create"
+msgstr ""
+
+#: src/Dialogs/Request/CreateDialog.vala:53
+#: src/Dialogs/Request/UpdateDialog.vala:53
+msgid "Request name must not be empty."
+msgstr ""
+
+#: src/Dialogs/Request/UpdateDialog.vala:27
+msgid "Update Request"
+msgstr ""
+
+#: src/Dialogs/Request/UpdateDialog.vala:35
+msgid "Update"
+msgstr ""
+
+#: src/Dialogs/Preferences.vala:26 src/Widgets/HeaderBar.vala:45
+msgid "Preferences"
+msgstr ""
+
+#: src/Dialogs/Preferences.vala:37
+msgid "General"
+msgstr ""
+
+#: src/Dialogs/Preferences.vala:38
+msgid "Network"
+msgstr ""
+
+#: src/Dialogs/Preference/General.vala:37
+msgid "Dark Theme"
+msgstr ""
+
+#: src/Dialogs/Preference/General.vala:42
+msgid "Follow redirects automatically"
+msgstr ""
+
+#: src/Dialogs/Preference/General.vala:61
+msgid "Maximum Redirects"
+msgstr ""
+
+#: src/Dialogs/Preference/General.vala:72
+msgid "Network Request Timeout"
+msgstr ""
+
+#: src/Dialogs/Preference/Network.vala:36
+msgid "Use Proxy"
+msgstr ""
+
+#: src/Dialogs/Preference/Network.vala:44
+msgid "HTTP Proxy"
+msgstr ""
+
+#: src/Dialogs/Preference/Network.vala:54
+msgid "HTTPS Proxy"
+msgstr ""
+
+#: src/Dialogs/Preference/Network.vala:64
+msgid "No Proxy"
+msgstr ""
+
+#: src/Dialogs/Preference/Network.vala:75
+msgid "Use User Information"
+msgstr ""
+
+#: src/Dialogs/Preference/Network.vala:81
+msgid "Username"
+msgstr ""
+
+#: src/Dialogs/Preference/Network.vala:92
+msgid "Password"
+msgstr ""
+
+#: src/Widgets/Content.vala:52
+msgid "Inspect your HTTP transmissions to the web"
+msgstr ""
+
+#: src/Widgets/Content.vala:54
+msgid "Create a new request to the web."
+msgstr ""
+
+#: src/Widgets/Sidebar/Container.vala:54
+msgid "Requests"
+msgstr ""
+
+#: src/Widgets/Sidebar/Item.vala:24
+msgid "No URL specified"
+msgstr ""
+
+#: src/Widgets/Sidebar/Item.vala:133
+msgid "Edit"
+msgstr ""
+
+#: src/Widgets/Sidebar/Item.vala:134
+msgid "Delete"
+msgstr ""
+
+#: src/Widgets/Response/JsonTreeView.vala:50
+#: src/Widgets/Response/JsonTreeView.vala:75
+msgid "Key"
+msgstr ""
+
+#: src/Widgets/Response/JsonTreeView.vala:51
+#: src/Widgets/Response/JsonTreeView.vala:76
+msgid "Value"
+msgstr ""
+
+#: src/Widgets/Response/JsonTreeView.vala:87
+msgid "Object"
+msgstr ""
+
+#: src/Widgets/Response/JsonTreeView.vala:90
+msgid "Array"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:46
+msgid "Text"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:47
+#: src/Widgets/Response/StatusBar/Container.vala:70
+msgid "Raw"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:56
+msgid "Preview"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:57
+msgid "Source Code"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:58
+#: src/Widgets/Response/StatusBar/Container.vala:69
+#: src/Widgets/Request/Container.vala:112
+msgid "Headers"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:67
+msgid "JSON Tree"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:68
+msgid "Prettified"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:78
+#: src/Widgets/Response/StatusBar/Container.vala:143
+msgid "No status"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:86
+#: src/Widgets/Response/StatusBar/Container.vala:140
+msgid "No duration"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:94
+#: src/Widgets/Response/StatusBar/Container.vala:137
+msgid "No size"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:147
+msgid "seconds"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:161
+msgid "GB"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:163
+msgid "MB"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:165
+msgid "KB"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:170
+msgid "B"
+msgstr ""
+
+#: src/Widgets/Request/Container.vala:68
+msgid "JavaScript Console"
+msgstr ""
+
+#: src/Widgets/Request/Container.vala:70
+msgid "JavaScript Info"
+msgstr ""
+
+#: src/Widgets/Request/Container.vala:113
+msgid "Parameters"
+msgstr ""
+
+#: src/Widgets/Request/Container.vala:114
+msgid "Body"
+msgstr ""
+
+#: src/Widgets/Request/Container.vala:115
+msgid "Script"
+msgstr ""
+
+#: src/Widgets/Request/Container.vala:129
+msgid "Add Header"
+msgstr ""
+
+#: src/Widgets/Request/Container.vala:178
+msgid "Add Parameter"
+msgstr ""
+
+#: src/Widgets/Request/UrlEntry.vala:101
+msgid "Type an URL"
+msgstr ""
+
+#: src/Widgets/Request/BodyView.vala:60
+msgid "Plain"
+msgstr ""
+
+#: src/Widgets/Request/BodyView.vala:61
+msgid "XML"
+msgstr ""
+
+#: src/Widgets/Request/BodyView.vala:62
+msgid "JSON"
+msgstr ""
+
+#: src/Widgets/Request/BodyView.vala:63
+msgid "HTML"
+msgstr ""
+
+#: src/Widgets/Request/BodyView.vala:150 src/Widgets/Request/BodyView.vala:168
+msgid "Add"
+msgstr ""

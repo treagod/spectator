@@ -1,0 +1,98 @@
+# French translations for extra package.
+# Copyright (C) 2019 THE extra'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the extra package.
+# NathanBnm, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: extra\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-03-31 16:40+0200\n"
+"PO-Revision-Date: 2019-03-31 16:04+0200\n"
+"Last-Translator: NathanBnm\n"
+"Language-Team: Français\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: data/com.github.treagod.spectator.desktop.in:3
+#: data/com.github.treagod.spectator.desktop.in:4
+#: data/com.github.treagod.spectator.appdata.xml.in:7
+msgid "Spectator"
+msgstr "Spectator"
+
+#: data/com.github.treagod.spectator.desktop.in:5
+msgid "REST Client"
+msgstr "Client REST"
+
+#: data/com.github.treagod.spectator.desktop.in:8
+msgid "com.github.treagod.spectator"
+msgstr "com.github.treagod.spectator"
+
+#: data/com.github.treagod.spectator.desktop.in:12
+msgid "REST;HTTP;Client;"
+msgstr "REST;HTTP;Client;"
+
+#: data/com.github.treagod.spectator.appdata.xml.in:8
+#: data/com.github.treagod.spectator.appdata.xml.in:39
+msgid "Comfortably test your REST APIs!"
+msgstr "Testez confortablement vos API REST !"
+
+#: data/com.github.treagod.spectator.appdata.xml.in:10
+msgid "Gives you the possibilty to test your REST application."
+msgstr "Donnez-vous la possibilité de tester votre application REST."
+
+#: data/com.github.treagod.spectator.appdata.xml.in:11
+#: data/com.github.treagod.spectator.appdata.xml.in:40
+msgid ""
+"Send custom headers and self defined bodies to your application and displays "
+"the response in a clean way."
+msgstr ""
+"Envoyez des en-têtes personnalisés et des corps auto-définis à votre "
+"application et visualisez la réponse d'une manière claire."
+
+#: data/com.github.treagod.spectator.appdata.xml.in:19
+msgid "JavaScript Integration"
+msgstr "Intégration de JavaScript"
+
+#: data/com.github.treagod.spectator.appdata.xml.in:21
+msgid "Adds the possibility to augment your requests with scripting."
+msgstr "Ajout de la possibilité d'augmenter vos requêtes avec des scripts."
+
+#: data/com.github.treagod.spectator.appdata.xml.in:22
+msgid ""
+"The developer can use the 'before_sending' JavaScript function to augment "
+"the request."
+msgstr ""
+"Le développeur peut utiliser la fonction JavaScript « before_sending » pour "
+"augmenter la requête."
+
+#: data/com.github.treagod.spectator.appdata.xml.in:23
+msgid ""
+"HTTP.get(url), HTTP.post(url, config) and other request methods are "
+"available from script"
+msgstr ""
+"Les méthodes HTTP.get(url), HTTP.post(url, config) et les autres méthodes "
+"sont disponibles depuis le script."
+
+#: data/com.github.treagod.spectator.appdata.xml.in:29
+msgid "URL Params fixes"
+msgstr "Correction des paramètres d'URL"
+
+#: data/com.github.treagod.spectator.appdata.xml.in:31
+msgid ""
+"Fixes a bug where the application crashes if a URL param is entered from key-"
+"value view without a URL"
+msgstr ""
+"Correction d'un bug où l'application plantait si le paramètre d'URL était "
+"entré depuis une valeur clé sans URL."
+
+#: data/com.github.treagod.spectator.appdata.xml.in:37
+msgid "Initial Release"
+msgstr "Version initiale"
+
+#: data/com.github.treagod.spectator.appdata.xml.in:91
+msgid "Marvin Ahlgrimm"
+msgstr "Marvin Ahlgrimm"
