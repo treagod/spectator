@@ -25,7 +25,7 @@ namespace Spectator.Dialogs.Request {
 
         public CreateDialog (Gtk.ApplicationWindow parent) {
             base (_("Create Request"), parent);
-            request_name_entry.text = "My Request";
+            request_name_entry.text = _("My Request");
 
             add_button (_("Create"), Gtk.ResponseType.APPLY);
 

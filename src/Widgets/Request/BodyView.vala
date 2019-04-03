@@ -57,10 +57,10 @@ namespace Spectator.Widgets.Request {
 
         private void setup_language_box () {
             language_box = new Gtk.ComboBoxText ();
-            language_box.append_text ("Plain");
-            language_box.append_text ("XML");
-            language_box.append_text ("JSON");
-            language_box.append_text ("HTML");
+            language_box.append_text (_("Plain"));
+            language_box.append_text (_("XML"));
+            language_box.append_text (_("JSON"));
+            language_box.append_text (_("HTML"));
             language_box.active = 0;
 
             language_box.changed.connect (() => {

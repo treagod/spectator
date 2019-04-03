@@ -88,7 +88,7 @@ namespace Spectator.Widgets.Response.StatusBar {
             });
 
             http_status_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL,9);
-            http_status_label = new Gtk.Label (_("No Status"));
+            http_status_label = new Gtk.Label (_("No status"));
             http_status_box.get_style_context ().add_class ("no-info-box");
             http_status_label.halign = Gtk.Align.CENTER;
             http_status_label.margin = 3;
@@ -148,13 +148,13 @@ namespace Spectator.Widgets.Response.StatusBar {
             if (it == null) {
                 response_size_box.get_style_context ().add_class ("no-info-box");
                 response_size_label.halign = Gtk.Align.CENTER;
-                response_size_label.label = "No size";
+                response_size_label.label = _("No size");
                 request_time_box.get_style_context ().add_class ("no-info-box");
                 request_time_box.halign = Gtk.Align.CENTER;
-                request_time_label.label = "No duration";
+                request_time_label.label = _("No duration");
                 http_status_box.get_style_context ().add_class ("no-info-box");
                 http_status_box.halign = Gtk.Align.CENTER;
-                http_status_label.label = "No status";
+                http_status_label.label = _("No status");
             } else {
                 http_status_label.label = "%u %s".printf (it.status_code, Soup.Status.get_phrase (it.status_code));
                 response_size_label.label = human_readable_bytes (it.size);
@@ -172,16 +172,16 @@ namespace Spectator.Widgets.Response.StatusBar {
 
         private string human_readable_bytes (int64 response_size) {
             if (response_size >= 1000000000) {
-                return ("%" + int64.FORMAT + " GB").printf (response_size / 1000000000);
+                return ("%" + int64.FORMAT + " " + _("GB")).printf (response_size / 1000000000);
             } else if (response_size >= 1000000) {
-                return ("%" + int64.FORMAT + " MB").printf (response_size / 1000000);
+                return ("%" + int64.FORMAT + " " + _("MB")).printf (response_size / 1000000);
             } else if (response_size >= 1000) {
-                return ("%" + int64.FORMAT + " KB").printf (response_size / 1000);
+                return ("%" + int64.FORMAT + " " + _("KB")).printf (response_size / 1000);
             }
 
             // Assuming nobody is downloading more or equal than 1 TB...
             // if you do, please give send me an email with proof (marv.ahlgrimm@gmail.com)
-            return ("%" + int64.FORMAT + " B").printf (response_size);
+            return ("%" + int64.FORMAT + " " + _("B")).printf (response_size);
         }
 
         public void set_active_type (Type typ) {
