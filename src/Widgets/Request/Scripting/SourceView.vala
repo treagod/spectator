@@ -20,13 +20,13 @@
 */
 
 namespace Spectator.Widgets.Request {
-    class ScriptingView : Gtk.SourceView {
+    class ScriptingSourceView : Gtk.SourceView {
         public signal void changed (string script);
         public new Gtk.SourceBuffer buffer;
         private string font { set; get; default = "Roboto Mono Regular 11"; }
 
 
-        public ScriptingView () {
+        public ScriptingSourceView () {
             Object (
                 highlight_current_line: true,
                 show_right_margin: false,
