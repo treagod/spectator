@@ -58,6 +58,10 @@ namespace Spectator.Widgets.Request {
             body_view = create_body_view ();
             scripting_view = new Spectator.Widgets.Request.Scripting.Container ();
 
+            scripting_view.script_changed.connect ((script) => {
+                script_changed (script);
+            });
+
             init_stack ();
 
             add (url_entry);
