@@ -194,24 +194,22 @@ namespace Spectator.Services {
     }
 
     private static void append_body_to_msg (Duktape.Context ctx, Soup.Message msg) {
-        if (ctx.is_object (-1)) {
-            ctx.get_prop_string (-1, "body");
-            stdout.printf ("Woop\n");
-            if (!ctx.is_undefined (-1)) {
-                stdout.printf ("W35oop\n");
-                if (ctx.is_string (-1)) {
-                    stdout.printf ("Wo69op\n");
-                    msg.set_request ("undefined", Soup.MemoryUse.COPY, ctx.get_string (-1).data);
-                } else if (ctx.is_object (-1)) {
-                    stdout.printf ("W789789oop\n");
-                    handle_body_object (ctx, msg);
-                } else {
-                    var writer = get_writer (ctx);
-                    writer.error ("Invalid 'body'. 'body' must be a string or an object");
-                }
+        ctx.get_prop_string (-1, "body");
+        stdout.printf ("Woop\n");
+        if (!ctx.is_undefined (-1)) {
+            stdout.printf ("W35oop\n");
+            if (ctx.is_string (-1)) {
+                stdout.printf ("Wo69op\n");
+                msg.set_request ("undefined", Soup.MemoryUse.COPY, ctx.get_string (-1).data);
+            } else if (ctx.is_object (-1)) {
+                stdout.printf ("W789789oop\n");
+                handle_body_object (ctx, msg);
+            } else {
+                var writer = get_writer (ctx);
+                writer.error ("Invalid 'body'. 'body' must be a string or an object");
             }
-            ctx.pop ();
         }
+        ctx.pop ();
     }
 
     public static void set_timeout (Duktape.Context ctx, Soup.Session session) {
@@ -266,8 +264,11 @@ namespace Spectator.Services {
         if (Spectator.Services.Utilities.valid_uri (uri)) {
             var session = new Soup.Session ();
             var msg = new Soup.Message (method, uri_string);
-            append_headers_to_msg (ctx, msg);
-            set_timeout (ctx, session);
+
+            if (!ctx.is_undefined (-1) && ctx.is_object (-1)) {
+                append_headers_to_msg (ctx, msg);
+                set_timeout (ctx, session);
+            }
 
             session.send_message (msg);
 
@@ -292,9 +293,11 @@ namespace Spectator.Services {
         if (Spectator.Services.Utilities.valid_uri (uri)) {
             var session = new Soup.Session ();
             var msg = new Soup.Message (method, uri_string);
-            append_headers_to_msg (ctx, msg);
-            append_body_to_msg (ctx, msg);
-            set_timeout (ctx, session);
+            if (!ctx.is_undefined (-1) && ctx.is_object (-1)) {
+                append_headers_to_msg (ctx, msg);
+                append_body_to_msg (ctx, msg);
+                set_timeout (ctx, session);
+            }
 
             session.send_message (msg);
 
