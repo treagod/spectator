@@ -23,6 +23,8 @@ namespace Spectator.Widgets.Request.Scripting {
     class Container : Gtk.Box {
         private ScriptingSourceView scripting_view;
         private Gtk.TextView console;
+        private Gee.HashMap<Models.Request, Gtk.TextBuffer> request_consoles;
+        private Gtk.ScrolledWindow scrolled_console;
         public Gtk.TextBuffer console_buffer {
             get {
                 return console.buffer;
@@ -36,6 +38,7 @@ namespace Spectator.Widgets.Request.Scripting {
         public signal void script_changed (string script);
 
         public Container () {
+            request_consoles = new Gee.HashMap<Models.Request, Gtk.TextBuffer> ();
             orientation = Gtk.Orientation.VERTICAL;
             spacing = 5;
             scripting_view = new ScriptingSourceView ();
@@ -53,10 +56,9 @@ namespace Spectator.Widgets.Request.Scripting {
             js_info_button.tooltip_text = _("JavaScript Info");
 
             var scrolled_scripting_view = new Gtk.ScrolledWindow (null, null);
-            var scrolled_console = new Gtk.ScrolledWindow (null, null);
+            scrolled_console = new Gtk.ScrolledWindow (null, null);
             scrolled_console.get_style_context ().add_class ("scrolled-console");
             console = new Gtk.TextView ();
-            console.buffer.text = "";
             console.wrap_mode = Gtk.WrapMode.WORD;
             console.pixels_below_lines = 3;
             console.border_width = 12;
@@ -74,10 +76,6 @@ namespace Spectator.Widgets.Request.Scripting {
                 }
             });
 
-            console.buffer.notify["text"].connect (() => {
-                scrolled_console.vadjustment.value = scrolled_console.vadjustment.upper;
-            });
-
             scrolled_console.add (console);
             scrolled_scripting_view.add (scripting_view);
 
@@ -90,6 +88,19 @@ namespace Spectator.Widgets.Request.Scripting {
 
         public void update_script_buffer (string buffer) {
             scripting_view.update_buffer (buffer);
+        }
+
+        public void change_console (Models.Request request) {
+            if (request_consoles.has_key (request)) {
+                console.buffer = request_consoles[request];
+            } else {
+                var buffer = new Gtk.TextBuffer (null);
+                buffer.notify["text"].connect (() => {
+                    scrolled_console.vadjustment.value = scrolled_console.vadjustment.upper;
+                });
+                request_consoles[request] = buffer;
+                console.buffer = buffer;
+            }
         }
 
         public new void grab_focus () {

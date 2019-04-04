@@ -272,15 +272,16 @@ namespace Spectator.Widgets.Request {
             return new Services.TextBufferWriter (scripting_view.console_buffer);
         }
 
-        public void set_item (Models.Request item) {
-            url_entry.change_status (item.status);
-            url_entry.set_text (item.uri);
-            url_entry.set_method (item.method);
-            body_view.set_body (item.request_body);
-            update_url_params (item);
-            update_tabs (item.method);
-            update_script (item.script_code);
-            set_headers (item.headers);
+        public void set_item (Models.Request request) {
+            url_entry.change_status (request.status);
+            url_entry.set_text (request.uri);
+            url_entry.set_method (request.method);
+            scripting_view.change_console (request);
+            body_view.set_body (request.request_body);
+            update_url_params (request);
+            update_tabs (request.method);
+            update_script (request.script_code);
+            set_headers (request.headers);
             show_all ();
         }
     }
