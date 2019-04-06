@@ -52,19 +52,19 @@ function before_sending(request) {
 }
 ```
 
-## Config Object for HTTP
+### Config Object for HTTP
 
 The config object configures the HTTP requests. It consists only of fields which are all optional to set.
 
 > **Note:** As the HTTP requests are not concurrent right now it is recommended to set at least the timeout field so your application won't freeze to death.
 
-### headers : Object
+#### headers : Object
 The headers field is an object which currently consists of string-string pairs. All headers defined here will be added the the HTTP request
 
-### timeout : string|number
+#### timeout : string|number
 Sets the timeout for the HTTP request
 
-### body
+#### body
 Sets the HTTP body for the request. This field will be ignored when the HTTP method has no body (e.g. GET).
 
 The `body` has two fields, `type` and `data`.
@@ -93,7 +93,7 @@ function before_sending(request) {
 }
 ```
 
-## ContentType
+#### ContentType
 The content type object defines the ContentType of the request. Currently there are only `Json`, `UrlEncoded` and `FormData`
 
 ContentType should be set for the `type` field of the `body` field in the config object.
