@@ -76,6 +76,10 @@ namespace Spectator.Widgets.Request.Scripting {
                 }
             });
 
+            js_info_button.clicked.connect (() => {
+                AppInfo.launch_default_for_uri ("https://treagod.github.io/spectator/#/scripting", null);
+            });
+
             scrolled_console.add (console);
             scrolled_scripting_view.add (scripting_view);
 
