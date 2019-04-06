@@ -19,11 +19,16 @@ Spectator -right->[activate request] "JavaScript before_sending"
 ```
 
 ## console
-The console currently binds only the `log` method, which is for printing on the Spectator JavaScript console.
+The `console` object provides methods to write on the Spectator console.
 
 <img src="console_output.png" style="width:100%; max-width:675px; height: auto;">
 
 ### log(any)
+Writes unformatted text to the console.
+### warning(any)
+Writes yellow text to the console.
+### error(any)
+Writes red text to the console.
 
 ## HTTP
 The HTTP object provides methods to make additional requests during your Spectator request operation. The objects methods are the same

@@ -18,11 +18,16 @@ Spectator -right->[Request aktivieren] "JavaScript before_sending"
 ```
 
 ## console
-Das Objekt `console` beinhaltet zurzeit nur die `log` Methode. Diese wird verwendet um auf die Spectator JavaScript Konsole zu schreiben.
+Das `console` Objekt stellt Methoden bereit, um auf die Spectator Konsole zu schreiben.
 
 <img src="console_output.png" style="width:100%; max-width:675px; height: auto;">
 
 ### log(any)
+Schreibt unformatierten Text auf die Konsole.
+### warning(any)
+Schreibt gelben Text auf die Konsole.
+### error(any)
+Schreibt roten Text auf die Konsole.
 
 ## HTTP
 The HTTP object provides methods to make additional requests during your Spectator request operation. The objects methods are the same

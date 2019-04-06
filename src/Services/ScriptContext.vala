@@ -75,6 +75,10 @@ namespace Spectator.Services {
             obj_idx = push_object ();
             push_vala_function (console_log, Duktape.VARARGS);
             put_prop_string (obj_idx, "log");
+            push_vala_function (console_warning, Duktape.VARARGS);
+            put_prop_string (obj_idx, "warning");
+            push_vala_function (console_error, Duktape.VARARGS);
+            put_prop_string (obj_idx, "error");
             put_global_string ("console");
         }
 
@@ -101,6 +105,26 @@ namespace Spectator.Services {
         ctx.insert (0);
         ctx.join (ctx.get_top () - 1);
         writer.write ("%s".printf ( ctx.safe_to_string (-1)));
+
+        return 0;
+    }
+
+    public static Duktape.ReturnType console_warning (Duktape.Context ctx) {
+        var writer = get_writer (ctx);
+        ctx.push_string (" ");
+        ctx.insert (0);
+        ctx.join (ctx.get_top () - 1);
+        writer.warning ("Warning: %s".printf ( ctx.safe_to_string (-1)));
+
+        return 0;
+    }
+
+    public static Duktape.ReturnType console_error (Duktape.Context ctx) {
+        var writer = get_writer (ctx);
+        ctx.push_string (" ");
+        ctx.insert (0);
+        ctx.join (ctx.get_top () - 1);
+        writer.error ("Error: %s".printf ( ctx.safe_to_string (-1)));
 
         return 0;
     }
