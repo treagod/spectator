@@ -74,7 +74,6 @@ namespace Spectator.Models {
             evaluated = false;
             writer = new Services.StdoutWriter ();
             context = new Services.ScriptContext (writer);
-            context.push_http_object ();
             context.push_content_type_object ();
         }
 
