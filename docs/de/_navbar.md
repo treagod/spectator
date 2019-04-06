@@ -1,4 +1,4 @@
-* [Spectator](/)
+* [Spectator](/de/)
 
 * [Mitwirken](/de/contribute.md)
 
