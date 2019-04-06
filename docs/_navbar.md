@@ -2,7 +2,7 @@
 
 * [Contribute](contribute.md)
 
-* Usage
+* [Scripting](scripting.md)
 
-  * [Overview](/#spectator)
-  * [Scripting](scripting.md)
+* :us: Language
+    * [:de:](/de/)
