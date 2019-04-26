@@ -133,7 +133,11 @@ namespace Spectator.Services {
                 var data_stream = new DataOutputStream (file.create (FileCreateFlags.REPLACE_DESTINATION));
                 data_stream.put_string (data);
             } catch (IOError e) {
-                stderr.printf ("IO Error during saving settings: %s\n", e.message);
+                string dir_path = Path.get_dirname (filepath);
+                
+                File dir = File.new_for_path (dir_path);
+                dir.make_directory_with_parents ();
+                write_to_file (filepath);
             } catch (Error e) {
                 stderr.printf ("Error during saving settings: %s\n", e.message);
             }
