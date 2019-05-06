@@ -25,8 +25,6 @@ namespace Spectator.Widgets.Response {
         public Gtk.SourceLanguageManager manager;
         public Gtk.SourceStyleSchemeManager style_scheme_manager;
 
-        private string font { set; get; default = "Roboto Mono Regular 11"; }
-
         private Gtk.SourceLanguage? language {
             set {
                 buffer.language = value;
@@ -61,19 +59,44 @@ namespace Spectator.Widgets.Response {
             insert_text (res.data);
         }
 
+        private void set_default_font () {
+            override_font (Pango.FontDescription.from_string (
+                    new GLib.Settings ("org.gnome.desktop.interface")
+                        .get_string ("monospace-font-name")));
+        }
+
+        private void set_font (string font) {
+            override_font (Pango.FontDescription.from_string (font));
+        }
+
         construct {
             manager = Gtk.SourceLanguageManager.get_default ();
             editable = false;
             style_scheme_manager = new Gtk.SourceStyleSchemeManager ();
+            var settings = Settings.get_instance ();
             var style_id = (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) ? "solarized-dark"
                                                                                            : "solarized-light";
             var scheme = style_scheme_manager.get_scheme (style_id);
 
-            Settings.get_instance ().theme_changed.connect (() => {
+            settings.theme_changed.connect (() => {
                 var temp_id = (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) ? "solarized-dark"
                                                                                               : "solarized-light";
                 var schem = style_scheme_manager.get_scheme (temp_id);
                 buffer.style_scheme = schem;
+            });
+
+            if (settings.use_default_font) {
+                set_default_font ();
+            } else {
+                set_font (settings.font);
+            }
+
+            settings.font_changed.connect (() => {
+                set_font (settings.font);
+            });
+
+            settings.default_font.connect (() => {
+                set_default_font ();
             });
 
             buffer = new Gtk.SourceBuffer (null);

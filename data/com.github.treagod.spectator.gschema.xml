@@ -24,7 +24,7 @@
             <description>The saved height of the window. Must be greater than 500, or it will not take effect.</description>
         </key>
 
-	      <key name="maximized" type="b">
+        <key name="maximized" type="b">
             <default>false</default>
             <summary>Maximize the main window.</summary>
             <description>Wether the main window was maximized or not.</description>
@@ -107,6 +107,18 @@
            <summary>Data of Spectator.</summary>
            <description>Stores all requests items and the API version of the app in a JSON object.</description>
        </key>
+
+       <key name="use-default-font" type="b">
+            <default>true</default>
+            <summary>Use default font</summary>
+            <description>Specifies if the system font shall be used.</description>
+        </key>
+
+       <key name="font" type="s">
+            <default>''</default>
+            <summary>Font.</summary>
+            <description>Specifies which font shall be used.</description>
+        </key>
     </schema>
 </schemalist>
 

@@ -34,8 +34,10 @@ namespace Spectator.Dialogs {
             main_stack.margin = 6;
             main_stack.margin_bottom = 18;
             main_stack.margin_top = 24;
+
             main_stack.add_titled (new Preference.General (), "general", _("General"));
             main_stack.add_titled (new Preference.Network (), "network", _("Network"));
+            main_stack.add_titled (new Preference.Editor (), "editor", _("Editor"));
 
             var main_stackswitcher = new Gtk.StackSwitcher ();
             main_stackswitcher.set_stack (main_stack);

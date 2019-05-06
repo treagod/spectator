@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2019 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -24,6 +24,8 @@ namespace Spectator {
         private static Settings? instance = null;
 
         public signal void theme_changed ();
+        public signal void font_changed ();
+        public signal void default_font ();
 
         public bool dark_theme { get; set; }
         public int pos_x { get; set; }
@@ -43,11 +45,17 @@ namespace Spectator {
         public int maximum_redirects { get; set; }
         public double timeout { get; set; }
         public string data { get; set; }
+        public string font { get; set; }
+        public bool use_default_font { get; set; }
 
 
         public static Settings get_instance () {
             if (instance == null) {
                 instance = new Settings ();
+            }
+
+            if (instance.font == "") {
+                instance.font = new GLib.Settings ("org.gnome.desktop.interface").get_string ("monospace-font-name");
             }
 
             return instance;

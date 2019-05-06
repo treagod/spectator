@@ -45,6 +45,7 @@ executable(
 	'Dialogs/Preferences.vala',
 	'Dialogs/Preference/General.vala',
 	'Dialogs/Preference/Network.vala',
+	'Dialogs/Preference/Editor.vala',
 	'Widgets/Content.vala',
 	'Widgets/HeaderBar.vala',
 	'Widgets/Sidebar/Container.vala',
