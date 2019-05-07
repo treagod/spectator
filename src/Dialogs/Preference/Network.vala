@@ -119,7 +119,6 @@ namespace Spectator.Dialogs.Preference {
             username_entry.sensitive = use_prox;
             password_entry.sensitive = use_prox;
 
-
             use_proxy_switch.active = settings.use_proxy;
 
             option_grid.attach (use_proxy_label, 0, 0, 1, 1);

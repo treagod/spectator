@@ -26,6 +26,7 @@ namespace Spectator {
         public signal void theme_changed ();
         public signal void font_changed ();
         public signal void default_font ();
+        public signal void editor_scheme_changed ();
 
         public bool dark_theme { get; set; }
         public int pos_x { get; set; }
@@ -47,6 +48,7 @@ namespace Spectator {
         public string data { get; set; }
         public string font { get; set; }
         public bool use_default_font { get; set; }
+        public string editor_scheme { get; set; }
 
 
         public static Settings get_instance () {
@@ -54,15 +56,23 @@ namespace Spectator {
                 instance = new Settings ();
             }
 
-            if (instance.font == "") {
-                instance.font = new GLib.Settings ("org.gnome.desktop.interface").get_string ("monospace-font-name");
-            }
-
             return instance;
         }
 
         private Settings () {
             base ("com.github.treagod.spectator");
+
+            if (font == "") {
+                font = new GLib.Settings ("org.gnome.desktop.interface").get_string ("monospace-font-name");
+            }
+
+            if (editor_scheme == "") {
+                if (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) {
+                    editor_scheme = "solarized-dark";
+                } else {
+                    editor_scheme = "solarized-light";
+                }
+            }
         }
     }
 }

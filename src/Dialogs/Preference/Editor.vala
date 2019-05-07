@@ -38,7 +38,7 @@ namespace Spectator.Dialogs.Preference {
                 settings.font = font_button.font;
                 settings.font_changed ();
             });
-            
+
             var use_default_font_label = new Gtk.Label (_("Use Default Font"));
             use_default_font_label.halign = Gtk.Align.START;
             var use_default_font_switch = new Gtk.Switch ();
@@ -54,13 +54,37 @@ namespace Spectator.Dialogs.Preference {
                 settings.use_default_font = use_default_font_switch.active;
             });
 
+
             option_grid.column_spacing = 12;
             option_grid.row_spacing = 6;
+
+            var scheme_label = new Gtk.Label (_("Color Scheme"));
+            scheme_label.halign = Gtk.Align.START;
+
+            var fbox = new Gtk.FlowBox ();
+            fbox.max_children_per_line = 1;
+            fbox.column_spacing = 0;
+
+            var s = Gtk.SourceStyleSchemeManager.get_default ();
+
+            foreach (var id in s.scheme_ids) {
+                var but = new Gtk.Button ();
+                var r = new Gtk.Label (id);
+                but.add (r);
+                but.clicked.connect (() => {
+                    settings.editor_scheme = r.label;
+                    settings.editor_scheme_changed ();
+                });
+                r.halign = Gtk.Align.START;
+                fbox.add (but);
+            }
 
             option_grid.attach (use_default_font_label, 0, 0, 1, 1);
             option_grid.attach (use_default_font_switch, 1, 0, 1, 1);
             option_grid.attach (font_label, 0, 1, 1, 1);
             option_grid.attach (font_button, 1, 1, 1, 1);
+            option_grid.attach (scheme_label, 0, 2, 1, 1);
+            option_grid.attach (fbox, 1, 3, 1, 1);
 
             add (option_grid);
         }

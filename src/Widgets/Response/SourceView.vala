@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2019 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -69,20 +69,18 @@ namespace Spectator.Widgets.Response {
             override_font (Pango.FontDescription.from_string (font));
         }
 
+        public void set_editor_scheme (string scheme) {
+            buffer.style_scheme = style_scheme_manager.get_scheme (scheme);
+        }
+
         construct {
             manager = Gtk.SourceLanguageManager.get_default ();
             editable = false;
             style_scheme_manager = new Gtk.SourceStyleSchemeManager ();
             var settings = Settings.get_instance ();
-            var style_id = (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) ? "solarized-dark"
-                                                                                           : "solarized-light";
-            var scheme = style_scheme_manager.get_scheme (style_id);
 
-            settings.theme_changed.connect (() => {
-                var temp_id = (Gtk.Settings.get_default ().gtk_application_prefer_dark_theme) ? "solarized-dark"
-                                                                                              : "solarized-light";
-                var schem = style_scheme_manager.get_scheme (temp_id);
-                buffer.style_scheme = schem;
+            settings.editor_scheme_changed.connect (() => {
+                set_editor_scheme (settings.editor_scheme);
             });
 
             if (settings.use_default_font) {
@@ -101,7 +99,7 @@ namespace Spectator.Widgets.Response {
 
             buffer = new Gtk.SourceBuffer (null);
             buffer.highlight_syntax = true;
-            buffer.style_scheme = scheme;
+            set_editor_scheme (settings.editor_scheme);
 
             set_buffer (buffer);
             set_show_line_numbers (false);
