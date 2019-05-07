@@ -2,6 +2,63 @@
     margin-top: 2px;
 }
 
+.theme-selection radiobutton {
+    background-color: @theme_unfocused_bg_color;
+
+}
+
+.theme-selection radiobutton radio {
+    opacity: 0;
+    transition-property: none;
+    font-size: 0px;
+    background-color: @theme_unfocused_bg_color;
+    border-width: 0px;
+    box-shadow: none;
+}
+
+.theme-selection radiobutton:checked {
+    background-color: @theme_selected_bg_color;
+
+}
+
+.theme-selection radiobutton:checked radio {
+    opacity: 0;
+    transition-property: none;
+    font-size: 0px;
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_bg_color;
+    border-color: @theme_selected_bg_color;
+    box-shadow: none;
+}
+
+.theme-selection radiobutton:active {
+    background-color: @theme_selected_bg_color;
+
+}
+
+.theme-selection radiobutton:active radio {
+    opacity: 0;
+    transition-property: none;
+    font-size: 0px;
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_bg_color;
+    border-color: @theme_selected_bg_color;
+    box-shadow: none;
+}
+
+.theme-selection radiobutton:indeterminate {
+    background-color: @theme_selected_bg_color;
+}
+
+.theme-selection radiobutton:indeterminate radio {
+    opacity: 0;
+    transition-property: none;
+    font-size: 0px;
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_bg_color;
+    border-color: @theme_selected_bg_color;
+}
+
 .console-box {
     margin: 2px 13px;
 }

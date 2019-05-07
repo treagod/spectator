@@ -60,33 +60,67 @@ namespace Spectator.Dialogs.Preference {
 
             var scheme_label = new Gtk.Label (_("Color Scheme"));
             scheme_label.halign = Gtk.Align.START;
+            scheme_label.valign = Gtk.Align.START;
 
             var fbox = new Gtk.FlowBox ();
             fbox.max_children_per_line = 1;
             fbox.column_spacing = 0;
 
-            var s = Gtk.SourceStyleSchemeManager.get_default ();
-
-            foreach (var id in s.scheme_ids) {
-                var but = new Gtk.Button ();
-                var r = new Gtk.Label (id);
-                but.add (r);
-                but.clicked.connect (() => {
-                    settings.editor_scheme = r.label;
-                    settings.editor_scheme_changed ();
-                });
-                r.halign = Gtk.Align.START;
-                fbox.add (but);
-            }
+            var ra_box = create_radio_button_box ();
 
             option_grid.attach (use_default_font_label, 0, 0, 1, 1);
             option_grid.attach (use_default_font_switch, 1, 0, 1, 1);
             option_grid.attach (font_label, 0, 1, 1, 1);
             option_grid.attach (font_button, 1, 1, 1, 1);
             option_grid.attach (scheme_label, 0, 2, 1, 1);
-            option_grid.attach (fbox, 1, 3, 1, 1);
+            option_grid.attach (ra_box, 1, 2, 1, 1);
 
             add (option_grid);
+        }
+
+        private Gtk.Box create_radio_button_box () {
+            var settings = Settings.get_instance ();
+            var scheme_manager = Gtk.SourceStyleSchemeManager.get_default ();
+            var ra_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+            ra_box.get_style_context ().add_class ("theme-selection");
+            Gtk.RadioButton radio_button = null;
+
+            var editor_scheme = settings.editor_scheme;
+            foreach (var id in scheme_manager.scheme_ids) {
+                var label = create_label_for_id (id);
+
+                if (radio_button == null) {
+                    radio_button = new Gtk.RadioButton.with_label (null, label);
+                } else {
+                    radio_button = new Gtk.RadioButton.with_label_from_widget (radio_button, label);
+                }
+
+                radio_button.hide ();
+
+                ra_box.pack_start (radio_button);
+                radio_button.clicked.connect (() => {
+                    settings.editor_scheme = id;
+                    settings.editor_scheme_changed ();
+                });
+
+                if (id == editor_scheme) {
+                    radio_button.active = true;
+                }
+            }
+
+            return ra_box;
+        }
+
+        private string create_label_for_id (string id) {
+            var part_ids = id.split ("-");
+            var builder = new StringBuilder ();
+
+            foreach (var part in part_ids) {
+                part = "%s%s ".printf (part.up (1), part.substring(1));
+                builder.append (part);
+            }
+
+            return builder.str;
         }
     }
 }
