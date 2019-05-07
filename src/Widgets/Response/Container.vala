@@ -27,7 +27,6 @@ namespace Spectator.Widgets.Response {
         private AbstractTypeView xml_view;
         private AbstractTypeView plain_view;
         private Gtk.Stack stack;
-        private ResponseItem? item;
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -58,12 +57,22 @@ namespace Spectator.Widgets.Response {
         }
 
         public void update (ResponseItem? it) {
-            item = it;
             set_content_type (it);
             update_view (it);
             status_bar.update (it);
             var current_view = (AbstractTypeView) stack.get_visible_child ();
             current_view.update (it);
+            current_view.show_view (0);
+        }
+
+        public void update_test (Models.Request request) {
+            var res = request.response;
+
+            set_content_type (res);
+            update_view (res);
+            status_bar.update (res);
+            var current_view = (AbstractTypeView) stack.get_visible_child ();
+            current_view.update (res);
             current_view.show_view (0);
         }
 

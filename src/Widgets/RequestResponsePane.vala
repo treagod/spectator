@@ -24,7 +24,6 @@ namespace Spectator.Widgets {
         private Request.Container request_view;
         private Response.Container response_view;
         private Gee.HashMap<Models.Request, int> tab_indecies;
-        private Gee.HashMap<Models.Request, ResponseViewCache> cache;
         private Models.Request last_item;
 
         public signal void type_changed (RequestBody.ContentType type);
@@ -38,8 +37,8 @@ namespace Spectator.Widgets {
         public RequestResponsePane () {
             request_view = new Request.Container ();
             response_view = new Response.Container ();
+            response_view = new Response.Container ();
             tab_indecies = new Gee.HashMap<Models.Request, int> ();
-            cache = new Gee.HashMap<Models.Request, ResponseViewCache> ();
 
             request_view.response_received.connect ((res) => {
                 response_view.update (res);
@@ -98,6 +97,7 @@ namespace Spectator.Widgets {
             });
 
             pack1 (request_view, true, false);
+            pack2 (response_view, true, false);
         }
 
         public void update_url_bar (string uri) {
@@ -124,6 +124,7 @@ namespace Spectator.Widgets {
             }
         }
 
+        /*
         private void create_or_get_cached_view (Models.Request item) {
             remove (response_view);
 
@@ -145,6 +146,7 @@ namespace Spectator.Widgets {
                 response_view.update (item.response);
             }
         }
+        */
 
         public void set_item (Models.Request request) {
             adjust_tab (request);
@@ -153,15 +155,24 @@ namespace Spectator.Widgets {
 
         public void update_response (Models.Request request) {
             if (request.response != null) {
-                create_or_get_cached_view (request);
+                response_view.update_test (request);
+                response_view.show_all ();
+
+                if (get_child2 () == null) {
+                    pack2 (response_view, true, false);
+                }
             } else {
                 if (get_child2 () != null) {
                     remove (response_view);
                 }
             }
+
+            show_all ();
+
         }
 
         public void update_chunk_response (Models.Request item) {
+            /*
             if (cache.has_key(item)) {
                 response_view = cache[item].view;
                 response_view.show_all ();
@@ -177,6 +188,7 @@ namespace Spectator.Widgets {
             response_view.show_all ();
             response_view.update (item.response);
             show_all ();
+            */
         }
 
         public void update_status (Models.Request request) {
