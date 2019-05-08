@@ -23,8 +23,21 @@ namespace Spectator.Widgets.Request {
     class ScriptingSourceView : Gtk.SourceView {
         public signal void changed (string script);
         public new Gtk.SourceBuffer buffer;
-        private string font { set; get; default = "Roboto Mono Regular 11"; }
+        public Gtk.SourceStyleSchemeManager style_scheme_manager;
 
+        private void set_default_font () {
+            override_font (Pango.FontDescription.from_string (
+                    new GLib.Settings ("org.gnome.desktop.interface")
+                        .get_string ("monospace-font-name")));
+        }
+
+        private void set_font (string font) {
+            override_font (Pango.FontDescription.from_string (font));
+        }
+
+        private void set_editor_scheme (string scheme) {
+            buffer.style_scheme = style_scheme_manager.get_scheme (scheme);
+        }
 
         public ScriptingSourceView () {
             Object (
@@ -34,8 +47,31 @@ namespace Spectator.Widgets.Request {
             );
             show_line_numbers = true;
             var manager = Gtk.SourceLanguageManager.get_default ();
+            style_scheme_manager = new Gtk.SourceStyleSchemeManager ();
+            var settings = Settings.get_instance ();
+
+            if (settings.use_default_font) {
+                set_default_font ();
+            } else {
+                set_font (settings.font);
+            }
+
+            settings.editor_scheme_changed.connect (() => {
+                set_editor_scheme (settings.editor_scheme);
+            });
+
+            settings.font_changed.connect (() => {
+                set_font (settings.font);
+            });
+
+            settings.default_font.connect (() => {
+                set_default_font ();
+            });
+
             buffer = new Gtk.SourceBuffer (null);
             buffer.highlight_syntax = true;
+            set_editor_scheme (settings.editor_scheme);
+
             indent_width = 4;
             insert_spaces_instead_of_tabs = true;
             indent_on_tab = true;
