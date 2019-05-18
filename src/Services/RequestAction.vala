@@ -161,7 +161,11 @@ namespace Spectator.Services {
         }
 
         private async void perform_request () {
-            if (!item.has_valid_uri ()) {
+            var valid_uri = Utilities.valid_uri_string (item.uri);
+
+            // Explicit comparison because.. seems to be a compiler bug?
+            // if (valid_uri) always evaluates to true
+            if (valid_uri == false) {
                 invalid_uri (item);
                 return;
             }

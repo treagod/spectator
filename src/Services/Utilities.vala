@@ -20,6 +20,12 @@
 */
 
 namespace Spectator.Services.Utilities {
+    public bool valid_uri_string (string uri) {
+        var soup_uri = new Soup.URI (uri);
+
+        return valid_uri (soup_uri);
+    }
+
     public bool valid_uri (Soup.URI? uri) {
         return uri != null &&
                (uri.get_scheme () == "http" || uri.get_scheme () == "https") &&
