@@ -143,10 +143,21 @@ namespace Spectator.Widgets {
 
         public void update_response (Models.Request request) {
             req_res_pane.update_response (request);
+            if (infobar.revealed) {
+                reset_infobar ();
+            }
+        }
+
+        public void reset_infobar () {
+            infolabel.label = "";
+                infobar.revealed = false;
         }
 
         public void update_chunk_response (Models.Request request) {
             req_res_pane.update_chunk_response (request);
+            if (infobar.revealed) {
+                reset_infobar ();
+            }
         }
 
         public void update_status (Models.Request request) {
