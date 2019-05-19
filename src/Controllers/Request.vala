@@ -214,6 +214,7 @@ namespace Spectator.Controllers {
             var dialog = new Dialogs.Request.CreateDialog (main.window);
             dialog.show_all ();
             dialog.creation.connect ((item) => {
+                item.script_code = "// function before_sending(request) {\n// }";
                 add_item (item);
                 update_headerbar (item);
                 content.show_request (item);
