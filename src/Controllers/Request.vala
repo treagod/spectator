@@ -29,8 +29,8 @@ namespace Spectator.Controllers {
         private Widgets.Content content;
         private Widgets.HeaderBar headerbar;
         // \Views
-        public Main main;
-        private RequestAction action;
+        public unowned Main main;
+        private Services.RequestAction action;
 
         public signal void preference_clicked ();
 
@@ -89,7 +89,7 @@ namespace Spectator.Controllers {
                 request.query = querystr;
 
                 if (querystr == "") {
-                    request.uri = request.uri.replace("?", "");
+                    request.uri = request.uri.replace ("?", "");
                 }
 
                 sidebar.update_active (request);
@@ -103,24 +103,24 @@ namespace Spectator.Controllers {
 
             content.script_changed.connect ((script) => {
                 var item = sidebar.get_active_item ();
-                item.script.code = script;
+                item.script_code = script;
             });
 
             content.method_changed.connect ((method) => {
                 sidebar.update_active_method (method);
             });
 
-            content.key_value_added.connect((kv) => {
+            content.key_value_added.connect ((kv) => {
                 var item = sidebar.get_active_item ();
                 item.request_body.add_key_value (kv);
             });
 
-            content.key_value_updated.connect((kv) => {
+            content.key_value_updated.connect ((kv) => {
                 var item = sidebar.get_active_item ();
                 item.request_body.update_key_value (kv);
             });
 
-            content.key_value_removed.connect((kv) => {
+            content.key_value_removed.connect ((kv) => {
                 var item = sidebar.get_active_item ();
                 item.request_body.remove_key_value (kv);
             });
@@ -134,9 +134,7 @@ namespace Spectator.Controllers {
                 var item = sidebar.get_active_item ();
                 item.status = Models.RequestStatus.SENDING;
 
-                action = new RequestAction (item);
-
-                main.plugin_engine.run_plugin (item);
+                action = new Services.RequestAction.with_writer (item, content.get_console_writer ());
 
                 action.finished_request.connect (() => {
                     if (item == sidebar.get_active_item ()) {
@@ -148,19 +146,19 @@ namespace Spectator.Controllers {
                 action.request_failed.connect ((item) => {
                     item.status = Models.RequestStatus.SENT;
                     content.show_request (item);
-                    content.set_error ("Request failed: %s".printf (item.name));
+                    content.set_error (_("Request failed: %s").printf (item.name));
                 });
 
                 action.invalid_uri.connect ((item) => {
                     item.status = Models.RequestStatus.SENT;
                     content.update_status (item);
-                    content.set_error ("Invalid URI: %s".printf (item.name));
+                    content.set_error (_("Invalid URI: %s").printf (item.name));
                 });
 
                 action.proxy_failed.connect ((item) => {
                     item.status = Models.RequestStatus.SENT;
                     content.update_status (item);
-                    content.set_error ("Proxy denied request: %s".printf (item.name));
+                    content.set_error (_("Proxy denied request: %s").printf (item.name));
                 });
 
                 action.request_got_chunk.connect (() => {
@@ -177,7 +175,7 @@ namespace Spectator.Controllers {
                 action.make_request.begin ();
             });
 
-            content.header_added.connect((header) =>  {
+            content.header_added.connect ((header) => {
                 var item = sidebar.get_active_item ();
                 item.add_header (header);
             });
@@ -216,6 +214,7 @@ namespace Spectator.Controllers {
             var dialog = new Dialogs.Request.CreateDialog (main.window);
             dialog.show_all ();
             dialog.creation.connect ((item) => {
+                item.script_code = "// function before_sending(request) {\n// }";
                 add_item (item);
                 update_headerbar (item);
                 content.show_request (item);
@@ -244,9 +243,6 @@ namespace Spectator.Controllers {
 
         public void add_item (Models.Request item) {
             items.add (item);
-            item.script.script_error.connect ((err) => {
-                content.set_script_error (err);
-            });
             sidebar.add_item (item);
         }
 

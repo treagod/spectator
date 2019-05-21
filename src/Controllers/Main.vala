@@ -24,12 +24,10 @@ namespace Spectator.Controllers {
         private Request request_controller;
         private Collection collection_controller;
         public unowned Gtk.ApplicationWindow window;
-        public Plugins.Engine plugin_engine { get; private set; }
         private string setting_file_path;
 
         public Main (Gtk.ApplicationWindow window, Request req_controller, Collection col_controller) {
             this.window = window;
-            this.plugin_engine = new Plugins.Engine (new Plugins.GtkWrapper (window));
             this.request_controller = req_controller;
             this.request_controller.main = this;
             this.collection_controller = col_controller;
@@ -61,7 +59,7 @@ namespace Spectator.Controllers {
                 add_request (request);
             });
 
-            deserializer.load_data_from_file(setting_file_path);
+            deserializer.load_data_from_file (setting_file_path);
         }
 
         public void save_data () {

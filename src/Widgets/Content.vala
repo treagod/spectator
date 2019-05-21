@@ -36,10 +36,10 @@ namespace Spectator.Widgets {
         public signal void script_changed (string script);
 
         public signal void item_changed (Models.Request item);
-        public signal void welcome_activated(int index);
+        public signal void welcome_activated (int index);
         public signal void header_added (Pair header);
         public signal void header_deleted (Pair header);
-        public signal void url_params_updated(Gee.ArrayList<Pair> items);
+        public signal void url_params_updated (Gee.ArrayList<Pair> items);
         public signal void key_value_added (Pair item);
         public signal void key_value_removed (Pair item);
         public signal void key_value_updated (Pair item);
@@ -47,12 +47,13 @@ namespace Spectator.Widgets {
         public Content () {
             stack = new Gtk.Stack ();
             infobar = new Gtk.InfoBar ();
-            infolabel = new Gtk.Label("");
-            welcome = new Granite.Widgets.Welcome (_(Constants.RELEASE_NAME), _("Inspect your HTTP transmissions to the web"));
+            infolabel = new Gtk.Label ("");
+            welcome = new Granite.Widgets.Welcome (_(Constants.RELEASE_NAME),
+                                                   _("Inspect your HTTP transmissions to the web"));
             welcome.hexpand = true;
             welcome.append ("bookmark-new", _("Create Request"), _("Create a new request to the web."));
 
-            welcome.activated.connect((index) => {
+            welcome.activated.connect ((index) => {
                 welcome_activated (index);
             });
 
@@ -70,15 +71,15 @@ namespace Spectator.Widgets {
                 script_changed (script);
             });
 
-            req_res_pane.key_value_added.connect((item) => {
+            req_res_pane.key_value_added.connect ((item) => {
                 key_value_added (item);
             });
 
-            req_res_pane.key_value_updated.connect((item) => {
+            req_res_pane.key_value_updated.connect ((item) => {
                 key_value_updated (item);
             });
 
-            req_res_pane.key_value_removed.connect((item) => {
+            req_res_pane.key_value_removed.connect ((item) => {
                 key_value_removed (item);
             });
 
@@ -101,9 +102,9 @@ namespace Spectator.Widgets {
 
             Gtk.Container content = infobar.get_content_area ();
             content.add (infolabel);
-		    content.show_all ();
+            content.show_all ();
 
-            add  (infobar);
+            add (infobar);
             add (stack);
 
             show_all ();
@@ -130,17 +131,9 @@ namespace Spectator.Widgets {
             reveal_infobar (message);
         }
 
-        public void set_script_error (string message) {
-            infobar.message_type = Gtk.MessageType.ERROR;
-
-            req_res_pane.set_script_error (message);
-
-            reveal_infobar (message);
-        }
-
         private void reveal_infobar (string message) {
             infolabel.label = message;
-		    infobar.revealed = true;
+            infobar.revealed = true;
         }
 
         public void show_request (Models.Request item) {
@@ -150,10 +143,21 @@ namespace Spectator.Widgets {
 
         public void update_response (Models.Request request) {
             req_res_pane.update_response (request);
+            if (infobar.revealed) {
+                reset_infobar ();
+            }
+        }
+
+        public void reset_infobar () {
+            infolabel.label = "";
+                infobar.revealed = false;
         }
 
         public void update_chunk_response (Models.Request request) {
             req_res_pane.update_chunk_response (request);
+            if (infobar.revealed) {
+                reset_infobar ();
+            }
         }
 
         public void update_status (Models.Request request) {
@@ -162,6 +166,10 @@ namespace Spectator.Widgets {
 
         public void update_url_params (Models.Request item) {
             req_res_pane.update_url_params (item);
+        }
+
+        public Services.ScriptWriter get_console_writer () {
+            return req_res_pane.get_console_writer ();
         }
 
         private void setup_request_signals (RequestResponsePane request) {
@@ -173,7 +181,7 @@ namespace Spectator.Widgets {
                 request_activated ();
             });
 
-            request.method_changed.connect((method) => {
+            request.method_changed.connect ((method) => {
                 method_changed (method);
             });
 

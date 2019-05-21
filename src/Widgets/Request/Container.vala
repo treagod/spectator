@@ -25,10 +25,11 @@ namespace Spectator.Widgets.Request {
         private KeyValueList header_view;
         private BodyView body_view;
         private KeyValueList url_params_view;
-        private ScriptingView scripting_view;
+        private Spectator.Widgets.Request.Scripting.Container scripting_view;
         private Granite.Widgets.ModeButton tabs;
         private Gtk.Stack stack;
         private Gtk.Label body_label;
+
         public int tab_index {
             get {
                 return tabs.selected;
@@ -55,7 +56,11 @@ namespace Spectator.Widgets.Request {
             url_params_view = create_url_params_view ();
             url_entry = create_url_entry ();
             body_view = create_body_view ();
-            scripting_view = create_scripting_view ();
+            scripting_view = new Spectator.Widgets.Request.Scripting.Container ();
+
+            scripting_view.script_changed.connect ((script) => {
+                script_changed (script);
+            });
 
             init_stack ();
 
@@ -74,6 +79,7 @@ namespace Spectator.Widgets.Request {
 
             add (tabs);
             add (stack);
+            show_all ();
         }
 
         private KeyValueList create_header_view () {
@@ -89,21 +95,6 @@ namespace Spectator.Widgets.Request {
             });
 
             return header_view;
-        }
-
-        private ScriptingView create_scripting_view () {
-            var view = new ScriptingView ();
-
-            view.changed.connect ((script) => {
-                script_changed (script);
-            });
-
-            return view;
-        }
-
-        public void set_script_error (string error) {
-            stack.set_visible_child_name ("scripting");
-            scripting_view.grab_focus ();
         }
 
         private UrlEntry create_url_entry () {
@@ -167,15 +158,15 @@ namespace Spectator.Widgets.Request {
                 body_buffer_changed (content);
             });
 
-            body_view.key_value_added.connect((item) => {
+            body_view.key_value_added.connect ((item) => {
                 key_value_added (item);
             });
 
-            body_view.key_value_updated.connect((item) => {
+            body_view.key_value_updated.connect ((item) => {
                 key_value_updated (item);
             });
 
-            body_view.key_value_removed.connect((item) => {
+            body_view.key_value_removed.connect ((item) => {
                 key_value_removed (item);
             });
 
@@ -196,16 +187,16 @@ namespace Spectator.Widgets.Request {
 
         public void update_url_params (Models.Request item) {
             var query = item.query;
-            var params = query.split("&");
+            var params = query.split ("&");
             url_params_view.clear ();
 
             foreach (var param in params) {
                 if (param != "") {
-                    var kv = param.split("=");
-                    if(kv.length == 2){
-                        url_params_view.add_field (new Pair(kv[0], kv[1]));
+                    var kv = param.split ("=");
+                    if (kv.length == 2) {
+                        url_params_view.add_field (new Pair (kv[0], kv[1]));
                     } else if (kv.length == 1) {
-                        url_params_view.add_field (new Pair(kv[0], ""));
+                        url_params_view.add_field (new Pair (kv[0], ""));
                     }
 
                 }
@@ -220,7 +211,7 @@ namespace Spectator.Widgets.Request {
             tabs.append (header_params_label);
             tabs.append (url_params_label);
             tabs.append (body_label);
-            tabs.append(script_label);
+            tabs.append (script_label);
             tabs.set_active (0);
 
             tabs.mode_changed.connect ((tab) => {
@@ -237,7 +228,7 @@ namespace Spectator.Widgets.Request {
                 } else if (tab == url_params_label) {
                     stack.set_visible_child_name ("url_params");
                     current_index = tabs.selected;
-                }  else if (tab == script_label) {
+                } else if (tab == script_label) {
                     stack.set_visible_child_name ("scripting");
                     scripting_view.grab_focus ();
                     current_index = tabs.selected;
@@ -250,7 +241,7 @@ namespace Spectator.Widgets.Request {
         // select the Body Tab
         // For all other methods this method checks if the Body Tab was selected. If
         // the Body tab was selected, select Headers Tab. Furthermore disable Body Tab
-        private void update_tabs(Models.Method method) {
+        private void update_tabs (Models.Method method) {
             if (method == Models.Method.POST || method == Models.Method.PUT || method == Models.Method.PATCH) {
                 body_label.sensitive = true;
             } else {
@@ -269,23 +260,28 @@ namespace Spectator.Widgets.Request {
             url_entry.set_text (uri);
         }
 
-        private void update_script (Models.Script script) {
-            scripting_view.update_buffer (script.code);
+        private void update_script (string script) {
+            scripting_view.update_script_buffer (script);
         }
 
         public void update_status (Models.Request request) {
             url_entry.change_status (request.status);
         }
 
-        public void set_item (Models.Request item) {
-            url_entry.change_status (item.status);
-            url_entry.set_text (item.uri);
-            url_entry.set_method (item.method);
-            body_view.set_body (item.request_body);
-            update_url_params (item);
-            update_tabs (item.method);
-            update_script (item.script);
-            set_headers (item.headers);
+        public Services.ScriptWriter get_console_writer () {
+            return new Services.TextBufferWriter (scripting_view.console_buffer);
+        }
+
+        public void set_item (Models.Request request) {
+            url_entry.change_status (request.status);
+            url_entry.set_text (request.uri);
+            url_entry.set_method (request.method);
+            scripting_view.change_console (request);
+            body_view.set_body (request.request_body);
+            update_url_params (request);
+            update_tabs (request.method);
+            update_script (request.script_code);
+            set_headers (request.headers);
             show_all ();
         }
     }

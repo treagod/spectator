@@ -1,0 +1,284 @@
+# French translations for com.github.treagod.spectator package.
+# Copyright (C) 2019 THE com.github.treagod.spectator'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.treagod.spectator package.
+# NathanBnm, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.treagod.spectator\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-03-31 17:01+0200\n"
+"PO-Revision-Date: 2019-03-31 16:03+0200\n"
+"Last-Translator: NathanBnm\n"
+"Language-Team: Français\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: src/Controllers/Request.vala:149
+#, c-format
+msgid "Request failed: %s"
+msgstr "La requête à échoué : %s"
+
+#: src/Controllers/Request.vala:155
+#, c-format
+msgid "Invalid URI: %s"
+msgstr "URI Invalide : %s"
+
+#: src/Controllers/Request.vala:161
+#, c-format
+msgid "Proxy denied request: %s"
+msgstr "Accès refusé par le proxy : %s"
+
+#: src/Dialogs/Request/Dialog.vala:39
+msgid "Name:"
+msgstr "Nom :"
+
+#: src/Dialogs/Request/Dialog.vala:44 src/Dialogs/Alert.vala:42
+#: src/Dialogs/Preferences.vala:44
+msgid "Close"
+msgstr "Fermer"
+
+#: src/Dialogs/Request/CreateDialog.vala:27 src/Widgets/Content.vala:54
+#: src/Widgets/HeaderBar.vala:42
+msgid "Create Request"
+msgstr "Créer une requête"
+
+#: src/Dialogs/Request/CreateDialog.vala:28
+msgid "My Request"
+msgstr "Ma requête"
+
+#: src/Dialogs/Request/CreateDialog.vala:30
+msgid "Create"
+msgstr "Créer"
+
+#: src/Dialogs/Request/CreateDialog.vala:53
+#: src/Dialogs/Request/UpdateDialog.vala:53
+msgid "Request name must not be empty."
+msgstr "Le nom de la requête ne peut pas être vide."
+
+#: src/Dialogs/Request/UpdateDialog.vala:27
+msgid "Update Request"
+msgstr "Mettre à jour la requête"
+
+#: src/Dialogs/Request/UpdateDialog.vala:35
+msgid "Update"
+msgstr "Mettre à jour"
+
+#: src/Dialogs/Preferences.vala:26 src/Widgets/HeaderBar.vala:45
+msgid "Preferences"
+msgstr "Préférences"
+
+#: src/Dialogs/Preferences.vala:37
+msgid "General"
+msgstr "Général"
+
+#: src/Dialogs/Preferences.vala:38
+msgid "Network"
+msgstr "Réseau"
+
+#: src/Dialogs/Preference/General.vala:37
+msgid "Dark Theme"
+msgstr "Thème sombre"
+
+#: src/Dialogs/Preference/General.vala:42
+msgid "Follow redirects automatically"
+msgstr "Suivre les redirections automatiquement"
+
+#: src/Dialogs/Preference/General.vala:61
+msgid "Maximum Redirects"
+msgstr "Nombre de redirections maximum"
+
+#: src/Dialogs/Preference/General.vala:72
+msgid "Network Request Timeout"
+msgstr "Temps d'attente avant délai dépassé"
+
+#: src/Dialogs/Preference/Network.vala:36
+msgid "Use Proxy"
+msgstr "Utiliser un proxy"
+
+#: src/Dialogs/Preference/Network.vala:44
+msgid "HTTP Proxy"
+msgstr "Proxy HTTP"
+
+#: src/Dialogs/Preference/Network.vala:54
+msgid "HTTPS Proxy"
+msgstr "Proxy HTTPS"
+
+#: src/Dialogs/Preference/Network.vala:64
+msgid "No Proxy"
+msgstr "Pas de proxy"
+
+#: src/Dialogs/Preference/Network.vala:75
+msgid "Use User Information"
+msgstr "Utiliser les identifiants utilisateur"
+
+#: src/Dialogs/Preference/Network.vala:81
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: src/Dialogs/Preference/Network.vala:92
+msgid "Password"
+msgstr "Mot de passe"
+
+#: src/Widgets/Content.vala:52
+msgid "Inspect your HTTP transmissions to the web"
+msgstr "Inspectez vos transmissions HTTP sur le web"
+
+#: src/Widgets/Content.vala:54
+msgid "Create a new request to the web."
+msgstr "Créer une nouvelle requête web."
+
+#: src/Widgets/Sidebar/Container.vala:54
+msgid "Requests"
+msgstr "Requêtes"
+
+#: src/Widgets/Sidebar/Item.vala:24
+msgid "No URL specified"
+msgstr "Aucun URL spécifié"
+
+#: src/Widgets/Sidebar/Item.vala:133
+msgid "Edit"
+msgstr "Modifier"
+
+#: src/Widgets/Sidebar/Item.vala:134
+msgid "Delete"
+msgstr "Supprimer"
+
+#: src/Widgets/Response/JsonTreeView.vala:50
+#: src/Widgets/Response/JsonTreeView.vala:75
+msgid "Key"
+msgstr "Clé"
+
+#: src/Widgets/Response/JsonTreeView.vala:51
+#: src/Widgets/Response/JsonTreeView.vala:76
+msgid "Value"
+msgstr "Valeur"
+
+#: src/Widgets/Response/JsonTreeView.vala:87
+msgid "Object"
+msgstr "Objet"
+
+#: src/Widgets/Response/JsonTreeView.vala:90
+msgid "Array"
+msgstr "Tableau"
+
+#: src/Widgets/Response/StatusBar/Container.vala:46
+msgid "Text"
+msgstr "Texte"
+
+#: src/Widgets/Response/StatusBar/Container.vala:47
+#: src/Widgets/Response/StatusBar/Container.vala:70
+msgid "Raw"
+msgstr "Brut"
+
+#: src/Widgets/Response/StatusBar/Container.vala:56
+msgid "Preview"
+msgstr "Aperçu"
+
+#: src/Widgets/Response/StatusBar/Container.vala:57
+msgid "Source Code"
+msgstr "Code source"
+
+#: src/Widgets/Response/StatusBar/Container.vala:58
+#: src/Widgets/Response/StatusBar/Container.vala:69
+#: src/Widgets/Request/Container.vala:112
+msgid "Headers"
+msgstr "En-têtes"
+
+#: src/Widgets/Response/StatusBar/Container.vala:67
+msgid "JSON Tree"
+msgstr "Arbre JSON"
+
+#: src/Widgets/Response/StatusBar/Container.vala:68
+msgid "Prettified"
+msgstr "Mis en forme"
+
+#: src/Widgets/Response/StatusBar/Container.vala:78
+#: src/Widgets/Response/StatusBar/Container.vala:143
+msgid "No status"
+msgstr "Pas de statut"
+
+#: src/Widgets/Response/StatusBar/Container.vala:86
+#: src/Widgets/Response/StatusBar/Container.vala:140
+msgid "No duration"
+msgstr "Pas de durée"
+
+#: src/Widgets/Response/StatusBar/Container.vala:94
+#: src/Widgets/Response/StatusBar/Container.vala:137
+msgid "No size"
+msgstr "Pas de taille"
+
+#: src/Widgets/Response/StatusBar/Container.vala:147
+msgid "seconds"
+msgstr "secondes"
+
+#: src/Widgets/Response/StatusBar/Container.vala:161
+msgid "GB"
+msgstr "Go"
+
+#: src/Widgets/Response/StatusBar/Container.vala:163
+msgid "MB"
+msgstr "Mo"
+
+#: src/Widgets/Response/StatusBar/Container.vala:165
+msgid "KB"
+msgstr "Ko"
+
+#: src/Widgets/Response/StatusBar/Container.vala:170
+msgid "B"
+msgstr "Octets"
+
+#: src/Widgets/Request/Container.vala:68
+msgid "JavaScript Console"
+msgstr "Console JavaScript"
+
+#: src/Widgets/Request/Container.vala:70
+msgid "JavaScript Info"
+msgstr "Info JavaScript"
+
+#: src/Widgets/Request/Container.vala:113
+msgid "Parameters"
+msgstr "Paramètres"
+
+#: src/Widgets/Request/Container.vala:114
+msgid "Body"
+msgstr "Corps"
+
+#: src/Widgets/Request/Container.vala:115
+msgid "Script"
+msgstr "Script"
+
+#: src/Widgets/Request/Container.vala:129
+msgid "Add Header"
+msgstr "Ajouter un en-tête"
+
+#: src/Widgets/Request/Container.vala:178
+msgid "Add Parameter"
+msgstr "Ajouter un paramètre"
+
+#: src/Widgets/Request/UrlEntry.vala:101
+msgid "Type an URL"
+msgstr "Tapez un URL"
+
+#: src/Widgets/Request/BodyView.vala:60
+msgid "Plain"
+msgstr "Texte brut"
+
+#: src/Widgets/Request/BodyView.vala:61
+msgid "XML"
+msgstr "XML"
+
+#: src/Widgets/Request/BodyView.vala:62
+msgid "JSON"
+msgstr "JSON"
+
+#: src/Widgets/Request/BodyView.vala:63
+msgid "HTML"
+msgstr "HTML"
+
+#: src/Widgets/Request/BodyView.vala:150 src/Widgets/Request/BodyView.vala:168
+msgid "Add"
+msgstr "Ajouter"

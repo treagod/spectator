@@ -68,7 +68,7 @@ namespace Spectator.Services {
         var request = new Models.Request.with_uri (name, uri, Models.Method.convert (method));
         var headers = request_object.get_array_member ("headers");
 
-        request.script.code = script_code;
+        request.script_code = script_code;
 
         foreach (var header_element in headers.get_elements ()) {
             var header = header_element.get_object ();
@@ -80,7 +80,7 @@ namespace Spectator.Services {
         request.request_body.type = RequestBody.ContentType.FORM_DATA;
         foreach (var form_data_element in body.get_array_member ("form_data").get_elements ()) {
             var form_data_item = form_data_element.get_object ();
-            request.request_body.add_key_value (new Pair(
+            request.request_body.add_key_value (new Pair (
                     form_data_item.get_string_member ("key"),
                     form_data_item.get_string_member ("value")
             ));
@@ -89,7 +89,7 @@ namespace Spectator.Services {
         request.request_body.type = RequestBody.ContentType.URLENCODED;
         foreach (var form_data_element in body.get_array_member ("urlencoded").get_elements ()) {
             var form_data_item = form_data_element.get_object ();
-            request.request_body.add_key_value (new Pair(
+            request.request_body.add_key_value (new Pair (
                     form_data_item.get_string_member ("key"),
                     form_data_item.get_string_member ("value")
             ));

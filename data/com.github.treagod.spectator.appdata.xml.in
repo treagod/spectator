@@ -9,8 +9,8 @@
   <description>
     <p>Gives you the possibilty to test your REST application.</p>
     <p>
-        Send custom headers and self defined bodies to your application and
-        displays the response in a clean way.
+      Send custom headers and self defined bodies to your application and
+      displays the response in a clean way.
     </p>
   </description>
   <releases>
@@ -21,75 +21,82 @@
 				</ul>
     </release>
     <release version="0.2.0" date="2019-03-17">
-      <p>JavaScript Integration</p>
-				<ul>
-					<li>Adds the possibility to augment your requests with scripting.</li>
-					<li>The developer can use the 'before_sending' JavaScript function to augment the request.</li>
-					<li>HTTP.get(url), HTTP.post(url, config) and other request methods are available from script</li>
-				</ul>
+      <description>
+        <p>JavaScript Integration</p>
+        <ul>
+          <li>Adds the possibility to augment your requests with scripting.</li>
+          <li>The developer can use the 'before_sending' JavaScript function to augment the request.</li>
+          <li>HTTP.get(url), HTTP.post(url, config) and other request methods are available from script</li>
+        </ul>
+      </description>
     </release>
     <release version="0.1.10" date="2019-03-13 ">
-      <p>URL Params fixes</p>
-				<ul>
-					<li>Fixes a bug where the application crashes if a URL param is entered from key-value view without a URL</li>
-				</ul>
+      <description>
+        <p>URL Params fixes</p>
+        <ul>
+          <li>Fixes a bug where the application crashes if a URL param is entered from key-value view without a URL</li>
+        </ul>
+      </description>
     </release>
     <release version="0.1.8" date="2019-02-26">
-      <p>Initial Release</p>
-				<ul>
-					<li>Comfortably test your REST APIs!</li>
-					<li>Send custom headers and self defined bodies to your application and displays the response in a clean way.</li>
-				</ul>
+      <description>
+        <p>Initial Release</p>
+        <ul>
+          <li>Comfortably test your REST APIs!</li>
+          <li>Send custom headers and self defined bodies to your application and displays the response in a clean way.</li>
+        </ul>
+      </description>
     </release>
   </releases>
   <screenshots>
     <screenshot>
-			<image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-19%2018.12.17.png</image>
-		</screenshot>
-		<screenshot type="default">
-			<image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-19%2018.12.07.png</image>
-		</screenshot>
-		<screenshot>
-			<image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-19%2018.13.26.png</image>
-		</screenshot>
+      <image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-19%2018.12.17.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-19%2018.12.07.png</image>
+    </screenshot>
     <screenshot>
-			<image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-19%2018.16.56.png</image>
-		</screenshot>
+      <image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-19%2018.13.26.png</image>
+    </screenshot>
     <screenshot>
-			<image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-19%2018.23.48.png</image>
-		</screenshot>
+      <image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-19%2018.16.56.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/Screenshot%20from%202019-03-19%2018.23.48.png</image>
+    </screenshot>
   </screenshots>
   <content_rating type="oars-1.1">
-		<content_attribute id="violence-cartoon">none</content_attribute>
-		<content_attribute id="violence-fantasy">none</content_attribute>
-		<content_attribute id="violence-realistic">none</content_attribute>
-		<content_attribute id="violence-bloodshed">none</content_attribute>
-		<content_attribute id="violence-sexual">none</content_attribute>
-		<content_attribute id="violence-desecration">none</content_attribute>
-		<content_attribute id="violence-slavery">none</content_attribute>
-		<content_attribute id="violence-worship">none</content_attribute>
-		<content_attribute id="drugs-alcohol">none</content_attribute>
-		<content_attribute id="drugs-narcotics">none</content_attribute>
-		<content_attribute id="drugs-tobacco">none</content_attribute>
-		<content_attribute id="sex-nudity">none</content_attribute>
-		<content_attribute id="sex-themes">none</content_attribute>
-		<content_attribute id="sex-homosexuality">none</content_attribute>
-		<content_attribute id="sex-prostitution">none</content_attribute>
-		<content_attribute id="sex-adultery">none</content_attribute>
-		<content_attribute id="sex-appearance">none</content_attribute>
-		<content_attribute id="language-profanity">none</content_attribute>
-		<content_attribute id="language-humor">none</content_attribute>
-		<content_attribute id="language-discrimination">none</content_attribute>
-		<content_attribute id="social-chat">none</content_attribute>
-		<content_attribute id="social-info">none</content_attribute>
-		<content_attribute id="social-audio">none</content_attribute>
-		<content_attribute id="social-location">none</content_attribute>
-		<content_attribute id="social-contacts">none</content_attribute>
-		<content_attribute id="money-purchasing">none</content_attribute>
-		<content_attribute id="money-gambling">none</content_attribute>
-	</content_rating>
-	<developer_name>Marvin Ahlgrimm</developer_name>
-	<custom>
-		<value key="x-appcenter-suggested-price">6</value>
+    <content_attribute id="violence-cartoon">none</content_attribute>
+    <content_attribute id="violence-fantasy">none</content_attribute>
+    <content_attribute id="violence-realistic">none</content_attribute>
+    <content_attribute id="violence-bloodshed">none</content_attribute>
+    <content_attribute id="violence-sexual">none</content_attribute>
+    <content_attribute id="violence-desecration">none</content_attribute>
+    <content_attribute id="violence-slavery">none</content_attribute>
+    <content_attribute id="violence-worship">none</content_attribute>
+    <content_attribute id="drugs-alcohol">none</content_attribute>
+    <content_attribute id="drugs-narcotics">none</content_attribute>
+    <content_attribute id="drugs-tobacco">none</content_attribute>
+    <content_attribute id="sex-nudity">none</content_attribute>
+    <content_attribute id="sex-themes">none</content_attribute>
+    <content_attribute id="sex-homosexuality">none</content_attribute>
+    <content_attribute id="sex-prostitution">none</content_attribute>
+    <content_attribute id="sex-adultery">none</content_attribute>
+    <content_attribute id="sex-appearance">none</content_attribute>
+    <content_attribute id="language-profanity">none</content_attribute>
+    <content_attribute id="language-humor">none</content_attribute>
+    <content_attribute id="language-discrimination">none</content_attribute>
+    <content_attribute id="social-chat">none</content_attribute>
+    <content_attribute id="social-info">none</content_attribute>
+    <content_attribute id="social-audio">none</content_attribute>
+    <content_attribute id="social-location">none</content_attribute>
+    <content_attribute id="social-contacts">none</content_attribute>
+    <content_attribute id="money-purchasing">none</content_attribute>
+    <content_attribute id="money-gambling">none</content_attribute>
+  </content_rating>
+  <developer_name>Marvin Ahlgrimm</developer_name>
+  <custom>
+    <value key="x-appcenter-suggested-price">6</value>
   </custom>
 </component>
+

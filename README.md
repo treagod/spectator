@@ -9,8 +9,9 @@ API endpoints of your HTTP server.
 
 - [x] Do requests to a web server
 - [x] Handle Basic Proxy Server
-- [ ] Create request enviroments
+- [x] Scripting capabilities
 - [ ] Create collections of requests
+- [ ] Create request enviroments
 - [ ] Create test enviroments for your collections
 
 Right now Spectator allows you to make single requests to a web endpoint. In the long run
@@ -26,6 +27,7 @@ You'll need the following dependencies:
 * libgtksourceview-3.0-dev
 * libwebkit2gtk-4.0-dev
 * libjson-glib-dev
+* libxml2-dev
 * duktape-dev
 * valac
 
@@ -33,13 +35,10 @@ Run `meson build` to configure the build environment. Change to the build direct
 
     meson build --prefix=/usr
     cd build
-    ninja test
+    ninja
 
 To install, use `ninja install`, then execute with `com.github.treagod.spectator`
 
     sudo ninja install
     com.github.treagod.spectator
 
-## Git Policy
-
-As of 11th March 2019 a new [git policy](https://nvie.com/posts/a-successful-git-branching-model/) should be used.

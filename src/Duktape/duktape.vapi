@@ -165,6 +165,9 @@ namespace Duktape {
         [CCode (cname = "duk_is_string")]
         public bool is_string(int idx);
 
+        [CCode (cname = "duk_is_number")]
+        public bool is_number(int idx);
+
         [CCode (cname = "duk_is_object")]
         public bool is_object(int idx);
 

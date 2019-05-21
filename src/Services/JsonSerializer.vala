@@ -81,7 +81,7 @@ namespace Spectator.Services {
             builder.end_object (); // body
         }
 
-        private void serialize_request(Models.Request request) {
+        private void serialize_request (Models.Request request) {
             builder.begin_object ();
             builder.set_member_name ("name");
             builder.add_string_value (request.name);
@@ -90,7 +90,7 @@ namespace Spectator.Services {
             builder.set_member_name ("method");
             builder.add_int_value (request.method.to_i ());
             builder.set_member_name ("script");
-            builder.add_string_value (request.script.code);
+            builder.add_string_value (request.script_code);
 
             serialize_headers (request);
             serialize_body (request);
@@ -121,7 +121,7 @@ namespace Spectator.Services {
             data = generator.to_data (null);
         }
 
-        public void write_to_file(string filepath) {
+        public void write_to_file (string filepath) {
             var file = File.new_for_path (filepath);
 
             try {
@@ -133,7 +133,11 @@ namespace Spectator.Services {
                 var data_stream = new DataOutputStream (file.create (FileCreateFlags.REPLACE_DESTINATION));
                 data_stream.put_string (data);
             } catch (IOError e) {
-                stderr.printf ("IO Error during saving settings: %s\n", e.message);
+                string dir_path = Path.get_dirname (filepath);
+                
+                File dir = File.new_for_path (dir_path);
+                dir.make_directory_with_parents ();
+                write_to_file (filepath);
             } catch (Error e) {
                 stderr.printf ("Error during saving settings: %s\n", e.message);
             }

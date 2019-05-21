@@ -19,7 +19,7 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace Spectator {
+namespace Spectator.Services {
     public class RequestAction {
         private Models.Request item;
         private Settings settings = Settings.get_instance ();
@@ -27,6 +27,7 @@ namespace Spectator {
         private Soup.Session session;
         private MainLoop loop;
         private bool is_canceled;
+        private Models.Script script;
 
         public signal void finished_request ();
         public signal void request_got_chunk ();
@@ -36,16 +37,24 @@ namespace Spectator {
         public signal void aborted ();
 
 
-        public RequestAction(Models.Request it) {
+        public RequestAction (Models.Request it) {
             item = it;
+            script = new Models.Script.with_code (item.script_code);
+            session = new Soup.Session ();
+            is_canceled = false;
+        }
+
+        public RequestAction.with_writer (Models.Request it, Services.ScriptWriter writer) {
+            item = it;
+            script = new Models.Script.with_code (item.script_code);
+            script.set_writer (writer);
             session = new Soup.Session ();
             is_canceled = false;
         }
 
         public async void make_request () {
-            timer = new Timer ();
             yield perform_request ();
-	        item.status = Models.RequestStatus.SENDING;
+            item.status = Models.RequestStatus.SENDING;
         }
 
         public Models.Request get_item () {
@@ -81,7 +90,7 @@ namespace Spectator {
             return performed_redirects;
         }
 
-        private void read_response(Soup.Session sess, Soup.Message mess) {
+        private void read_response (Soup.Session sess, Soup.Message mess) {
             if (mess.response_body.data == null) {
                 if (!is_canceled) {
                     request_failed (item);
@@ -97,7 +106,7 @@ namespace Spectator {
                     } else {
                         // try to extract info from url string
                         var http_proxy = new Soup.URI (settings.http_proxy);
-                        auth_string = "%s:%s".printf (http_proxy.get_user(), http_proxy.get_password ());
+                        auth_string = "%s:%s".printf (http_proxy.get_user (), http_proxy.get_password ());
                     }
                     var auth_string_b64 = Base64.encode ((uchar[]) auth_string.to_utf8 ());
                     mess.request_headers.append ("Proxy-Authorization", "Basic %s".printf (auth_string_b64));
@@ -119,6 +128,12 @@ namespace Spectator {
             res.size = mess.response_body.length;
 
             var builder = new StringBuilder ();
+            var http_version = mess.http_version == Soup.HTTPVersion.@1_0 ? "HTTP/1.0"
+                                                                          : "HTTP/1.1";
+
+            builder.append("%s %u %s\r\n".printf(http_version,
+                                                 res.status_code,
+                                                 Soup.Status.get_phrase (res.status_code)));
 
             mess.response_headers.foreach ((key, val) => {
                 res.add_header (key, val);
@@ -126,10 +141,11 @@ namespace Spectator {
             });
 
             builder.append ("\r\n");
-            builder.append ((string) mess.response_body.data);
+            var body_data = (string) mess.response_body.data;
+            builder.append (body_data);
 
             res.raw = builder.str;
-            res.data = (string) mess.response_body.data;
+            res.data = body_data;
 
             item.status = Models.RequestStatus.SENT;
             item.response = res;
@@ -145,14 +161,18 @@ namespace Spectator {
         }
 
         private async void perform_request () {
-            if (!item.has_valid_uri ()) {
+            var valid_uri = Utilities.valid_uri_string (item.uri);
+
+            // Explicit comparison because.. seems to be a compiler bug?
+            // if (valid_uri) always evaluates to true
+            if (valid_uri == false) {
                 invalid_uri (item);
                 return;
             }
 
             var tmp_req = new Models.Request.duplicate (item);
 
-            if (!tmp_req.execute_pre_script ()) {
+            if (!script.execute_before_sending (item)) {
                 aborted ();
                 return;
             }
@@ -246,7 +266,8 @@ namespace Spectator {
                     if (content_type_set) {
                         msg.set_request (null, Soup.MemoryUse.COPY, body.raw.data);
                     } else {
-                        msg.set_request (RequestBody.ContentType.to_mime (body.type), Soup.MemoryUse.COPY, body.raw.data);
+                        msg.set_request (RequestBody.ContentType.to_mime (body.type),
+                                         Soup.MemoryUse.COPY, body.raw.data);
                     }
                 } else if (body.type == RequestBody.ContentType.FORM_DATA) {
                     var multipart = new Soup.Multipart ("multipart/form-data");
@@ -267,8 +288,8 @@ namespace Spectator {
                             builder.append ("&");
                         }
                         builder.append ("%s=%s".printf (
-                            Soup.URI.encode(pair.key, "&"),
-                            Soup.URI.encode(pair.val, "&")
+                            Soup.URI.encode (pair.key, "&"),
+                            Soup.URI.encode (pair.val, "&")
                         ));
                     }
                     msg.set_request ("application/x-www-form-urlencoded", Soup.MemoryUse.COPY, builder.str.data);
@@ -282,6 +303,7 @@ namespace Spectator {
                 session.user_agent = user_agent;
             }
 
+            timer = new Timer ();
             session.queue_message (msg, read_response);
         }
     }

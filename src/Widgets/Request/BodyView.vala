@@ -57,10 +57,10 @@ namespace Spectator.Widgets.Request {
 
         private void setup_language_box () {
             language_box = new Gtk.ComboBoxText ();
-            language_box.append_text ("Plain");
-            language_box.append_text ("XML");
-            language_box.append_text ("JSON");
-            language_box.append_text ("HTML");
+            language_box.append_text (_("Plain"));
+            language_box.append_text (_("XML"));
+            language_box.append_text (_("JSON"));
+            language_box.append_text (_("HTML"));
             language_box.active = 0;
 
             language_box.changed.connect (() => {
@@ -149,15 +149,15 @@ namespace Spectator.Widgets.Request {
         private void setup_form_data () {
             form_data = new KeyValueList (_("Add"));
 
-            form_data.item_added.connect((item) => {
+            form_data.item_added.connect ((item) => {
                 key_value_added (item);
             });
 
-            form_data.item_updated.connect((item) => {
+            form_data.item_updated.connect ((item) => {
                 key_value_updated (item);
             });
 
-            form_data.item_deleted.connect((item) => {
+            form_data.item_deleted.connect ((item) => {
                 key_value_removed (item);
             });
 
@@ -167,15 +167,15 @@ namespace Spectator.Widgets.Request {
         private void setup_urlencoded () {
             urlencoded = new KeyValueList (_("Add"));
 
-            urlencoded.item_added.connect((item) => {
+            urlencoded.item_added.connect ((item) => {
                 key_value_added (item);
             });
 
-            urlencoded.item_updated.connect((item) => {
+            urlencoded.item_updated.connect ((item) => {
                 key_value_updated (item);
             });
 
-            urlencoded.item_deleted.connect((item) => {
+            urlencoded.item_deleted.connect ((item) => {
                 key_value_removed (item);
             });
 

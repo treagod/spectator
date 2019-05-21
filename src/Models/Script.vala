@@ -21,27 +21,26 @@
 
 public Duktape.ReturnType abort_request (Duktape.Context ctx) {
     ctx.push_true ();
-    ctx.put_global_string (Duktape.hidden_symbol("abort"));
+    ctx.put_global_string (Duktape.hidden_symbol ("abort"));
     return (Duktape.ReturnType) (-1);
 }
 
 namespace Spectator.Models {
-    public class Script  {
-        public signal void script_error (string err);
-
+    public class Script {
         private Services.ScriptContext context;
         private bool evaluated;
         private bool _valid;
         private string _code;
+        private Services.ScriptWriter writer;
 
-        public  bool valid {
+        public bool valid {
             get {
                 if (!evaluated) {
                     evaluate_code ();
                 }
 
                 return _valid;
-            } private set{
+            } private set {
                 _valid = value;
             }
         }
@@ -53,6 +52,11 @@ namespace Spectator.Models {
                 _code = value;
                 evaluated = false;
             }
+        }
+
+        public void set_writer (Services.ScriptWriter wri) {
+            writer = wri;
+            context.set_writer (writer);
         }
 
         public Script () {
@@ -68,8 +72,8 @@ namespace Spectator.Models {
             valid = true;
             code = "";
             evaluated = false;
-            context = new Services.ScriptContext ();
-            context.push_http_object ();
+            writer = new Services.StdoutWriter ();
+            context = new Services.ScriptContext (writer);
             context.push_content_type_object ();
         }
 
@@ -80,7 +84,7 @@ namespace Spectator.Models {
 
                 if (!valid) {
                     var err = context.safe_to_string (-1);
-                    script_error (err);
+                    context.emit_error (err);
                 }
 
                 context.pop (); // pops error string
@@ -91,20 +95,22 @@ namespace Spectator.Models {
             evaluate_code ();
             if (valid) {
                 context.get_global_string ("before_sending");
-                if (context.is_function(-1)) {
+                if (context.is_function (-1)) {
                     context.push_false ();
-                    context.put_global_string (Duktape.hidden_symbol("abort"));
+                    context.put_global_string (Duktape.hidden_symbol ("abort"));
 
                     context.push_request (request);
 
                     if (context.pcall (1) != 0) {
-                        context.get_global_string (Duktape.hidden_symbol("abort"));
+                        context.get_global_string (Duktape.hidden_symbol ("abort"));
                         if (context.get_boolean (-1)) {
+                            context.pop ();
                             return false;
-                        } else  {
+                        } else {
+                            context.pop ();
                             if (context.is_error (-1)) {
                                 var err = context.safe_to_string (-1);
-                                script_error (err);
+                                context.emit_error (err);
                                 context.pop ();
                             }
                         }

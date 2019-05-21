@@ -20,7 +20,7 @@
 */
 
 namespace Spectator.Widgets.Response {
-    public class JsonTreeView  : Gtk.TreeView {
+    public class JsonTreeView : Gtk.TreeView {
         // Workaround to keep Gtk.TreeIter in memory to do recursive creation
         private class TreeIter {
             public Gtk.TreeIter iter;
@@ -47,8 +47,8 @@ namespace Spectator.Widgets.Response {
         public JsonTreeView.empty () {
             store = new Gtk.TreeStore (2, typeof (string), typeof (string));
             set_model (store);
-            insert_column_with_attributes (-1, "Key", new Gtk.CellRendererText (), "text", 0, null);
-            insert_column_with_attributes (-1, "Value", new Gtk.CellRendererText (), "text", 1, null);
+            insert_column_with_attributes (-1, (_("Key")), new Gtk.CellRendererText (), "text", 0, null);
+            insert_column_with_attributes (-1, (_("Value")), new Gtk.CellRendererText (), "text", 1, null);
         }
 
         public void clear () {
@@ -72,8 +72,8 @@ namespace Spectator.Widgets.Response {
         private void init_tree (Json.Node node) {
             store = new Gtk.TreeStore (2, typeof (string), typeof (string));
             set_model (store);
-            insert_column_with_attributes (-1, "Key", new Gtk.CellRendererText (), "text", 0, null);
-            insert_column_with_attributes (-1, "Value", new Gtk.CellRendererText (), "text", 1, null);
+            insert_column_with_attributes (-1, (_("Key")), new Gtk.CellRendererText (), "text", 0, null);
+            insert_column_with_attributes (-1, (_("Value")), new Gtk.CellRendererText (), "text", 1, null);
 
             init_top_level (node);
         }
@@ -84,10 +84,10 @@ namespace Spectator.Widgets.Response {
             store.append (out root.iter, null);
 
             if (node.get_node_type () == Json.NodeType.OBJECT) {
-                store.set (root.iter, 0, "Object", 1, "", -1);
+                store.set (root.iter, 0, (_("Object")), 1, "", -1);
                 add_object_content (node.get_object (), root);
             } else if (node.get_node_type () == Json.NodeType.ARRAY) {
-                store.set (root.iter, 0, "Array", 1, "", -1);
+                store.set (root.iter, 0, (_("Array")), 1, "", -1);
                 add_array_content (node.get_array (), root);
             } else if (node.is_null ()) {
                 store.set (root.iter, 0, "", 1, "null", -1);

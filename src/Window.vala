@@ -45,7 +45,8 @@ namespace Spectator {
         public void show_app () {
             var provider = new Gtk.CssProvider ();
             provider.load_from_resource ("/com/github/treagod/spectator/stylesheet.css");
-            Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+            Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (),
+                                                      provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
 
             var grid = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
             grid.width_request = 950;

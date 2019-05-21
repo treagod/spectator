@@ -27,6 +27,6 @@ namespace Spectator.Widgets.Request {
         public signal void cancel_process ();
         public signal void header_added (Pair header);
         public signal void header_deleted (Pair header);
-        public signal void url_params_updated(Gee.ArrayList<Pair> items);
+        public signal void url_params_updated (Gee.ArrayList<Pair> items);
     }
 }

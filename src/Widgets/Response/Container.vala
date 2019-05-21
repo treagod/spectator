@@ -24,9 +24,9 @@ namespace Spectator.Widgets.Response {
         private StatusBar.Container status_bar;
         private AbstractTypeView html_view;
         private AbstractTypeView json_view;
+        private AbstractTypeView xml_view;
         private AbstractTypeView plain_view;
         private Gtk.Stack stack;
-        private ResponseItem? item;
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -36,12 +36,14 @@ namespace Spectator.Widgets.Response {
             stack = new Gtk.Stack ();
             html_view = new HtmlView ();
             json_view = new JsonView ();
+            xml_view = new XmlView ();
             plain_view = new DefaultView ();
 
             stack.add_named (html_view, "html_view");
             stack.add_named (json_view, "json_view");
+            stack.add_named (xml_view, "xml_view");
             stack.add_named (plain_view, "plain_view");
-            stack.set_visible_child (html_view);
+            stack.set_visible_child (plain_view);
 
             status_bar = new StatusBar.Container ();
 
@@ -55,12 +57,22 @@ namespace Spectator.Widgets.Response {
         }
 
         public void update (ResponseItem? it) {
-            item = it;
             set_content_type (it);
             update_view (it);
             status_bar.update (it);
             var current_view = (AbstractTypeView) stack.get_visible_child ();
             current_view.update (it);
+            current_view.show_view (0);
+        }
+
+        public void update_test (Models.Request request) {
+            var res = request.response;
+
+            set_content_type (res);
+            update_view (res);
+            status_bar.update (res);
+            var current_view = (AbstractTypeView) stack.get_visible_child ();
+            current_view.update (res);
             current_view.show_view (0);
         }
 
@@ -77,7 +89,7 @@ namespace Spectator.Widgets.Response {
             } else if (is_json (content_type)) {
                 stack.set_visible_child (json_view);
             } else if (is_xml (content_type)) {
-                stack.set_visible_child (html_view);
+                stack.set_visible_child (xml_view);
             } else {
                 stack.set_visible_child (plain_view);
             }
@@ -85,20 +97,20 @@ namespace Spectator.Widgets.Response {
 
         private void set_content_type (ResponseItem? it) {
             if (it == null) {
-                status_bar.set_active_type (Type.UNKOWN);
+                status_bar.set_active_type (StatusBar.Type.UNKOWN);
                 return;
             }
 
             var content_type = it.headers["Content-Type"];
             if (content_type != null) {
                 if (is_html (content_type)) {
-                    status_bar.set_active_type (Type.HTML);
+                    status_bar.set_active_type (StatusBar.Type.HTML);
                 } else if (is_json (content_type)) {
-                    status_bar.set_active_type (Type.JSON);
+                    status_bar.set_active_type (StatusBar.Type.JSON);
                 } else if (is_xml (content_type)) {
-                    status_bar.set_active_type (Type.XML);
+                    status_bar.set_active_type (StatusBar.Type.XML);
                 } else {
-                    status_bar.set_active_type (Type.UNKOWN);
+                    status_bar.set_active_type (StatusBar.Type.UNKOWN);
                 }
             }
         }

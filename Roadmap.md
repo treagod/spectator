@@ -3,8 +3,9 @@
 ## Rough Overview
 
 * Allow Scripting ✔️
-  * Error Reporting
-  * Script Debug
+  * Error Reporting ✅
+  * Script Debug ✅ (built in console output for debugging)
+  * Asynchronous HTTP requests
 * Create Collections
   * Basic grouping of requests
   * Add collection variables
@@ -38,7 +39,7 @@ Variables should give the user the ability to save often used values like IDs.
 
 ### Defined execution of multiple requests
 
-The user should be able to define an execution order of requests.
+The user should be a ble to define an execution order of requests.
 For example first login, create a blog post and then logout.
 
 ### Test-Enviroment for requests via JavaScript
