@@ -65,25 +65,25 @@ namespace Spectator.Services.Scripting {
         }
 
         private static void handle_body_object (Duktape.Context ctx, Soup.Message msg) {
-            ctx.get_prop_string (-1, "type");
-            var type = "";
-            if (!ctx.is_undefined (-1) && ctx.is_string (-1)) {
-                type = ctx.get_string (-1);
+            ctx.get_prop_string (-1, Helper.obj_type);
+            var type = 0;
+            if (!ctx.is_undefined (-1) && ctx.is_number (-1)) {
+                type = ctx.get_int (-1);
             }
             ctx.pop ();
-            ctx.get_prop_string (-1, "data");
-            if (!ctx.is_undefined (-1) && ctx.is_object (-1)) {
-                if (type == "json") {
-                    msg.set_request ("application/json", Soup.MemoryUse.COPY, ctx.json_encode (-1).data);
-                } else if (type == "form_data") {
-                    append_multipart_to_message (ctx, msg);
-                } else if (type == "encoded") {
-                    var encoded = create_url_encoded_string (ctx);
 
-                    msg.set_request ("application/x-www-form-urlencoded", Soup.MemoryUse.COPY, encoded.data);
-                }
+            if (type == Helper.url_enc_type) {
+                ctx.get_prop_string (-1, Helper.obj_content);
+                var encoded = create_url_encoded_string (ctx);
+
+                msg.set_request ("application/x-www-form-urlencoded", Soup.MemoryUse.COPY, encoded.data);
+            } else if (type == Helper.form_data_type) {
+                ctx.get_prop_string (-1, Helper.obj_content);
+                append_multipart_to_message (ctx, msg);
+            } else {
+                msg.set_request ("application/json", Soup.MemoryUse.COPY, ctx.json_encode (-1).data);
             }
-            ctx.pop ();
+
         }
 
         private void append_multipart_to_message (Duktape.Context ctx, Soup.Message msg) {
@@ -106,16 +106,25 @@ namespace Spectator.Services.Scripting {
             var first = true;
             ctx.enum (-1, 0);
             while (ctx.next (-1, true)) {
-                if (ctx.is_string (-1) && ctx.is_string (-2)) {
+                if (ctx.is_string (-2) && (ctx.is_string (-1) || ctx.is_number (-1))) {
                     if (first) {
                         first = false;
                     } else {
                         builder.append ("&");
                     }
-                    builder.append ("%s=%s".printf (
-                        Soup.URI.encode (ctx.get_string (-2), "&"),
-                        Soup.URI.encode (ctx.get_string (-1), "&")
-                    ));
+
+                    if (ctx.is_string (-1)) {
+                        builder.append ("%s=%s".printf (
+                            Soup.URI.encode (ctx.get_string (-2), "&"),
+                            Soup.URI.encode (ctx.get_string (-1), "&")
+                        ));
+                    } else {
+                        builder.append ("%s=%d".printf (
+                            Soup.URI.encode (ctx.get_string (-2), "&"),
+                            ctx.get_int (-1)
+                        ));
+                    }
+
                 }
 
                 ctx.pop_n (2);
@@ -142,7 +151,12 @@ namespace Spectator.Services.Scripting {
             ctx.get_prop_string (-1, "body");
             if (!ctx.is_undefined (-1)) {
                 if (ctx.is_string (-1)) {
-                    msg.set_request ("undefined", Soup.MemoryUse.COPY, ctx.get_string (-1).data);
+                    var content_type = msg.request_headers.get_one ("Content-Type");
+                    if (content_type != null) {
+                        msg.set_request (content_type, Soup.MemoryUse.COPY, ctx.get_string (-1).data);
+                    } else {
+                        msg.set_request ("text/plain", Soup.MemoryUse.COPY, ctx.get_string (-1).data);
+                    }
                 } else if (ctx.is_object (-1)) {
                     handle_body_object (ctx, msg);
                 } else {

@@ -38,6 +38,7 @@ executable(
 	'Services/RequestAction.vala',
     'Services/Scripting/Http.vala',
     'Services/Scripting/Console.vala',
+    'Services/Scripting/Helper.vala',
 	'Dialogs/Request/Dialog.vala',
 	'Dialogs/Request/CreateDialog.vala',
 	'Dialogs/Request/UpdateDialog.vala',

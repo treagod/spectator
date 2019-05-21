@@ -32,6 +32,7 @@ namespace Spectator.Services {
             put_global_string (Duktape.hidden_symbol ("writer"));
             Scripting.HTTP.register (this);
             Scripting.Console.register (this);
+            Scripting.Helper.register (this);
         }
 
         public void push_request (Models.Request request) {
