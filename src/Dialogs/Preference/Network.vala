@@ -89,6 +89,7 @@ namespace Spectator.Dialogs.Preference {
                 settings.proxy_username = username_entry.text;
             });
 
+
             var password_label = new Gtk.Label (_("Password"));
             password_label.halign = Gtk.Align.START;
             var password_entry = new Gtk.Entry ();
@@ -96,6 +97,18 @@ namespace Spectator.Dialogs.Preference {
             password_entry.text = settings.proxy_password;
             password_entry.hexpand = true;
             password_entry.visibility = false;
+            password_entry.secondary_icon_name = "channel-secure-symbolic";
+            password_entry.secondary_icon_activatable = true;
+            password_entry.icon_press.connect ((pos, event) => {
+                if (password_entry.visibility) {
+                    password_entry.visibility = false;
+                    password_entry.secondary_icon_name = "channel-secure-symbolic";
+                } else {
+                    password_entry.visibility = true;
+                    password_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "channel-insecure-symbolic");
+                }
+            });
+
 
             password_entry.changed.connect (() => {
                 settings.proxy_password = password_entry.text;
