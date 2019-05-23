@@ -1,3 +1,0 @@
-# Spectator
-
-TBD
