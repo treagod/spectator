@@ -40,6 +40,7 @@ namespace Spectator.Widgets.Sidebar {
     public class Container : Gtk.Box {
         private Gtk.FlowBox item_box;
         private Gtk.ScrolledWindow scroll;
+        private Gtk.Stack stack;
 
         public signal void item_deleted (Models.Request item);
         public signal void item_edited (Models.Request item);
@@ -79,8 +80,58 @@ namespace Spectator.Widgets.Sidebar {
 
             scroll.add (item_box);
 
-            this.pack_start (titlebar, false, true, 0);
-            this.pack_start (scroll, true, true, 0);
+
+            var text_mode = new Granite.Widgets.ModeButton ();
+            text_mode.append_icon ("view-list-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+            text_mode.append_icon ("document-open-recent-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+            text_mode.set_active (0);
+
+            // ----------
+            var library_category = new Granite.Widgets.SourceList.ExpandableItem ("Libraries");
+            var store_category = new Granite.Widgets.SourceList.ExpandableItem ("Stores");
+            var device_category = new Granite.Widgets.SourceList.ExpandableItem ("Devices");
+
+            var music_item = new Granite.Widgets.SourceList.Item ("Music");
+
+            // "Libraries" will be the parent category of "Music"
+            library_category.add (music_item);
+
+            // We plan to add sub-items to the store, so let's use an expandable item
+            var my_store_item = new Granite.Widgets.SourceList.Item ("My Store");
+            store_category.add (my_store_item);
+
+            var player1_item = new Granite.Widgets.SourceList.Item ("Player 1");
+            var player2_item = new Granite.Widgets.SourceList.Item ("Player 2");
+
+            device_category.add (player1_item);
+            device_category.add (player2_item);
+            var source_list = new Granite.Widgets.SourceList ();
+            var root = source_list.root;
+
+            root.add (library_category);
+            root.add (store_category);
+            root.add (device_category);
+            // -------------
+            stack = new Gtk.Stack ();
+            stack.add_named (source_list, "groups");
+            stack.add_named (scroll, "history");
+
+            stack.set_visible_child (source_list);
+
+            text_mode.mode_changed.connect (() => {
+                if (text_mode.selected == 0) {
+                    stack.set_visible_child (source_list);
+                } else {
+                    stack.set_visible_child (scroll);
+                }
+            });
+
+            text_mode.get_style_context ().add_class ("square");
+
+
+            pack_start (titlebar, false, true, 0);
+            pack_start (stack, true, true, 0);
+            pack_end (text_mode, false, true, 0);
         }
 
         public void update_active_method (Models.Method method) {
