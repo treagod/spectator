@@ -20,9 +20,9 @@
 */
 
 namespace Spectator.Models {
-    private uint64 max_id = 0;
+    private uint max_id = 0;
     public class Request : Object {
-        private uint64 id;
+        private uint id;
         public string name { get; set; }
         public RequestBody request_body { get; private set; }
         public Method method { get; set; }
@@ -58,7 +58,7 @@ namespace Spectator.Models {
             id = max_id++;
         }
 
-        public Request.with_id (string nam, Method meth, uint64 i) {
+        public Request.with_id (string nam, Method meth, uint i) {
             setup (nam, meth);
             if (i > max_id) {
                 max_id = i;

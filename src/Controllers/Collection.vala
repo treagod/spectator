@@ -22,9 +22,18 @@
 namespace Spectator.Controllers {
     public class Collection {
         public unowned Main main;
+        private Widgets.HeaderBar headerbar;
         private Gee.ArrayList<Models.Collection> collections;
 
-        public Collection () {
+        public Collection (Widgets.HeaderBar header) {
+            headerbar = header;
+            headerbar.new_collection.clicked.connect (() => {
+                var dialog = new Dialogs.Collection.CollectionDialog (main.window);
+                dialog.show_all ();
+                dialog.creation.connect ((collection) => {
+                    stdout.printf ("%s\n", collection.name);
+                });
+            });
             collections = new Gee.ArrayList<Models.Collection> ();
         }
 

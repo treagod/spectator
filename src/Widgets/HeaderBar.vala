@@ -22,10 +22,15 @@
 namespace Spectator.Widgets {
     public class HeaderBar : Gtk.HeaderBar {
         private Gtk.Button _new_request;
+        private Gtk.Button _new_collection;
         public Gtk.MenuButton app_menu;
 
         public Gtk.Button new_request {
             get { return _new_request; }
+        }
+
+        public Gtk.Button new_collection {
+            get { return _new_collection; }
         }
 
         public signal void preference_clicked ();
@@ -41,6 +46,9 @@ namespace Spectator.Widgets {
             _new_request = new Gtk.Button.from_icon_name ("bookmark-new", Gtk.IconSize.LARGE_TOOLBAR);
             _new_request.tooltip_text = _("Create Request");
 
+            _new_collection = new Gtk.Button.from_icon_name ("folder-new", Gtk.IconSize.LARGE_TOOLBAR);
+            _new_collection.tooltip_text = _("Create Collection");
+
             var preference_button = new Gtk.Button.from_icon_name ("open-menu", Gtk.IconSize.LARGE_TOOLBAR);
             preference_button.tooltip_text = _("Preferences");
 
@@ -51,6 +59,7 @@ namespace Spectator.Widgets {
             title = Constants.RELEASE_NAME;
             subtitle = "";
             pack_start (_new_request);
+            pack_start (_new_collection);
             pack_end (preference_button);
         }
     }

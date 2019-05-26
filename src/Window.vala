@@ -64,7 +64,7 @@ namespace Spectator {
             sidebar = new Widgets.Sidebar.Container ();
 
             var req_controller = new Controllers.Request (headerbar, sidebar, request_item_view);
-            var collection_controller = new Controllers.Collection ();
+            var collection_controller = new Controllers.Collection (headerbar);
 
             controller = new Controllers.Main (this, req_controller, collection_controller);
 
