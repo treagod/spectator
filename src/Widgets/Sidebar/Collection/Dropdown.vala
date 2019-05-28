@@ -35,9 +35,9 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 box.remove (indicator);
                 box.remove (label);
                 if (_expanded) {
-                    indicator = new Gtk.Image.from_icon_name ("draw-arrow-forward", Gtk.IconSize.BUTTON);
-                } else {
                     indicator = new Gtk.Image.from_icon_name ("draw-arrow-down", Gtk.IconSize.BUTTON);
+                } else {
+                    indicator = new Gtk.Image.from_icon_name ("draw-arrow-forward", Gtk.IconSize.BUTTON);
                 }
                 box.add (indicator);
                 box.add (label);
