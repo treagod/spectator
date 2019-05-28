@@ -39,6 +39,15 @@ namespace Spectator.Dialogs.Collection {
             collection_name_entry = new Gtk.Entry ();
             dialog_title = new DialogTitle (_("New Collection"));
 
+            collection_name_entry.activate.connect (() => {
+                if (name.length == 0) {
+                    show_warning (_("Request name must not be empty."));
+                } else {
+                    creation (new Models.Collection (collection_name_entry.text));
+                    destroy ();
+                }
+            });
+
             add_button (_("Close"), Gtk.ResponseType.CLOSE);
             add_button (_("Create"), Gtk.ResponseType.APPLY);
 

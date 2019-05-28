@@ -52,6 +52,8 @@ executable(
 	'Widgets/HeaderBar.vala',
 	'Widgets/Sidebar/Container.vala',
 	'Widgets/Sidebar/Item.vala',
+	'Widgets/Sidebar/Collection/Container.vala',
+	'Widgets/Sidebar/Collection/Dropdown.vala',
 	'Widgets/RequestResponsePane.vala',
 	'Widgets/Response/SourceView.vala',
 	'Widgets/Response/Container.vala',

@@ -24,14 +24,17 @@ namespace Spectator.Controllers {
         public unowned Main main;
         private Widgets.HeaderBar headerbar;
         private Gee.ArrayList<Models.Collection> collections;
+        private Widgets.Sidebar.Container sidebar;
 
-        public Collection (Widgets.HeaderBar header) {
+        public Collection (Widgets.HeaderBar header, Widgets.Sidebar.Container side) {
             headerbar = header;
+            sidebar = side;
+
             headerbar.new_collection.clicked.connect (() => {
                 var dialog = new Dialogs.Collection.CollectionDialog (main.window);
                 dialog.show_all ();
                 dialog.creation.connect ((collection) => {
-                    stdout.printf ("%s\n", collection.name);
+                    sidebar.add_collection (collection);
                 });
             });
             collections = new Gee.ArrayList<Models.Collection> ();

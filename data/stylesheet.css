@@ -6,6 +6,11 @@
     border-radius: 0px;
 }
 
+.collection-box {
+    margin-top: 1em;
+    padding-left: 1em;
+}
+
 .theme-selection radiobutton {
     background-color: @theme_unfocused_bg_color;
 
