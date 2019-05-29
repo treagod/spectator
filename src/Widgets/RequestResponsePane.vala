@@ -168,27 +168,10 @@ namespace Spectator.Widgets {
             }
 
             show_all ();
-
         }
 
         public void update_chunk_response (Models.Request item) {
-            /*
-            if (cache.has_key(item)) {
-                response_view = cache[item].view;
-                response_view.show_all ();
-            } else {
-                response_view = new Response.Container ();
-                cache[item] = new ResponseViewCache (item.response, response_view);
-            }
-
-            if (get_child2 () == null) {
-                pack2 (response_view, true, false);
-            }
-
-            response_view.show_all ();
-            response_view.update (item.response);
-            show_all ();
-            */
+            update_response (item);
         }
 
         public void update_status (Models.Request request) {
