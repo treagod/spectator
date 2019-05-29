@@ -35,6 +35,7 @@ namespace Spectator.Controllers {
                 dialog.show_all ();
                 dialog.creation.connect ((collection) => {
                     sidebar.add_collection (collection);
+                    add_collection (collection);
                 });
             });
             collections = new Gee.ArrayList<Models.Collection> ();
@@ -42,6 +43,11 @@ namespace Spectator.Controllers {
 
         public void add_collection (Models.Collection collection) {
             collections.add (collection);
+            sidebar.add_collection (collection);
+        }
+
+        public unowned Gee.ArrayList<Models.Collection> get_collections () {
+            return collections;
         }
 
         public void add_request_to_collection (Models.Collection collection, Models.Request request) {

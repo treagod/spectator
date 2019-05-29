@@ -33,7 +33,7 @@ namespace Spectator.Controllers {
             this.collection_controller = col_controller;
             this.collection_controller.main = this;
             this.setting_file_path = Path.build_filename (Environment.get_home_dir (), ".local", "share",
-                                                          Constants.PROJECT_NAME, "settings.json");
+                                                          Constants.PROJECT_NAME, "tmp_settings.json");
 
             setup ();
         }
@@ -53,10 +53,18 @@ namespace Spectator.Controllers {
             request_controller.add_item (item);
         }
 
+        public void add_collection (Models.Collection collection) {
+            collection_controller.add_collection (collection);
+        }
+
         public void load_data () {
             var deserializer = new Services.JsonDeserializer ();
             deserializer.request_loaded.connect ((request) => {
                 add_request (request);
+            });
+
+            deserializer.collection_loaded.connect ((collection) => {
+                add_collection (collection);
             });
 
             deserializer.load_data_from_file (setting_file_path);
@@ -64,7 +72,7 @@ namespace Spectator.Controllers {
 
         public void save_data () {
             var serializer = new Services.JsonSerializer ();
-            serializer.serialize (request_controller.get_items_reference ());
+            serializer.serialize (request_controller.get_items_reference (), collection_controller.get_collections ());
             serializer.write_to_file (setting_file_path);
         }
     }

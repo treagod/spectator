@@ -22,6 +22,7 @@
 namespace Spectator.Services {
     public class JsonDeserializer {
         public signal void request_loaded (Models.Request request);
+        public signal void collection_loaded (Models.Collection collection);
 
         public void load_data_from_file (string filepath) {
             var parser = new Json.Parser ();
@@ -42,6 +43,14 @@ namespace Spectator.Services {
                     parser.load_from_data (builder.str);
                     var object = parser.get_root ().get_object ();
 
+                    var collection_member = object.get_member ("collections");
+                    var collection_array = collection_member.get_array ();
+                    foreach (var collection_element in collection_array.get_elements ()) {
+                        var collection = deserialize_collection (collection_element.get_object ());
+
+                        collection_loaded (collection);
+                    }
+
                     var items = object.get_member ("request_items");
                     var request_items = items.get_array ();
 
@@ -55,6 +64,13 @@ namespace Spectator.Services {
                 stderr.printf ("Error during loading settings: %s\n", e.message);
             }
         }
+    }
+
+    private Models.Collection deserialize_collection (Json.Object collection_object) {
+        var id = (uint) collection_object.get_int_member ("id");
+        var name = collection_object.get_string_member ("name");
+
+        return new Models.Collection.with_id (id, name);
     }
 
     private Models.Request deserialize_item (Json.Object request_object) {

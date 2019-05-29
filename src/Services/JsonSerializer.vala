@@ -98,18 +98,35 @@ namespace Spectator.Services {
             builder.end_object ();
         }
 
-        public void serialize (Gee.ArrayList<Models.Request> items) {
+        private void serialize_collection (Models.Collection collection) {
+            builder.begin_object ();
+            builder.set_member_name ("id");
+            builder.add_int_value (collection.id);
+            builder.set_member_name ("name");
+            builder.add_string_value (collection.name);
+
+            builder.end_object ();
+        }
+
+        public void serialize (Gee.ArrayList<Models.Request> items,
+                               Gee.ArrayList<Models.Collection> collections) {
             builder.begin_object ();
             builder.set_member_name ("version");
-            builder.add_string_value ("0.1");
+            builder.add_string_value ("0.2");
 
+            builder.set_member_name ("collections");
+            builder.begin_array ();
+
+            foreach (var collection in collections) {
+                serialize_collection (collection);
+            }
+
+            builder.end_array ();
             builder.set_member_name ("request_items");
             builder.begin_array ();
 
-            if (items.size > 0) {
-                foreach (var item in items) {
-                    serialize_request (item);
-                }
+            foreach (var item in items) {
+                serialize_request (item);
             }
 
             builder.end_array ();
@@ -134,7 +151,7 @@ namespace Spectator.Services {
                 data_stream.put_string (data);
             } catch (IOError e) {
                 string dir_path = Path.get_dirname (filepath);
-                
+
                 File dir = File.new_for_path (dir_path);
                 dir.make_directory_with_parents ();
                 write_to_file (filepath);
