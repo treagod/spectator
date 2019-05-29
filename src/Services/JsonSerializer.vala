@@ -83,6 +83,8 @@ namespace Spectator.Services {
 
         private void serialize_request (Models.Request request) {
             builder.begin_object ();
+            builder.set_member_name ("id");
+            builder.add_int_value (request.id);
             builder.set_member_name ("name");
             builder.add_string_value (request.name);
             builder.set_member_name ("uri");
@@ -91,6 +93,11 @@ namespace Spectator.Services {
             builder.add_int_value (request.method.to_i ());
             builder.set_member_name ("script");
             builder.add_string_value (request.script_code);
+
+            if (request.collection_id != null) {
+                builder.set_member_name ("collection_id");
+                builder.add_int_value (request.collection_id);
+            }
 
             serialize_headers (request);
             serialize_body (request);
