@@ -14,6 +14,23 @@
     </p>
   </description>
   <releases>
+    <release version="0.2.1" date="2019-05-21">
+      <p>Improvement of JavaScript</p>
+				<ul>
+          <li>Added JavaScript Console</li>
+          <li>Displayed time of response is now more accurate</li>
+          <li>Added XML parsing and create new view for XML responses</li>
+          <li>Unified sourcecode views</li>
+          <li>Sourcecode views are using a monospace font by default</li>
+          <li>Added configuration for sourcecode views</li>
+				</ul>
+    </release>
+    <release version="0.2.1" date="2019-03-26">
+      <p>Fix streamed data behaviour</p>
+				<ul>
+					<li>Solves a bug where streamed data will not be shown until request finished (which might be never)</li>
+				</ul>
+    </release>
     <release version="0.2.0" date="2019-03-17">
       <description>
         <p>JavaScript Integration</p>

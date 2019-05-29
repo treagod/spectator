@@ -1,4 +1,21 @@
-com.github.treagod.spectator (0.2.9) bionic; urgency=medium
+com.github.treagod.spectator (0.3.0) bionic; urgency=medium
+
+  * Added JavaScript Console
+  * Displayed time of response is now more accurate
+  * Added XML parsing and create new view for XML responses
+  * Unified sourcecode views
+  * Sourcecode views are using a monospace font by default
+  * Added configuration for sourcecode views
+
+ -- Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>  Tue, 21 May 2019 20:57:03 +0200
+
+com.github.treagod.spectator (0.2.1) bionic; urgency=high
+
+  * Solves a bug where streamed data will not be shown until request finished (which might be never)
+
+ -- Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>  Tue, 26 Mar 2019 20:42:20 +0100
+
+com.github.treagod.spectator (0.2.0) bionic; urgency=medium
 
   * Add the possibility to augment your requests with scripting.
   * The developer can use the 'before_sending' JavaScript function to augment the request.
