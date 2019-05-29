@@ -21,6 +21,9 @@
 
 namespace Spectator.Widgets.Sidebar.Collection {
     public class Dropdown : Gtk.EventBox {
+        private static string collection_open_icon = "folder-open";
+        private static string collection_closed_icon = "folder";
+
         private Models.Collection collection;
         private Gtk.Label label;
         private Gtk.Box box;
@@ -33,9 +36,9 @@ namespace Spectator.Widgets.Sidebar.Collection {
             set {
                 _expanded = value;
                 if (_expanded) {
-                    indicator.set_from_icon_name ("folder-open", Gtk.IconSize.BUTTON);
+                    indicator.set_from_icon_name (collection_open_icon, Gtk.IconSize.BUTTON);
                 } else {
-                    indicator.set_from_icon_name ("folder", Gtk.IconSize.BUTTON);
+                    indicator.set_from_icon_name (collection_closed_icon, Gtk.IconSize.BUTTON);
                 }
             }
         }
@@ -46,7 +49,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
             label = new Gtk.Label ("<b>%s</b>".printf (collection.name));
             label.halign = Gtk.Align.START;
             label.use_markup = true;
-            indicator = new Gtk.Image.from_icon_name ("folder", Gtk.IconSize.BUTTON);;
+            indicator = new Gtk.Image.from_icon_name (collection_closed_icon, Gtk.IconSize.BUTTON);;
             _expanded = false;
 
             box.add (indicator);
