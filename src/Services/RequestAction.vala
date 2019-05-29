@@ -220,8 +220,6 @@ namespace Spectator.Services {
                 }
             });
 
-
-
             if (settings.use_proxy) {
                 var proxy_resolver = new SimpleProxyResolver (null, null);
 
