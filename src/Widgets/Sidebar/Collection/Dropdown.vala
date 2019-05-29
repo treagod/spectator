@@ -32,16 +32,11 @@ namespace Spectator.Widgets.Sidebar.Collection {
             }
             set {
                 _expanded = value;
-                box.remove (indicator);
-                box.remove (label);
                 if (_expanded) {
-                    indicator = new Gtk.Image.from_icon_name ("draw-arrow-down", Gtk.IconSize.BUTTON);
+                    indicator.set_from_icon_name ("folder-open", Gtk.IconSize.BUTTON);
                 } else {
-                    indicator = new Gtk.Image.from_icon_name ("draw-arrow-forward", Gtk.IconSize.BUTTON);
+                    indicator.set_from_icon_name ("folder", Gtk.IconSize.BUTTON);
                 }
-                box.add (indicator);
-                box.add (label);
-                box.show_all ();
             }
         }
 
@@ -51,7 +46,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
             label = new Gtk.Label ("<b>%s</b>".printf (collection.name));
             label.halign = Gtk.Align.START;
             label.use_markup = true;
-            indicator = new Gtk.Image.from_icon_name ("draw-arrow-forward", Gtk.IconSize.BUTTON);;
+            indicator = new Gtk.Image.from_icon_name ("folder", Gtk.IconSize.BUTTON);;
             _expanded = false;
 
             box.add (indicator);
@@ -60,7 +55,6 @@ namespace Spectator.Widgets.Sidebar.Collection {
 
             button_release_event.connect (() => {
                 expanded = !expanded;
-                show_all ();
                 return true;
             });
             show_all ();
