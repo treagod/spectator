@@ -42,7 +42,7 @@ namespace Spectator.Widgets.Sidebar {
         private Gtk.ScrolledWindow scroll;
         private Gtk.Stack stack;
         private Granite.Widgets.SourceList source_list;
-        private Collection.Container collection;
+        public Collection.Container collection;
 
         public signal void item_deleted (Models.Request item);
         public signal void item_edited (Models.Request item);

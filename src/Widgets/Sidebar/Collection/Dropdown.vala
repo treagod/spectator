@@ -20,14 +20,16 @@
 */
 
 namespace Spectator.Widgets.Sidebar.Collection {
-    public class Dropdown : Gtk.EventBox {
+    public class Dropdown : Gtk.Box {
         private static string collection_open_icon = "folder-open";
         private static string collection_closed_icon = "folder";
 
         private Models.Collection collection;
         private Gtk.Label label;
         private Gtk.Box box;
+        private Gtk.Box item_box;
         private Gtk.Image indicator;
+        private Gee.ArrayList<Item> items;
         private bool _expanded;
         public bool expanded {
             get {
@@ -37,30 +39,51 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 _expanded = value;
                 if (_expanded) {
                     indicator.set_from_icon_name (collection_open_icon, Gtk.IconSize.BUTTON);
+                    item_box.show ();
                 } else {
                     indicator.set_from_icon_name (collection_closed_icon, Gtk.IconSize.BUTTON);
+                    item_box.hide ();
                 }
             }
         }
 
+        construct {
+            orientation = Gtk.Orientation.VERTICAL;
+            spacing = 0;
+        }
+
         public Dropdown (Models.Collection model) {
             collection = model;
+            items = new Gee.ArrayList<Item> ();
+
             box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 4);
+            item_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 2);
+            item_box.get_style_context ().add_class ("collection-items");
             label = new Gtk.Label ("<b>%s</b>".printf (collection.name));
             label.halign = Gtk.Align.START;
             label.use_markup = true;
-            indicator = new Gtk.Image.from_icon_name (collection_closed_icon, Gtk.IconSize.BUTTON);;
-            _expanded = false;
+            indicator = new Gtk.Image.from_icon_name (collection_open_icon, Gtk.IconSize.BUTTON);;
+            _expanded = true;
+
+            collection.request_added.connect ((request) => {
+                var item = new Item (request);
+                item_box.add (item);
+            });
 
             box.add (indicator);
             box.add (label);
-            add (box);
-
-            button_release_event.connect (() => {
+            var event_box = new Gtk.EventBox ();
+            event_box.add (box);
+            event_box.button_release_event.connect (() => {
                 expanded = !expanded;
                 return true;
             });
+            add (event_box);
+            add (item_box);
+
+
             show_all ();
+            item_box.hide ();
         }
     }
 }

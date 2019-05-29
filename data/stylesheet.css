@@ -11,6 +11,10 @@
     padding-left: 1em;
 }
 
+.collection-items {
+    margin-left: 1.25em;
+}
+
 .theme-selection radiobutton {
     background-color: @theme_unfocused_bg_color;
 

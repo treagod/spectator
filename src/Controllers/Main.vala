@@ -67,6 +67,10 @@ namespace Spectator.Controllers {
                 add_collection (collection);
             });
 
+            deserializer.request_added_to_collection.connect ((collection, request) => {
+                collection_controller.add_request_to_collection (collection, request);
+            });
+
             deserializer.load_data_from_file (setting_file_path);
         }
 
