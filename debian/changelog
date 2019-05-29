@@ -1,3 +1,9 @@
+com.github.treagod.spectator (0.3.1) bionic; urgency=high
+
+  * Fixed a (reintroduced )bug where chunked data was not displayed
+
+ -- Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>  Wed, 29 May 2019 23:06:30 +0200
+
 com.github.treagod.spectator (0.3.0) bionic; urgency=medium
 
   * Added JavaScript Console

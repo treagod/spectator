@@ -14,7 +14,13 @@
     </p>
   </description>
   <releases>
-    <release version="0.2.1" date="2019-05-21">
+    <release version="0.3.1" date="2019-05-29">
+      <p>Fix streamed data behaviour</p>
+				<ul>
+					<li>Fixed a (reintroduced )bug where chunked data was not displayed</li>
+				</ul>
+    </release>
+    <release version="0.3.0" date="2019-05-21">
       <p>Improvement of JavaScript</p>
 				<ul>
           <li>Added JavaScript Console</li>
