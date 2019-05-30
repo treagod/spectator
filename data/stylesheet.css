@@ -11,6 +11,11 @@
     padding-left: 1em;
 }
 
+.collection-box .active {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+}
+
 .collection-items {
     margin-left: 1.25em;
 }

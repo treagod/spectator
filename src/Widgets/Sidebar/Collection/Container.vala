@@ -23,6 +23,9 @@ namespace Spectator.Widgets.Sidebar.Collection {
     public class Container : Gtk.Box {
         public signal void item_edit (Models.Request request);
         public signal void item_clicked (Item item);
+
+        private Item? active_item;
+
         construct {
             orientation = Gtk.Orientation.VERTICAL;
             spacing = 3;
@@ -40,6 +43,11 @@ namespace Spectator.Widgets.Sidebar.Collection {
             });
 
             dropdown.item_clicked.connect ((item) => {
+                if (active_item != null) {
+                    active_item.get_style_context ().remove_class ("active");
+                }
+                active_item = item;
+                active_item.get_style_context ().add_class ("active");
                 item_clicked (item);
             });
 
