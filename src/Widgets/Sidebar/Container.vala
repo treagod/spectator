@@ -84,6 +84,14 @@ namespace Spectator.Widgets.Sidebar {
             source_list = new Granite.Widgets.SourceList ();
             collection = new Collection.Container ();
 
+            collection.item_edit.connect ((request) => {
+                item_edited (request);
+            });
+
+            collection.item_clicked.connect ((item) => {
+                selection_changed (item.item);
+            });
+
             stack = new Gtk.Stack ();
             stack.add_named (collection, "groups");
             stack.add_named (scroll, "history");

@@ -24,6 +24,9 @@ namespace Spectator.Widgets.Sidebar.Collection {
         private static string collection_open_icon = "folder-open";
         private static string collection_closed_icon = "folder";
 
+        public signal void item_edit (Models.Request request);
+        public signal void item_clicked (Item item);
+
         private Models.Collection collection;
         private Gtk.Label label;
         private Gtk.Box box;
@@ -68,6 +71,14 @@ namespace Spectator.Widgets.Sidebar.Collection {
             collection.request_added.connect ((request) => {
                 var item = new Item (request);
                 item_box.add (item);
+
+                item.item_clicked.connect (() => {
+                    item_clicked (item);
+                });
+
+                item.item_edit.connect ((item) => {
+                    item_edit (item);
+                });
             });
 
             box.add (indicator);

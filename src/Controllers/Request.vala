@@ -103,7 +103,7 @@ namespace Spectator.Controllers {
 
             content.script_changed.connect ((script) => {
                 var item = sidebar.get_active_item ();
-                item.script_code = script;
+                //item.script_code = script;
             });
 
             content.method_changed.connect ((method) => {

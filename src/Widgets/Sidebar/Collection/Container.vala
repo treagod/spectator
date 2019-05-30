@@ -21,6 +21,8 @@
 
 namespace Spectator.Widgets.Sidebar.Collection {
     public class Container : Gtk.Box {
+        public signal void item_edit (Models.Request request);
+        public signal void item_clicked (Item item);
         construct {
             orientation = Gtk.Orientation.VERTICAL;
             spacing = 3;
@@ -31,7 +33,17 @@ namespace Spectator.Widgets.Sidebar.Collection {
         }
 
         public void add_collection (Models.Collection collection) {
-            add (new Dropdown (collection));
+            var dropdown = new Dropdown (collection);
+
+            dropdown.item_edit.connect ((request) => {
+                item_edit (request);
+            });
+
+            dropdown.item_clicked.connect ((item) => {
+                item_clicked (item);
+            });
+
+            add (dropdown);
         }
     }
 }
