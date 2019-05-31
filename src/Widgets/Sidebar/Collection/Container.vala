@@ -23,6 +23,8 @@ namespace Spectator.Widgets.Sidebar.Collection {
     public class Container : Gtk.Box {
         public signal void item_edit (Models.Request request);
         public signal void item_clicked (Item item);
+        public signal void create_collection_request (Models.Collection collection);
+        public signal void collection_edit (Models.Collection collection);
 
         private Item? active_item;
 
@@ -49,6 +51,22 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 active_item = item;
                 active_item.get_style_context ().add_class ("active");
                 item_clicked (item);
+            });
+
+            dropdown.create_collection_request.connect ((collection) => {
+                create_collection_request (collection);
+            });
+
+            dropdown.collection_edit.connect ((collection) => {
+                collection_edit (collection);
+            });
+
+            dropdown.active_item_changed.connect ((item) => {
+                if (active_item != null) {
+                    active_item.get_style_context ().remove_class ("active");
+                }
+                active_item = item;
+                active_item.get_style_context ().add_class ("active");
             });
 
             add (dropdown);

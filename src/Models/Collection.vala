@@ -24,7 +24,7 @@ namespace Spectator.Models {
         public signal void request_added (Request request);
 
         private Gee.ArrayList<Request> requests;
-        public string name { get; private set; }
+        public string name { get; set; }
         public uint id { get; private set; }
         private static uint max_id = 0;
 
@@ -48,6 +48,7 @@ namespace Spectator.Models {
 
         public void add_request (Request request) {
             if (!requests.contains (request)) {
+                request.collection_id = id;
                 requests.add (request);
                 request_added (request);
             }

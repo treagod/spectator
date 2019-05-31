@@ -48,6 +48,8 @@ namespace Spectator.Widgets.Sidebar {
         public signal void item_edited (Models.Request item);
         public signal void selection_changed (Models.Request item);
         public signal void notify_delete ();
+        public signal void create_collection_request (Models.Collection collection);
+        public signal void collection_edit (Models.Collection collection);
 
         public Container () {
             scroll = new Gtk.ScrolledWindow (null, null);
@@ -90,6 +92,14 @@ namespace Spectator.Widgets.Sidebar {
 
             collection.item_clicked.connect ((item) => {
                 selection_changed (item.item);
+            });
+
+            collection.create_collection_request.connect ((collection) => {
+                create_collection_request (collection);
+            });
+
+            collection.collection_edit.connect ((collection) => {
+                collection_edit (collection);
             });
 
             stack = new Gtk.Stack ();

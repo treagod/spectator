@@ -20,13 +20,13 @@
 */
 
 namespace Spectator.Dialogs.Collection {
-    public class CollectionDialog : Gtk.Dialog {
-        public signal void creation (Models.Collection collection);
+    public class UpdateCollectionDialog : Gtk.Dialog {
+        public signal void updated ();
         protected Gtk.Entry collection_name_entry;
         private DialogTitle dialog_title;
         private bool warning_active;
 
-        public CollectionDialog (Gtk.ApplicationWindow parent) {
+        public UpdateCollectionDialog (Gtk.ApplicationWindow parent, Models.Collection collection) {
             border_width = 5;
             set_size_request (425, 100);
             deletable = false;
@@ -37,19 +37,21 @@ namespace Spectator.Dialogs.Collection {
 
             var request_name_label = new Gtk.Label (_("Name:"));
             collection_name_entry = new Gtk.Entry ();
+            collection_name_entry.text = collection.name;
             dialog_title = new DialogTitle (_("New Collection"));
 
             collection_name_entry.activate.connect (() => {
                 if (name.length == 0) {
                     show_warning (_("Request name must not be empty."));
                 } else {
-                    creation (new Models.Collection (collection_name_entry.text));
+                    collection.name = collection_name_entry.text;
+                    updated ();
                     destroy ();
                 }
             });
 
             add_button (_("Close"), Gtk.ResponseType.CLOSE);
-            add_button (_("Create"), Gtk.ResponseType.APPLY);
+            add_button (_("Update"), Gtk.ResponseType.APPLY);
 
             Gtk.Box hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 15);
             hbox.pack_start (request_name_label, false, true, 0);
@@ -70,7 +72,7 @@ namespace Spectator.Dialogs.Collection {
                 if (name.length == 0) {
                     show_warning (_("Collection name must not be empty."));
                 } else {
-                    creation (new Models.Collection (collection_name_entry.text));
+                    updated ();
                     destroy ();
                 }
 

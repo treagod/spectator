@@ -205,6 +205,24 @@ namespace Spectator.Controllers {
                 }
             });
 
+            sidebar.create_collection_request.connect ((collection) => {
+                var dialog = new Dialogs.Request.CreateDialogWithCollection (main.window, collection);
+                dialog.show_all ();
+                dialog.creation.connect ((item) => {
+                    item.script_code = "// function before_sending(request) {\n// }";
+                    add_item (item);
+                    update_headerbar (item);
+                    content.show_request (item);
+                });
+            });
+
+            sidebar.collection_edit.connect ((collection) => {
+                var dialog = new Dialogs.Collection.UpdateCollectionDialog (main.window, collection);
+                dialog.show_all ();
+                dialog.updated.connect (() => {
+                });
+            });
+
             content.item_changed.connect ((item) => {
                 sidebar.update_active (item);
             });

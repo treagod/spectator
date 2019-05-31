@@ -26,6 +26,10 @@ namespace Spectator.Widgets.Sidebar.Collection {
 
         public signal void item_edit (Models.Request request);
         public signal void item_clicked (Item item);
+        public signal void collection_delete (Models.Collection collection);
+        public signal void collection_edit (Models.Collection collection);
+        public signal void create_collection_request (Models.Collection collection);
+        public signal void active_item_changed (Item item);
 
         private Models.Collection collection;
         private Gtk.Label label;
@@ -79,16 +83,59 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 item.item_edit.connect ((item) => {
                     item_edit (item);
                 });
+
+                active_item_changed (item);
+
+                if (!expanded) {
+                    expanded = true;
+                }
+                show_all ();
             });
 
             box.add (indicator);
             box.add (label);
             var event_box = new Gtk.EventBox ();
             event_box.add (box);
-            event_box.button_release_event.connect (() => {
-                expanded = !expanded;
-                return true;
+            event_box.button_release_event.connect ((event) => {
+                var result = false;
+                switch (event.button) {
+                    case 1:
+                        expanded = !expanded;
+                        result = true;
+                        break;
+                    case 3:
+                        var menu = new Gtk.Menu ();
+                        var new_request_item = new Gtk.MenuItem.with_label (_("Add Request"));
+                        var edit_item = new Gtk.MenuItem.with_label (_("Edit"));
+                        var delete_item = new Gtk.MenuItem.with_label (_("Delete"));
+
+                        new_request_item.activate.connect (() => {
+                            create_collection_request (model);
+                        });
+
+                        edit_item.activate.connect (() => {
+                            collection_edit (model);
+                        });
+
+                        delete_item.activate.connect (() => {
+                            collection_delete (model);
+                        });
+
+                        menu.add (new_request_item);
+                        menu.add (new Gtk.SeparatorMenuItem ());
+                        menu.add (edit_item);
+                        menu.add (delete_item);
+                        menu.show_all ();
+                        menu.popup_at_pointer (event);
+                        result = true;
+                        break;
+                    default:
+                        break;
+                }
+
+                return result;
             });
+
             add (event_box);
             add (item_box);
 
