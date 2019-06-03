@@ -21,21 +21,54 @@
 
 namespace Spectator.Controllers {
     public class Main {
-        private Request request_controller;
-        private Collection collection_controller;
-        public unowned Gtk.ApplicationWindow window;
+        public Request request_controller { get; private set; }
+        public Collection collection_controller { get; private set; }
+        public Sidebar sidebar_controller { get; private set; }
+        public unowned Window window;
         private string setting_file_path;
 
-        public Main (Gtk.ApplicationWindow window, Request req_controller, Collection col_controller) {
+        public Main (Window window, Request req_controller, Collection col_controller) {
             this.window = window;
             this.request_controller = req_controller;
             this.request_controller.main = this;
             this.collection_controller = col_controller;
             this.collection_controller.main = this;
+            sidebar_controller = new Sidebar (this);
             this.setting_file_path = Path.build_filename (Environment.get_home_dir (), ".local", "share",
                                                           Constants.PROJECT_NAME, "tmp_settings.json");
 
             setup ();
+        }
+
+        public void update_headerbar (Models.Request request) {
+            request_controller.headerbar.subtitle = request.name;
+        }
+
+        public void show_create_request_dialog () {
+            var dialog = new Dialogs.Request.CreateDialog (window);
+            dialog.show_all ();
+            dialog.creation.connect ((request) => {
+                request.script_code = "// function before_sending(request) {\n// }";
+                add_request (request);
+                update_headerbar (request);
+                request_controller.show_request (request);
+            });
+        }
+
+        public void update_active (Models.Request request) {
+            //
+        }
+
+        public void show_update_request_dialog (Models.Request request) {
+           var dialog = new Dialogs.Request.UpdateDialog (window, request);
+           dialog.show_all ();
+           dialog.updated.connect ((request) => {
+               update_headerbar (request);
+
+               if (request == sidebar_controller.sidebar.get_active_item ()) {
+                   request_controller.show_request (request);
+               }
+           });
         }
 
         private void setup () {
@@ -49,8 +82,25 @@ namespace Spectator.Controllers {
             dialog.show_all ();
         }
 
-        public void add_request (Models.Request item) {
-            request_controller.add_item (item);
+        public void add_request (Models.Request request) {
+            request_controller.add_request (request);
+            sidebar_controller.add_request (request);
+        }
+
+        public void remove_request (Models.Request request) {
+            request_controller.remove_request (request);
+        }
+
+        public void set_active_sidebar_item (Models.Request request) {
+            sidebar_controller.set_active (request);
+        }
+
+        public void update_sidebar_active_method (Models.Method method) {
+            sidebar_controller.update_method_active (method);
+        }
+
+        public void show_content (Models.Request request) {
+            request_controller.show_request (request);
         }
 
         public void add_collection (Models.Collection collection) {
