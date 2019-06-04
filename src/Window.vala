@@ -72,14 +72,14 @@ namespace Spectator {
 
             request_item_view.show_welcome ();
 
+            show_all ();
+
             grid.add (sidebar);
             grid.add (seperator);
             add (grid);
             grid.add (request_item_view);
-            show_all ();
-            present ();
 
-            sidebar.clear_selection ();
+            show_all ();
         }
 
         protected override bool delete_event (Gdk.EventAny event) {
