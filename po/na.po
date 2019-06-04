@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.treagod.spectator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-31 17:01+0200\n"
+"POT-Creation-Date: 2019-06-04 17:58+0200\n"
 "PO-Revision-Date: 2019-03-31 16:03+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -36,7 +36,7 @@ msgid "Name:"
 msgstr ""
 
 #: src/Dialogs/Request/Dialog.vala:44 src/Dialogs/Alert.vala:42
-#: src/Dialogs/Preferences.vala:44
+#: src/Dialogs/Preferences.vala:46
 msgid "Close"
 msgstr ""
 
@@ -70,12 +70,16 @@ msgstr ""
 msgid "Preferences"
 msgstr ""
 
-#: src/Dialogs/Preferences.vala:37
+#: src/Dialogs/Preferences.vala:38
 msgid "General"
 msgstr ""
 
-#: src/Dialogs/Preferences.vala:38
+#: src/Dialogs/Preferences.vala:39
 msgid "Network"
+msgstr ""
+
+#: src/Dialogs/Preferences.vala:40
+msgid "Editor"
 msgstr ""
 
 #: src/Dialogs/Preference/General.vala:37
@@ -118,7 +122,7 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: src/Dialogs/Preference/Network.vala:92
+#: src/Dialogs/Preference/Network.vala:93
 msgid "Password"
 msgstr ""
 
@@ -170,6 +174,7 @@ msgstr ""
 
 #: src/Widgets/Response/StatusBar/Container.vala:47
 #: src/Widgets/Response/StatusBar/Container.vala:70
+#: src/Widgets/Response/StatusBar/Container.vala:83
 msgid "Raw"
 msgstr ""
 
@@ -178,83 +183,81 @@ msgid "Preview"
 msgstr ""
 
 #: src/Widgets/Response/StatusBar/Container.vala:57
+#: src/Widgets/Response/StatusBar/Container.vala:68
 msgid "Source Code"
 msgstr ""
 
 #: src/Widgets/Response/StatusBar/Container.vala:58
 #: src/Widgets/Response/StatusBar/Container.vala:69
-#: src/Widgets/Request/Container.vala:112
+#: src/Widgets/Response/StatusBar/Container.vala:82
+#: src/Widgets/Request/Container.vala:69
 msgid "Headers"
 msgstr ""
 
 #: src/Widgets/Response/StatusBar/Container.vala:67
+msgid "XML Tree"
+msgstr ""
+
+#: src/Widgets/Response/StatusBar/Container.vala:80
 msgid "JSON Tree"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:68
+#: src/Widgets/Response/StatusBar/Container.vala:81
 msgid "Prettified"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:78
-#: src/Widgets/Response/StatusBar/Container.vala:143
+#: src/Widgets/Response/StatusBar/Container.vala:91
+#: src/Widgets/Response/StatusBar/Container.vala:157
 msgid "No status"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:86
-#: src/Widgets/Response/StatusBar/Container.vala:140
+#: src/Widgets/Response/StatusBar/Container.vala:99
+#: src/Widgets/Response/StatusBar/Container.vala:154
 msgid "No duration"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:94
-#: src/Widgets/Response/StatusBar/Container.vala:137
+#: src/Widgets/Response/StatusBar/Container.vala:107
+#: src/Widgets/Response/StatusBar/Container.vala:151
 msgid "No size"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:147
+#: src/Widgets/Response/StatusBar/Container.vala:161
 msgid "seconds"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:161
+#: src/Widgets/Response/StatusBar/Container.vala:175
 msgid "GB"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:163
+#: src/Widgets/Response/StatusBar/Container.vala:177
 msgid "MB"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:165
+#: src/Widgets/Response/StatusBar/Container.vala:179
 msgid "KB"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:170
+#: src/Widgets/Response/StatusBar/Container.vala:184
 msgid "B"
 msgstr ""
 
-#: src/Widgets/Request/Container.vala:68
-msgid "JavaScript Console"
-msgstr ""
-
 #: src/Widgets/Request/Container.vala:70
-msgid "JavaScript Info"
-msgstr ""
-
-#: src/Widgets/Request/Container.vala:113
 msgid "Parameters"
 msgstr ""
 
-#: src/Widgets/Request/Container.vala:114
+#: src/Widgets/Request/Container.vala:71
 msgid "Body"
 msgstr ""
 
-#: src/Widgets/Request/Container.vala:115
+#: src/Widgets/Request/Container.vala:72
 msgid "Script"
 msgstr ""
 
-#: src/Widgets/Request/Container.vala:129
+#: src/Widgets/Request/Container.vala:86
 msgid "Add Header"
 msgstr ""
 
-#: src/Widgets/Request/Container.vala:178
+#: src/Widgets/Request/Container.vala:125
 msgid "Add Parameter"
 msgstr ""
 
