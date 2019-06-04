@@ -34,7 +34,6 @@ namespace Spectator.Controllers {
                 var dialog = new Dialogs.Collection.CollectionDialog (main.window);
                 dialog.show_all ();
                 dialog.creation.connect ((collection) => {
-                    sidebar.add_collection (collection);
                     add_collection (collection);
                 });
             });
