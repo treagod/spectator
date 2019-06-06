@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-31 16:40+0200\n"
+"POT-Creation-Date: 2019-06-04 18:01+0200\n"
 "PO-Revision-Date: 2019-03-31 16:04+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -36,7 +36,7 @@ msgid "REST;HTTP;Client;"
 msgstr "REST;HTTP;Client;"
 
 #: data/com.github.treagod.spectator.appdata.xml.in:8
-#: data/com.github.treagod.spectator.appdata.xml.in:39
+#: data/com.github.treagod.spectator.appdata.xml.in:56
 msgid "Comfortably test your REST APIs!"
 msgstr "Comfortably test your REST APIs!"
 
@@ -45,7 +45,7 @@ msgid "Gives you the possibilty to test your REST application."
 msgstr "Gives you the possibilty to test your REST application."
 
 #: data/com.github.treagod.spectator.appdata.xml.in:11
-#: data/com.github.treagod.spectator.appdata.xml.in:40
+#: data/com.github.treagod.spectator.appdata.xml.in:57
 msgid ""
 "Send custom headers and self defined bodies to your application and displays "
 "the response in a clean way."
@@ -53,15 +53,15 @@ msgstr ""
 "Send custom headers and self defined bodies to your application and displays "
 "the response in a clean way."
 
-#: data/com.github.treagod.spectator.appdata.xml.in:19
+#: data/com.github.treagod.spectator.appdata.xml.in:36
 msgid "JavaScript Integration"
 msgstr "JavaScript Integration"
 
-#: data/com.github.treagod.spectator.appdata.xml.in:21
+#: data/com.github.treagod.spectator.appdata.xml.in:38
 msgid "Adds the possibility to augment your requests with scripting."
 msgstr "Adds the possibility to augment your requests with scripting."
 
-#: data/com.github.treagod.spectator.appdata.xml.in:22
+#: data/com.github.treagod.spectator.appdata.xml.in:39
 msgid ""
 "The developer can use the 'before_sending' JavaScript function to augment "
 "the request."
@@ -69,7 +69,7 @@ msgstr ""
 "The developer can use the 'before_sending' JavaScript function to augment "
 "the request."
 
-#: data/com.github.treagod.spectator.appdata.xml.in:23
+#: data/com.github.treagod.spectator.appdata.xml.in:40
 msgid ""
 "HTTP.get(url), HTTP.post(url, config) and other request methods are "
 "available from script"
@@ -77,11 +77,11 @@ msgstr ""
 "HTTP.get(url), HTTP.post(url, config) and other request methods are "
 "available from script"
 
-#: data/com.github.treagod.spectator.appdata.xml.in:29
+#: data/com.github.treagod.spectator.appdata.xml.in:46
 msgid "URL Params fixes"
 msgstr "URL Params fixes"
 
-#: data/com.github.treagod.spectator.appdata.xml.in:31
+#: data/com.github.treagod.spectator.appdata.xml.in:48
 msgid ""
 "Fixes a bug where the application crashes if a URL param is entered from key-"
 "value view without a URL"
@@ -89,10 +89,10 @@ msgstr ""
 "Fixes a bug where the application crashes if a URL param is entered from key-"
 "value view without a URL"
 
-#: data/com.github.treagod.spectator.appdata.xml.in:37
+#: data/com.github.treagod.spectator.appdata.xml.in:54
 msgid "Initial Release"
 msgstr "Initial Release"
 
-#: data/com.github.treagod.spectator.appdata.xml.in:91
+#: data/com.github.treagod.spectator.appdata.xml.in:108
 msgid "Marvin Ahlgrimm"
 msgstr "Marvin Ahlgrimm"
