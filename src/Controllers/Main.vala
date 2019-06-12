@@ -89,6 +89,7 @@ namespace Spectator.Controllers {
 
         public void remove_request (Models.Request request) {
             request_controller.remove_request (request);
+            collection_controller.remove_request (request);
         }
 
         public void set_active_sidebar_item (Models.Request request) {

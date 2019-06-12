@@ -54,5 +54,15 @@ namespace Spectator.Controllers {
                 collection.add_request (request);
             }
         }
+
+        public void remove_request (Models.Request request) {
+            if (request.collection_id == null) return;
+
+            foreach (var collection in collections) {
+                if (collection.id == request.collection_id) {
+                    collection.remove_request (request);
+                }
+            }
+        }
     }
 }

@@ -25,6 +25,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         private static string collection_closed_icon = "folder";
 
         public signal void item_edit (Models.Request request);
+        public signal void item_deleted (Models.Request request);
         public signal void item_clicked (Item item);
         public signal void collection_delete (Models.Collection collection);
         public signal void collection_edit (Models.Collection collection);
@@ -82,6 +83,12 @@ namespace Spectator.Widgets.Sidebar.Collection {
 
                 item.item_edit.connect ((item) => {
                     item_edit (item);
+                });
+
+                item.item_deleted.connect ((request) => {
+                    item_deleted (request);
+                    item_box.remove (item);
+                    item = null;
                 });
 
                 active_item_changed (item);

@@ -53,5 +53,11 @@ namespace Spectator.Models {
                 request_added (request);
             }
         }
+
+        public void remove_request (Request request) {
+            if (requests.contains (request)) {
+                requests.remove (request);
+            }
+        }
     }
 }

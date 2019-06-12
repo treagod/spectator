@@ -22,6 +22,7 @@
 namespace Spectator.Widgets.Sidebar.Collection {
     public class Container : Gtk.Box {
         public signal void item_edit (Models.Request request);
+        public signal void item_deleted (Models.Request request);
         public signal void item_clicked (Item item);
         public signal void create_collection_request (Models.Collection collection);
         public signal void collection_edit (Models.Collection collection);
@@ -42,6 +43,10 @@ namespace Spectator.Widgets.Sidebar.Collection {
 
             dropdown.item_edit.connect ((request) => {
                 item_edit (request);
+            });
+
+            dropdown.item_deleted.connect ((request) => {
+                item_deleted (request);
             });
 
             dropdown.item_clicked.connect ((item) => {

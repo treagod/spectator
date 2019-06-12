@@ -90,6 +90,10 @@ namespace Spectator.Widgets.Sidebar {
                 item_edited (request);
             });
 
+            collection.item_deleted.connect ((request) => {
+                item_deleted (request);
+            });
+
             collection.item_clicked.connect ((item) => {
                 selection_changed (item.item);
             });
