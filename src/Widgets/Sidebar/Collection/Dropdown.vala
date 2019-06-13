@@ -101,6 +101,18 @@ namespace Spectator.Widgets.Sidebar.Collection {
 
             box.add (indicator);
             box.add (label);
+
+            var event_box = create_event_box (model);
+
+            add (event_box);
+            add (item_box);
+
+
+            show_all ();
+            item_box.hide ();
+        }
+
+        private Gtk.EventBox create_event_box (Models.Collection model) {
             var event_box = new Gtk.EventBox ();
             event_box.add (box);
             event_box.button_release_event.connect ((event) => {
@@ -143,12 +155,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 return result;
             });
 
-            add (event_box);
-            add (item_box);
-
-
-            show_all ();
-            item_box.hide ();
+            return event_box;
         }
     }
 }
