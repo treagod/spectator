@@ -38,6 +38,13 @@ namespace Spectator.Widgets.Sidebar.Collection {
             get_style_context ().add_class ("collection-box");
         }
 
+        public void adjust_visibility () {
+            foreach (var child in get_children()) {
+                var dropdown = (Dropdown) child;
+                dropdown.adjust_visibility ();
+            }
+        }
+
         public void add_collection (Models.Collection collection) {
             var dropdown = new Dropdown (collection);
 

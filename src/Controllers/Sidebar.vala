@@ -62,6 +62,10 @@ namespace Spectator.Controllers {
             });
         }
 
+        public void adjust_visibility () {
+            sidebar.adjust_visibility ();
+        }
+
         public void set_active (Models.Request request) {
             sidebar.update_active (request);
         }

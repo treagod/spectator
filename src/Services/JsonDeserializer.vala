@@ -90,7 +90,15 @@ namespace Spectator.Services {
         var id = (uint) collection_object.get_int_member ("id");
         var name = collection_object.get_string_member ("name");
 
-        return new Models.Collection.with_id (id, name);
+        var collection = new Models.Collection.with_id (id, name);
+
+        if (collection_object.has_member ("items_visible")) {
+            collection.items_visible = collection_object.get_boolean_member ("items_visible");
+        } else {
+            collection.items_visible = false;
+        }
+
+        return collection;
     }
 
     private Models.Request deserialize_item (Json.Object request_object) {

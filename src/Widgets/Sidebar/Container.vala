@@ -172,6 +172,10 @@ namespace Spectator.Widgets.Sidebar {
             }
         }
 
+        public void adjust_visibility () {
+            collection.adjust_visibility ();
+        }
+
         public void add_item (Models.Request item) {
             var box_item = new Sidebar.Item (item);
 

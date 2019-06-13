@@ -45,6 +45,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
             }
             set {
                 _expanded = value;
+                collection.items_visible = value;
                 if (_expanded) {
                     indicator.set_from_icon_name (collection_open_icon, Gtk.IconSize.BUTTON);
                     item_box.show ();
@@ -110,6 +111,14 @@ namespace Spectator.Widgets.Sidebar.Collection {
 
             show_all ();
             item_box.hide ();
+        }
+
+        public void adjust_visibility () {
+            if (collection.items_visible) {
+                expanded = true;
+            } else {
+                expanded = false;
+            }
         }
 
         private Gtk.EventBox create_event_box (Models.Collection model) {

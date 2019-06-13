@@ -27,6 +27,7 @@ namespace Spectator.Models {
         public string name { get; set; }
         public uint id { get; private set; }
         private static uint max_id = 0;
+        public bool items_visible = false;
 
         public Collection (string nam) {
             id = max_id++;

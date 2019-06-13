@@ -92,6 +92,10 @@ namespace Spectator.Controllers {
             collection_controller.remove_request (request);
         }
 
+        public void adjust_visibility () {
+            sidebar_controller.adjust_visibility ();
+        }
+
         public void set_active_sidebar_item (Models.Request request) {
             sidebar_controller.set_active (request);
         }

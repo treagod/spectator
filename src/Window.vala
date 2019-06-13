@@ -80,6 +80,8 @@ namespace Spectator {
             grid.add (request_item_view);
 
             show_all ();
+
+            controller.adjust_visibility ();
         }
 
         protected override bool delete_event (Gdk.EventAny event) {

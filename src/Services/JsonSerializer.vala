@@ -111,6 +111,8 @@ namespace Spectator.Services {
             builder.add_int_value (collection.id);
             builder.set_member_name ("name");
             builder.add_string_value (collection.name);
+            builder.set_member_name ("items_visible");
+            builder.add_boolean_value (collection.items_visible);
 
             builder.end_object ();
         }
