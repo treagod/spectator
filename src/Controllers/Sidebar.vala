@@ -58,6 +58,7 @@ namespace Spectator.Controllers {
                 var dialog = new Dialogs.Collection.UpdateCollectionDialog (main.window, collection);
                 dialog.show_all ();
                 dialog.updated.connect (() => {
+                    sidebar.update_collection (collection);
                 });
             });
         }

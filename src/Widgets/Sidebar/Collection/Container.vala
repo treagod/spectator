@@ -45,6 +45,17 @@ namespace Spectator.Widgets.Sidebar.Collection {
             }
         }
 
+        public void update (Models.Collection collection) {
+            foreach (var child in get_children ()) {
+                var dropdown = (Dropdown) child;
+
+                if (dropdown.collection == collection) {
+                    dropdown.update ();
+                    break;
+                }
+            }
+        }
+
         public void add_collection (Models.Collection collection) {
             var dropdown = new Dropdown (collection);
 

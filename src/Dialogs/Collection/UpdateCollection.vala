@@ -38,11 +38,11 @@ namespace Spectator.Dialogs.Collection {
             var request_name_label = new Gtk.Label (_("Name:"));
             collection_name_entry = new Gtk.Entry ();
             collection_name_entry.text = collection.name;
-            dialog_title = new DialogTitle (_("New Collection"));
+            dialog_title = new DialogTitle (_("Update %s").printf (collection.name));
 
             collection_name_entry.activate.connect (() => {
                 if (name.length == 0) {
-                    show_warning (_("Request name must not be empty."));
+                    show_warning (_("Collection name must not be empty."));
                 } else {
                     collection.name = collection_name_entry.text;
                     updated ();

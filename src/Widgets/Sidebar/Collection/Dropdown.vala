@@ -32,7 +32,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public signal void create_collection_request (Models.Collection collection);
         public signal void active_item_changed (Item item);
 
-        private Models.Collection collection;
+        public Models.Collection collection { get; private set;}
         private Gtk.Label label;
         private Gtk.Box box;
         private Gtk.Box item_box;
@@ -59,6 +59,10 @@ namespace Spectator.Widgets.Sidebar.Collection {
         construct {
             orientation = Gtk.Orientation.VERTICAL;
             spacing = 0;
+        }
+
+        public void update () {
+            label.label = "<b>%s</b>".printf (collection.name);
         }
 
         public Dropdown (Models.Collection model) {

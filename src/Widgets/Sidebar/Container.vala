@@ -172,6 +172,10 @@ namespace Spectator.Widgets.Sidebar {
             }
         }
 
+        public void update_collection (Models.Collection col) {
+            collection.update (col);
+        }
+
         public void adjust_visibility () {
             collection.adjust_visibility ();
         }
