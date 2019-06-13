@@ -21,11 +21,21 @@
 
 namespace Spectator.Widgets.Sidebar {
     public class TitleBar : Gtk.Box {
+        private Gtk.Label title;
+        public string title_text {
+            get {
+                return title.label;
+            }
+            set {
+                title.label = value;
+            }
+        }
+
         public TitleBar (string text) {
             orientation = Gtk.Orientation.VERTICAL;
 
-            var title = new Gtk.Label (text);
-            title.get_style_context ().add_class ("h3");
+            title = new Gtk.Label (text);
+            title.get_style_context ().add_class ("h2");
             title.halign = Gtk.Align.CENTER;
             title.margin = 5;
 
@@ -40,6 +50,8 @@ namespace Spectator.Widgets.Sidebar {
     public class Container : Gtk.Box {
         private Gtk.FlowBox item_box;
         private Gtk.ScrolledWindow scroll;
+        private string collection_title_text = _("Collections");
+        private string history_title_text = _("History");
         private Gtk.Stack stack;
         private Granite.Widgets.SourceList source_list;
         public Collection.Container collection;
@@ -56,7 +68,7 @@ namespace Spectator.Widgets.Sidebar {
             scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
 
-            var titlebar = new TitleBar (_("Requests"));
+            var titlebar = new TitleBar (collection_title_text);
 
             item_box = new Gtk.FlowBox ();
             item_box.activate_on_single_click = true;
@@ -117,8 +129,10 @@ namespace Spectator.Widgets.Sidebar {
             mode_buttons.mode_changed.connect (() => {
                 if (mode_buttons.selected == 0) {
                     stack.set_visible_child (collection);
+                    titlebar.title_text = collection_title_text;
                 } else {
                     stack.set_visible_child (scroll);
+                    titlebar.title_text = history_title_text;
                 }
             });
 
