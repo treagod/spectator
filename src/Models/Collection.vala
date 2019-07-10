@@ -23,7 +23,7 @@ namespace Spectator.Models {
     public class Collection {
         public signal void request_added (Request request);
 
-        private Gee.ArrayList<Request> requests;
+        public Gee.ArrayList<Request> requests { get; private set; }
         public string name { get; set; }
         public uint id { get; private set; }
         private static uint max_id = 0;

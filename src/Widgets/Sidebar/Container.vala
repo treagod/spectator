@@ -48,13 +48,12 @@ namespace Spectator.Widgets.Sidebar {
     }
 
     public class Container : Gtk.Box {
-        private Gtk.FlowBox item_box;
         private Gtk.ScrolledWindow scroll;
         private string collection_title_text = _("Collections");
         private string history_title_text = _("History");
         private Gtk.Stack stack;
-        private Granite.Widgets.SourceList source_list;
         public Collection.Container collection;
+        public History.Container history;
 
         public signal void item_deleted (Models.Request item);
         public signal void item_edited (Models.Request item);
@@ -70,33 +69,27 @@ namespace Spectator.Widgets.Sidebar {
 
             var titlebar = new TitleBar (collection_title_text);
 
-            item_box = new Gtk.FlowBox ();
-            item_box.activate_on_single_click = true;
-            item_box.valign = Gtk.Align.START;
-            item_box.min_children_per_line = 1;
-            item_box.max_children_per_line = 1;
-            item_box.selection_mode = Gtk.SelectionMode.SINGLE;
-            item_box.margin = 6;
-            item_box.expand = false;
 
-            Settings.get_instance ().theme_changed.connect (() => {
-                item_box.forall ((widget) => {
-                    var it = (Sidebar.Item) widget;
-                    it.update (it.item);
-                });
-            });
-
-            item_box.child_activated.connect ((child) => {
-                var sidebar_item = child as Sidebar.Item;
-                selection_changed (sidebar_item.item);
-            });
+            //  Settings.get_instance ().theme_changed.connect (() => {
+            //      item_box.forall ((widget) => {
+            //          var it = (Sidebar.Item) widget;
+            //          it.update (it.item);
+            //      });
+            //  });
 
             orientation = Gtk.Orientation.VERTICAL;
             width_request = 265;
 
-            scroll.add (item_box);
-            source_list = new Granite.Widgets.SourceList ();
             collection = new Collection.Container ();
+            history = new History.Container ();
+
+            history.child_activated.connect ((child) => {
+                var sidebar_item = child as Sidebar.Item;
+                selection_changed (sidebar_item.item);
+            });
+
+
+            scroll.add (history);
 
             collection.item_edit.connect ((request) => {
                 item_edited (request);
@@ -183,13 +176,13 @@ namespace Spectator.Widgets.Sidebar {
         public void add_item (Models.Request item) {
             var box_item = new Sidebar.Item (item);
 
-            item_box.add (box_item);
-            item_box.show_all ();
-            item_box.select_child (box_item);
+            history.add (box_item);
+            history.show_all ();
+            history.select_child (box_item);
 
             box_item.item_deleted.connect ((item) => {
                 item_deleted (item);
-                item_box.remove (box_item);
+                history.remove (box_item);
             });
 
             box_item.item_edit.connect ((item) => {
@@ -206,7 +199,7 @@ namespace Spectator.Widgets.Sidebar {
         }
 
         private Sidebar.Item? get_active () {
-            var children = item_box.get_selected_children ();
+            var children = history.get_selected_children ();
 
             if (children.length () > 0) {
                 return ((Sidebar.Item) children.nth_data (0));
@@ -226,7 +219,7 @@ namespace Spectator.Widgets.Sidebar {
         }
 
         public void clear_selection () {
-            item_box.unselect_all ();
+            history.unselect_all ();
             queue_draw ();
         }
     }

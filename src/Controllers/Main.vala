@@ -56,7 +56,7 @@ namespace Spectator.Controllers {
         }
 
         public void update_active (Models.Request request) {
-            //
+            stdout.printf ("Not implemented\n");
         }
 
         public void show_update_request_dialog (Models.Request request) {
@@ -112,18 +112,22 @@ namespace Spectator.Controllers {
             collection_controller.add_collection (collection);
         }
 
+        public void add_to_history (Models.Request request) {
+            stdout.printf ("Added to history\n");
+        }
+
         public void load_data () {
             var deserializer = new Services.JsonDeserializer ();
             deserializer.request_loaded.connect ((request) => {
                 add_request (request);
             });
 
-            deserializer.collection_loaded.connect ((collection) => {
-                add_collection (collection);
-            });
-
             deserializer.request_added_to_collection.connect ((collection, request) => {
                 collection_controller.add_request_to_collection (collection, request);
+            });
+
+            deserializer.collection_loaded.connect ((collection) => {
+                add_collection (collection);
             });
 
             deserializer.load_data_from_file (setting_file_path);

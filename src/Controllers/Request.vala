@@ -158,6 +158,7 @@ namespace Spectator.Controllers {
                 });
 
                 action.make_request.begin ();
+                main.add_to_history (active_request);
             });
 
             content.header_added.connect ((header) => {
