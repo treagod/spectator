@@ -85,9 +85,9 @@ namespace Spectator.Controllers {
                     active_request.uri = active_request.uri.replace ("?", "");
                 }
 
-                main.update_active (active_request);
                 // TODO: more hiearchy, so this change does not propagate that high
                 content.update_url_bar (active_request.uri);
+                main.update_active_url ();
             });
 
             content.body_buffer_changed.connect ((content) => {

@@ -55,10 +55,6 @@ namespace Spectator.Controllers {
             });
         }
 
-        public void update_active (Models.Request request) {
-            stdout.printf ("Not implemented\n");
-        }
-
         public void update_active_url () {
             sidebar_controller.update_active_url ();
         }

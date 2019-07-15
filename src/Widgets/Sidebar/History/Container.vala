@@ -81,7 +81,7 @@ namespace Spectator.Widgets.Sidebar.History {
             Settings.get_instance ().theme_changed.connect (() => {
                 forall ((widget) => {
                     var it = (Sidebar.Item) widget;
-                    it.update (it.item);
+                    it.refresh ();
                 });
             });
         }

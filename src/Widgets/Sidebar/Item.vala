@@ -60,6 +60,8 @@ namespace Spectator.Widgets.Sidebar {
 
         public Item (Models.Request it) {
             item = it;
+
+            //TODO: make it more explicit, i.e. trigger refresh from controller
             item.notify.connect (() => {
                 refresh ();
             });
@@ -113,14 +115,10 @@ namespace Spectator.Widgets.Sidebar {
             set_formatted_uri (item.uri);
         }
 
-        public void update (Models.Request it) {
-            item = it;
+        public void refresh () {
             method.label = get_method_label (item.method);
-
             request_name.label = item.name;
-
             set_formatted_uri (item.uri);
-
             show_all ();
         }
 
@@ -165,21 +163,6 @@ namespace Spectator.Widgets.Sidebar {
                 }
                 return result;
             });
-        }
-
-        public void refresh () {
-            method.label = get_method_label (item.method);
-
-            request_name.label = item.name;
-
-            var escaped_url = escape_url (item.uri);
-            if (item.uri.length > 0) {
-                url.label = "<small><i>" + escaped_url + "</i></small>";
-            } else {
-                url.label = no_url;
-            }
-
-            show_all ();
         }
 
         private string escape_url (string url) {

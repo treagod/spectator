@@ -168,11 +168,11 @@ namespace Spectator.Widgets.Sidebar {
             collection.adjust_visibility ();
         }
 
-        public void update_active (Models.Request item) {
+        public void update_active () {
             Sidebar.Item? sidebar_item = get_active ();
 
             if (sidebar_item != null) {
-                sidebar_item.update (item);
+                sidebar_item.refresh ();
             }
         }
 

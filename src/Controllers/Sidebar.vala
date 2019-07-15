@@ -95,7 +95,7 @@ namespace Spectator.Controllers {
         }
 
         public void set_active (Models.Request request) {
-            sidebar.update_active (request);
+            sidebar.update_active ();
         }
 
         public void update_method_active (Models.Method method) {
