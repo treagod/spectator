@@ -59,6 +59,10 @@ namespace Spectator.Controllers {
             stdout.printf ("Not implemented\n");
         }
 
+        public void update_active_url () {
+            sidebar_controller.update_active_url ();
+        }
+
         public void show_update_request_dialog (Models.Request request) {
            var dialog = new Dialogs.Request.UpdateDialog (window, request);
            dialog.show_all ();
@@ -133,7 +137,7 @@ namespace Spectator.Controllers {
             deserializer.load_data_from_file (setting_file_path);
 
             var requests = request_controller.get_items_reference ();
-            sidebar_controller.add_test (requests);
+            sidebar_controller.add_history_from_list (requests);
         }
 
         public void save_data () {

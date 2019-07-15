@@ -58,6 +58,8 @@ namespace Spectator.Controllers {
                         content.update_url_params (active_request);
                     }
                 }
+
+                main.update_active_url ();
             });
 
             content.url_params_updated.connect ((items) => {

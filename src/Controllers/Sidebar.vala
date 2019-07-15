@@ -65,7 +65,12 @@ namespace Spectator.Controllers {
             });
         }
 
-        public void add_test (unowned Gee.ArrayList<Models.Request> requests) {
+        public void update_active_url () {
+            sidebar.update_active_url ();
+        }
+
+
+        public void add_history_from_list (Gee.ArrayList<Models.Request> requests) {
             var history_items = new Gee.ArrayList<Models.Request> ();
 
             foreach (var req in requests) {

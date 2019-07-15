@@ -86,6 +86,12 @@ namespace Spectator.Widgets.Sidebar.History {
             });
         }
 
+        public void update_active_url () {
+            if (active_item != null) {
+                active_item.update_url ();
+            }
+        }
+
         public void change_active (Models.Request request) {
             if (active_item != null) {
                 active_item.get_style_context ().remove_class ("active");

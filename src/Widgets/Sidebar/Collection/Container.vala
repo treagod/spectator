@@ -43,6 +43,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 active_item.get_style_context ().remove_class ("active");
                 active_item = null;
             }
+
             @foreach((child) => {
                 var dropdown = (Dropdown) child;
                 var item = dropdown.get_item (request);
@@ -53,6 +54,12 @@ namespace Spectator.Widgets.Sidebar.Collection {
                     return;
                 }
             });
+        }
+
+        public void update_active_url () {
+            if (active_item != null) {
+                active_item.update_url ();
+            }
         }
 
         public void adjust_visibility () {

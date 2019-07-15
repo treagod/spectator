@@ -109,6 +109,10 @@ namespace Spectator.Widgets.Sidebar {
             add (item_box);
         }
 
+        public void update_url () {
+            set_formatted_uri (item.uri);
+        }
+
         public void update (Models.Request it) {
             item = it;
             method.label = get_method_label (item.method);

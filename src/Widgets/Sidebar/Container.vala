@@ -69,14 +69,6 @@ namespace Spectator.Widgets.Sidebar {
 
             var titlebar = new TitleBar (collection_title_text);
 
-
-            //  Settings.get_instance ().theme_changed.connect (() => {
-            //      item_box.forall ((widget) => {
-            //          var it = (Sidebar.Item) widget;
-            //          it.update (it.item);
-            //      });
-            //  });
-
             orientation = Gtk.Orientation.VERTICAL;
             width_request = 265;
 
@@ -163,12 +155,9 @@ namespace Spectator.Widgets.Sidebar {
             }
         }
 
-        public void update_active_url (string uri) {
-            var sidebar_item = get_active ();
-
-            if (sidebar_item != null) {
-                sidebar_item.item.uri = uri;
-            }
+        public void update_active_url () {
+            collection.update_active_url ();
+            history.update_active_url ();
         }
 
         public void update_collection (Models.Collection col) {
