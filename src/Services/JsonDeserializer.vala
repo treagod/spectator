@@ -118,6 +118,11 @@ namespace Spectator.Services {
             request = new Models.Request.with_uri (name, uri, Models.Method.convert (method));
         }
 
+        if (request_object.has_member ("last_sent")) {
+            int64 last_sent = request_object.get_int_member ("last_sent");
+            request.last_sent = new DateTime.from_unix_local (last_sent);
+        }
+
         if (request_object.has_member ("collection_id")) {
             request.collection_id = (uint) request_object.get_int_member ("collection_id");
         }

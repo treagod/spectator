@@ -158,7 +158,8 @@ namespace Spectator.Controllers {
                 });
 
                 action.make_request.begin ();
-                main.add_to_history (active_request);
+                active_request.last_sent = new DateTime.now_local ();
+                main.update_history (active_request);
             });
 
             content.header_added.connect ((header) => {

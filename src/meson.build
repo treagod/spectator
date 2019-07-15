@@ -29,6 +29,7 @@ executable(
 	'Controllers/Main.vala',
 	'Controllers/Collection.vala',
 	'Controllers/Sidebar.vala',
+	'Controllers/History.vala',
 	'Services/Utilities.vala',
     'Services/ScriptWriter.vala',
 	'Services/Settings.vala',

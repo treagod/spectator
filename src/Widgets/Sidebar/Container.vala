@@ -173,23 +173,6 @@ namespace Spectator.Widgets.Sidebar {
             collection.adjust_visibility ();
         }
 
-        public void add_item (Models.Request item) {
-            var box_item = new Sidebar.Item (item);
-
-            history.add (box_item);
-            history.show_all ();
-            history.select_child (box_item);
-
-            box_item.item_deleted.connect ((item) => {
-                item_deleted (item);
-                history.remove (box_item);
-            });
-
-            box_item.item_edit.connect ((item) => {
-                item_edited (item);
-            });
-        }
-
         public void update_active (Models.Request item) {
             Sidebar.Item? sidebar_item = get_active ();
 

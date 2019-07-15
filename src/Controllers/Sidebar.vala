@@ -22,11 +22,13 @@
 namespace Spectator.Controllers {
     public class Sidebar {
         public Main main { get; private set; }
+        public History history_controller { get; private set; }
 
         public Widgets.Sidebar.Container sidebar { get; private set; }
         public Sidebar (Main m) {
             main = m;
             sidebar = main.window.sidebar;
+            history_controller = new History (main, sidebar.history);
 
             setup ();
         }
@@ -63,6 +65,26 @@ namespace Spectator.Controllers {
             });
         }
 
+        public void add_test (unowned Gee.ArrayList<Models.Request> requests) {
+            var history_items = new Gee.ArrayList<Models.Request> ();
+
+            foreach (var req in requests) {
+                if (req.last_sent != null) history_items.add (req);
+            }
+
+            history_items.sort ((a, b) => {
+                return a.last_sent.compare (b.last_sent);
+            });
+
+            foreach (var req in history_items) {
+                history_controller.add (req);
+            }
+        }
+
+        public void update_history (Models.Request request) {
+            history_controller.add (request);
+        }
+
         public void adjust_visibility () {
             sidebar.adjust_visibility ();
         }
@@ -76,7 +98,7 @@ namespace Spectator.Controllers {
         }
 
         public void add_request (Models.Request request) {
-            sidebar.add_item (request);
+            //sidebar.add_item (request);
         }
     }
 }

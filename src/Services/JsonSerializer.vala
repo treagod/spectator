@@ -91,6 +91,10 @@ namespace Spectator.Services {
             builder.add_string_value (request.uri);
             builder.set_member_name ("method");
             builder.add_int_value (request.method.to_i ());
+            if (request.last_sent != null) {
+                builder.set_member_name ("last_sent");
+                builder.add_int_value (request.last_sent.to_unix ());
+            }
             builder.set_member_name ("script");
             builder.add_string_value (request.script_code);
 

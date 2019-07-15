@@ -112,8 +112,8 @@ namespace Spectator.Controllers {
             collection_controller.add_collection (collection);
         }
 
-        public void add_to_history (Models.Request request) {
-            stdout.printf ("Added to history\n");
+        public void update_history (Models.Request request) {
+            sidebar_controller.update_history (request);
         }
 
         public void load_data () {
@@ -131,6 +131,9 @@ namespace Spectator.Controllers {
             });
 
             deserializer.load_data_from_file (setting_file_path);
+
+            var requests = request_controller.get_items_reference ();
+            sidebar_controller.add_test (requests);
         }
 
         public void save_data () {

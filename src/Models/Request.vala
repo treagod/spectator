@@ -31,6 +31,7 @@ namespace Spectator.Models {
         public ResponseItem? response { get; set; }
         public string script_code;
         public Gee.ArrayList<Pair> headers { get; private set; }
+        public DateTime? last_sent;
         public string query {
             owned get {
                 var idx = uri.index_of_char ('?');
