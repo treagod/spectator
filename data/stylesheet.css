@@ -11,6 +11,11 @@
     padding-left: 1em;
 }
 
+.history-box .active {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+}
+
 .collection-box .active {
     background-color: @theme_selected_bg_color;
     color: @theme_selected_fg_color;

@@ -37,11 +37,33 @@ namespace Spectator.Widgets.Sidebar.History {
             pack_start (items);
             items.show_all ();
         }
+
+        public void add_item (Item item) {
+            items.add (item);
+        }
+
+        public Item? get_item (Models.Request request) {
+            Item? result = null;
+
+            items.foreach ((it) => {
+                var item = (Item) it;
+
+                if (item.item == request) {
+                    result = item;
+                    return;
+                }
+            });
+            return result;
+        }
     }
+
     public class Container : Gtk.FlowBox {
         public signal void item_deleted (Models.Request item);
         public signal void item_edited (Models.Request item);
+        public signal void item_clicked (Item item);
+
         private Gee.HashMap<string, DateBox> boxes;
+        private Item? active_item;
 
         construct {
             activate_on_single_click = true;
@@ -55,6 +77,7 @@ namespace Spectator.Widgets.Sidebar.History {
 
         public Container () {
             boxes = new Gee.HashMap<string, DateBox> ();
+            get_style_context ().add_class ("history-box");
             Settings.get_instance ().theme_changed.connect (() => {
                 forall ((widget) => {
                     var it = (Sidebar.Item) widget;
@@ -63,15 +86,43 @@ namespace Spectator.Widgets.Sidebar.History {
             });
         }
 
+        public void change_active (Models.Request request) {
+            if (active_item != null) {
+                active_item.get_style_context ().remove_class ("active");
+                active_item = null;
+            }
+
+            foreach (var entry in boxes.entries) {
+                var date_box = entry.value;
+                var item = date_box.get_item (request);
+
+                if (item != null) {
+                    active_item = item;
+                    active_item.get_style_context ().add_class ("active");
+                    return;
+                }
+            }
+        }
+
         private void add_history_item (string key_date, Models.Request request) {
             var item = new Item (request);
+
+            item.item_clicked.connect (() => {
+                if (active_item != null) {
+                    active_item.get_style_context ().remove_class ("active");
+                }
+                active_item = item;
+                active_item.get_style_context ().add_class ("active");
+                item_clicked (item);
+            });
+
             if (boxes.has_key (key_date)) {
                 var date_box = boxes[key_date];
-                date_box.add (item);
+                date_box.add_item (item);
                 date_box.show_all ();
             } else {
                 var date_box = new DateBox (key_date);
-                date_box.add (item);
+                date_box.add_item (item);
                 boxes[key_date] = date_box;
                 add (date_box);
                 date_box.show_all ();
@@ -115,23 +166,6 @@ namespace Spectator.Widgets.Sidebar.History {
                     add_history_item (entry.value.format ("%e. %B %Y"), entry.key);
                 }
             }
-        }
-
-        public void add_item (Models.Request request) {
-            var box_item = new Sidebar.Item (request);
-
-            add (box_item);
-            show_all ();
-            select_child (box_item);
-
-            box_item.item_deleted.connect ((item) => {
-                item_deleted (item);
-                remove (box_item);
-            });
-
-            box_item.item_edit.connect ((item) => {
-                item_edited (item);
-            });
         }
     }
 }

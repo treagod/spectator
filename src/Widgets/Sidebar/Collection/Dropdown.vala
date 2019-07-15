@@ -37,7 +37,6 @@ namespace Spectator.Widgets.Sidebar.Collection {
         private Gtk.Box box;
         private Gtk.Box item_box;
         private Gtk.Image indicator;
-        private Gee.ArrayList<Item> items;
         private bool _expanded;
         public bool expanded {
             get {
@@ -65,10 +64,21 @@ namespace Spectator.Widgets.Sidebar.Collection {
             label.label = "<b>%s</b>".printf (collection.name);
         }
 
+        public Item? get_item (Models.Request request) {
+            Item? result = null;
+            item_box.foreach ((it) => {
+                var item = (Item) it;
+
+                if (item.item == request) {
+                    result = item;
+                    return;
+                }
+            });
+            return result;
+        }
+
         public Dropdown (Models.Collection model) {
             collection = model;
-            items = new Gee.ArrayList<Item> ();
-
             box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 4);
             item_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 2);
             item_box.get_style_context ().add_class ("collection-items");

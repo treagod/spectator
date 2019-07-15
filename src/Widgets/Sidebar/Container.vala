@@ -101,6 +101,12 @@ namespace Spectator.Widgets.Sidebar {
 
             collection.item_clicked.connect ((item) => {
                 selection_changed (item.item);
+                history.change_active (item.item);
+            });
+
+            history.item_clicked.connect ((item) => {
+                selection_changed (item.item);
+                collection.change_active (item.item);
             });
 
             collection.create_collection_request.connect ((collection) => {

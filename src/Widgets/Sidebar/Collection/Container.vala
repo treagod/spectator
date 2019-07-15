@@ -38,6 +38,23 @@ namespace Spectator.Widgets.Sidebar.Collection {
             get_style_context ().add_class ("collection-box");
         }
 
+        public void change_active (Models.Request request) {
+            if (active_item != null) {
+                active_item.get_style_context ().remove_class ("active");
+                active_item = null;
+            }
+            @foreach((child) => {
+                var dropdown = (Dropdown) child;
+                var item = dropdown.get_item (request);
+
+                if (item != null) {
+                    active_item = item;
+                    active_item.get_style_context ().add_class ("active");
+                    return;
+                }
+            });
+        }
+
         public void adjust_visibility () {
             foreach (var child in get_children()) {
                 var dropdown = (Dropdown) child;
