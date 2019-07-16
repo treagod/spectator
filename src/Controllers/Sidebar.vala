@@ -54,6 +54,7 @@ namespace Spectator.Controllers {
 
             sidebar.item_deleted.connect ((request) => {
                 main.remove_request (request);
+                sidebar.history_delete (request);
             });
 
             sidebar.collection_edit.connect ((collection) => {

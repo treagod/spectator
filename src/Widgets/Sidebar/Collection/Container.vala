@@ -27,7 +27,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public signal void create_collection_request (Models.Collection collection);
         public signal void collection_edit (Models.Collection collection);
 
-        private Item? active_item;
+        public Item? active_item { get; private set; }
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;

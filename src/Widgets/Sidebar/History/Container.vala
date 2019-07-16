@@ -33,13 +33,27 @@ namespace Spectator.Widgets.Sidebar.History {
             date_label.justify = Gtk.Justification.CENTER;
             date_label.use_markup = true;
 
-            pack_start (date_label);
-            pack_start (items);
+            pack_start (date_label, true, true);
+            pack_start (items, true, true);
             items.show_all ();
+        }
+
+        public uint item_size () {
+            return items.get_children ().length ();
         }
 
         public void add_item (Item item) {
             items.add (item);
+        }
+
+        public bool delete_request (Models.Request request) {
+            var item = get_item (request);
+
+            if (item != null) {
+                items.remove (item);
+                return true;
+            }
+            return false;
         }
 
         public Item? get_item (Models.Request request) {
@@ -57,7 +71,7 @@ namespace Spectator.Widgets.Sidebar.History {
         }
     }
 
-    public class Container : Gtk.FlowBox {
+    public class Container : Gtk.Box {
         public signal void item_deleted (Models.Request item);
         public signal void item_edited (Models.Request item);
         public signal void item_clicked (Item item);
@@ -66,11 +80,7 @@ namespace Spectator.Widgets.Sidebar.History {
         private Item? active_item;
 
         construct {
-            activate_on_single_click = true;
-            valign = Gtk.Align.START;
-            min_children_per_line = 1;
-            max_children_per_line = 1;
-            selection_mode = Gtk.SelectionMode.SINGLE;
+            orientation = Gtk.Orientation.VERTICAL;
             margin = 6;
             expand = false;
         }
@@ -89,6 +99,24 @@ namespace Spectator.Widgets.Sidebar.History {
         public void update_active_url () {
             if (active_item != null) {
                 active_item.update_url ();
+            }
+        }
+
+        public void delete_request (Models.Request request) {
+            foreach (var entry in boxes.entries) {
+                var date_box = entry.value;
+
+                // If the request item was deleted check if for the
+                // date box are any children left. If none, delete box
+                // Skip other boxes if deletion was succesfull
+                if (date_box.delete_request (request)) {
+                    if (date_box.item_size () == 0) {
+                        boxes.unset (entry.key);
+                        remove (date_box);
+                        date_box.destroy ();
+                    }
+                    return;
+                }
             }
         }
 

@@ -75,12 +75,6 @@ namespace Spectator.Widgets.Sidebar {
             collection = new Collection.Container ();
             history = new History.Container ();
 
-            history.child_activated.connect ((child) => {
-                var sidebar_item = child as Sidebar.Item;
-                selection_changed (sidebar_item.item);
-            });
-
-
             scroll.add (history);
 
             collection.item_edit.connect ((request) => {
@@ -176,14 +170,12 @@ namespace Spectator.Widgets.Sidebar {
             }
         }
 
+        public void history_delete (Models.Request request) {
+            history.delete_request (request);
+        }
+
         private Sidebar.Item? get_active () {
-            var children = history.get_selected_children ();
-
-            if (children.length () > 0) {
-                return ((Sidebar.Item) children.nth_data (0));
-            }
-
-            return null;
+            return collection.active_item;
         }
 
         public Models.Request? get_active_item () {
@@ -197,7 +189,8 @@ namespace Spectator.Widgets.Sidebar {
         }
 
         public void clear_selection () {
-            history.unselect_all ();
+            // collection.clear_slection ();
+            // history.clear_selection ();
             queue_draw ();
         }
     }
