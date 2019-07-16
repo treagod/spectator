@@ -100,6 +100,13 @@ namespace Spectator.Controllers {
             sidebar_controller.set_active (request);
         }
 
+        public void delete_collection (Models.Collection collection) {
+            foreach (var request in collection.requests) {
+                request_controller.remove_request (request);
+            }
+            collection_controller.delete_collection (collection);
+        }
+
         public void update_sidebar_active_method (Models.Method method) {
             sidebar_controller.update_method_active (method);
         }

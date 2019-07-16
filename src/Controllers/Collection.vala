@@ -55,6 +55,12 @@ namespace Spectator.Controllers {
             }
         }
 
+        public void delete_collection (Models.Collection collection) {
+            if (collections.contains (collection)) {
+                collections.remove (collection);
+            }
+        }
+
         public void remove_request (Models.Request request) {
             if (request.collection_id == null) return;
 

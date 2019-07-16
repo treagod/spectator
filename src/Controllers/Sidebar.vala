@@ -64,6 +64,10 @@ namespace Spectator.Controllers {
                     sidebar.update_collection (collection);
                 });
             });
+
+            sidebar.collection_delete.connect ((collection) => {
+                main.delete_collection (collection);
+            });
         }
 
         public void update_active_url () {
