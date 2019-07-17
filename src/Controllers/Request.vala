@@ -44,7 +44,9 @@ namespace Spectator.Controllers {
 
         private void setup () {
             content.welcome_activated.connect (main.show_create_request_dialog);
-            headerbar.new_request.clicked.connect (main.show_create_request_dialog);
+            headerbar.new_request.clicked.connect (() => {
+                main.show_create_request_dialog ();
+            });
             headerbar.preference_clicked.connect (() => { preference_clicked (); });
 
             content.url_changed.connect ((url) => {

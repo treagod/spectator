@@ -45,13 +45,18 @@ namespace Spectator.Controllers {
         }
 
         public void show_create_request_dialog () {
-            var dialog = new Dialogs.Request.CreateDialog (window);
+            var dialog = new Dialogs.Request.CreateDialog (window, collection_controller.get_collections ());
+
             dialog.show_all ();
             dialog.creation.connect ((request) => {
                 request.script_code = "// function before_sending(request) {\n// }";
                 add_request (request);
                 update_headerbar (request);
                 request_controller.show_request (request);
+            });
+            dialog.collection_created.connect ((collection) => {
+                collection_controller.add_collection (collection);
+                collection.items_visible = true;
             });
         }
 
