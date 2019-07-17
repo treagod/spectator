@@ -2,6 +2,30 @@
     margin-top: 2px;
 }
 
+.square button {
+    border-radius: 0px;
+}
+
+.collection-box {
+    margin-top: 1em;
+    padding-left: 1em;
+}
+
+.history-box .active {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+}
+
+.collection-box .active {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+}
+
+.collection-items {
+    margin-top: 0.15em;
+    margin-left: 1.25em;
+}
+
 .theme-selection radiobutton {
     background-color: @theme_unfocused_bg_color;
 

@@ -21,7 +21,7 @@
 
 namespace Spectator.Services {
     public class RequestAction {
-        private Models.Request item;
+        public Models.Request item { get; private set; }
         private Settings settings = Settings.get_instance ();
         private Timer timer;
         private Soup.Session session;
@@ -55,10 +55,6 @@ namespace Spectator.Services {
         public async void make_request () {
             yield perform_request ();
             item.status = Models.RequestStatus.SENDING;
-        }
-
-        public Models.Request get_item () {
-            return item;
         }
 
         public void cancel () {

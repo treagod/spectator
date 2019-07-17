@@ -21,17 +21,43 @@
 
 namespace Spectator.Models {
     public class Collection {
-        private Gee.ArrayList<Request> requests;
-        public string name { get; private set; }
+        public signal void request_added (Request request);
+
+        public Gee.ArrayList<Request> requests { get; private set; }
+        public string name { get; set; }
+        public uint id { get; private set; }
+        private static uint max_id = 0;
+        public bool items_visible = false;
 
         public Collection (string nam) {
+            id = max_id++;
+            name = nam;
+            requests = new Gee.ArrayList<Request> ();
+        }
+
+        public Collection.with_id (uint i, string nam) {
+            if (i > max_id) {
+                max_id = i;
+                id = max_id++;
+            } else {
+                id = i;
+            }
+
             name = nam;
             requests = new Gee.ArrayList<Request> ();
         }
 
         public void add_request (Request request) {
             if (!requests.contains (request)) {
+                request.collection_id = id;
                 requests.add (request);
+                request_added (request);
+            }
+        }
+
+        public void remove_request (Request request) {
+            if (requests.contains (request)) {
+                requests.remove (request);
             }
         }
     }

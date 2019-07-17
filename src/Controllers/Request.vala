@@ -23,20 +23,18 @@ namespace Spectator.Controllers {
     public class Request {
         // Models
         private Gee.ArrayList<Models.Request> items;
+        public Models.Request? active_request;
         // \Models
         // Views
-        private Widgets.Sidebar.Container sidebar;
-        private Widgets.Content content;
-        private Widgets.HeaderBar headerbar;
+        public Widgets.Content content { get; private set; }
+        public Widgets.HeaderBar headerbar { get; private set; }
         // \Views
         public unowned Main main;
         private Services.RequestAction action;
 
         public signal void preference_clicked ();
 
-        public Request (Widgets.HeaderBar headerbar, Widgets.Sidebar.Container sidebar,
-                                  Widgets.Content content) {
-            this.sidebar = sidebar;
+        public Request (Widgets.HeaderBar headerbar, Widgets.Content content) {
             this.content = content;
             this.headerbar = headerbar;
             this.items = new Gee.ArrayList<Models.Request> ();
@@ -45,32 +43,44 @@ namespace Spectator.Controllers {
         }
 
         private void setup () {
-            content.welcome_activated.connect (show_create_request_dialog);
-            headerbar.new_request.clicked.connect (show_create_request_dialog);
-            headerbar.preference_clicked.connect (() => { preference_clicked (); });
-            sidebar.item_edited.connect (show_update_request_dialog);
-            sidebar.selection_changed.connect ((item) => {
-                update_headerbar (item);
-                update_content (item);
+            content.welcome_activated.connect ((idx) => {
+                switch (idx) {
+                    case 0:
+                    main.show_create_request_dialog ();
+                    break;
+                    case 1:
+                    var dialog = new Dialogs.Collection.CollectionDialog (main.window);
+                    dialog.show_all ();
+                    dialog.creation.connect ((collection) => {
+                        main.add_collection (collection);
+                    });
+                    break;
+                    default:
+                    assert_not_reached ();
+                    }
             });
+            headerbar.new_request.clicked.connect (() => {
+                main.show_create_request_dialog ();
+            });
+            headerbar.preference_clicked.connect (() => { preference_clicked (); });
 
             content.url_changed.connect ((url) => {
-                var request = sidebar.get_active_item ();
                 var uri = new Soup.URI (url);
-                var old_query = request.query;
 
-                if (request != null) {
-                    request.uri = url;
+                if (active_request != null) {
+                    var old_query = active_request.query;
 
                     if ((uri == null || old_query != uri.query)) {
-                        content.update_url_params (request);
+                        active_request.uri = url;
+                        content.update_url_params (active_request);
                     }
                 }
+
+                main.update_active_url ();
             });
 
             content.url_params_updated.connect ((items) => {
                 var query_builder = new StringBuilder ();
-                var request = sidebar.get_active_item ();
 
                 for (int i = 0; i < items.size; i++) {
                     var item = items.get (i);
@@ -86,164 +96,129 @@ namespace Spectator.Controllers {
                 }
 
                 var querystr = query_builder.str;
-                request.query = querystr;
+                active_request.query = querystr;
 
                 if (querystr == "") {
-                    request.uri = request.uri.replace ("?", "");
+                    active_request.uri = active_request.uri.replace ("?", "");
                 }
 
-                sidebar.update_active (request);
-                content.update_url_bar (request.uri);
+                // TODO: more hiearchy, so this change does not propagate that high
+                content.update_url_bar (active_request.uri);
+                main.update_active_url ();
             });
 
             content.body_buffer_changed.connect ((content) => {
-                var item = sidebar.get_active_item ();
-                item.request_body.raw = content;
+                active_request.request_body.raw = content;
             });
 
             content.script_changed.connect ((script) => {
-                var item = sidebar.get_active_item ();
-                item.script_code = script;
+                active_request.script_code = script;
             });
 
             content.method_changed.connect ((method) => {
-                sidebar.update_active_method (method);
+                main.update_sidebar_active_method (method);
             });
 
             content.key_value_added.connect ((kv) => {
-                var item = sidebar.get_active_item ();
-                item.request_body.add_key_value (kv);
+                active_request.request_body.add_key_value (kv);
             });
 
             content.key_value_updated.connect ((kv) => {
-                var item = sidebar.get_active_item ();
-                item.request_body.update_key_value (kv);
+                active_request.request_body.update_key_value (kv);
             });
 
             content.key_value_removed.connect ((kv) => {
-                var item = sidebar.get_active_item ();
-                item.request_body.remove_key_value (kv);
+                active_request.request_body.remove_key_value (kv);
             });
 
             content.type_changed.connect ((type) => {
-                var item = sidebar.get_active_item ();
-                item.request_body.type = type;
+                active_request.request_body.type = type;
             });
 
             content.request_activated.connect (() => {
-                var item = sidebar.get_active_item ();
-                item.status = Models.RequestStatus.SENDING;
+                active_request.status = Models.RequestStatus.SENDING;
 
-                action = new Services.RequestAction.with_writer (item, content.get_console_writer ());
+                action = new Services.RequestAction.with_writer (active_request, content.get_console_writer ());
 
                 action.finished_request.connect (() => {
-                    if (item == sidebar.get_active_item ()) {
-                        content.update_response (item);
-                        content.update_status (item);
+                    if (action.item == active_request) {
+                        content.update_response (active_request);
+                        content.update_status (active_request);
                     }
                 });
 
                 action.request_failed.connect ((item) => {
-                    item.status = Models.RequestStatus.SENT;
-                    content.show_request (item);
-                    content.set_error (_("Request failed: %s").printf (item.name));
+                    action.item.status = Models.RequestStatus.SENT;
+                    content.show_request (action.item);
+                    content.set_error (_("Request failed: %s").printf (action.item.name));
                 });
 
                 action.invalid_uri.connect ((item) => {
-                    item.status = Models.RequestStatus.SENT;
-                    content.update_status (item);
-                    content.set_error (_("Invalid URI: %s").printf (item.name));
+                    action.item.status = Models.RequestStatus.SENT;
+                    content.update_status (action.item);
+                    content.set_error (_("Invalid URI: %s").printf (action.item.name));
                 });
 
                 action.proxy_failed.connect ((item) => {
-                    item.status = Models.RequestStatus.SENT;
-                    content.update_status (item);
-                    content.set_error (_("Proxy denied request: %s").printf (item.name));
+                    action.item.status = Models.RequestStatus.SENT;
+                    content.update_status (action.item);
+                    content.set_error (_("Proxy denied request: %s").printf (action.item.name));
                 });
 
                 action.request_got_chunk.connect (() => {
-                    if (item == sidebar.get_active_item ()) {
-                        content.update_chunk_response (item);
+                    if (action.item == active_request) {
+                        content.update_chunk_response (action.item);
                     }
                 });
 
                 action.aborted.connect (() => {
-                    item.status = Models.RequestStatus.SENT;
-                    content.update_status (item);
+                    action.item.status = Models.RequestStatus.SENT;
+                    content.update_status (action.item);
                 });
 
                 action.make_request.begin ();
+                active_request.last_sent = new DateTime.now_local ();
+                main.update_history (active_request);
             });
 
             content.header_added.connect ((header) => {
-                var item = sidebar.get_active_item ();
-                item.add_header (header);
+                active_request.add_header (header);
             });
 
             content.cancel_process.connect (() => {
                 if (action != null) {
                     action.cancel ();
-                    var item = action.get_item ();
-                    item.status = Models.RequestStatus.SENT;
-                    if (item == sidebar.get_active_item ()) {
-                        content.update_status (item);
+                    action.item.status = Models.RequestStatus.SENT;
+                    if (action.item == active_request) {
+                        content.update_status (action.item);
                     }
                 }
             });
 
             content.header_deleted.connect ((header) => {
-                var item = sidebar.get_active_item ();
-
-                item.remove_header (header);
+                active_request.remove_header (header);
             });
 
-            sidebar.item_deleted.connect ((item) => {
-                items.remove (item);
-
-                if (items.size == 0) {
-                    content.show_welcome ();
-                }
-            });
-
-            content.item_changed.connect ((item) => {
-                sidebar.update_active (item);
+            content.item_changed.connect ((request) => {
+                main.set_active_sidebar_item (request);
             });
         }
 
-        private void show_create_request_dialog () {
-            var dialog = new Dialogs.Request.CreateDialog (main.window);
-            dialog.show_all ();
-            dialog.creation.connect ((item) => {
-                item.script_code = "// function before_sending(request) {\n// }";
-                add_item (item);
-                update_headerbar (item);
-                content.show_request (item);
-            });
+        public void show_request (Models.Request request) {
+            active_request = request;
+            content.show_request (request);
         }
 
-        private void show_update_request_dialog (Models.Request item) {
-           var dialog = new Dialogs.Request.UpdateDialog (main.window, item);
-           dialog.show_all ();
-           dialog.updated.connect ((item) => {
-               update_headerbar (item);
-
-               if (item == sidebar.get_active_item ()) {
-                   update_content (item);
-               }
-           });
+        public void add_request (Models.Request request) {
+            items.add (request);
         }
 
-        private void update_headerbar (Models.Request item) {
-            headerbar.subtitle = item.name;
-        }
+        public void remove_request (Models.Request request) {
+            items.remove (request);
 
-        private void update_content (Models.Request item) {
-            content.show_request (item);
-        }
-
-        public void add_item (Models.Request item) {
-            items.add (item);
-            sidebar.add_item (item);
+            if (items.size == 0) {
+                content.show_welcome ();
+            }
         }
 
         public unowned Gee.ArrayList<Models.Request> get_items_reference () {

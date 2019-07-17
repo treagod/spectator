@@ -16,20 +16,20 @@
   <releases>
     <release version="0.2.1" date="2019-05-21">
       <p>Improvement of JavaScript</p>
-				<ul>
-          <li>Added JavaScript Console</li>
-          <li>Displayed time of response is now more accurate</li>
-          <li>Added XML parsing and create new view for XML responses</li>
-          <li>Unified sourcecode views</li>
-          <li>Sourcecode views are using a monospace font by default</li>
-          <li>Added configuration for sourcecode views</li>
-				</ul>
+      <ul>
+        <li>Added JavaScript Console</li>
+        <li>Displayed time of response is now more accurate</li>
+        <li>Added XML parsing and create new view for XML responses</li>
+        <li>Unified sourcecode views</li>
+        <li>Sourcecode views are using a monospace font by default</li>
+        <li>Added configuration for sourcecode views</li>
+      </ul>
     </release>
     <release version="0.2.1" date="2019-03-26">
       <p>Fix streamed data behaviour</p>
-				<ul>
-					<li>Solves a bug where streamed data will not be shown until request finished (which might be never)</li>
-				</ul>
+      <ul>
+        <li>Solves a bug where streamed data will not be shown until request finished (which might be never)</li>
+      </ul>
     </release>
     <release version="0.2.0" date="2019-03-17">
       <description>
@@ -106,6 +106,9 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <developer_name>Marvin Ahlgrimm</developer_name>
+  <url type="homepage">https://github.com/treagod/spectator</url>
+  <url type="bugtracker">https://github.com/treagod/spectator/issues</url>
+  <url type="translate">https://github.com/treagod/spectator/tree/master/po</url>
   <custom>
     <value key="x-appcenter-suggested-price">6</value>
   </custom>

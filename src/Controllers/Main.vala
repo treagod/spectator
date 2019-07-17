@@ -21,21 +21,59 @@
 
 namespace Spectator.Controllers {
     public class Main {
-        private Request request_controller;
-        private Collection collection_controller;
-        public unowned Gtk.ApplicationWindow window;
+        public Request request_controller { get; private set; }
+        public Collection collection_controller { get; private set; }
+        public Sidebar sidebar_controller { get; private set; }
+        public unowned Window window;
         private string setting_file_path;
 
-        public Main (Gtk.ApplicationWindow window, Request req_controller, Collection col_controller) {
+        public Main (Window window, Request req_controller, Collection col_controller) {
             this.window = window;
             this.request_controller = req_controller;
             this.request_controller.main = this;
             this.collection_controller = col_controller;
             this.collection_controller.main = this;
+            sidebar_controller = new Sidebar (this);
             this.setting_file_path = Path.build_filename (Environment.get_home_dir (), ".local", "share",
-                                                          Constants.PROJECT_NAME, "settings.json");
+                                                          Constants.PROJECT_NAME, "tmp_settings.json");
 
             setup ();
+        }
+
+        public void update_headerbar (Models.Request request) {
+            request_controller.headerbar.subtitle = request.name;
+        }
+
+        public void show_create_request_dialog () {
+            var dialog = new Dialogs.Request.CreateDialog (window, collection_controller.get_collections ());
+
+            dialog.show_all ();
+            dialog.creation.connect ((request) => {
+                request.script_code = "// function before_sending(request) {\n// }";
+                add_request (request);
+                update_headerbar (request);
+                request_controller.show_request (request);
+            });
+            dialog.collection_created.connect ((collection) => {
+                collection_controller.add_collection (collection);
+                collection.items_visible = true;
+            });
+        }
+
+        public void update_active_url () {
+            sidebar_controller.update_active_url ();
+        }
+
+        public void show_update_request_dialog (Models.Request request) {
+           var dialog = new Dialogs.Request.UpdateDialog (window, request);
+           dialog.show_all ();
+           dialog.updated.connect ((request) => {
+               update_headerbar (request);
+
+               if (request == sidebar_controller.sidebar.get_active_item ()) {
+                   request_controller.show_request (request);
+               }
+           });
         }
 
         private void setup () {
@@ -49,8 +87,45 @@ namespace Spectator.Controllers {
             dialog.show_all ();
         }
 
-        public void add_request (Models.Request item) {
-            request_controller.add_item (item);
+        public void add_request (Models.Request request) {
+            request_controller.add_request (request);
+            sidebar_controller.add_request (request);
+        }
+
+        public void remove_request (Models.Request request) {
+            request_controller.remove_request (request);
+            collection_controller.remove_request (request);
+        }
+
+        public void adjust_visibility () {
+            sidebar_controller.adjust_visibility ();
+        }
+
+        public void set_active_sidebar_item (Models.Request request) {
+            sidebar_controller.set_active (request);
+        }
+
+        public void delete_collection (Models.Collection collection) {
+            foreach (var request in collection.requests) {
+                request_controller.remove_request (request);
+            }
+            collection_controller.delete_collection (collection);
+        }
+
+        public void update_sidebar_active_method (Models.Method method) {
+            sidebar_controller.update_method_active (method);
+        }
+
+        public void show_content (Models.Request request) {
+            request_controller.show_request (request);
+        }
+
+        public void add_collection (Models.Collection collection) {
+            collection_controller.add_collection (collection);
+        }
+
+        public void update_history (Models.Request request) {
+            sidebar_controller.update_history (request);
         }
 
         public void load_data () {
@@ -59,12 +134,23 @@ namespace Spectator.Controllers {
                 add_request (request);
             });
 
+            deserializer.request_added_to_collection.connect ((collection, request) => {
+                collection_controller.add_request_to_collection (collection, request);
+            });
+
+            deserializer.collection_loaded.connect ((collection) => {
+                add_collection (collection);
+            });
+
             deserializer.load_data_from_file (setting_file_path);
+
+            var requests = request_controller.get_items_reference ();
+            sidebar_controller.add_history_from_list (requests);
         }
 
         public void save_data () {
             var serializer = new Services.JsonSerializer ();
-            serializer.serialize (request_controller.get_items_reference ());
+            serializer.serialize (request_controller.get_items_reference (), collection_controller.get_collections ());
             serializer.write_to_file (setting_file_path);
         }
     }
