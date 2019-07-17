@@ -20,9 +20,10 @@
 */
 
 namespace Spectator.Models {
-    private uint64 max_id = 0;
+    private uint max_id = 0;
     public class Request : Object {
-        private uint64 id;
+        public uint id { get; private set; }
+        public uint? collection_id;
         public string name { get; set; }
         public RequestBody request_body { get; private set; }
         public Method method { get; set; }
@@ -30,6 +31,7 @@ namespace Spectator.Models {
         public ResponseItem? response { get; set; }
         public string script_code;
         public Gee.ArrayList<Pair> headers { get; private set; }
+        public DateTime? last_sent;
         public string query {
             owned get {
                 var idx = uri.index_of_char ('?');
@@ -42,6 +44,8 @@ namespace Spectator.Models {
             } public set {
                 var idx = uri.index_of_char ('?');
 
+                // If a '?' exists in the URI, cut it with the tail of and
+                // replace it with the new query
                 if (idx < 0) {
                     uri = "%s?%s".printf (uri, value);
                 } else {
@@ -58,12 +62,8 @@ namespace Spectator.Models {
             id = max_id++;
         }
 
-        public Request.with_id (string nam, Method meth, uint64 i) {
+        public Request.with_id (string nam, Method meth, uint i) {
             setup (nam, meth);
-            if (i > max_id) {
-                max_id = i;
-            }
-            id = max_id++;
         }
 
         public Request.duplicate (Request old_req) {
@@ -80,6 +80,16 @@ namespace Spectator.Models {
             setup (nam, meth);
             uri = url;
             id = max_id++;
+        }
+        public Request.with_uri_and_id (uint i, string nam, string url, Method meth) {
+            setup (nam, meth);
+            uri = url;
+            if (i > max_id) {
+                max_id = i;
+                id = max_id++;
+            } else {
+                id = i;
+            }
         }
 
         private void setup (string nam, Method meth) {

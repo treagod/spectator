@@ -22,6 +22,8 @@
 namespace Spectator.Services {
     public class JsonDeserializer {
         public signal void request_loaded (Models.Request request);
+        public signal void collection_loaded (Models.Collection collection);
+        public signal void request_added_to_collection (Models.Collection collection, Models.Request request);
 
         public void load_data_from_file (string filepath) {
             var parser = new Json.Parser ();
@@ -42,11 +44,38 @@ namespace Spectator.Services {
                     parser.load_from_data (builder.str);
                     var object = parser.get_root ().get_object ();
 
+                    var collection_member = object.get_member ("collections");
+                    var collection_array = collection_member.get_array ();
+                    var collections = new Gee.ArrayList<Models.Collection> ();
+                    foreach (var collection_element in collection_array.get_elements ()) {
+                        var collection = deserialize_collection (collection_element.get_object ());
+                        collections.add (collection);
+
+                        collection_loaded (collection);
+                    }
+
                     var items = object.get_member ("request_items");
                     var request_items = items.get_array ();
 
                     foreach (var request_item in request_items.get_elements ()) {
                         var request = deserialize_item (request_item.get_object ());
+
+                        if (request.collection_id != null) {
+                            bool collection_not_found = true;
+                            foreach (var collection in collections) {
+                                if (collection.id == request.collection_id) {
+                                    collection_not_found = false;
+                                    collection.add_request (request);
+                                    break;
+                                }
+                            }
+
+                            if (collection_not_found) {
+                                request.collection_id = null;
+                            }
+                        } else {
+                            //
+                        }
 
                         request_loaded (request);
                     }
@@ -57,6 +86,21 @@ namespace Spectator.Services {
         }
     }
 
+    private Models.Collection deserialize_collection (Json.Object collection_object) {
+        var id = (uint) collection_object.get_int_member ("id");
+        var name = collection_object.get_string_member ("name");
+
+        var collection = new Models.Collection.with_id (id, name);
+
+        if (collection_object.has_member ("items_visible")) {
+            collection.items_visible = collection_object.get_boolean_member ("items_visible");
+        } else {
+            collection.items_visible = false;
+        }
+
+        return collection;
+    }
+
     private Models.Request deserialize_item (Json.Object request_object) {
         var name = request_object.get_string_member ("name");
         var uri = request_object.get_string_member ("uri");
@@ -65,7 +109,23 @@ namespace Spectator.Services {
         if (request_object.has_member ("script")) {
             script_code = request_object.get_string_member ("script");
         }
-        var request = new Models.Request.with_uri (name, uri, Models.Method.convert (method));
+        Models.Request request;
+
+        if (request_object.has_member ("id")) {
+            var id = (uint) request_object.get_int_member ("id");
+            request = new Models.Request.with_uri_and_id (id, name, uri, Models.Method.convert (method));
+        } else {
+            request = new Models.Request.with_uri (name, uri, Models.Method.convert (method));
+        }
+
+        if (request_object.has_member ("last_sent")) {
+            int64 last_sent = request_object.get_int_member ("last_sent");
+            request.last_sent = new DateTime.from_unix_local (last_sent);
+        }
+
+        if (request_object.has_member ("collection_id")) {
+            request.collection_id = (uint) request_object.get_int_member ("collection_id");
+        }
         var headers = request_object.get_array_member ("headers");
 
         request.script_code = script_code;

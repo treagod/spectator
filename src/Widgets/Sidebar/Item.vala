@@ -27,6 +27,8 @@ namespace Spectator.Widgets.Sidebar {
         Gtk.Label request_name;
         Gtk.Label url;
         public Models.Request item { get; set; }
+
+        public signal void item_clicked ();
         public signal void item_deleted (Models.Request item);
         public signal void item_edit (Models.Request item);
 
@@ -58,6 +60,8 @@ namespace Spectator.Widgets.Sidebar {
 
         public Item (Models.Request it) {
             item = it;
+
+            //TODO: make it more explicit, i.e. trigger refresh from controller
             item.notify.connect (() => {
                 refresh ();
             });
@@ -107,14 +111,14 @@ namespace Spectator.Widgets.Sidebar {
             add (item_box);
         }
 
-        public void update (Models.Request it) {
-            item = it;
-            method.label = get_method_label (item.method);
-
-            request_name.label = item.name;
-
+        public void update_url () {
             set_formatted_uri (item.uri);
+        }
 
+        public void refresh () {
+            method.label = get_method_label (item.method);
+            request_name.label = item.name;
+            set_formatted_uri (item.uri);
             show_all ();
         }
 
@@ -128,43 +132,37 @@ namespace Spectator.Widgets.Sidebar {
 
         private void create_box_menu () {
             item_box.button_release_event.connect ((event) => {
-                if (event.button == 3) {
-                    var menu = new Gtk.Menu ();
-                    var edit_item = new Gtk.MenuItem.with_label (_("Edit"));
-                    var delete_item = new Gtk.MenuItem.with_label (_("Delete"));
+                var result = false;
+                switch (event.button) {
+                    case 1:
+                        result = true;
+                        item_clicked ();
+                        break;
+                    case 3:
+                        var menu = new Gtk.Menu ();
+                        var edit_item = new Gtk.MenuItem.with_label (_("Edit"));
+                        var delete_item = new Gtk.MenuItem.with_label (_("Delete"));
 
-                    edit_item.activate.connect (() => {
-                        item_edit (item);
-                    });
+                        edit_item.activate.connect (() => {
+                            item_edit (item);
+                        });
 
-                    delete_item.activate.connect (() => {
-                        item_deleted (item);
-                    });
+                        delete_item.activate.connect (() => {
+                            item_deleted (item);
+                        });
 
-                    menu.add (edit_item);
-                    menu.add (delete_item);
-                    menu.show_all ();
-                    menu.popup_at_pointer (event);
+                        menu.add (edit_item);
+                        menu.add (delete_item);
+                        menu.show_all ();
+                        menu.popup_at_pointer (event);
 
-                    return true;
+                        result = true;
+                        break;
+                    default:
+                        break;
                 }
-                return false;
+                return result;
             });
-        }
-
-        public void refresh () {
-            method.label = get_method_label (item.method);
-
-            request_name.label = item.name;
-
-            var escaped_url = escape_url (item.uri);
-            if (item.uri.length > 0) {
-                url.label = "<small><i>" + escaped_url + "</i></small>";
-            } else {
-                url.label = no_url;
-            }
-
-            show_all ();
         }
 
         private string escape_url (string url) {
