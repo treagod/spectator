@@ -53,9 +53,9 @@ namespace Spectator.Widgets.Response.StatusBar {
 
             var html_selection = new Gtk.ComboBoxText ();
 
-            html_selection.append_text (_("Preview"));
             html_selection.append_text (_("Source Code"));
             html_selection.append_text (_("Headers"));
+            html_selection.append_text (_("Web View"));
             html_selection.active = 0;
 
             html_selection.changed.connect (() => {

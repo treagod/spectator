@@ -21,19 +21,13 @@
 
 namespace Spectator.Widgets.Response {
     public class HtmlView : AbstractTypeView {
-        private WebKit.WebView web_view;
+        private WebKit.WebView? web_view;
         private SourceView response_text;
         private Gtk.ScrolledWindow scrolled;
         private HeaderList header_list;
         private Gtk.ScrolledWindow header_scrolled;
 
-        public HtmlView () {
-            scrolled = new Gtk.ScrolledWindow (null, null);
-            header_list = new HeaderList ();
-            header_scrolled = new Gtk.ScrolledWindow (null, null);
-
-            header_scrolled.add (header_list);
-
+        private void init_web_view () {
             var settings = Settings.get_instance ();
 
             if (settings.use_proxy) {
@@ -47,17 +41,26 @@ namespace Spectator.Widgets.Response {
             } else {
                 web_view = new WebKit.WebView ();
             }
-
             configure_webview ();
-            response_text = new SourceView ();
+
             web_view.load_plain_text ("");
+            add (web_view);
+        }
+
+        public HtmlView () {
+            scrolled = new Gtk.ScrolledWindow (null, null);
+            header_list = new HeaderList ();
+            header_scrolled = new Gtk.ScrolledWindow (null, null);
+            web_view = null;
+
+            header_scrolled.add (header_list);
+            response_text = new SourceView ();
             scrolled.add (response_text);
 
-            add (web_view);
             add (scrolled);
             add (header_scrolled);
 
-            set_visible_child (web_view);
+            set_visible_child (scrolled);
 
             show_all ();
         }
@@ -81,19 +84,25 @@ namespace Spectator.Widgets.Response {
 
         public override void show_view (int i) {
             switch (i) {
-                case 1:
+                case 0:
                     set_visible_child (scrolled);
                     break;
-                case 2:
+                case 1:
                     set_visible_child (header_scrolled);
                     break;
                 default:
+                    if (web_view == null) {
+                        init_web_view ();
+                    }
                     set_visible_child (web_view);
                     break;
             }
         }
 
         public override void update (ResponseItem? it) {
+            if (web_view == null) {
+                init_web_view ();
+            }
             header_list.clear ();
             if (it != null) {
                 web_view.load_html (it.data, it.url);
