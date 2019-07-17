@@ -43,7 +43,22 @@ namespace Spectator.Controllers {
         }
 
         private void setup () {
-            content.welcome_activated.connect (main.show_create_request_dialog);
+            content.welcome_activated.connect ((idx) => {
+                switch (idx) {
+                    case 0:
+                    main.show_create_request_dialog ();
+                    break;
+                    case 1:
+                    var dialog = new Dialogs.Collection.CollectionDialog (main.window);
+                    dialog.show_all ();
+                    dialog.creation.connect ((collection) => {
+                        main.add_collection (collection);
+                    });
+                    break;
+                    default:
+                    assert_not_reached ();
+                    }
+            });
             headerbar.new_request.clicked.connect (() => {
                 main.show_create_request_dialog ();
             });
