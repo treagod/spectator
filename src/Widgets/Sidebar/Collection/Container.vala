@@ -57,6 +57,14 @@ namespace Spectator.Widgets.Sidebar.Collection {
             });
         }
 
+        public void unselect_all () {
+            @foreach((child) => {
+                var dropdown = (Dropdown) child;
+
+                dropdown.unselect_all ();
+            });
+        }
+
         public void update_active_url () {
             if (active_item != null) {
                 active_item.update_url ();

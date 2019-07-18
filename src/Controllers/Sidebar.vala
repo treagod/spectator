@@ -95,8 +95,8 @@ namespace Spectator.Controllers {
             history_controller.add (request);
         }
 
-        public void adjust_visibility () {
-            sidebar.adjust_visibility ();
+        public void unselect_all () {
+            sidebar.unselect_all ();
         }
 
         public void set_active (Models.Request request) {

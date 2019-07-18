@@ -163,10 +163,6 @@ namespace Spectator.Widgets.Sidebar {
             collection.update (col);
         }
 
-        public void adjust_visibility () {
-            collection.adjust_visibility ();
-        }
-
         public void update_active () {
             Sidebar.Item? sidebar_item = get_active ();
 
@@ -193,10 +189,9 @@ namespace Spectator.Widgets.Sidebar {
             return null;
         }
 
-        public void clear_selection () {
-            // collection.clear_slection ();
-            // history.clear_selection ();
-            queue_draw ();
+        public void unselect_all () {
+            collection.unselect_all ();
+            history.unselect_all ();
         }
     }
 }

@@ -37,7 +37,9 @@ namespace Spectator.Controllers {
             this.setting_file_path = Path.build_filename (Environment.get_home_dir (), ".local", "share",
                                                           Constants.PROJECT_NAME, "tmp_settings.json");
 
-            setup ();
+            request_controller.preference_clicked.connect (() => {
+                open_preferences ();
+            });
         }
 
         public void update_headerbar (Models.Request request) {
@@ -76,12 +78,6 @@ namespace Spectator.Controllers {
            });
         }
 
-        private void setup () {
-            request_controller.preference_clicked.connect (() => {
-                open_preferences ();
-            });
-        }
-
         private void open_preferences () {
             var dialog = new Dialogs.Preferences (window);
             dialog.show_all ();
@@ -97,8 +93,8 @@ namespace Spectator.Controllers {
             collection_controller.remove_request (request);
         }
 
-        public void adjust_visibility () {
-            sidebar_controller.adjust_visibility ();
+        public void unselect_all () {
+            sidebar_controller.unselect_all ();
         }
 
         public void set_active_sidebar_item (Models.Request request) {

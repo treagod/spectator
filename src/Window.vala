@@ -81,7 +81,7 @@ namespace Spectator {
 
             show_all ();
 
-            controller.adjust_visibility ();
+            controller.unselect_all ();
         }
 
         protected override bool delete_event (Gdk.EventAny event) {

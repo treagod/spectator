@@ -77,6 +77,14 @@ namespace Spectator.Widgets.Sidebar.Collection {
             return result;
         }
 
+        public void unselect_all () {
+            item_box.foreach ((it) => {
+                var item = (Item) it;
+
+                item.get_style_context ().remove_class ("active");
+            });
+        }
+
         public Dropdown (Models.Collection model) {
             collection = model;
             box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 4);

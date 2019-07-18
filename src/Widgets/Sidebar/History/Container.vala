@@ -42,6 +42,14 @@ namespace Spectator.Widgets.Sidebar.History {
             return items.get_children ().length ();
         }
 
+        public void unselect_all () {
+            items.foreach ((it) => {
+                var item = (Item) it;
+
+                item.get_style_context ().remove_class ("active");
+            });
+        }
+
         public void add_item (Item item) {
             items.add (item);
         }
@@ -99,6 +107,13 @@ namespace Spectator.Widgets.Sidebar.History {
         public void update_active_url () {
             if (active_item != null) {
                 active_item.update_url ();
+            }
+        }
+
+        public void unselect_all () {
+            foreach (var entry in boxes.entries) {
+                var date_box = entry.value;
+                date_box.unselect_all ();
             }
         }
 
