@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-04 17:58+0200\n"
 "PO-Revision-Date: 2019-03-31 16:03+0200\n"
-"Last-Translator: Automatically generated\n"
+"Last-Translator: Mario Rodrigo\n"
 "Language-Team: none\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -20,268 +20,268 @@ msgstr ""
 #: src/Controllers/Request.vala:149
 #, c-format
 msgid "Request failed: %s"
-msgstr ""
+msgstr "Petición fallida: %s"
 
 #: src/Controllers/Request.vala:155
 #, c-format
 msgid "Invalid URI: %s"
-msgstr ""
+msgstr "URI inválida: %s"
 
 #: src/Controllers/Request.vala:161
 #, c-format
 msgid "Proxy denied request: %s"
-msgstr ""
+msgstr "El proxy denegó la petición: %s"
 
 #: src/Dialogs/Request/Dialog.vala:39
 msgid "Name:"
-msgstr ""
+msgstr "Nombre"
 
 #: src/Dialogs/Request/Dialog.vala:44 src/Dialogs/Alert.vala:42
 #: src/Dialogs/Preferences.vala:46
 msgid "Close"
-msgstr ""
+msgstr "Cerrar"
 
 #: src/Dialogs/Request/CreateDialog.vala:27 src/Widgets/Content.vala:54
 #: src/Widgets/HeaderBar.vala:42
 msgid "Create Request"
-msgstr ""
+msgstr "Crear petición"
 
 #: src/Dialogs/Request/CreateDialog.vala:28
 msgid "My Request"
-msgstr ""
+msgstr "Mi petición"
 
 #: src/Dialogs/Request/CreateDialog.vala:30
 msgid "Create"
-msgstr ""
+msgstr "Crear"
 
 #: src/Dialogs/Request/CreateDialog.vala:53
 #: src/Dialogs/Request/UpdateDialog.vala:53
 msgid "Request name must not be empty."
-msgstr ""
+msgstr "El nombre de la petición no puede estar vacío."
 
 #: src/Dialogs/Request/UpdateDialog.vala:27
 msgid "Update Request"
-msgstr ""
+msgstr "Actualizar petición"
 
 #: src/Dialogs/Request/UpdateDialog.vala:35
 msgid "Update"
-msgstr ""
+msgstr "Actualizar"
 
 #: src/Dialogs/Preferences.vala:26 src/Widgets/HeaderBar.vala:45
 msgid "Preferences"
-msgstr ""
+msgstr "Preferencias"
 
 #: src/Dialogs/Preferences.vala:38
 msgid "General"
-msgstr ""
+msgstr "General"
 
 #: src/Dialogs/Preferences.vala:39
 msgid "Network"
-msgstr ""
+msgstr "Red"
 
 #: src/Dialogs/Preferences.vala:40
 msgid "Editor"
-msgstr ""
+msgstr "Editor"
 
 #: src/Dialogs/Preference/General.vala:37
 msgid "Dark Theme"
-msgstr ""
+msgstr "Tema oscuro"
 
 #: src/Dialogs/Preference/General.vala:42
 msgid "Follow redirects automatically"
-msgstr ""
+msgstr "Seguir las redirecciones automáticamente"
 
 #: src/Dialogs/Preference/General.vala:61
 msgid "Maximum Redirects"
-msgstr ""
+msgstr "Redirecciones máximas"
 
 #: src/Dialogs/Preference/General.vala:72
 msgid "Network Request Timeout"
-msgstr ""
+msgstr "Tiempo de espera de solicitud de red"
 
 #: src/Dialogs/Preference/Network.vala:36
 msgid "Use Proxy"
-msgstr ""
+msgstr "Usar proxy"
 
 #: src/Dialogs/Preference/Network.vala:44
 msgid "HTTP Proxy"
-msgstr ""
+msgstr "Proxy HTTP"
 
 #: src/Dialogs/Preference/Network.vala:54
 msgid "HTTPS Proxy"
-msgstr ""
+msgstr "Proxy HTTPS"
 
 #: src/Dialogs/Preference/Network.vala:64
 msgid "No Proxy"
-msgstr ""
+msgstr "Sin Proxy"
 
 #: src/Dialogs/Preference/Network.vala:75
 msgid "Use User Information"
-msgstr ""
+msgstr "Utilizar información de usuario"
 
 #: src/Dialogs/Preference/Network.vala:81
 msgid "Username"
-msgstr ""
+msgstr "Nombre de usuario"
 
 #: src/Dialogs/Preference/Network.vala:93
 msgid "Password"
-msgstr ""
+msgstr "Contraseña"
 
 #: src/Widgets/Content.vala:52
 msgid "Inspect your HTTP transmissions to the web"
-msgstr ""
+msgstr "Inspeccionar tus transmisiones HTTP a la web"
 
 #: src/Widgets/Content.vala:54
 msgid "Create a new request to the web."
-msgstr ""
+msgstr "Crear una nueva petición a la web."
 
 #: src/Widgets/Sidebar/Container.vala:54
 msgid "Requests"
-msgstr ""
+msgstr "Peticiones"
 
 #: src/Widgets/Sidebar/Item.vala:24
 msgid "No URL specified"
-msgstr ""
+msgstr "URL no especificada"
 
 #: src/Widgets/Sidebar/Item.vala:133
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #: src/Widgets/Sidebar/Item.vala:134
 msgid "Delete"
-msgstr ""
+msgstr "Borrar"
 
 #: src/Widgets/Response/JsonTreeView.vala:50
 #: src/Widgets/Response/JsonTreeView.vala:75
 msgid "Key"
-msgstr ""
+msgstr "Clave"
 
 #: src/Widgets/Response/JsonTreeView.vala:51
 #: src/Widgets/Response/JsonTreeView.vala:76
 msgid "Value"
-msgstr ""
+msgstr "Valor"
 
 #: src/Widgets/Response/JsonTreeView.vala:87
 msgid "Object"
-msgstr ""
+msgstr "Objeto"
 
 #: src/Widgets/Response/JsonTreeView.vala:90
 msgid "Array"
-msgstr ""
+msgstr "Vector"
 
 #: src/Widgets/Response/StatusBar/Container.vala:46
 msgid "Text"
-msgstr ""
+msgstr "Texto"
 
 #: src/Widgets/Response/StatusBar/Container.vala:47
 #: src/Widgets/Response/StatusBar/Container.vala:70
 #: src/Widgets/Response/StatusBar/Container.vala:83
 msgid "Raw"
-msgstr ""
+msgstr "Crudo"
 
 #: src/Widgets/Response/StatusBar/Container.vala:56
 msgid "Preview"
-msgstr ""
+msgstr "Previsualizar"
 
 #: src/Widgets/Response/StatusBar/Container.vala:57
 #: src/Widgets/Response/StatusBar/Container.vala:68
 msgid "Source Code"
-msgstr ""
+msgstr "Código fuente"
 
 #: src/Widgets/Response/StatusBar/Container.vala:58
 #: src/Widgets/Response/StatusBar/Container.vala:69
 #: src/Widgets/Response/StatusBar/Container.vala:82
 #: src/Widgets/Request/Container.vala:69
 msgid "Headers"
-msgstr ""
+msgstr "Cabeceras"
 
 #: src/Widgets/Response/StatusBar/Container.vala:67
 msgid "XML Tree"
-msgstr ""
+msgstr "Árbol XML"
 
 #: src/Widgets/Response/StatusBar/Container.vala:80
 msgid "JSON Tree"
-msgstr ""
+msgstr "Árbol JSON"
 
 #: src/Widgets/Response/StatusBar/Container.vala:81
 msgid "Prettified"
-msgstr ""
+msgstr "Enbellecido"
 
 #: src/Widgets/Response/StatusBar/Container.vala:91
 #: src/Widgets/Response/StatusBar/Container.vala:157
 msgid "No status"
-msgstr ""
+msgstr "Sin estado"
 
 #: src/Widgets/Response/StatusBar/Container.vala:99
 #: src/Widgets/Response/StatusBar/Container.vala:154
 msgid "No duration"
-msgstr ""
+msgstr "Sin duración"
 
 #: src/Widgets/Response/StatusBar/Container.vala:107
 #: src/Widgets/Response/StatusBar/Container.vala:151
 msgid "No size"
-msgstr ""
+msgstr "Sin tamaño"
 
 #: src/Widgets/Response/StatusBar/Container.vala:161
 msgid "seconds"
-msgstr ""
+msgstr "segundos"
 
 #: src/Widgets/Response/StatusBar/Container.vala:175
 msgid "GB"
-msgstr ""
+msgstr "GB"
 
 #: src/Widgets/Response/StatusBar/Container.vala:177
 msgid "MB"
-msgstr ""
+msgstr "MB"
 
 #: src/Widgets/Response/StatusBar/Container.vala:179
 msgid "KB"
-msgstr ""
+msgstr "KB"
 
 #: src/Widgets/Response/StatusBar/Container.vala:184
 msgid "B"
-msgstr ""
+msgstr "B"
 
 #: src/Widgets/Request/Container.vala:70
 msgid "Parameters"
-msgstr ""
+msgstr "Parámetros"
 
 #: src/Widgets/Request/Container.vala:71
 msgid "Body"
-msgstr ""
+msgstr "Cuerpo"
 
 #: src/Widgets/Request/Container.vala:72
 msgid "Script"
-msgstr ""
+msgstr "Script"
 
 #: src/Widgets/Request/Container.vala:86
 msgid "Add Header"
-msgstr ""
+msgstr "Añadir cabecera"
 
 #: src/Widgets/Request/Container.vala:125
 msgid "Add Parameter"
-msgstr ""
+msgstr "Añadir parámetro"
 
 #: src/Widgets/Request/UrlEntry.vala:101
 msgid "Type an URL"
-msgstr ""
+msgstr "Escribir una URL"
 
 #: src/Widgets/Request/BodyView.vala:60
 msgid "Plain"
-msgstr ""
+msgstr "Plano"
 
 #: src/Widgets/Request/BodyView.vala:61
 msgid "XML"
-msgstr ""
+msgstr "XML"
 
 #: src/Widgets/Request/BodyView.vala:62
 msgid "JSON"
-msgstr ""
+msgstr "JSON"
 
 #: src/Widgets/Request/BodyView.vala:63
 msgid "HTML"
-msgstr ""
+msgstr "HTML"
 
 #: src/Widgets/Request/BodyView.vala:150 src/Widgets/Request/BodyView.vala:168
 msgid "Add"
-msgstr ""
+msgstr "Añadir"
