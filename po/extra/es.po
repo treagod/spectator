@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-04 18:01+0200\n"
 "PO-Revision-Date: 2019-03-31 16:04+0200\n"
-"Last-Translator: Automatically generated\n"
+"Last-Translator: Mario Rodrigo\n"
 "Language-Team: none\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -21,28 +21,28 @@ msgstr ""
 #: data/com.github.treagod.spectator.desktop.in:4
 #: data/com.github.treagod.spectator.appdata.xml.in:7
 msgid "Spectator"
-msgstr ""
+msgstr "Spectator"
 
 #: data/com.github.treagod.spectator.desktop.in:5
 msgid "REST Client"
-msgstr ""
+msgstr "Cliente REST"
 
 #: data/com.github.treagod.spectator.desktop.in:8
 msgid "com.github.treagod.spectator"
-msgstr ""
+msgstr "com.github.treagod.spectator"
 
 #: data/com.github.treagod.spectator.desktop.in:12
 msgid "REST;HTTP;Client;"
-msgstr ""
+msgstr "REST;HTTP;Cliente;"
 
 #: data/com.github.treagod.spectator.appdata.xml.in:8
 #: data/com.github.treagod.spectator.appdata.xml.in:56
 msgid "Comfortably test your REST APIs!"
-msgstr ""
+msgstr "Prueba tus APIs REST cómodamente!"
 
 #: data/com.github.treagod.spectator.appdata.xml.in:10
 msgid "Gives you the possibilty to test your REST application."
-msgstr ""
+msgstr "Te da la posibilidad de probar tu aplicación REST."
 
 #: data/com.github.treagod.spectator.appdata.xml.in:11
 #: data/com.github.treagod.spectator.appdata.xml.in:57
@@ -50,41 +50,49 @@ msgid ""
 "Send custom headers and self defined bodies to your application and displays "
 "the response in a clean way."
 msgstr ""
+"Envia cabeceras personalizadas y cuerpos definidos por ti a tu aplicación "
+"y muesta la respuesta de forma clara."
 
 #: data/com.github.treagod.spectator.appdata.xml.in:36
 msgid "JavaScript Integration"
-msgstr ""
+msgstr "Integración JavaScript"
 
 #: data/com.github.treagod.spectator.appdata.xml.in:38
 msgid "Adds the possibility to augment your requests with scripting."
-msgstr ""
+msgstr "Añade la posibilidad de aumentar tus peticiones con scripting."
 
 #: data/com.github.treagod.spectator.appdata.xml.in:39
 msgid ""
 "The developer can use the 'before_sending' JavaScript function to augment "
 "the request."
 msgstr ""
+"El desarrollador puede usar la función JavaScript 'before_sending' para aumentar "
+"la petición."
 
 #: data/com.github.treagod.spectator.appdata.xml.in:40
 msgid ""
 "HTTP.get(url), HTTP.post(url, config) and other request methods are "
 "available from script"
 msgstr ""
+"HTTP.get(url), HTTP.post(url, config) y otros métodos de peticiones están "
+"disponibles desde script"
 
 #: data/com.github.treagod.spectator.appdata.xml.in:46
 msgid "URL Params fixes"
-msgstr ""
+msgstr "Arreglos en los parámetros de URL"
 
 #: data/com.github.treagod.spectator.appdata.xml.in:48
 msgid ""
 "Fixes a bug where the application crashes if a URL param is entered from key-"
 "value view without a URL"
 msgstr ""
+"Soluciona un error que provoca que la aplicación se cierre si se introduce un parámetro "
+"de URL en la forma clave-valor sin una URL"
 
 #: data/com.github.treagod.spectator.appdata.xml.in:54
 msgid "Initial Release"
-msgstr ""
+msgstr "Versión inicial"
 
 #: data/com.github.treagod.spectator.appdata.xml.in:108
 msgid "Marvin Ahlgrimm"
-msgstr ""
+msgstr "Marvin Ahlgrimm"
