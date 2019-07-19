@@ -25,9 +25,9 @@ namespace Spectator.Controllers {
         public History history_controller { get; private set; }
 
         public Widgets.Sidebar.Container sidebar { get; private set; }
-        public Sidebar (Main m) {
+        public Sidebar (Main m, Widgets.Sidebar.Container sb) {
             main = m;
-            sidebar = main.window.sidebar;
+            sidebar = sb;
             history_controller = new History (main, sidebar.history);
 
             setup ();

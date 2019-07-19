@@ -27,17 +27,15 @@ namespace Spectator.Controllers {
         // \Models
         // Views
         public Widgets.Content content { get; private set; }
-        public Widgets.HeaderBar headerbar { get; private set; }
         // \Views
         public unowned Main main;
         private Services.RequestAction action;
 
         public signal void preference_clicked ();
 
-        public Request (Widgets.HeaderBar headerbar, Widgets.Content content) {
-            this.content = content;
-            this.headerbar = headerbar;
-            this.items = new Gee.ArrayList<Models.Request> ();
+        public Request (Widgets.Content cont) {
+            content = cont;
+            items = new Gee.ArrayList<Models.Request> ();
 
             setup ();
         }
@@ -59,10 +57,6 @@ namespace Spectator.Controllers {
                     assert_not_reached ();
                     }
             });
-            headerbar.new_request.clicked.connect (() => {
-                main.show_create_request_dialog ();
-            });
-            headerbar.preference_clicked.connect (() => { preference_clicked (); });
 
             content.url_changed.connect ((url) => {
                 var uri = new Soup.URI (url);

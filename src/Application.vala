@@ -24,6 +24,7 @@ namespace Spectator {
         // Avoid multiple instances
         public bool running = false;
         public Window window;
+        public Controllers.Main main_controller;
 
         construct {
             flags |= ApplicationFlags.HANDLES_OPEN;
@@ -32,14 +33,12 @@ namespace Spectator {
 
         protected override void activate () {
             if (!running) {
-                window = new Window (this);
-                this.add_window (window);
+                main_controller = new Controllers.Main (this);
+                add_window (main_controller.window);
 
                 running = true;
-
-                return;
             }
-            window.show_app ();
+            main_controller.show_app ();
         }
 
         public static int main (string[] args) {

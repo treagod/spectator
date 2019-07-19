@@ -21,10 +21,7 @@
 
 namespace Spectator {
     public class Window : Gtk.ApplicationWindow {
-        private Widgets.Content request_item_view;
-        public Widgets.Sidebar.Container sidebar { get; private set; }
-        private Controllers.Main controller;
-
+        public signal void close_window ();
         public Window (Gtk.Application app) {
             var settings = Settings.get_instance ();
             // Store the main app to be used
@@ -37,12 +34,9 @@ namespace Spectator {
             if (settings.maximized) {
                 maximize ();
             }
-
-            // Show the app
-            show_app ();
         }
 
-        public void show_app () {
+        public void show_app (Widgets.HeaderBar headerbar, Widgets.Sidebar.Container sidebar, Widgets.Content content) {
             var provider = new Gtk.CssProvider ();
             provider.load_from_resource ("/com/github/treagod/spectator/stylesheet.css");
             Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (),
@@ -52,7 +46,6 @@ namespace Spectator {
             grid.width_request = 950;
             grid.height_request = 500;
 
-            var headerbar = new Widgets.HeaderBar ();
 
             set_titlebar (headerbar);
 
@@ -60,28 +53,14 @@ namespace Spectator {
             seperator.visible = true;
             seperator.no_show_all = false;
 
-            request_item_view = new Widgets.Content ();
-            sidebar = new Widgets.Sidebar.Container ();
-
-            var req_controller = new Controllers.Request (headerbar, request_item_view);
-            var collection_controller = new Controllers.Collection (headerbar, sidebar);
-
-            controller = new Controllers.Main (this, req_controller, collection_controller);
-
-            controller.load_data ();
-
-            request_item_view.show_welcome ();
-
             show_all ();
 
             grid.add (sidebar);
             grid.add (seperator);
+            grid.add (content);
             add (grid);
-            grid.add (request_item_view);
 
             show_all ();
-
-            controller.unselect_all ();
         }
 
         protected override bool delete_event (Gdk.EventAny event) {
@@ -97,7 +76,9 @@ namespace Spectator {
             settings.window_height = height;
             settings.maximized = is_maximized;
 
-            controller.save_data ();
+            //controller.save_data ();
+
+            close_window ();
 
             return false;
         }

@@ -24,26 +24,50 @@ namespace Spectator.Controllers {
         public Request request_controller { get; private set; }
         public Collection collection_controller { get; private set; }
         public Sidebar sidebar_controller { get; private set; }
-        public unowned Window window;
+        public Window window { get; private set; }
         private string setting_file_path;
 
-        public Main (Window window, Request req_controller, Collection col_controller) {
-            this.window = window;
-            this.request_controller = req_controller;
-            this.request_controller.main = this;
-            this.collection_controller = col_controller;
-            this.collection_controller.main = this;
-            sidebar_controller = new Sidebar (this);
-            this.setting_file_path = Path.build_filename (Environment.get_home_dir (), ".local", "share",
+        private Widgets.Content request_item_view;
+        private Widgets.Sidebar.Container sidebar;
+        private Widgets.HeaderBar headerbar;
+
+        public Main (Application application) {
+            window = new Window (application);
+            request_item_view = new Widgets.Content ();
+            sidebar = new Widgets.Sidebar.Container ();
+            headerbar = new Widgets.HeaderBar ();
+
+            request_controller = new Controllers.Request (request_item_view);
+            request_controller.main = this;
+            collection_controller = new Controllers.Collection (headerbar, sidebar);
+            collection_controller.main = this;
+            sidebar_controller = new Sidebar (this, sidebar);
+            setting_file_path = Path.build_filename (Environment.get_home_dir (), ".local", "share",
                                                           Constants.PROJECT_NAME, "tmp_settings.json");
 
-            request_controller.preference_clicked.connect (() => {
+            request_item_view.show_welcome ();
+
+            headerbar.new_request.clicked.connect (() => {
+                show_create_request_dialog ();
+            });
+            headerbar.preference_clicked.connect (() => {
                 open_preferences ();
             });
+
+            window.close_window.connect (() => {
+                save_data ();
+            });
+
+            load_data ();
+        }
+
+        public void show_app () {
+            window.show_app (headerbar, sidebar, request_item_view);
+            unselect_all ();
         }
 
         public void update_headerbar (Models.Request request) {
-            request_controller.headerbar.subtitle = request.name;
+            headerbar.subtitle = request.name;
         }
 
         public void show_create_request_dialog () {
