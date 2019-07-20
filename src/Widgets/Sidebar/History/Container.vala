@@ -21,6 +21,7 @@
 
 namespace Spectator.Widgets.Sidebar.History {
     public class DateBox : Gtk.Box {
+        public delegate void ItemIterator (Item item);
         private Gtk.Box items;
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -36,6 +37,14 @@ namespace Spectator.Widgets.Sidebar.History {
             pack_start (date_label, true, true);
             pack_start (items, true, true);
             items.show_all ();
+        }
+
+        public void each_item (ItemIterator iter) {
+            items.foreach ((it) => {
+                var item = (Item) it;
+
+                iter (item);
+            });
         }
 
         public uint item_size () {
@@ -97,10 +106,12 @@ namespace Spectator.Widgets.Sidebar.History {
             boxes = new Gee.HashMap<string, DateBox> ();
             get_style_context ().add_class ("history-box");
             Settings.get_instance ().theme_changed.connect (() => {
-                forall ((widget) => {
-                    var it = (Sidebar.Item) widget;
-                    it.refresh ();
-                });
+                foreach (var entry in boxes.entries) {
+                    var date_box = entry.value;
+                    date_box.each_item ((item) => {
+                        item.refresh ();
+                    });
+                }
             });
         }
 
