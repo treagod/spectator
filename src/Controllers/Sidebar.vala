@@ -23,11 +23,14 @@ namespace Spectator.Controllers {
     public class Sidebar {
         public Main main { get; private set; }
         public History history_controller { get; private set; }
-
+        public Collection collection_controller { get; private set; }
         public Widgets.Sidebar.Container sidebar { get; private set; }
-        public Sidebar (Main m, Widgets.Sidebar.Container sb) {
+
+        public Sidebar (Main m) {
             main = m;
-            sidebar = sb;
+            sidebar = new Widgets.Sidebar.Container ();
+
+            collection_controller = new Controllers.Collection (main, sidebar);
             history_controller = new History (main, sidebar.history);
 
             setup ();
@@ -74,6 +77,26 @@ namespace Spectator.Controllers {
             sidebar.update_active_url ();
         }
 
+        public unowned Gee.ArrayList<Models.Collection> get_collections () {
+            return collection_controller.get_collections ();
+        }
+
+        public void remove_request (Models.Request request) {
+            collection_controller.remove_request (request);
+            // history_controller.remove_request (request);
+        }
+
+        public void delete_collection (Models.Collection collection) {
+            collection_controller.delete_collection (collection);
+        }
+
+        public void add_collection (Models.Collection collection) {
+            collection_controller.add_collection (collection);
+        }
+
+        public void add_request_to_collection (Models.Collection collection, Models.Request request) {
+            collection_controller.add_request_to_collection (collection, request);
+        }
 
         public void add_history_from_list (Gee.ArrayList<Models.Request> requests) {
             var history_items = new Gee.ArrayList<Models.Request> ();
