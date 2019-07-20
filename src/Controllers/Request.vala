@@ -28,13 +28,14 @@ namespace Spectator.Controllers {
         // Views
         public Widgets.Content content { get; private set; }
         // \Views
-        public unowned Main main;
+        public unowned Main main { get; private set; }
         private Services.RequestAction action;
 
         public signal void preference_clicked ();
 
-        public Request (Widgets.Content cont) {
-            content = cont;
+        public Request (Main m) {
+            main = m;
+            content = new Widgets.Content ();
             items = new Gee.ArrayList<Models.Request> ();
 
             setup ();

@@ -27,25 +27,22 @@ namespace Spectator.Controllers {
         public Window window { get; private set; }
         private string setting_file_path;
 
-        private Widgets.Content request_item_view;
         private Widgets.Sidebar.Container sidebar;
         private Widgets.HeaderBar headerbar;
 
         public Main (Application application) {
             window = new Window (application);
-            request_item_view = new Widgets.Content ();
             sidebar = new Widgets.Sidebar.Container ();
             headerbar = new Widgets.HeaderBar ();
 
-            request_controller = new Controllers.Request (request_item_view);
-            request_controller.main = this;
+            request_controller = new Controllers.Request (this);
             collection_controller = new Controllers.Collection (headerbar, sidebar);
             collection_controller.main = this;
             sidebar_controller = new Sidebar (this, sidebar);
             setting_file_path = Path.build_filename (Environment.get_home_dir (), ".local", "share",
                                                           Constants.PROJECT_NAME, "tmp_settings.json");
 
-            request_item_view.show_welcome ();
+            request_controller.content.show_welcome ();
 
             headerbar.new_request.clicked.connect (() => {
                 show_create_request_dialog ();
@@ -62,7 +59,7 @@ namespace Spectator.Controllers {
         }
 
         public void show_app () {
-            window.show_app (headerbar, sidebar, request_item_view);
+            window.show_app (headerbar, sidebar, request_controller.content);
             unselect_all ();
         }
 
