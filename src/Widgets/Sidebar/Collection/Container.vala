@@ -37,6 +37,16 @@ namespace Spectator.Widgets.Sidebar.Collection {
 
         public Container () {
             get_style_context ().add_class ("collection-box");
+
+            Settings.get_instance ().theme_changed.connect (() => {
+                @foreach((child) => {
+                    var dropdown = (Dropdown) child;
+
+                    dropdown.each_item ((item) => {
+                        item.refresh ();
+                    });
+                });
+            });
         }
 
         public void change_active (Models.Request request) {

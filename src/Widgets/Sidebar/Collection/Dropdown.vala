@@ -21,6 +21,7 @@
 
 namespace Spectator.Widgets.Sidebar.Collection {
     public class Dropdown : Gtk.Box {
+        public delegate void ItemIterator (Item item);
         private static string collection_open_icon = "folder-open";
         private static string collection_closed_icon = "folder";
 
@@ -75,6 +76,14 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 }
             });
             return result;
+        }
+
+        public void each_item (ItemIterator iter) {
+            item_box.foreach ((it) => {
+                var item = (Item) it;
+
+                iter (item);
+            });
         }
 
         public void unselect_all () {
