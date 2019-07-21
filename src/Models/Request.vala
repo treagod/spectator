@@ -84,7 +84,7 @@ namespace Spectator.Models {
         public Request.with_uri_and_id (uint i, string nam, string url, Method meth) {
             setup (nam, meth);
             uri = url;
-            if (i > max_id) {
+            if (i >= max_id) {
                 max_id = i;
                 id = max_id++;
             } else {

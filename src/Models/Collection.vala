@@ -36,7 +36,7 @@ namespace Spectator.Models {
         }
 
         public Collection.with_id (uint i, string nam) {
-            if (i > max_id) {
+            if (i >= max_id) {
                 max_id = i;
                 id = max_id++;
             } else {
