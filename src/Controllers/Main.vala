@@ -28,9 +28,34 @@ namespace Spectator.Controllers {
         private Widgets.HeaderBar headerbar;
         public Window window { get; private set; }
 
+        private void setup_keyboard_shortcuts () {
+            var accel_group = new Gtk.AccelGroup ();
+            accel_group.connect(Gdk.keyval_from_name("n"), Gdk.ModifierType.CONTROL_MASK, 0, () => {
+                show_create_request_dialog ();
+                return true;
+            });
+
+            accel_group.connect(Gdk.keyval_from_name("q"), Gdk.ModifierType.CONTROL_MASK, 0, () => {
+                var dialog = new Dialogs.Collection.CollectionDialog (window);
+                dialog.show_all ();
+                dialog.creation.connect ((collection) => {
+                    sidebar_controller.add_collection (collection);
+                });
+                return true;
+            });
+
+            accel_group.connect(Gdk.Key.comma, Gdk.ModifierType.CONTROL_MASK, 0, () => {
+                open_preferences ();
+                return true;
+            });
+
+            window.add_accel_group (accel_group);
+        }
+
         public Main (Application application) {
             window = new Window (application);
             headerbar = new Widgets.HeaderBar ();
+            setup_keyboard_shortcuts ();
 
             request_controller = new Controllers.Request (this);
             sidebar_controller = new Sidebar (this);
@@ -42,6 +67,7 @@ namespace Spectator.Controllers {
             headerbar.new_request.clicked.connect (() => {
                 show_create_request_dialog ();
             });
+
             headerbar.preference_clicked.connect (() => {
                 open_preferences ();
             });
