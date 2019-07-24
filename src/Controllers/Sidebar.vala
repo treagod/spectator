@@ -73,6 +73,14 @@ namespace Spectator.Controllers {
             });
         }
 
+        public void show_history () {
+            sidebar.show_history ();
+        }
+
+        public void show_collection () {
+            sidebar.show_collection ();
+        }
+
         public void update_active_url () {
             sidebar.update_active_url ();
         }

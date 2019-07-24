@@ -49,6 +49,16 @@ namespace Spectator.Controllers {
                 return true;
             });
 
+            accel_group.connect(Gdk.keyval_from_name("h"), Gdk.ModifierType.CONTROL_MASK, 0, () => {
+                sidebar_controller.show_history ();
+                return true;
+            });
+
+            accel_group.connect(Gdk.keyval_from_name("l"), Gdk.ModifierType.CONTROL_MASK, 0, () => {
+                sidebar_controller.show_collection ();
+                return true;
+            });
+
             window.add_accel_group (accel_group);
         }
 

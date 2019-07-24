@@ -54,6 +54,8 @@ namespace Spectator.Widgets.Sidebar {
         private Gtk.Stack stack;
         public Collection.Container collection;
         public History.Container history;
+        private TitleBar titlebar;
+        private Granite.Widgets.ModeButton mode_buttons;
 
         public signal void item_deleted (Models.Request item);
         public signal void item_edited (Models.Request item);
@@ -68,7 +70,7 @@ namespace Spectator.Widgets.Sidebar {
             scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
 
-            var titlebar = new TitleBar (collection_title_text);
+            titlebar = new TitleBar (collection_title_text);
 
             orientation = Gtk.Orientation.VERTICAL;
             width_request = 265;
@@ -114,7 +116,7 @@ namespace Spectator.Widgets.Sidebar {
 
             stack.set_visible_child (collection);
 
-            var mode_buttons = create_mode_buttons ();
+            mode_buttons = create_mode_buttons ();
 
             mode_buttons.mode_changed.connect (() => {
                 if (mode_buttons.selected == 0) {
@@ -131,6 +133,18 @@ namespace Spectator.Widgets.Sidebar {
             pack_start (titlebar, false, true, 0);
             pack_start (stack, true, true, 0);
             pack_end (mode_buttons, false, true, 0);
+        }
+
+        public void show_history () {
+            mode_buttons.selected = 1;
+            stack.set_visible_child (scroll);
+            titlebar.title_text = history_title_text;
+        }
+
+        public void show_collection () {
+            mode_buttons.selected = 0;
+            stack.set_visible_child (collection);
+            titlebar.title_text = collection_title_text;
         }
 
         public void add_collection (Models.Collection model) {
