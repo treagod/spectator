@@ -35,7 +35,7 @@ namespace Spectator.Controllers {
                 return true;
             });
 
-            accel_group.connect(Gdk.keyval_from_name("q"), Gdk.ModifierType.CONTROL_MASK, 0, () => {
+            accel_group.connect(Gdk.keyval_from_name("n"), Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK, 0, () => {
                 var dialog = new Dialogs.Collection.CollectionDialog (window);
                 dialog.show_all ();
                 dialog.creation.connect ((collection) => {

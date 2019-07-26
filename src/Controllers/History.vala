@@ -45,6 +45,8 @@ namespace Spectator.Controllers {
             foreach (var req in requests) {
                 view.add_request (req);
             }
+
+            view.change_active (request);
         }
     }
 }
