@@ -28,6 +28,8 @@ namespace Spectator.Widgets.Sidebar {
         Gtk.Label url;
         public Models.Request item { get; set; }
 
+        public signal bool button_event (unowned Gdk.EventButton event);
+
         public signal void item_clicked ();
         public signal void item_deleted (Models.Request item);
         public signal void item_edit (Models.Request item);
@@ -132,36 +134,7 @@ namespace Spectator.Widgets.Sidebar {
 
         private void create_box_menu () {
             item_box.button_release_event.connect ((event) => {
-                var result = false;
-                switch (event.button) {
-                    case 1:
-                        result = true;
-                        item_clicked ();
-                        break;
-                    case 3:
-                        var menu = new Gtk.Menu ();
-                        var edit_item = new Gtk.MenuItem.with_label (_("Edit"));
-                        var delete_item = new Gtk.MenuItem.with_label (_("Delete"));
-
-                        edit_item.activate.connect (() => {
-                            item_edit (item);
-                        });
-
-                        delete_item.activate.connect (() => {
-                            item_deleted (item);
-                        });
-
-                        menu.add (edit_item);
-                        menu.add (delete_item);
-                        menu.show_all ();
-                        menu.popup_at_pointer (event);
-
-                        result = true;
-                        break;
-                    default:
-                        break;
-                }
-                return result;
+                return button_event (event);
             });
         }
 

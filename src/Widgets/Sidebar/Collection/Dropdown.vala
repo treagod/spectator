@@ -109,18 +109,39 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 var item = new Item (request);
                 item_box.add (item);
 
-                item.item_clicked.connect (() => {
-                    item_clicked (item);
-                });
+                item.button_event.connect((event) => {
+                    var result = false;
+                    switch (event.button) {
+                        case 1:
+                            result = true;
+                            item_clicked (item);
+                            break;
+                        case 3:
+                            var menu = new Gtk.Menu ();
+                            var edit_item = new Gtk.MenuItem.with_label (_("Edit"));
+                            var delete_item = new Gtk.MenuItem.with_label (_("Delete"));
 
-                item.item_edit.connect ((item) => {
-                    item_edit (item);
-                });
+                            edit_item.activate.connect (() => {
+                                item_edit (item.item);
+                            });
 
-                item.item_deleted.connect ((request) => {
-                    item_deleted (request);
-                    item_box.remove (item);
-                    item = null;
+                            delete_item.activate.connect (() => {
+                                item_deleted (request);
+                                item_box.remove (item);
+                                item = null;
+                            });
+
+                            menu.add (edit_item);
+                            menu.add (delete_item);
+                            menu.show_all ();
+                            menu.popup_at_pointer (event);
+
+                            result = true;
+                            break;
+                        default:
+                            break;
+                    }
+                    return result;
                 });
 
                 active_item_changed (item);
