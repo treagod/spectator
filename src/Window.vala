@@ -46,11 +46,12 @@ namespace Spectator {
             paned.wide_handle = true;
 
             set_titlebar (headerbar);
-
+            content.hexpand = true;
+            sidebar.hexpand = false;
             show_all ();
 
             paned.pack1 (sidebar, false, false);
-            paned.pack2 (content, false, false);
+            paned.pack2 (content, true, false);
             add (paned);
 
             show_all ();

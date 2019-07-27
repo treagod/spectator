@@ -171,21 +171,17 @@ namespace Spectator.Widgets.Sidebar.History {
                 switch (event.button) {
                     case 1:
                         result = true;
+                        if (active_item != null) {
+                            active_item.get_style_context ().remove_class ("active");
+                        }
+                        active_item = item;
+                        active_item.get_style_context ().add_class ("active");
                         item_clicked (item);
                         break;
                     default:
                         break;
                 }
                 return result;
-            });
-
-            item.item_clicked.connect (() => {
-                if (active_item != null) {
-                    active_item.get_style_context ().remove_class ("active");
-                }
-                active_item = item;
-                active_item.get_style_context ().add_class ("active");
-                item_clicked (item);
             });
 
             if (boxes.has_key (key_date)) {

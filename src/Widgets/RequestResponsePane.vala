@@ -124,30 +124,6 @@ namespace Spectator.Widgets {
             }
         }
 
-        /*
-        private void create_or_get_cached_view (Models.Request item) {
-            remove (response_view);
-
-            if (cache.has_key (item)) {
-                response_view = cache[item].view;
-                response_view.show_all ();
-            } else {
-                response_view = new Response.Container ();
-                cache[item] = new ResponseViewCache (item.response, response_view);
-                response_view.show_all ();
-                response_view.update (item.response);
-            }
-
-            pack2 (response_view, true, false);
-            show_all ();
-
-            if (cache[item].response != item.response) {
-                cache[item].response = item.response;
-                response_view.update (item.response);
-            }
-        }
-        */
-
         public void set_item (Models.Request request) {
             adjust_tab (request);
             update_response (request);
