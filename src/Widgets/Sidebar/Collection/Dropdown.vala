@@ -125,9 +125,8 @@ namespace Spectator.Widgets.Sidebar.Collection {
 
                 active_item_changed (item);
 
-                if (!expanded) {
-                    expanded = true;
-                }
+                expanded = true;
+                collection.items_visible = true;
                 show_all ();
             });
 
