@@ -72,6 +72,9 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 var dropdown = (Dropdown) child;
 
                 dropdown.unselect_all ();
+                if (!dropdown.collection.items_visible) {
+                    dropdown.expanded = false;
+                }
             });
         }
 
