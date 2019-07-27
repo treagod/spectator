@@ -93,9 +93,8 @@ namespace Spectator.Widgets.Response {
             try {
                 // Pretty Print Version of response JSON
                 var parser = new Json.Parser ();
-                var json = convert_with_fallback (it.data, it.data.length, "UTF-8", "ISO-8859-1");
-                tree_view.update_from_string (json);
-                parser.load_from_data (json, -1);
+                tree_view.update_from_string (it.data);
+                parser.load_from_data (it.data);
                 var root = parser.get_root ();
                 var generator = new Json.Generator ();
                 generator.set_root (root);
@@ -105,6 +104,7 @@ namespace Spectator.Widgets.Response {
                 response_text.insert_text (pretty_json);
             } catch (Error e) {
                 stderr.printf ("Error parsing JSON.\n");
+                response_text.insert_text (it.data);
             }
 
             response_text_raw.insert_text (it.raw);

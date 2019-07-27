@@ -44,11 +44,7 @@ namespace Spectator.Widgets.Response {
         }
 
         public void insert_text (string res) {
-            try {
-               buffer.text = convert_with_fallback (res, res.length, "UTF-8", "ISO-8859-1");
-           } catch (ConvertError e) {
-               stderr.printf ("Error converting markup for" + res + ", "+ e.message);
-           }
+            buffer.text = res;
         }
 
         public void insert (ResponseItem? res) {
