@@ -127,9 +127,9 @@ namespace Spectator.Services {
             var http_version = mess.http_version == Soup.HTTPVersion.@1_0 ? "HTTP/1.0"
                                                                           : "HTTP/1.1";
 
-            builder.append("%s %u %s\r\n".printf(http_version,
-                                                 res.status_code,
-                                                 Soup.Status.get_phrase (res.status_code)));
+            builder.append ("%s %u %s\r\n".printf (http_version,
+                                                   res.status_code,
+                                                   Soup.Status.get_phrase (res.status_code)));
 
             mess.response_headers.foreach ((key, val) => {
                 res.add_header (key, val);
@@ -201,7 +201,7 @@ namespace Spectator.Services {
                 if (is_chunked) {
                     msg.got_chunk.connect ((chunk) => {
                         var tmp = (string) chunk.data;
-                        tmp = tmp.substring(0, ((int) chunk.length));
+                        tmp = tmp.substring (0, ((int) chunk.length));
 
                         item.response.data += tmp;
                         builder.append (tmp);

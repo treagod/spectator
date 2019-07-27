@@ -39,7 +39,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
             get_style_context ().add_class ("collection-box");
 
             Settings.get_instance ().theme_changed.connect (() => {
-                @foreach((child) => {
+                @foreach ((child) => {
                     var dropdown = (Dropdown) child;
 
                     dropdown.each_item ((item) => {
@@ -55,7 +55,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 active_item = null;
             }
 
-            @foreach((child) => {
+            @foreach ((child) => {
                 var dropdown = (Dropdown) child;
                 var item = dropdown.get_item (request);
 
@@ -68,7 +68,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         }
 
         public void unselect_all () {
-            @foreach((child) => {
+            @foreach ((child) => {
                 var dropdown = (Dropdown) child;
 
                 dropdown.unselect_all ();
@@ -85,7 +85,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         }
 
         public void adjust_visibility () {
-            foreach (var child in get_children()) {
+            foreach (var child in get_children ()) {
                 var dropdown = (Dropdown) child;
                 dropdown.adjust_visibility ();
             }

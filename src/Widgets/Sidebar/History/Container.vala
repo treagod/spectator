@@ -166,7 +166,7 @@ namespace Spectator.Widgets.Sidebar.History {
 
         private void add_history_item (string key_date, Models.Request request) {
             var item = new Item (request);
-            item.button_event.connect((event) => {
+            item.button_event.connect ((event) => {
                 var result = false;
                 switch (event.button) {
                     case 1:
@@ -211,7 +211,7 @@ namespace Spectator.Widgets.Sidebar.History {
         }
 
         public void clear () {
-            @foreach((widget) => {
+            @foreach ((widget) => {
                 remove (widget);
             });
             boxes.clear ();
@@ -219,7 +219,7 @@ namespace Spectator.Widgets.Sidebar.History {
 
         public void update (Gee.HashMap<Models.Request, DateTime> requests_history) {
             var now = new DateTime.now_local ();
-            @foreach((widget) => {
+            @foreach ((widget) => {
                 remove (widget);
             });
 

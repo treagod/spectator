@@ -109,7 +109,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 var item = new Item (request);
                 item_box.add (item);
 
-                item.button_event.connect((event) => {
+                item.button_event.connect ((event) => {
                     var result = false;
                     switch (event.button) {
                         case 1:

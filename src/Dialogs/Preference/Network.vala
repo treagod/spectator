@@ -105,7 +105,8 @@ namespace Spectator.Dialogs.Preference {
                     password_entry.secondary_icon_name = "channel-secure-symbolic";
                 } else {
                     password_entry.visibility = true;
-                    password_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "channel-insecure-symbolic");
+                    password_entry.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY,
+                                                            "channel-insecure-symbolic");
                 }
             });
 

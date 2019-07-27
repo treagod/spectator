@@ -45,7 +45,7 @@ namespace Spectator.Widgets.Response {
             header_scrolled.add (header_list);
 
             response_text.set_lang ("xml");
-            response_text_raw.set_lang("plain");
+            response_text_raw.set_lang ("plain");
 
 
             add (tree_scrolled);

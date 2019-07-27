@@ -65,20 +65,20 @@ namespace Spectator.Services.Scripting {
         }
 
         private static void handle_body_object (Duktape.Context ctx, Soup.Message msg) {
-            ctx.get_prop_string (-1, Helper.obj_type);
+            ctx.get_prop_string (-1, Helper.OBJ_TYPE);
             var type = 0;
             if (!ctx.is_undefined (-1) && ctx.is_number (-1)) {
                 type = ctx.get_int (-1);
             }
             ctx.pop ();
 
-            if (type == Helper.url_enc_type) {
-                ctx.get_prop_string (-1, Helper.obj_content);
+            if (type == Helper.URL_ENC_TYPE) {
+                ctx.get_prop_string (-1, Helper.OBJ_CONTENT);
                 var encoded = create_url_encoded_string (ctx);
 
                 msg.set_request ("application/x-www-form-urlencoded", Soup.MemoryUse.COPY, encoded.data);
-            } else if (type == Helper.form_data_type) {
-                ctx.get_prop_string (-1, Helper.obj_content);
+            } else if (type == Helper.FORM_DATA_TYPE) {
+                ctx.get_prop_string (-1, Helper.OBJ_CONTENT);
                 append_multipart_to_message (ctx, msg);
             } else {
                 msg.set_request ("application/json", Soup.MemoryUse.COPY, ctx.json_encode (-1).data);

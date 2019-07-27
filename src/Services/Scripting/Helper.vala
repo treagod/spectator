@@ -21,10 +21,10 @@
 
 namespace Spectator.Services.Scripting {
     namespace Helper {
-        private const string obj_type = "_sot_"; // Spectator Object Type
-        private const string obj_content = "_soc_"; // Spectator Object Content
-        private const int url_enc_type = 42;
-        private const int form_data_type = 1337;
+        private const string OBJ_TYPE = "_sot_"; // Spectator Object Type
+        private const string OBJ_CONTENT = "_soc_"; // Spectator Object Content
+        private const int URL_ENC_TYPE = 42;
+        private const int FORM_DATA_TYPE = 1337;
         public void register (Duktape.Context ctx) {
             ctx.push_vala_function (url_encoded, 1);
             ctx.put_global_string ("UrlEncoded");
@@ -33,25 +33,25 @@ namespace Spectator.Services.Scripting {
             ctx.put_global_string ("FormData");
         }
 
-        private void create_helper_object(Duktape.Context ctx, int magic_number) {
+        private void create_helper_object (Duktape.Context ctx, int magic_number) {
             var obj_idx = ctx.push_object ();
             ctx.push_int (magic_number);
-            ctx.put_prop_string (obj_idx, obj_type);
+            ctx.put_prop_string (obj_idx, OBJ_TYPE);
             ctx.insert (-2);
-            ctx.put_prop_string (-2, obj_content);
+            ctx.put_prop_string (-2, OBJ_CONTENT);
         }
 
         private Duktape.ReturnType url_encoded (Duktape.Context ctx) {
             if (!valid ("UrlEncoded", ctx)) return (Duktape.ReturnType) 0;
 
-            create_helper_object (ctx, url_enc_type);
+            create_helper_object (ctx, URL_ENC_TYPE);
             return (Duktape.ReturnType) 1;
         }
 
         public static Duktape.ReturnType form_data (Duktape.Context ctx) {
             if (!valid ("FormData", ctx)) return (Duktape.ReturnType) 0;
 
-            create_helper_object (ctx, form_data_type);
+            create_helper_object (ctx, FORM_DATA_TYPE);
             return (Duktape.ReturnType) 1;
         }
 

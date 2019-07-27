@@ -30,12 +30,13 @@ namespace Spectator.Controllers {
 
         private void setup_keyboard_shortcuts () {
             var accel_group = new Gtk.AccelGroup ();
-            accel_group.connect(Gdk.keyval_from_name("n"), Gdk.ModifierType.CONTROL_MASK, 0, () => {
+            accel_group.connect (Gdk.keyval_from_name ("n"), Gdk.ModifierType.CONTROL_MASK, 0, () => {
                 show_create_request_dialog ();
                 return true;
             });
 
-            accel_group.connect(Gdk.keyval_from_name("n"), Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK, 0, () => {
+            accel_group.connect (Gdk.keyval_from_name ("n"), Gdk.ModifierType.CONTROL_MASK |
+                                                             Gdk.ModifierType.SHIFT_MASK, 0, () => {
                 var dialog = new Dialogs.Collection.CollectionDialog (window);
                 dialog.show_all ();
                 dialog.creation.connect ((collection) => {
@@ -44,17 +45,17 @@ namespace Spectator.Controllers {
                 return true;
             });
 
-            accel_group.connect(Gdk.Key.comma, Gdk.ModifierType.CONTROL_MASK, 0, () => {
+            accel_group.connect (Gdk.Key.comma, Gdk.ModifierType.CONTROL_MASK, 0, () => {
                 open_preferences ();
                 return true;
             });
 
-            accel_group.connect(Gdk.keyval_from_name("h"), Gdk.ModifierType.CONTROL_MASK, 0, () => {
+            accel_group.connect (Gdk.keyval_from_name ("h"), Gdk.ModifierType.CONTROL_MASK, 0, () => {
                 sidebar_controller.show_history ();
                 return true;
             });
 
-            accel_group.connect(Gdk.keyval_from_name("l"), Gdk.ModifierType.CONTROL_MASK, 0, () => {
+            accel_group.connect (Gdk.keyval_from_name ("l"), Gdk.ModifierType.CONTROL_MASK, 0, () => {
                 sidebar_controller.show_collection ();
                 return true;
             });
@@ -203,14 +204,14 @@ namespace Spectator.Controllers {
             var tmp_path = Path.build_filename (Environment.get_home_dir (), ".local", "share",
                                                 Constants.PROJECT_NAME, "tmp_settings.json");
 
-            if (GLib.FileUtils.test(tmp_path, GLib.FileTest.EXISTS)) {
+            if (GLib.FileUtils.test (tmp_path, GLib.FileTest.EXISTS)) {
                 deserializer.load_data_from_file (tmp_path);
                 File file = File.new_for_path (tmp_path);
                 try {
                     file.delete ();
                 } catch (Error e) {
                     print ("Error deleting %s\n", tmp_path);
-	            }
+                }
             } else {
                 deserializer.load_data_from_file (setting_file_path);
             }

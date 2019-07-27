@@ -28,7 +28,7 @@ namespace Spectator.Widgets.Response {
 
         private Gtk.TreeStore store;
 
-        private XmlTreeView () {        }
+        private XmlTreeView () {}
 
         public XmlTreeView.from_string (string xml) {
             Xml.Parser.init ();

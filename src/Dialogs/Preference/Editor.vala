@@ -116,7 +116,7 @@ namespace Spectator.Dialogs.Preference {
             var builder = new StringBuilder ();
 
             foreach (var part in part_ids) {
-                part = "%s%s ".printf (part.up (1), part.substring(1));
+                part = "%s%s ".printf (part.up (1), part.substring (1));
                 builder.append (part);
             }
 

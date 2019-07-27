@@ -52,7 +52,8 @@ namespace Spectator.Widgets {
                                                    _("Inspect your HTTP transmissions to the web"));
             welcome.hexpand = true;
             welcome.append ("bookmark-new", _("Create Request"), _("Create a new request to the web."));
-            welcome.append ("folder-new", _("Create Collection"), _("Create a new collection to arrange your requests."));
+            welcome.append ("folder-new", _("Create Collection"),
+                            _("Create a new collection to arrange your requests."));
 
             welcome.activated.connect ((index) => {
                 welcome_activated (index);
