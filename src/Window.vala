@@ -42,23 +42,16 @@ namespace Spectator {
             Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (),
                                                       provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-            var grid = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
-            grid.width_request = 950;
-            grid.height_request = 500;
-
+            var paned = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
+            paned.wide_handle = true;
 
             set_titlebar (headerbar);
 
-            var seperator = new Gtk.Separator (Gtk.Orientation.VERTICAL);
-            seperator.visible = true;
-            seperator.no_show_all = false;
-
             show_all ();
 
-            grid.add (sidebar);
-            grid.add (seperator);
-            grid.add (content);
-            add (grid);
+            paned.pack1 (sidebar, false, false);
+            paned.pack2 (content, false, false);
+            add (paned);
 
             show_all ();
         }
