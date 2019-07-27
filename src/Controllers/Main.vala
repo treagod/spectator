@@ -70,9 +70,10 @@ namespace Spectator.Controllers {
             request_controller = new Controllers.Request (this);
             sidebar_controller = new Sidebar (this);
             setting_file_path = Path.build_filename (Environment.get_home_dir (), ".local", "share",
-                                                          Constants.PROJECT_NAME, "tmp_settings.json");
+                                                          Constants.PROJECT_NAME, "settings.json");
 
             request_controller.content.show_welcome ();
+
 
             headerbar.new_request.clicked.connect (() => {
                 show_create_request_dialog ();
@@ -198,7 +199,21 @@ namespace Spectator.Controllers {
                 add_collection (collection);
             });
 
-            deserializer.load_data_from_file (setting_file_path);
+            // Regression check, because tmp_path was used in main-branch
+            var tmp_path = Path.build_filename (Environment.get_home_dir (), ".local", "share",
+                                                Constants.PROJECT_NAME, "tmp_settings.json");
+
+            if (GLib.FileUtils.test(tmp_path, GLib.FileTest.EXISTS)) {
+                deserializer.load_data_from_file (tmp_path);
+                File file = File.new_for_path (tmp_path);
+                try {
+                    file.delete ();
+                } catch (Error e) {
+                    print ("Error deleting %s\n", tmp_path);
+	            }
+            } else {
+                deserializer.load_data_from_file (setting_file_path);
+            }
 
             var requests = request_controller.get_items_reference ();
             sidebar_controller.add_history_from_list (requests);

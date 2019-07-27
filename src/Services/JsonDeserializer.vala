@@ -44,122 +44,191 @@ namespace Spectator.Services {
                     parser.load_from_data (builder.str);
                     var object = parser.get_root ().get_object ();
 
-                    var collection_member = object.get_member ("collections");
-                    var collection_array = collection_member.get_array ();
-                    var collections = new Gee.ArrayList<Models.Collection> ();
-                    foreach (var collection_element in collection_array.get_elements ()) {
-                        var collection = deserialize_collection (collection_element.get_object ());
-                        collections.add (collection);
+                    var version = object.get_string_member ("version");
 
-                        collection_loaded (collection);
-                    }
-
-                    var items = object.get_member ("request_items");
-                    var request_items = items.get_array ();
-
-                    foreach (var request_item in request_items.get_elements ()) {
-                        var request = deserialize_item (request_item.get_object ());
-
-                        if (request.collection_id != null) {
-                            bool collection_not_found = true;
-                            foreach (var collection in collections) {
-                                if (collection.id == request.collection_id) {
-                                    collection_not_found = false;
-                                    collection.add_request (request);
-                                    break;
-                                }
-                            }
-
-                            if (collection_not_found) {
-                                request.collection_id = null;
-                            }
-                        } else {
-                            //
-                        }
-
-                        request_loaded (request);
+                    if (version == "0.2") {
+                        load_v2 (object);
+                    } else if (version == "0.1") {
+                        load_v1 (object);
+                    } else {
+                        stderr.printf ("Saved data was corrupted. Could not load data\n");
                     }
                 }
             } catch (Error e) {
                 stderr.printf ("Error during loading settings: %s\n", e.message);
             }
         }
-    }
 
-    private Models.Collection deserialize_collection (Json.Object collection_object) {
-        var id = (uint) collection_object.get_int_member ("id");
-        var name = collection_object.get_string_member ("name");
+        private void load_v1 (Json.Object object) {
+            var request_items = object.get_array_member ("request_items");
+            var collection = new Models.Collection (_("Unnamed collection"));
+            collection_loaded (collection);
 
-        var collection = new Models.Collection.with_id (id, name);
-
-        if (collection_object.has_member ("items_visible")) {
-            collection.items_visible = collection_object.get_boolean_member ("items_visible");
-        } else {
-            collection.items_visible = false;
+            foreach (var request_item in request_items.get_elements ()) {
+                var request = deserialize_item_v1 (request_item.get_object ());
+                collection.add_request (request);
+                request_loaded (request);
+            }
         }
 
-        return collection;
-    }
+        private Models.Request deserialize_item_v1 (Json.Object request_object) {
+            var name = request_object.get_string_member ("name");
+            var uri = request_object.get_string_member ("uri");
+            var method = (int) request_object.get_int_member ("method");
+            var script_code = "";
+            if (request_object.has_member ("script")) {
+                script_code = request_object.get_string_member ("script");
+            }
+            var request = new Models.Request.with_uri (name, uri, Models.Method.convert (method));
+            var headers = request_object.get_array_member ("headers");
 
-    private Models.Request deserialize_item (Json.Object request_object) {
-        var name = request_object.get_string_member ("name");
-        var uri = request_object.get_string_member ("uri");
-        var method = (int) request_object.get_int_member ("method");
-        var script_code = "";
-        if (request_object.has_member ("script")) {
-            script_code = request_object.get_string_member ("script");
-        }
-        Models.Request request;
+            request.script_code = script_code;
 
-        if (request_object.has_member ("id")) {
-            var id = (uint) request_object.get_int_member ("id");
-            request = new Models.Request.with_uri_and_id (id, name, uri, Models.Method.convert (method));
-        } else {
-            request = new Models.Request.with_uri (name, uri, Models.Method.convert (method));
-        }
+            foreach (var header_element in headers.get_elements ()) {
+                var header = header_element.get_object ();
+                request.add_header (new Pair (header.get_string_member ("key"), header.get_string_member ("value")));
+            }
 
-        if (request_object.has_member ("last_sent")) {
-            int64 last_sent = request_object.get_int_member ("last_sent");
-            request.last_sent = new DateTime.from_unix_local (last_sent);
-        }
+            var body = request_object.get_object_member ("body");
 
-        if (request_object.has_member ("collection_id")) {
-            request.collection_id = (uint) request_object.get_int_member ("collection_id");
-        }
-        var headers = request_object.get_array_member ("headers");
+            request.request_body.type = RequestBody.ContentType.FORM_DATA;
+            foreach (var form_data_element in body.get_array_member ("form_data").get_elements ()) {
+                var form_data_item = form_data_element.get_object ();
+                request.request_body.add_key_value (new Pair (
+                        form_data_item.get_string_member ("key"),
+                        form_data_item.get_string_member ("value")
+                ));
+            }
 
-        request.script_code = script_code;
+            request.request_body.type = RequestBody.ContentType.URLENCODED;
+            foreach (var form_data_element in body.get_array_member ("urlencoded").get_elements ()) {
+                var form_data_item = form_data_element.get_object ();
+                request.request_body.add_key_value (new Pair (
+                        form_data_item.get_string_member ("key"),
+                        form_data_item.get_string_member ("value")
+                ));
+            }
 
-        foreach (var header_element in headers.get_elements ()) {
-            var header = header_element.get_object ();
-            request.add_header (new Pair (header.get_string_member ("key"), header.get_string_member ("value")));
-        }
+            request.request_body.type =
+                    RequestBody.ContentType.convert ((int) body.get_int_member ("active_type"));
 
-        var body = request_object.get_object_member ("body");
+            request.request_body.raw = body.get_string_member ("raw") ?? "";
 
-        request.request_body.type = RequestBody.ContentType.FORM_DATA;
-        foreach (var form_data_element in body.get_array_member ("form_data").get_elements ()) {
-            var form_data_item = form_data_element.get_object ();
-            request.request_body.add_key_value (new Pair (
-                    form_data_item.get_string_member ("key"),
-                    form_data_item.get_string_member ("value")
-            ));
+            return request;
         }
 
-        request.request_body.type = RequestBody.ContentType.URLENCODED;
-        foreach (var form_data_element in body.get_array_member ("urlencoded").get_elements ()) {
-            var form_data_item = form_data_element.get_object ();
-            request.request_body.add_key_value (new Pair (
-                    form_data_item.get_string_member ("key"),
-                    form_data_item.get_string_member ("value")
-            ));
+        private void load_v2 (Json.Object object) {
+            var collection_array = object.get_array_member ("collections");
+            var collections = new Gee.ArrayList<Models.Collection> ();
+            foreach (var collection_element in collection_array.get_elements ()) {
+                var collection = deserialize_collection (collection_element.get_object ());
+                collections.add (collection);
+
+                collection_loaded (collection);
+            }
+
+            var items = object.get_member ("request_items");
+            var request_items = items.get_array ();
+
+            foreach (var request_item in request_items.get_elements ()) {
+                var request = deserialize_item (request_item.get_object ());
+
+                if (request.collection_id != null) {
+                    bool collection_not_found = true;
+                    foreach (var collection in collections) {
+                        if (collection.id == request.collection_id) {
+                            collection_not_found = false;
+                            collection.add_request (request);
+                            break;
+                        }
+                    }
+
+                    if (collection_not_found) {
+                        request.collection_id = null;
+                    }
+                } else {
+                    //
+                }
+
+                request_loaded (request);
+            }
         }
 
-        request.request_body.type =
-                RequestBody.ContentType.convert ((int) body.get_int_member ("active_type"));
+        private Models.Collection deserialize_collection (Json.Object collection_object) {
+            var id = (uint) collection_object.get_int_member ("id");
+            var name = collection_object.get_string_member ("name");
 
-        request.request_body.raw = body.get_string_member ("raw") ?? "";
+            var collection = new Models.Collection.with_id (id, name);
 
-        return request;
+            if (collection_object.has_member ("items_visible")) {
+                collection.items_visible = collection_object.get_boolean_member ("items_visible");
+            } else {
+                collection.items_visible = false;
+            }
+
+            return collection;
+        }
+
+        private Models.Request deserialize_item (Json.Object request_object) {
+            var name = request_object.get_string_member ("name");
+            var uri = request_object.get_string_member ("uri");
+            var method = (int) request_object.get_int_member ("method");
+            var script_code = "";
+            if (request_object.has_member ("script")) {
+                script_code = request_object.get_string_member ("script");
+            }
+            Models.Request request;
+
+            if (request_object.has_member ("id")) {
+                var id = (uint) request_object.get_int_member ("id");
+                request = new Models.Request.with_uri_and_id (id, name, uri, Models.Method.convert (method));
+            } else {
+                request = new Models.Request.with_uri (name, uri, Models.Method.convert (method));
+            }
+
+            if (request_object.has_member ("last_sent")) {
+                int64 last_sent = request_object.get_int_member ("last_sent");
+                request.last_sent = new DateTime.from_unix_local (last_sent);
+            }
+
+            if (request_object.has_member ("collection_id")) {
+                request.collection_id = (uint) request_object.get_int_member ("collection_id");
+            }
+            var headers = request_object.get_array_member ("headers");
+
+            request.script_code = script_code;
+
+            foreach (var header_element in headers.get_elements ()) {
+                var header = header_element.get_object ();
+                request.add_header (new Pair (header.get_string_member ("key"), header.get_string_member ("value")));
+            }
+
+            var body = request_object.get_object_member ("body");
+
+            request.request_body.type = RequestBody.ContentType.FORM_DATA;
+            foreach (var form_data_element in body.get_array_member ("form_data").get_elements ()) {
+                var form_data_item = form_data_element.get_object ();
+                request.request_body.add_key_value (new Pair (
+                        form_data_item.get_string_member ("key"),
+                        form_data_item.get_string_member ("value")
+                ));
+            }
+
+            request.request_body.type = RequestBody.ContentType.URLENCODED;
+            foreach (var form_data_element in body.get_array_member ("urlencoded").get_elements ()) {
+                var form_data_item = form_data_element.get_object ();
+                request.request_body.add_key_value (new Pair (
+                        form_data_item.get_string_member ("key"),
+                        form_data_item.get_string_member ("value")
+                ));
+            }
+
+            request.request_body.type =
+                    RequestBody.ContentType.convert ((int) body.get_int_member ("active_type"));
+
+            request.request_body.raw = body.get_string_member ("raw") ?? "";
+
+            return request;
+        }
     }
 }
