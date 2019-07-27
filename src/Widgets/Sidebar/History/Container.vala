@@ -166,6 +166,18 @@ namespace Spectator.Widgets.Sidebar.History {
 
         private void add_history_item (string key_date, Models.Request request) {
             var item = new Item (request);
+            item.button_event.connect((event) => {
+                var result = false;
+                switch (event.button) {
+                    case 1:
+                        result = true;
+                        item_clicked (item);
+                        break;
+                    default:
+                        break;
+                }
+                return result;
+            });
 
             item.item_clicked.connect (() => {
                 if (active_item != null) {

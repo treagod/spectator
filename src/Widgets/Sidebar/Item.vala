@@ -28,7 +28,7 @@ namespace Spectator.Widgets.Sidebar {
         Gtk.Label url;
         public Models.Request item { get; set; }
 
-        public signal bool button_event (unowned Gdk.EventButton event);
+        public signal bool button_event (Gdk.EventButton event);
 
         public signal void item_clicked ();
         public signal void item_deleted (Models.Request item);
