@@ -22,6 +22,7 @@
 namespace Spectator.Models {
     public class Collection {
         public signal void request_added (Request request);
+        public signal void request_removed (Request request);
 
         public Gee.ArrayList<Request> requests { get; private set; }
         public string name { get; set; }
@@ -58,6 +59,7 @@ namespace Spectator.Models {
         public void remove_request (Request request) {
             if (requests.contains (request)) {
                 requests.remove (request);
+                request_removed (request);
             }
         }
     }

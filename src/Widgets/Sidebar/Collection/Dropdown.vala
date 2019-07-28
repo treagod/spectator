@@ -78,6 +78,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
             return result;
         }
 
+        //TODO: fast abort (bool return or something)
         public void each_item (ItemIterator iter) {
             item_box.foreach ((it) => {
                 var item = (Item) it;
@@ -104,6 +105,14 @@ namespace Spectator.Widgets.Sidebar.Collection {
             label.use_markup = true;
             indicator = new Gtk.Image.from_icon_name (collection_open_icon, Gtk.IconSize.BUTTON);;
             _expanded = true;
+
+            collection.request_removed.connect ((request) => {
+                each_item ((item) => {
+                    if (item.item == request) {
+                        item_box.remove (item);
+                    }
+                });
+            });
 
             collection.request_added.connect ((request) => {
                 var item = new Item (request);

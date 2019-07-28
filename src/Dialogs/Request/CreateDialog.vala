@@ -29,14 +29,13 @@ namespace Spectator.Dialogs.Request {
             request_name_entry.text = _("My Request");
 
             add_button (_("Create"), Gtk.ResponseType.APPLY);
-
             var content = get_content_area () as Gtk.Box;
 
             var combo_box = new Gtk.ComboBoxText ();
 
             if (collections.size > 0) {
                 var combo_container = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
-                var collection_label = new Gtk.Label ("Add to collection");
+                var collection_label = new Gtk.Label (_("Add to collection"));
                 collection_label.halign = Gtk.Align.START;
                 combo_container.pack_start (collection_label);
                 foreach (var collection in collections) {
@@ -48,6 +47,8 @@ namespace Spectator.Dialogs.Request {
                 content.add (combo_container);
             }
 
+            var new_collection = _("New Collection");
+
             request_name_entry.activate.connect (() => {
                 if (collections.size > 0) {
                     var collection = collections.get (combo_box.active);
@@ -55,7 +56,7 @@ namespace Spectator.Dialogs.Request {
                 } else {
                     // TODO: temporary create new collection if none exists
                     // Future: Add request to top level in view
-                    var collection = new Models.Collection ("New collection");
+                    var collection = new Models.Collection (new_collection);
                     collection_created (collection);
                     create_request (collection);
                 }
@@ -70,7 +71,7 @@ namespace Spectator.Dialogs.Request {
                     } else {
                         // TODO: temporary create new collection if none exists
                         // Future: Add request to top level in view
-                        var collection = new Models.Collection (_("New collection"));
+                        var collection = new Models.Collection (new_collection);
                         collection_created (collection);
                         create_request (collection);
                     }
