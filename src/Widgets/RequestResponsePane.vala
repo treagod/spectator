@@ -147,6 +147,8 @@ namespace Spectator.Widgets {
         }
 
         public void update_chunk_response (Models.Request item) {
+            // TODO: Handle in view itself
+            item.response.add_header ("Content-Type", "text/plain");
             update_response (item);
         }
 
