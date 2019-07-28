@@ -168,7 +168,7 @@ namespace Spectator.Services {
 
             var tmp_req = new Models.Request.duplicate (item);
 
-            if (!script.execute_before_sending (item)) {
+            if (!script.execute_before_sending (tmp_req)) {
                 aborted ();
                 return;
             }
