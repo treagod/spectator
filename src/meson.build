@@ -5,7 +5,11 @@ conf_data.set('DATADIR', get_option('datadir'))
 conf_data.set('PKGDATADIR', get_option('datadir') + '/' + meson.project_name())
 conf_data.set('GETTEXT_PACKAGE', meson.project_name())
 conf_data.set('RELEASE_NAME', 'Spectator')
+<<<<<<< HEAD
 conf_data.set('VERSION', '0.4.0')
+=======
+conf_data.set('VERSION', '0.3.1')
+>>>>>>> c7c97f374ff324097bde7d86429153d7ff14b1e2
 conf_data.set('VERSION_INFO', 'Preview')
 conf_data.set('PREFIX', get_option('prefix'))
 

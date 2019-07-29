@@ -14,6 +14,7 @@
     </p>
   </description>
   <releases>
+<<<<<<< HEAD
     <release version="0.4.0" date="2019-07-28">
       <description>
         <p>Introduction of request collections</p>
@@ -44,6 +45,16 @@
     <release version="0.3.1" date="2019-05-29">
       <description>
         <p>Fix streamed data behaviour</p>
+=======
+    <release version="0.3.1" date="2019-05-29">
+      <p>Fix streamed data behaviour</p>
+				<ul>
+					<li>Fixed a (reintroduced )bug where chunked data was not displayed</li>
+				</ul>
+    </release>
+    <release version="0.3.0" date="2019-05-21">
+      <p>Improvement of JavaScript</p>
+>>>>>>> c7c97f374ff324097bde7d86429153d7ff14b1e2
 				<ul>
 					<li>Fixed a (reintroduced )bug where chunked data was not displayed</li>
 				</ul>
