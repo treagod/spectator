@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 com.github.treagod.spectator (0.4.0) bionic; urgency=medium
 
   * Added collection and history view in sidebar
@@ -9,8 +8,6 @@ com.github.treagod.spectator (0.4.0) bionic; urgency=medium
 
  -- Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>  Mon, 29 July 2019 20:06:30 +0200
 
-=======
->>>>>>> c7c97f374ff324097bde7d86429153d7ff14b1e2
 com.github.treagod.spectator (0.3.1) bionic; urgency=high
 
   * Fixed a (reintroduced )bug where chunked data was not displayed
