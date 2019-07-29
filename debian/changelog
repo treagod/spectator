@@ -1,3 +1,13 @@
+com.github.treagod.spectator (0.4.0) bionic; urgency=medium
+
+  * Added collection and history view in sidebar
+  * Added keyboard shortcuts
+  * Sidebar is now resizable
+  * WebKit will now be lazy-loaded
+  * Added more translations
+
+ -- Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>  Mon, 29 July 2019 20:06:30 +0200
+
 com.github.treagod.spectator (0.3.1) bionic; urgency=high
 
   * Fixed a (reintroduced )bug where chunked data was not displayed

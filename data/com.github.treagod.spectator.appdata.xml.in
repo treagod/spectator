@@ -14,28 +14,61 @@
     </p>
   </description>
   <releases>
+    <release version="0.4.0" date="2019-07-28">
+      <description>
+        <p>Introduction of request collections</p>
+				<ul>
+          <li>
+            Added collection and history view in sidebar
+            <ul>
+              <li>Requests can now be grouped into collections</li>
+              <li>Each request will be saved in a seperate history</li>
+            </ul>
+          </li>
+          <li>
+            Added keyboard shortcuts
+            <ul>
+              <li><strong>Ctlr+n:</strong> Create a new request</li>
+              <li><strong>Ctlr+Shift+n:</strong> Create a new collection</li>
+              <li><strong>Ctlr+l:</strong> Switch to collection view in sidebar</li>
+              <li><strong>Ctlr+h:</strong> Switch to history view in sidebar</li>
+              <li><strong>Ctlr+,:</strong> Open settings dialog</li>
+            </ul>
+          </li>
+          <li>Sidebar is now resizable</li>
+          <li>WebKit will now be lazy-loaded</li>
+          <li>Added more translations</li>
+				</ul>
+      </description>
+    </release>
     <release version="0.3.1" date="2019-05-29">
-      <p>Fix streamed data behaviour</p>
+      <description>
+        <p>Fix streamed data behaviour</p>
 				<ul>
 					<li>Fixed a (reintroduced )bug where chunked data was not displayed</li>
 				</ul>
+      </description>
     </release>
     <release version="0.3.0" date="2019-05-21">
-      <p>Improvement of JavaScript</p>
-      <ul>
-        <li>Added JavaScript Console</li>
-        <li>Displayed time of response is now more accurate</li>
-        <li>Added XML parsing and create new view for XML responses</li>
-        <li>Unified sourcecode views</li>
-        <li>Sourcecode views are using a monospace font by default</li>
-        <li>Added configuration for sourcecode views</li>
-      </ul>
+      <description>
+        <p>Improvement of JavaScript</p>
+        <ul>
+          <li>Added JavaScript Console</li>
+          <li>Displayed time of response is now more accurate</li>
+          <li>Added XML parsing and create new view for XML responses</li>
+          <li>Unified sourcecode views</li>
+          <li>Sourcecode views are using a monospace font by default</li>
+          <li>Added configuration for sourcecode views</li>
+        </ul>
+      </description>
     </release>
     <release version="0.2.1" date="2019-03-26">
-      <p>Fix streamed data behaviour</p>
-      <ul>
-        <li>Solves a bug where streamed data will not be shown until request finished (which might be never)</li>
-      </ul>
+      <description>
+        <p>Fix streamed data behaviour</p>
+        <ul>
+          <li>Solves a bug where streamed data will not be shown until request finished (which might be never)</li>
+        </ul>
+      </description>
     </release>
     <release version="0.2.0" date="2019-03-17">
       <description>
