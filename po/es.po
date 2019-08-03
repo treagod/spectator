@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.treagod.spectator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-04 17:58+0200\n"
+"POT-Creation-Date: 2019-08-03 11:46+0200\n"
 "PO-Revision-Date: 2019-03-31 16:03+0200\n"
 "Last-Translator: Mario Rodrigo\n"
 "Language-Team: none\n"
@@ -17,17 +17,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/Controllers/Request.vala:149
+#: src/Controllers/Request.vala:148
 #, c-format
 msgid "Request failed: %s"
 msgstr "Petición fallida: %s"
 
-#: src/Controllers/Request.vala:155
+#: src/Controllers/Request.vala:154
 #, c-format
 msgid "Invalid URI: %s"
 msgstr "URI inválida: %s"
 
-#: src/Controllers/Request.vala:161
+#: src/Controllers/Request.vala:160
 #, c-format
 msgid "Proxy denied request: %s"
 msgstr "El proxy denegó la petición: %s"
@@ -41,21 +41,29 @@ msgstr "Nombre"
 msgid "Close"
 msgstr "Cerrar"
 
-#: src/Dialogs/Request/CreateDialog.vala:27 src/Widgets/Content.vala:54
-#: src/Widgets/HeaderBar.vala:42
+#: src/Dialogs/Request/CreateDialog.vala:28 src/Widgets/Content.vala:54
+#: src/Widgets/HeaderBar.vala:47
 msgid "Create Request"
 msgstr "Crear petición"
 
-#: src/Dialogs/Request/CreateDialog.vala:28
+#: src/Dialogs/Request/CreateDialog.vala:29
 msgid "My Request"
 msgstr "Mi petición"
 
-#: src/Dialogs/Request/CreateDialog.vala:30
+#: src/Dialogs/Request/CreateDialog.vala:31
 msgid "Create"
 msgstr "Crear"
 
-#: src/Dialogs/Request/CreateDialog.vala:53
-#: src/Dialogs/Request/UpdateDialog.vala:53
+#: src/Dialogs/Request/CreateDialog.vala:38
+msgid "Add to collection"
+msgstr ""
+
+#: src/Dialogs/Request/CreateDialog.vala:50
+msgid "New Collection"
+msgstr ""
+
+#: src/Dialogs/Request/CreateDialog.vala:91
+#: src/Dialogs/Request/UpdateDialog.vala:87
 msgid "Request name must not be empty."
 msgstr "El nombre de la petición no puede estar vacío."
 
@@ -67,7 +75,11 @@ msgstr "Actualizar petición"
 msgid "Update"
 msgstr "Actualizar"
 
-#: src/Dialogs/Preferences.vala:26 src/Widgets/HeaderBar.vala:45
+#: src/Dialogs/Request/UpdateDialog.vala:39
+msgid "Change collection"
+msgstr ""
+
+#: src/Dialogs/Preferences.vala:26 src/Widgets/HeaderBar.vala:53
 msgid "Preferences"
 msgstr "Preferencias"
 
@@ -135,21 +147,25 @@ msgstr "Inspeccionar tus transmisiones HTTP a la web"
 msgid "Create a new request to the web."
 msgstr "Crear una nueva petición a la web."
 
-#: src/Widgets/Sidebar/Container.vala:54
-msgid "Requests"
-msgstr "Peticiones"
+#: src/Widgets/Content.vala:55 src/Widgets/HeaderBar.vala:50
+msgid "Create Collection"
+msgstr ""
+
+#: src/Widgets/Content.vala:56
+msgid "Create a new collection to arrange your requests."
+msgstr ""
+
+#: src/Widgets/Sidebar/Container.vala:52
+msgid "Collections"
+msgstr ""
+
+#: src/Widgets/Sidebar/Container.vala:53
+msgid "History"
+msgstr ""
 
 #: src/Widgets/Sidebar/Item.vala:24
 msgid "No URL specified"
 msgstr "URL no especificada"
-
-#: src/Widgets/Sidebar/Item.vala:133
-msgid "Edit"
-msgstr "Editar"
-
-#: src/Widgets/Sidebar/Item.vala:134
-msgid "Delete"
-msgstr "Borrar"
 
 #: src/Widgets/Response/JsonTreeView.vala:50
 #: src/Widgets/Response/JsonTreeView.vala:75
@@ -180,20 +196,20 @@ msgid "Raw"
 msgstr "Crudo"
 
 #: src/Widgets/Response/StatusBar/Container.vala:56
-msgid "Preview"
-msgstr "Previsualizar"
-
-#: src/Widgets/Response/StatusBar/Container.vala:57
 #: src/Widgets/Response/StatusBar/Container.vala:68
 msgid "Source Code"
 msgstr "Código fuente"
 
-#: src/Widgets/Response/StatusBar/Container.vala:58
+#: src/Widgets/Response/StatusBar/Container.vala:57
 #: src/Widgets/Response/StatusBar/Container.vala:69
 #: src/Widgets/Response/StatusBar/Container.vala:82
 #: src/Widgets/Request/Container.vala:69
 msgid "Headers"
 msgstr "Cabeceras"
+
+#: src/Widgets/Response/StatusBar/Container.vala:58
+msgid "Web View"
+msgstr ""
 
 #: src/Widgets/Response/StatusBar/Container.vala:67
 msgid "XML Tree"
@@ -285,3 +301,15 @@ msgstr "HTML"
 #: src/Widgets/Request/BodyView.vala:150 src/Widgets/Request/BodyView.vala:168
 msgid "Add"
 msgstr "Añadir"
+
+#~ msgid "Requests"
+#~ msgstr "Peticiones"
+
+#~ msgid "Edit"
+#~ msgstr "Editar"
+
+#~ msgid "Delete"
+#~ msgstr "Borrar"
+
+#~ msgid "Preview"
+#~ msgstr "Previsualizar"

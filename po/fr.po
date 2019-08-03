@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.treagod.spectator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-04 17:58+0200\n"
+"POT-Creation-Date: 2019-08-03 11:46+0200\n"
 "PO-Revision-Date: 2019-03-31 16:03+0200\n"
 "Last-Translator: NathanBnm\n"
 "Language-Team: Français\n"
@@ -17,17 +17,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/Controllers/Request.vala:149
+#: src/Controllers/Request.vala:148
 #, c-format
 msgid "Request failed: %s"
 msgstr "La requête à échoué : %s"
 
-#: src/Controllers/Request.vala:155
+#: src/Controllers/Request.vala:154
 #, c-format
 msgid "Invalid URI: %s"
 msgstr "URI Invalide : %s"
 
-#: src/Controllers/Request.vala:161
+#: src/Controllers/Request.vala:160
 #, c-format
 msgid "Proxy denied request: %s"
 msgstr "Accès refusé par le proxy : %s"
@@ -41,21 +41,29 @@ msgstr "Nom :"
 msgid "Close"
 msgstr "Fermer"
 
-#: src/Dialogs/Request/CreateDialog.vala:27 src/Widgets/Content.vala:54
-#: src/Widgets/HeaderBar.vala:42
+#: src/Dialogs/Request/CreateDialog.vala:28 src/Widgets/Content.vala:54
+#: src/Widgets/HeaderBar.vala:47
 msgid "Create Request"
 msgstr "Créer une requête"
 
-#: src/Dialogs/Request/CreateDialog.vala:28
+#: src/Dialogs/Request/CreateDialog.vala:29
 msgid "My Request"
 msgstr "Ma requête"
 
-#: src/Dialogs/Request/CreateDialog.vala:30
+#: src/Dialogs/Request/CreateDialog.vala:31
 msgid "Create"
 msgstr "Créer"
 
-#: src/Dialogs/Request/CreateDialog.vala:53
-#: src/Dialogs/Request/UpdateDialog.vala:53
+#: src/Dialogs/Request/CreateDialog.vala:38
+msgid "Add to collection"
+msgstr "Ajouter à la collection"
+
+#: src/Dialogs/Request/CreateDialog.vala:50
+msgid "New Collection"
+msgstr "Nouvelle collection"
+
+#: src/Dialogs/Request/CreateDialog.vala:91
+#: src/Dialogs/Request/UpdateDialog.vala:87
 msgid "Request name must not be empty."
 msgstr "Le nom de la requête ne peut pas être vide."
 
@@ -67,7 +75,11 @@ msgstr "Mettre à jour la requête"
 msgid "Update"
 msgstr "Mettre à jour"
 
-#: src/Dialogs/Preferences.vala:26 src/Widgets/HeaderBar.vala:45
+#: src/Dialogs/Request/UpdateDialog.vala:39
+msgid "Change collection"
+msgstr "Modifier la collection"
+
+#: src/Dialogs/Preferences.vala:26 src/Widgets/HeaderBar.vala:53
 msgid "Preferences"
 msgstr "Préférences"
 
@@ -135,21 +147,25 @@ msgstr "Inspectez vos transmissions HTTP sur le web"
 msgid "Create a new request to the web."
 msgstr "Créer une nouvelle requête web."
 
-#: src/Widgets/Sidebar/Container.vala:54
-msgid "Requests"
-msgstr "Requêtes"
+#: src/Widgets/Content.vala:55 src/Widgets/HeaderBar.vala:50
+msgid "Create Collection"
+msgstr "Créer une collection"
+
+#: src/Widgets/Content.vala:56
+msgid "Create a new collection to arrange your requests."
+msgstr "Créez une nouvelle collection pour organiser vos requêtes."
+
+#: src/Widgets/Sidebar/Container.vala:52
+msgid "Collections"
+msgstr "Collections"
+
+#: src/Widgets/Sidebar/Container.vala:53
+msgid "History"
+msgstr "Historique"
 
 #: src/Widgets/Sidebar/Item.vala:24
 msgid "No URL specified"
 msgstr "Aucun URL spécifié"
-
-#: src/Widgets/Sidebar/Item.vala:133
-msgid "Edit"
-msgstr "Modifier"
-
-#: src/Widgets/Sidebar/Item.vala:134
-msgid "Delete"
-msgstr "Supprimer"
 
 #: src/Widgets/Response/JsonTreeView.vala:50
 #: src/Widgets/Response/JsonTreeView.vala:75
@@ -180,20 +196,20 @@ msgid "Raw"
 msgstr "Brut"
 
 #: src/Widgets/Response/StatusBar/Container.vala:56
-msgid "Preview"
-msgstr "Aperçu"
-
-#: src/Widgets/Response/StatusBar/Container.vala:57
 #: src/Widgets/Response/StatusBar/Container.vala:68
 msgid "Source Code"
 msgstr "Code source"
 
-#: src/Widgets/Response/StatusBar/Container.vala:58
+#: src/Widgets/Response/StatusBar/Container.vala:57
 #: src/Widgets/Response/StatusBar/Container.vala:69
 #: src/Widgets/Response/StatusBar/Container.vala:82
 #: src/Widgets/Request/Container.vala:69
 msgid "Headers"
 msgstr "En-têtes"
+
+#: src/Widgets/Response/StatusBar/Container.vala:58
+msgid "Web View"
+msgstr "Vue Web"
 
 #: src/Widgets/Response/StatusBar/Container.vala:67
 msgid "XML Tree"
