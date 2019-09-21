@@ -131,7 +131,6 @@ namespace Spectator.Controllers {
         public void show_update_request_dialog (Models.Request request) {
            var dialog = new Dialogs.Request.UpdateDialog (window, request, sidebar_controller.get_collections ());
            dialog.show_all ();
-           var old_id = request.collection_id;
            dialog.updated.connect ((request) => {
                update_headerbar (request);
 

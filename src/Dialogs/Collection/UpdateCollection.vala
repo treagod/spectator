@@ -41,13 +41,7 @@ namespace Spectator.Dialogs.Collection {
             dialog_title = new DialogTitle (_("Update %s").printf (collection.name));
 
             collection_name_entry.activate.connect (() => {
-                if (name.length == 0) {
-                    show_warning (_("Collection name must not be empty."));
-                } else {
-                    collection.name = collection_name_entry.text;
-                    updated ();
-                    destroy ();
-                }
+                apply_update (collection);
             });
 
             add_button (_("Close"), Gtk.ResponseType.CLOSE);
@@ -68,20 +62,23 @@ namespace Spectator.Dialogs.Collection {
             response.connect ((source, id) => {
                 switch (id) {
                 case Gtk.ResponseType.APPLY:
-
-                if (name.length == 0) {
-                    show_warning (_("Collection name must not be empty."));
-                } else {
-                    updated ();
-                    destroy ();
-                }
-
+                    apply_update (collection);
                     break;
                 case Gtk.ResponseType.CLOSE:
                     destroy ();
                     break;
                 }
             });
+        }
+
+        private void apply_update (Models.Collection collection) {
+            if (name.length == 0) {
+                show_warning (_("Collection name must not be empty."));
+            } else {
+                collection.name = collection_name_entry.text;
+                updated ();
+                destroy ();
+            }
         }
 
         protected void show_warning (string warning) {
