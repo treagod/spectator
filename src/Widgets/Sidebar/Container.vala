@@ -120,7 +120,7 @@ namespace Spectator.Widgets.Sidebar {
             stack.add_named (collection_scroll, "groups");
             stack.add_named (history_scroll, "history");
 
-            stack.set_visible_child (collection);
+            stack.set_visible_child (collection_scroll);
 
             mode_buttons = create_mode_buttons ();
 
