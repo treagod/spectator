@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.treagod.spectator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-04 17:58+0200\n"
+"POT-Creation-Date: 2019-08-03 11:46+0200\n"
 "PO-Revision-Date: 2019-03-31 16:03+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,17 +17,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/Controllers/Request.vala:149
+#: src/Controllers/Request.vala:148
 #, fuzzy, c-format
 msgid "Request failed: %s"
 msgstr "Requests"
 
-#: src/Controllers/Request.vala:155
+#: src/Controllers/Request.vala:154
 #, c-format
 msgid "Invalid URI: %s"
 msgstr ""
 
-#: src/Controllers/Request.vala:161
+#: src/Controllers/Request.vala:160
 #, c-format
 msgid "Proxy denied request: %s"
 msgstr ""
@@ -41,22 +41,30 @@ msgstr "Name:"
 msgid "Close"
 msgstr "Close"
 
-#: src/Dialogs/Request/CreateDialog.vala:27 src/Widgets/Content.vala:54
-#: src/Widgets/HeaderBar.vala:42
+#: src/Dialogs/Request/CreateDialog.vala:28 src/Widgets/Content.vala:54
+#: src/Widgets/HeaderBar.vala:47
 msgid "Create Request"
 msgstr "Create Request"
 
-#: src/Dialogs/Request/CreateDialog.vala:28
+#: src/Dialogs/Request/CreateDialog.vala:29
 #, fuzzy
 msgid "My Request"
 msgstr "Requests"
 
-#: src/Dialogs/Request/CreateDialog.vala:30
+#: src/Dialogs/Request/CreateDialog.vala:31
 msgid "Create"
 msgstr "Create"
 
-#: src/Dialogs/Request/CreateDialog.vala:53
-#: src/Dialogs/Request/UpdateDialog.vala:53
+#: src/Dialogs/Request/CreateDialog.vala:38
+msgid "Add to collection"
+msgstr ""
+
+#: src/Dialogs/Request/CreateDialog.vala:50
+msgid "New Collection"
+msgstr ""
+
+#: src/Dialogs/Request/CreateDialog.vala:91
+#: src/Dialogs/Request/UpdateDialog.vala:87
 msgid "Request name must not be empty."
 msgstr "Request name must not be empty."
 
@@ -68,7 +76,11 @@ msgstr "Update Request"
 msgid "Update"
 msgstr "Update"
 
-#: src/Dialogs/Preferences.vala:26 src/Widgets/HeaderBar.vala:45
+#: src/Dialogs/Request/UpdateDialog.vala:39
+msgid "Change collection"
+msgstr ""
+
+#: src/Dialogs/Preferences.vala:26 src/Widgets/HeaderBar.vala:53
 msgid "Preferences"
 msgstr "Preferences"
 
@@ -136,20 +148,24 @@ msgstr "Inspect your HTTP transmissions to the web"
 msgid "Create a new request to the web."
 msgstr "Create a new request to the web."
 
-#: src/Widgets/Sidebar/Container.vala:54
-msgid "Requests"
-msgstr "Requests"
+#: src/Widgets/Content.vala:55 src/Widgets/HeaderBar.vala:50
+msgid "Create Collection"
+msgstr ""
+
+#: src/Widgets/Content.vala:56
+msgid "Create a new collection to arrange your requests."
+msgstr ""
+
+#: src/Widgets/Sidebar/Container.vala:52
+msgid "Collections"
+msgstr ""
+
+#: src/Widgets/Sidebar/Container.vala:53
+msgid "History"
+msgstr ""
 
 #: src/Widgets/Sidebar/Item.vala:24
 msgid "No URL specified"
-msgstr ""
-
-#: src/Widgets/Sidebar/Item.vala:133
-msgid "Edit"
-msgstr ""
-
-#: src/Widgets/Sidebar/Item.vala:134
-msgid "Delete"
 msgstr ""
 
 #: src/Widgets/Response/JsonTreeView.vala:50
@@ -181,20 +197,20 @@ msgid "Raw"
 msgstr "Raw"
 
 #: src/Widgets/Response/StatusBar/Container.vala:56
-msgid "Preview"
-msgstr "Preview"
-
-#: src/Widgets/Response/StatusBar/Container.vala:57
 #: src/Widgets/Response/StatusBar/Container.vala:68
 msgid "Source Code"
 msgstr "Source Code"
 
-#: src/Widgets/Response/StatusBar/Container.vala:58
+#: src/Widgets/Response/StatusBar/Container.vala:57
 #: src/Widgets/Response/StatusBar/Container.vala:69
 #: src/Widgets/Response/StatusBar/Container.vala:82
 #: src/Widgets/Request/Container.vala:69
 msgid "Headers"
 msgstr "Headers"
+
+#: src/Widgets/Response/StatusBar/Container.vala:58
+msgid "Web View"
+msgstr ""
 
 #: src/Widgets/Response/StatusBar/Container.vala:67
 msgid "XML Tree"
@@ -288,6 +304,12 @@ msgstr ""
 #: src/Widgets/Request/BodyView.vala:150 src/Widgets/Request/BodyView.vala:168
 msgid "Add"
 msgstr "Add"
+
+#~ msgid "Requests"
+#~ msgstr "Requests"
+
+#~ msgid "Preview"
+#~ msgstr "Preview"
 
 #~ msgid "JavaScript Console"
 #~ msgstr "JavaScript Console"

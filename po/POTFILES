@@ -6,7 +6,6 @@ src/Models/RequestBody.vala
 src/Models/ResponseItem.vala
 src/Controllers/Request.vala
 src/Controllers/Main.vala
-src/Stores/RequestStore.vala
 src/Services/Settings.vala
 src/Services/RequestAction.vala
 src/Dialogs/Request/Dialog.vala

@@ -26,6 +26,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         private static string collection_closed_icon = "folder";
 
         public signal void item_edit (Models.Request request);
+        public signal void item_clone (Models.Request request);
         public signal void item_deleted (Models.Request request);
         public signal void item_clicked (Item item);
         public signal void collection_delete (Models.Collection collection);
@@ -128,10 +129,15 @@ namespace Spectator.Widgets.Sidebar.Collection {
                         case 3:
                             var menu = new Gtk.Menu ();
                             var edit_item = new Gtk.MenuItem.with_label (_("Edit"));
+                            var clone_item = new Gtk.MenuItem.with_label (_("Clone"));
                             var delete_item = new Gtk.MenuItem.with_label (_("Delete"));
 
                             edit_item.activate.connect (() => {
                                 item_edit (item.item);
+                            });
+
+                            clone_item.activate.connect (() => {
+                                item_clone (item.item);
                             });
 
                             delete_item.activate.connect (() => {
@@ -141,6 +147,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                             });
 
                             menu.add (edit_item);
+                            menu.add (clone_item);
                             menu.add (delete_item);
                             menu.show_all ();
                             menu.popup_at_pointer (event);

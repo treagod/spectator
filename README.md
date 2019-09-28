@@ -10,7 +10,7 @@ API endpoints of your HTTP server.
 - [x] Do requests to a web server
 - [x] Handle Basic Proxy Server
 - [x] Scripting capabilities
-- [ ] Create collections of requests
+- [x] Create collections of requests
 - [ ] Create request enviroments
 - [ ] Create test enviroments for your collections
 

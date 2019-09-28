@@ -39,6 +39,14 @@ namespace Spectator.Controllers {
         private void setup () {
             sidebar.item_edited.connect (main.show_update_request_dialog);
 
+            sidebar.item_clone.connect ((old_request) => {
+                var new_request = new Models.Request.clone (old_request);
+                collection_controller.add_request_by_collection_id (new_request);
+                main.add_request (new_request);
+                main.update_headerbar (new_request);
+                main.show_content (new_request);
+            });
+
             sidebar.selection_changed.connect ((request) => {
                 main.update_headerbar (request);
                 main.show_content (request);

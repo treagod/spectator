@@ -48,7 +48,8 @@ namespace Spectator.Widgets.Sidebar {
     }
 
     public class Container : Gtk.Box {
-        private Gtk.ScrolledWindow scroll;
+        private Gtk.ScrolledWindow collection_scroll;
+        private Gtk.ScrolledWindow history_scroll;
         private string collection_title_text = _("Collections");
         private string history_title_text = _("History");
         private Gtk.Stack stack;
@@ -58,6 +59,7 @@ namespace Spectator.Widgets.Sidebar {
         private Granite.Widgets.ModeButton mode_buttons;
 
         public signal void item_deleted (Models.Request item);
+        public signal void item_clone (Models.Request item);
         public signal void item_edited (Models.Request item);
         public signal void selection_changed (Models.Request item);
         public signal void notify_delete ();
@@ -66,9 +68,13 @@ namespace Spectator.Widgets.Sidebar {
         public signal void collection_delete (Models.Collection collection);
 
         public Container () {
-            scroll = new Gtk.ScrolledWindow (null, null);
-            scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
-            scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
+            history_scroll = new Gtk.ScrolledWindow (null, null);
+            history_scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
+            history_scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
+
+            collection_scroll = new Gtk.ScrolledWindow (null, null);
+            collection_scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
+            collection_scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
 
             titlebar = new TitleBar (collection_title_text);
 
@@ -78,10 +84,15 @@ namespace Spectator.Widgets.Sidebar {
             collection = new Collection.Container ();
             history = new History.Container ();
 
-            scroll.add (history);
+            collection_scroll.add (collection);
+            history_scroll.add (history);
 
             collection.item_edit.connect ((request) => {
                 item_edited (request);
+            });
+
+            collection.item_clone.connect ((request) => {
+                item_clone (request);
             });
 
             collection.item_deleted.connect ((request) => {
@@ -111,19 +122,19 @@ namespace Spectator.Widgets.Sidebar {
             });
 
             stack = new Gtk.Stack ();
-            stack.add_named (collection, "groups");
-            stack.add_named (scroll, "history");
+            stack.add_named (collection_scroll, "groups");
+            stack.add_named (history_scroll, "history");
 
-            stack.set_visible_child (collection);
+            stack.set_visible_child (collection_scroll);
 
             mode_buttons = create_mode_buttons ();
 
             mode_buttons.mode_changed.connect (() => {
                 if (mode_buttons.selected == 0) {
-                    stack.set_visible_child (collection);
+                    stack.set_visible_child (collection_scroll);
                     titlebar.title_text = collection_title_text;
                 } else {
-                    stack.set_visible_child (scroll);
+                    stack.set_visible_child (history_scroll);
                     titlebar.title_text = history_title_text;
                 }
             });
@@ -137,13 +148,13 @@ namespace Spectator.Widgets.Sidebar {
 
         public void show_history () {
             mode_buttons.selected = 1;
-            stack.set_visible_child (scroll);
+            stack.set_visible_child (history_scroll);
             titlebar.title_text = history_title_text;
         }
 
         public void show_collection () {
             mode_buttons.selected = 0;
-            stack.set_visible_child (collection);
+            stack.set_visible_child (collection_scroll);
             titlebar.title_text = collection_title_text;
         }
 
