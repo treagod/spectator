@@ -59,6 +59,7 @@ namespace Spectator.Widgets.Sidebar {
         private Granite.Widgets.ModeButton mode_buttons;
 
         public signal void item_deleted (Models.Request item);
+        public signal void item_clone (Models.Request item);
         public signal void item_edited (Models.Request item);
         public signal void selection_changed (Models.Request item);
         public signal void notify_delete ();
@@ -88,6 +89,10 @@ namespace Spectator.Widgets.Sidebar {
 
             collection.item_edit.connect ((request) => {
                 item_edited (request);
+            });
+
+            collection.item_clone.connect ((request) => {
+                item_clone (request);
             });
 
             collection.item_deleted.connect ((request) => {

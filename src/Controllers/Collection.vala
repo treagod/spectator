@@ -47,6 +47,15 @@ namespace Spectator.Controllers {
             }
         }
 
+        public void add_request_by_collection_id (Models.Request request) {
+            foreach (var collection in collections) {
+                if (collection.id == request.collection_id) {
+                    collection.add_request (request);
+                    break;
+                }
+            }
+        }
+
         public void delete_collection (Models.Collection collection) {
             if (collections.contains (collection)) {
                 collections.remove (collection);
