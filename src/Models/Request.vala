@@ -76,6 +76,19 @@ namespace Spectator.Models {
             }
         }
 
+        public Request.clone (Request old_req) {
+            setup (old_req.name, old_req.method);
+            collection_id = old_req.collection_id;
+            uri = old_req.uri;
+            request_body = old_req.request_body;
+            script_code = old_req.script_code;
+            foreach (var header in old_req.headers) {
+                add_header (header);
+            }
+
+            id = max_id++;
+        }
+
         public Request.with_uri (string nam, string url, Method meth) {
             setup (nam, meth);
             uri = url;
