@@ -14,6 +14,22 @@
     </p>
   </description>
   <releases>
+    <release version="0.4.1" date="2019-09-30">
+      <description>
+        <p>Collection improvements</p>
+				<ul>
+          <li>
+            Fixed a bug where it was not possible to scroll through the collections
+            if there are to many collection or request items in the collection-sidebar
+          </li>
+          <li>
+            Fixed a bug where clicking on the "Update" button when editing a collection
+            nothing happend
+          </li>
+          <li>The right-click menu of a request item now allows the user to clone a request</li>
+				</ul>
+      </description>
+    </release>
     <release version="0.4.0" date="2019-07-28">
       <description>
         <p>Introduction of request collections</p>
