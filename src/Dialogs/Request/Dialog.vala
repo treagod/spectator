@@ -26,7 +26,7 @@ namespace Spectator.Dialogs.Request {
         private DialogTitle dialog_title;
         private bool warning_active;
 
-        public Dialog (string titl, Gtk.ApplicationWindow parent) {
+        protected Dialog (string titl, Gtk.ApplicationWindow parent) {
             title = titl;
             border_width = 5;
             set_size_request (425, 100);
