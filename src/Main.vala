@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -19,26 +19,8 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace Spectator {
-    public class Application : Gtk.Application {
-        // Avoid multiple instances
-        public bool running = false;
-        public Window window;
-        public Controllers.Main main_controller;
+public static int main (string[] args) {
+    var application = new Spectator.Application ();
 
-        construct {
-            flags |= ApplicationFlags.HANDLES_OPEN;
-            application_id = "com.github.treagod.spectator";
-        }
-
-        protected override void activate () {
-            if (!running) {
-                main_controller = new Controllers.Main (this);
-                add_window (main_controller.window);
-
-                running = true;
-            }
-            main_controller.show_app ();
-        }
-    }
+    return application.run (args);
 }

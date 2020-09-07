@@ -6,6 +6,20 @@ c_deps = cc.find_library('duktape', required: true)
 
 i18n = import('i18n')
 
+dependencies = [
+    dependency('gtk+-3.0'),
+    dependency('glib-2.0'),
+    dependency('gio-unix-2.0'),
+    dependency('gee-0.8'),
+    dependency('granite'),
+    dependency('gtksourceview-3.0'),
+    dependency('webkit2gtk-4.0'),
+    dependency('json-glib-1.0'),
+    dependency('libxml-2.0'),
+    c_deps
+]
+
+
 gnome = import('gnome')
 asresources = gnome.compile_resources(
     'as-resources', 'data/assets.gresource.xml',
@@ -18,5 +32,15 @@ add_global_arguments('-DGETTEXT_PACKAGE="@0@"'.format (meson.project_name()), la
 subdir('src')
 subdir('data')
 subdir('po')
+
+executable(
+    meson.project_name(),
+    sources,
+    asresources,
+    config_header,
+    dependencies: dependencies,
+    install: true
+)
+
 
 meson.add_install_script('meson/post_install.py')
