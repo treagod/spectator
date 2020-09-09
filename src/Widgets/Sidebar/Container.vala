@@ -56,21 +56,25 @@ namespace Spectator.Widgets.Sidebar {
         public Collection.Container collection;
         public History.Container history;
         private TitleBar titlebar;
+        private Spectator.Window window;
         private Granite.Widgets.ModeButton mode_buttons;
 
         public signal void item_deleted (Models.Request item);
         public signal void item_clone (Models.Request item);
         public signal void item_edited (Models.Request item);
-        public signal void selection_changed (Models.Request item);
+        public signal void selection_changed (Models.Request item); /* Deprecated */
+        public signal void request_item_selected (uint id);
         public signal void notify_delete ();
         public signal void create_collection_request (Models.Collection collection);
         public signal void collection_edit (Models.Collection collection);
         public signal void collection_delete (Models.Collection collection);
 
-        public Container () {
+        public Container (Spectator.Window window) {
+            this.window = window;
             history_scroll = new Gtk.ScrolledWindow (null, null);
             history_scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             history_scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
+
 
             collection_scroll = new Gtk.ScrolledWindow (null, null);
             collection_scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
@@ -81,7 +85,7 @@ namespace Spectator.Widgets.Sidebar {
             orientation = Gtk.Orientation.VERTICAL;
             width_request = 265;
 
-            collection = new Collection.Container ();
+            collection = new Collection.Container (window);
             history = new History.Container ();
 
             collection_scroll.add (collection);
@@ -119,6 +123,10 @@ namespace Spectator.Widgets.Sidebar {
 
             collection.collection_delete.connect ((collection) => {
                 collection_delete (collection);
+            });
+
+            collection.request_item_selected.connect ((id) => {
+                this.request_item_selected (id);
             });
 
             stack = new Gtk.Stack ();
@@ -160,6 +168,14 @@ namespace Spectator.Widgets.Sidebar {
 
         public void add_collection (Models.Collection model) {
             collection.add_collection (model);
+        }
+
+        public void select_request (uint id) {
+            collection.select_request (id);
+        }
+
+        public void show_items () {
+            collection.show_items ();
         }
 
         private Granite.Widgets.ModeButton create_mode_buttons () {

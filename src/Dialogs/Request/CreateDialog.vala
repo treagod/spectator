@@ -20,6 +20,8 @@
 */
 
 namespace Spectator.Dialogs.Request {
+
+    /* Deprecated */
     public class CreateDialog : Dialog {
         public signal void creation (Models.Request request);
         public signal void collection_created (Models.Collection collection);
@@ -93,6 +95,47 @@ namespace Spectator.Dialogs.Request {
                 var index = method_box.get_active ();
                 var request = new Models.Request (name, Models.Method.convert (index));
                 collection.add_request (request);
+                creation (request);
+                destroy ();
+            }
+        }
+    }
+
+    public class CreateDialogNew : Dialog {
+        public signal void creation (Models.Request request);
+        public signal void collection_created (Models.Collection collection);
+
+        public CreateDialogNew (Gtk.ApplicationWindow parent) {
+            base (_("Create Request"), parent);
+            request_name_entry.text = _("My Request");
+
+            add_button (_("Create"), Gtk.ResponseType.APPLY);
+
+            request_name_entry.activate.connect (() => {
+                create_request ();
+            });
+
+            response.connect ((source, id) => {
+                switch (id) {
+                case Gtk.ResponseType.APPLY:
+                    create_request ();
+
+                    break;
+                case Gtk.ResponseType.CLOSE:
+                    destroy ();
+                    break;
+                }
+            });
+        }
+
+        private void create_request () {
+            var name = request_name_entry.text;
+
+            if (name.length == 0) {
+                show_warning (_("Request name must not be empty."));
+            } else {
+                var index = method_box.get_active ();
+                var request = new Models.Request (name, Models.Method.convert (index));
                 creation (request);
                 destroy ();
             }

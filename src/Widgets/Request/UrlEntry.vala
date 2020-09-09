@@ -40,8 +40,10 @@ namespace Spectator.Widgets.Request {
             margin_top = 4;
             margin_bottom = 4;
 
-            url_entry.changed.connect (notify_url_change);
-
+            url_entry.key_release_event.connect (() => {
+                notify_url_change ();
+                return true;
+            });
         }
 
         private void init_method_box () {
@@ -63,9 +65,7 @@ namespace Spectator.Widgets.Request {
         }
 
         public void set_text (string url) {
-            url_entry.changed.disconnect (notify_url_change);
             url_entry.text = url;
-            url_entry.changed.connect (notify_url_change);
         }
 
         public string get_text () {

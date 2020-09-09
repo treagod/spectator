@@ -52,11 +52,11 @@ namespace Spectator.Widgets.Request {
         }
 
         public Container () {
-            header_view = create_header_view ();
-            url_params_view = create_url_params_view ();
-            url_entry = create_url_entry ();
-            body_view = create_body_view ();
-            scripting_view = new Spectator.Widgets.Request.Scripting.Container ();
+            this.header_view = create_header_view ();
+            this.url_params_view = create_url_params_view ();
+            this.url_entry = create_url_entry ();
+            this.body_view = create_body_view ();
+            this.scripting_view = new Spectator.Widgets.Request.Scripting.Container ();
 
             scripting_view.script_changed.connect ((script) => {
                 script_changed (script);
@@ -80,6 +80,22 @@ namespace Spectator.Widgets.Request {
             add (tabs);
             add (stack);
             show_all ();
+        }
+
+        public void set_request_url (string request_url) {
+            url_entry.set_text (request_url);
+        }
+
+        public void set_request_method (Models.Method method) {
+            url_entry.set_method (method);
+        }
+
+        public void set_script (string script) {
+            this.scripting_view.update_script_buffer (script);
+        }
+
+        public void set_headers(Gee.ArrayList<Pair> headers) {
+            this.header_view.change_rows (headers);
         }
 
         private KeyValueList create_header_view () {
@@ -252,18 +268,6 @@ namespace Spectator.Widgets.Request {
             }
         }
 
-        private void set_headers (Gee.ArrayList<Pair> headers) {
-            header_view.change_rows (headers);
-        }
-
-        public void update_url_bar (string uri) {
-            url_entry.set_text (uri);
-        }
-
-        private void update_script (string script) {
-            scripting_view.update_script_buffer (script);
-        }
-
         public void update_status (Models.Request request) {
             url_entry.change_status (request.status);
         }
@@ -280,7 +284,6 @@ namespace Spectator.Widgets.Request {
             body_view.set_body (request.request_body);
             update_url_params (request);
             update_tabs (request.method);
-            update_script (request.script_code);
             set_headers (request.headers);
             show_all ();
         }

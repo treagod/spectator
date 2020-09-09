@@ -155,6 +155,25 @@ namespace Spectator.Models {
             }
         }
 
+        public static Method convert_from_string (string method) {
+            switch (method.up ()) {
+                case "GET":
+                    return GET;
+                case "POST":
+                    return POST;
+                case "PUT":
+                    return PUT;
+                case "PATCH":
+                    return PATCH;
+                case "DELETE":
+                    return DELETE;
+                case "HEAD":
+                    return HEAD;
+                default:
+                    assert_not_reached ();
+            }
+        }
+
         public int to_i () {
             switch (this) {
                 case GET:

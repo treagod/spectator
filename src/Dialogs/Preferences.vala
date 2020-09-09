@@ -22,7 +22,7 @@
 namespace Spectator.Dialogs {
     public class Preferences : Gtk.Dialog {
 
-        public Preferences (Gtk.Window? parent) {
+        public Preferences (Gtk.Window parent) {
             title = _("Preferences");
             border_width = 5;
             deletable = false;

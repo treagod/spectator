@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,6 +25,8 @@ namespace Spectator.Widgets {
         private Response.Container response_view;
         private Gee.HashMap<Models.Request, int> tab_indecies;
         private Models.Request last_item;
+        private Spectator.Window window;
+        private uint active_id;
 
         public signal void type_changed (RequestBody.ContentType type);
         public signal void body_buffer_changed (string content);
@@ -33,12 +35,32 @@ namespace Spectator.Widgets {
         public signal void key_value_removed (Pair item);
         public signal void key_value_updated (Pair item);
 
+        public void display_request (uint id) {
+            this.active_id = id;
+            this.refresh_request (id);
+        }
 
-        public RequestResponsePane () {
-            request_view = new Request.Container ();
-            response_view = new Response.Container ();
-            response_view = new Response.Container ();
-            tab_indecies = new Gee.HashMap<Models.Request, int> ();
+        private void refresh_request (uint id) {
+            var request = this.window.request_service.get_request_by_id (id);
+
+            if (request != null) {
+                this.request_view.set_request_url (request.uri);
+                this.request_view.set_request_method (request.method);
+                this.request_view.set_script (request.script_code);
+                this.request_view.set_headers (request.headers);
+
+                if (request.response != null) {
+                    //
+                } else {}
+            }
+        }
+
+        public RequestResponsePane (Spectator.Window window) {
+            this.window = window;
+            this.request_view = new Request.Container ();
+            this.response_view = new Response.Container ();
+            this.response_view = new Response.Container ();
+            this.tab_indecies = new Gee.HashMap<Models.Request, int> ();
 
             request_view.response_received.connect ((res) => {
                 response_view.update (res);
@@ -49,7 +71,11 @@ namespace Spectator.Widgets {
             });
 
             request_view.url_changed.connect ((url) => {
-                url_changed (url);
+                var request = this.window.request_service.get_request_by_id (active_id);
+
+                if (request != null) {
+                    request.uri = url; // TODO: This allready saves the request, which should be explicit
+                }
             });
 
             request_view.cancel_process.connect (() => {
@@ -70,6 +96,11 @@ namespace Spectator.Widgets {
 
             request_view.header_added.connect ((header) => {
                 header_added (header);
+                var request = this.window.request_service.get_request_by_id (active_id);
+
+                if (request != null) {
+                    request.add_header(header);
+                }
             });
 
             request_view.script_changed.connect ((script) => {
@@ -77,7 +108,12 @@ namespace Spectator.Widgets {
             });
 
             request_view.header_deleted.connect ((header) => {
-                header_deleted (header);
+                header_added (header);
+                var request = this.window.request_service.get_request_by_id (active_id);
+
+                if (request != null) {
+                    request.remove_header (header);
+                }
             });
 
             request_view.type_changed.connect ((type) => {
@@ -100,10 +136,6 @@ namespace Spectator.Widgets {
             pack2 (response_view, true, false);
         }
 
-        public void update_url_bar (string uri) {
-            request_view.update_url_bar (uri);
-        }
-
         public void update_url_params (Models.Request item) {
             request_view.update_url_params (item);
         }
@@ -122,11 +154,6 @@ namespace Spectator.Widgets {
             } else {
                 request_view.tab_index = tab_indecies[item];
             }
-        }
-
-        public void set_item (Models.Request request) {
-            adjust_tab (request);
-            update_response (request);
         }
 
         public void update_response (Models.Request request) {

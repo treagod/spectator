@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -24,28 +24,40 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public signal void item_edit (Models.Request request);
         public signal void item_clone (Models.Request request);
         public signal void item_deleted (Models.Request request);
-        public signal void item_clicked (Item item);
+        public signal void item_clicked (Item item); /* Deprecated? */
+        public signal void request_item_selected (uint id);
         public signal void create_collection_request (Models.Collection collection);
         public signal void collection_edit (Models.Collection collection);
         public signal void collection_delete (Models.Collection collection);
 
         public Item? active_item { get; private set; }
+        public uint? active_id { get; private set; }
+        private Gee.HashMap<uint, RequestListItem> request_items;
+        private Spectator.Window window;
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
             spacing = 3;
         }
 
-        public Container () {
+        public Container (Spectator.Window window) {
+            this.window = window;
+            this.active_id = null;
+            this.request_items = new Gee.HashMap<uint, RequestListItem> ();
             get_style_context ().add_class ("collection-box");
 
             Settings.get_instance ().theme_changed.connect (() => {
                 @foreach ((child) => {
-                    var dropdown = (Dropdown) child;
+                    if (child is Dropdown) {
+                        var dropdown = (Dropdown) child;
 
-                    dropdown.each_item ((item) => {
-                        item.refresh ();
-                    });
+                        dropdown.each_item ((item) => {
+                            item.refresh ();
+                        });
+                    } else if (child is RequestListItem) {
+                        var list_item = (RequestListItem) child;
+                        list_item.repaint ();
+                    }
                 });
             });
         }
@@ -101,6 +113,70 @@ namespace Spectator.Widgets.Sidebar.Collection {
                     break;
                 }
             }
+        }
+
+        /* Adds active css-class to a  */
+        public void select_request (uint id) {
+            if (this.request_items.has_key (id)) {
+                if (this.active_id != null) {
+                    this.request_items[this.active_id].get_style_context ().remove_class ("active");
+                }
+
+                var request_item = this.request_items[id];
+                request_item.get_style_context ().add_class ("active");
+                this.active_id = id;
+            } else {
+                error ("No such id %u\n", id);
+            }
+        }
+
+        public void show_items () {
+            /* Resets the list */
+            foreach (var child in get_children ()) {
+                this.remove (child);
+            }
+
+            foreach (var entry in this.window.order_service.get_order ()) {
+                if (entry.type == Order.Type.REQUEST) {
+                    var request = this.window.request_service.get_request_by_id (entry.id);
+
+                    if (request != null) {
+                        this.add_request (request);
+                    } else {
+                        error ("NO REQUEST FOUND\n");
+                    }
+                } else if (entry.type == Order.Type.COLLECTION) {
+                    var collection = this.window.collection_service.get_collection_by_id (entry.id);
+
+                    if (collection != null) {
+                        this.add_collection (collection);
+                    } else {
+                        error ("NO COLLECTION FOUND\n");
+                    }
+                }
+            }
+        }
+
+        public void add_request (Models.Request request) {
+            var request_list_item = new RequestListItem (request.id, request.name, request.uri, request.method);
+
+            this.add (request_list_item);
+            this.request_items[request.id] = request_list_item;
+
+            request_list_item.button_event.connect ((event) => {
+                var result = false;
+                switch (event.button) {
+                    case 1:
+                        select_request (request.id);
+                        result = true;
+                        request_item_selected (request.id);
+                        break;
+                    default:
+                        break;
+                }
+                return result;
+            });
+            show_all();
         }
 
         public void add_collection (Models.Collection collection) {

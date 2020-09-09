@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -26,6 +26,7 @@ namespace Spectator.Widgets {
         private RequestResponsePane req_res_pane;
         private Gtk.InfoBar infobar;
         private Gtk.Label infolabel;
+        private Spectator.Window window;
 
         public signal void url_changed (string url);
         public signal void method_changed (Models.Method method);
@@ -44,11 +45,30 @@ namespace Spectator.Widgets {
         public signal void key_value_removed (Pair item);
         public signal void key_value_updated (Pair item);
 
-        public Content () {
-            stack = new Gtk.Stack ();
-            infobar = new Gtk.InfoBar ();
-            infolabel = new Gtk.Label ("");
-            welcome = new Granite.Widgets.Welcome (_(Constants.RELEASE_NAME),
+        private void create_activated_welcome_dialog (int i) {
+            switch (i) {
+                case 0:
+                this.window.create_request_dialog ();
+                break;
+                case 1:
+                this.window.create_collection_dialog ();
+                break;
+                default:
+                assert_not_reached ();
+            }
+        }
+
+        public void display_request (uint id) {
+            this.req_res_pane.display_request (id);
+            this.stack.set_visible_child (this.req_res_pane);
+        }
+
+        public Content (Spectator.Window window) {
+            this.stack = new Gtk.Stack ();
+            this.infobar = new Gtk.InfoBar ();
+            this.infolabel = new Gtk.Label ("");
+            this.window = window;
+            this.welcome = new Granite.Widgets.Welcome (_(Constants.RELEASE_NAME),
                                                    _("Inspect your HTTP transmissions to the web"));
             welcome.hexpand = true;
             welcome.append ("bookmark-new", _("Create Request"), _("Create a new request to the web."));
@@ -56,10 +76,10 @@ namespace Spectator.Widgets {
                             _("Create a new collection to arrange your requests."));
 
             welcome.activated.connect ((index) => {
-                welcome_activated (index);
+                create_activated_welcome_dialog (index);
             });
 
-            req_res_pane = new RequestResponsePane ();
+            req_res_pane = new RequestResponsePane (this.window);
 
             req_res_pane.type_changed.connect ((type) => {
                 type_changed (type);
@@ -117,10 +137,6 @@ namespace Spectator.Widgets {
             margin = 0;
         }
 
-        public void update_url_bar (string uri) {
-            req_res_pane.update_url_bar (uri);
-        }
-
         public void set_warning (string message) {
             infobar.message_type = Gtk.MessageType.WARNING;
 
@@ -138,11 +154,6 @@ namespace Spectator.Widgets {
             infobar.revealed = true;
         }
 
-        public void show_request (Models.Request item) {
-            req_res_pane.set_item (item);
-            stack.set_visible_child (req_res_pane);
-        }
-
         public void update_response (Models.Request request) {
             req_res_pane.update_response (request);
             if (infobar.revealed) {
@@ -152,7 +163,7 @@ namespace Spectator.Widgets {
 
         public void reset_infobar () {
             infolabel.label = "";
-                infobar.revealed = false;
+            infobar.revealed = false;
         }
 
         public void update_chunk_response (Models.Request request) {
@@ -176,7 +187,7 @@ namespace Spectator.Widgets {
 
         private void setup_request_signals (RequestResponsePane request) {
             request.url_changed.connect ((url) => {
-                url_changed (url);
+                // this.window.change_url (url);
             });
 
             request.request_activated.connect (() => {
