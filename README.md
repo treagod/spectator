@@ -1,4 +1,6 @@
+
 # Spectator
+[![Build Status](https://travis-ci.com/treagod/spectator.svg?branch=master)](https://travis-ci.com/treagod/spectator)
 
 Spectator is a native application written in Vala using GTK. It's enables you to test the
 API endpoints of your HTTP server.
