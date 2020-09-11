@@ -33,6 +33,7 @@ namespace Spectator.Widgets {
         public signal void key_value_added (Pair item);
         public signal void key_value_removed (Pair item);
         public signal void key_value_updated (Pair item);
+        public signal void request_edit_clicked (uint id);
 
         public void display_request (uint id) {
             this.active_id = id;

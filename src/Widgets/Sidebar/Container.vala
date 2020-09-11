@@ -64,6 +64,7 @@ namespace Spectator.Widgets.Sidebar {
         public signal void item_edited (Models.Request item);
         public signal void selection_changed (Models.Request item); /* Deprecated */
         public signal void request_item_selected (uint id);
+        public signal void request_edit_clicked (uint id);
         public signal void notify_delete ();
         public signal void create_collection_request (uint id);
         public signal void collection_edit (Models.Collection collection);
@@ -122,6 +123,10 @@ namespace Spectator.Widgets.Sidebar {
 
             collection.request_item_selected.connect ((id) => {
                 this.request_item_selected (id);
+            });
+
+            collection.request_edit_clicked.connect ((id) => {
+                request_edit_clicked (id);
             });
 
             stack = new Gtk.Stack ();

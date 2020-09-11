@@ -184,6 +184,23 @@ namespace Spectator {
                 }
             });
 
+            this.sidebar.request_edit_clicked.connect ((id) => {
+                var request = this.request_service.get_request_by_id (id);
+
+                if (request != null) {
+                    var dialog = new Dialogs.Request.UpdateDialog (this, request);
+
+                    dialog.updated.connect ((request) => {
+                        /* TODO: save/update machinism that is not executed on the model itself */
+                        this.sidebar.show_items ();
+                        this.sidebar.select_request (request.id);
+                        this.display_request (request);
+                    });
+
+                    dialog.show_all ();
+                }
+            });
+
             this.sidebar.create_collection_request.connect ((id) => {
                 var collection = this.collection_service.get_collection_by_id (id);
 
