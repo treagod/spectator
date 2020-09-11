@@ -156,9 +156,10 @@ namespace Spectator.Widgets.Sidebar {
         private Gtk.Label url;
         uint id;
 
-        public signal bool button_event (Gdk.EventButton event);
-        public signal void item_deleted (Models.Request item);
-        public signal void item_edit (Models.Request item);
+        public signal void clicked ();
+        public signal void delete_clicked ();
+        public signal void edit_clicked ();
+        public signal void clone_clicked ();
 
         private string get_method_label (Models.Method method) {
             var dark_theme = Gtk.Settings.get_default ().gtk_application_prefer_dark_theme;
@@ -261,8 +262,43 @@ namespace Spectator.Widgets.Sidebar {
         }
 
         private void create_box_menu () {
-            item_box.button_release_event.connect ((event) => {
-                return button_event (event);
+            this.item_box.button_release_event.connect ((event) => {
+                var result = false;
+                switch (event.button) {
+                    case 1:
+                        result = true;
+                        this.clicked ();
+                        break;
+                    case 3:
+                        var menu = new Gtk.Menu ();
+                        var edit_item = new Gtk.MenuItem.with_label (_("Edit"));
+                        var clone_item = new Gtk.MenuItem.with_label (_("Clone"));
+                        var delete_item = new Gtk.MenuItem.with_label (_("Delete"));
+
+                        edit_item.activate.connect (() => {
+                            this.edit_clicked ();
+                        });
+
+                        clone_item.activate.connect (() => {
+                            this.clone_clicked ();
+                        });
+
+                        delete_item.activate.connect (() => {
+                            this.delete_clicked ();
+                        });
+
+                        menu.add (edit_item);
+                        menu.add (clone_item);
+                        menu.add (delete_item);
+                        menu.show_all ();
+                        menu.popup_at_pointer (event);
+
+                        result = true;
+                        break;
+                    default:
+                        break;
+                }
+                return result;
             });
         }
 

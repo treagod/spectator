@@ -156,18 +156,9 @@ namespace Spectator.Widgets.Sidebar.Collection {
             this.add (request_list_item);
             this.request_items[request.id] = request_list_item;
 
-            request_list_item.button_event.connect ((event) => {
-                var result = false;
-                switch (event.button) {
-                    case 1:
-                        select_request (request.id);
-                        result = true;
-                        this.request_item_selected (request.id);
-                        break;
-                    default:
-                        break;
-                }
-                return result;
+            request_list_item.clicked.connect (() => {
+                select_request (request.id);
+                this.request_item_selected (request.id);
             });
             show_all();
         }
