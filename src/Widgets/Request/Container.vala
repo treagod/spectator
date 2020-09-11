@@ -40,11 +40,9 @@ namespace Spectator.Widgets.Request {
 
         public signal void response_received (ResponseItem it);
         public signal void type_changed (RequestBody.ContentType type);
+        public signal void content_changed (string content);
         public signal void body_buffer_changed (string content);
         public signal void script_changed (string script);
-        public signal void key_value_added (Pair item);
-        public signal void key_value_removed (Pair item);
-        public signal void key_value_updated (Pair item);
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -58,40 +56,57 @@ namespace Spectator.Widgets.Request {
             this.body_view = create_body_view ();
             this.scripting_view = new Spectator.Widgets.Request.Scripting.Container ();
 
-            scripting_view.script_changed.connect ((script) => {
-                script_changed (script);
+            this.scripting_view.script_changed.connect ((script) => {
+                this.script_changed (script);
             });
 
-            init_stack ();
+            this.init_stack ();
 
-            add (url_entry);
+            this.add (url_entry);
 
             var header_params_label = new Gtk.Label (_("Headers"));
             var url_params_label = new Gtk.Label (_("Parameters"));
-            body_label = new Gtk.Label (_("Body"));
             var script_label = new Gtk.Label (_("Script"));
+            this.body_label = new Gtk.Label (_("Body"));
 
-            setup_tabs (header_params_label, url_params_label, body_label, script_label);
+            this.setup_tabs (header_params_label, url_params_label, body_label, script_label);
 
-            body_label.sensitive = false;
+            this.body_label.sensitive = false;
 
-            stack.set_visible_child_name ("header");
+            this.stack.set_visible_child_name ("header");
 
-            add (tabs);
-            add (stack);
-            show_all ();
+            this.add (tabs);
+            this.add (stack);
+            this.show_all ();
+        }
+
+        public void set_url_entry (string request_url) {
+            this.url_entry.set_text (request_url);
+        }
+
+        public void set_request_body (RequestBody body) {
+            this.body_view.body_type_box.active = body.type;
         }
 
         public void set_request_url (string request_url) {
-            url_entry.set_text (request_url);
+            this.url_entry.set_text (request_url);
+            this.url_params_view.change_rows (this.convert_query_to_pairs (request_url));
         }
 
         public void set_request_method (Models.Method method) {
-            url_entry.set_method (method);
+            this.url_entry.set_method (method);
         }
 
         public void set_script (string script) {
             this.scripting_view.update_script_buffer (script);
+        }
+
+        public void set_body (RequestBody body) {
+            this.body_view.set_content (body.content, body.type);
+        }
+
+        public void reset_body () {
+            this.body_view.reset_content ();
         }
 
         public void set_headers(Gee.ArrayList<Pair> headers) {
@@ -113,12 +128,42 @@ namespace Spectator.Widgets.Request {
             return header_view;
         }
 
+        private Gee.ArrayList<Pair> convert_query_to_pairs (string url) {
+            var query_pairs = new Gee.ArrayList<Pair> ();
+            var query_sep = url.index_of ("?");
+
+            // Only do something if there is a '?'
+            if (query_sep >= 0) {
+                var query = url.substring (query_sep + 1);
+
+                if (query.strip ().length > 0) {
+                    var parameters = query.split ("&");
+
+                    foreach (var param in parameters) {
+                        if (param.strip ().length == 0) continue;
+                        var key_value = param.split ("=");
+
+                        // When there is a equal sign in the string, add key and value
+                        // Otherwise add the string as key and an empty string as value
+                        if (key_value.length > 1) {
+                            query_pairs.add(new Pair(key_value[0], key_value[1]));
+                        } else {
+                            query_pairs.add(new Pair(key_value[0], ""));
+                        }
+                    }
+                }
+            }
+
+            return query_pairs;
+        }
+
         private UrlEntry create_url_entry () {
             var url_entry = new UrlEntry ();
             url_entry.margin_bottom = 10;
 
             url_entry.url_changed.connect ((url) => {
                 url_changed (url);
+                this.url_params_view.change_rows (this.convert_query_to_pairs (url));
             });
 
             url_entry.method_changed.connect ((method) => {
@@ -154,12 +199,6 @@ namespace Spectator.Widgets.Request {
                 url_params_updated (items);
             });
 
-            url_params_view.item_added.connect ((url_param) => {
-            });
-
-            url_params_view.item_deleted.connect ((url_param) => {
-            });
-
             return url_params_view;
         }
 
@@ -170,20 +209,8 @@ namespace Spectator.Widgets.Request {
                 type_changed (type);
             });
 
-            body_view.body_buffer_changed.connect ((content) => {
-                body_buffer_changed (content);
-            });
-
-            body_view.key_value_added.connect ((item) => {
-                key_value_added (item);
-            });
-
-            body_view.key_value_updated.connect ((item) => {
-                key_value_updated (item);
-            });
-
-            body_view.key_value_removed.connect ((item) => {
-                key_value_removed (item);
+            body_view.content_changed.connect ((content) => {
+                this.content_changed (content);
             });
 
             return body_view;

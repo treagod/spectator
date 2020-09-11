@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -22,12 +22,17 @@
 namespace Spectator {
     public class RequestBody {
         public ContentType type;
+        /* Deprecated */
         public Gee.ArrayList<Pair> form_data { get; private set; }
+        /* Deprecated */
         public Gee.ArrayList<Pair> urlencoded { get; private set; }
+        /* Deprecated */
         public string raw;
+        public string content;
 
         public RequestBody () {
             raw = "";
+            this.content = "";
             type = FORM_DATA;
             form_data = new Gee.ArrayList<Pair> ();
             urlencoded = new Gee.ArrayList<Pair> ();

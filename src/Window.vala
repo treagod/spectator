@@ -149,6 +149,8 @@ namespace Spectator {
             this.content = new Widgets.Content (this);
             this.content.hexpand = true;
 
+            this.setup_content_events ();
+
             this.sidebar = new Widgets.Sidebar.Container (this);
             sidebar.hexpand = false;
 
@@ -160,7 +162,18 @@ namespace Spectator {
             this.add (paned);
         }
 
+        private void setup_content_events () {
+            this.content.url_changed.connect ((url) => {
+                this.sidebar.update_active_url (url);
+            });
+
+            this.content.method_changed.connect ((method) => {
+                this.sidebar.update_active_method (method);
+             });
+        }
+
         private void setup_sidebar_events () {
+            /* Adds visual look to selected item, clearing previous selected item (if any) */
             this.sidebar.request_item_selected.connect ((id) => {
                 var request = this.request_service.get_request_by_id (id);
 
@@ -168,6 +181,22 @@ namespace Spectator {
                     this.display_request (request);
                 } else {
                     error ("Not able to find request with id %u\n", id);
+                }
+            });
+
+            this.sidebar.create_collection_request.connect ((id) => {
+                var collection = this.collection_service.get_collection_by_id (id);
+
+                if (collection != null) {
+                    var dialog = new Dialogs.Request.CreateDialogWithCollection (this, collection);
+
+                    dialog.creation.connect ((request) => {
+                        this.request_service.add_request (request);
+                        this.collection_service.add_request_to_collection (id, request.id);
+                        this.sidebar.show_items ();
+                    });
+
+                    dialog.show_all ();
                 }
             });
         }

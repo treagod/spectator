@@ -99,9 +99,9 @@ namespace Spectator.Widgets.Request {
             });
 
             del_button.clicked.connect (() => {
-                item_deleted (field.item);
                 rows.remove (field);
                 rows.remove (del_button);
+                item_deleted (field.item);
             });
 
             rows.attach (field, 0, (int) id, 1, 1);

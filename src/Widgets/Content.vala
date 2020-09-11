@@ -33,7 +33,6 @@ namespace Spectator.Widgets {
         public async signal void request_activated ();
         public signal void cancel_process ();
         public signal void type_changed (RequestBody.ContentType type);
-        public signal void body_buffer_changed (string content);
         public signal void script_changed (string script);
 
         public signal void item_changed (Models.Request item);
@@ -83,10 +82,6 @@ namespace Spectator.Widgets {
 
             req_res_pane.type_changed.connect ((type) => {
                 type_changed (type);
-            });
-
-            req_res_pane.body_buffer_changed.connect ((content) => {
-                body_buffer_changed (content);
             });
 
             req_res_pane.script_changed.connect ((script) => {
@@ -177,17 +172,13 @@ namespace Spectator.Widgets {
             req_res_pane.update_status (request);
         }
 
-        public void update_url_params (Models.Request item) {
-            req_res_pane.update_url_params (item);
-        }
-
         public Services.ScriptWriter get_console_writer () {
             return req_res_pane.get_console_writer ();
         }
 
         private void setup_request_signals (RequestResponsePane request) {
             request.url_changed.connect ((url) => {
-                // this.window.change_url (url);
+                url_changed (url);
             });
 
             request.request_activated.connect (() => {

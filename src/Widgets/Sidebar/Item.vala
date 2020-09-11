@@ -186,14 +186,6 @@ namespace Spectator.Widgets.Sidebar {
             }
         }
 
-        public void repaint () {
-            var idx = method.label.index_of (">");
-            var substr = method.label.substring(idx + 1);
-            var method_str = substr.split ("<")[0];
-            method.label = get_method_label (Models.Method.convert_from_string (method_str));
-            show_all ();
-        }
-
         public RequestListItem (uint id, string name, string request_url, Models.Method request_method) {
             this.id = id;
             item_box = new Gtk.EventBox ();
@@ -244,6 +236,20 @@ namespace Spectator.Widgets.Sidebar {
 
         public void set_url (string request_url) {
             set_formatted_uri (request_url);
+            show_all ();
+        }
+
+        public void set_method (Models.Method m) {
+            method.label = get_method_label (m);
+            show_all ();
+        }
+
+        public void repaint () {
+            var idx = method.label.index_of (">");
+            var substr = method.label.substring(idx + 1);
+            var method_str = substr.split ("<")[0];
+            method.label = get_method_label (Models.Method.convert_from_string (method_str));
+            show_all ();
         }
 
         private void set_formatted_uri (string request_url) {

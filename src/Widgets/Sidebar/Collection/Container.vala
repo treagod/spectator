@@ -26,7 +26,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public signal void item_deleted (Models.Request request);
         public signal void item_clicked (Item item); /* Deprecated? */
         public signal void request_item_selected (uint id);
-        public signal void create_collection_request (Models.Collection collection);
+        public signal void create_collection_request (uint id);
         public signal void collection_edit (Models.Collection collection);
         public signal void collection_delete (Models.Collection collection);
 
@@ -62,60 +62,52 @@ namespace Spectator.Widgets.Sidebar.Collection {
             });
         }
 
-        public void change_active (Models.Request request) {
-            if (active_item != null) {
-                active_item.get_style_context ().remove_class ("active");
-                active_item = null;
-            }
-
-            @foreach ((child) => {
-                var dropdown = (Dropdown) child;
-                var item = dropdown.get_item (request);
-
-                if (item != null) {
-                    active_item = item;
-                    active_item.get_style_context ().add_class ("active");
-                    return;
-                }
-            });
-        }
-
         public void unselect_all () {
             @foreach ((child) => {
                 var dropdown = (Dropdown) child;
 
                 dropdown.unselect_all ();
-                if (!dropdown.collection.items_visible) {
-                    dropdown.expanded = false;
-                }
+                //  if (!dropdown.collection.items_visible) {
+                //      dropdown.expanded = false;
+                //  }
             });
         }
 
-        public void update_active_url () {
+        public void update_active_method (Models.Method method) {
+            var active_item = this.request_items[active_id];
+
             if (active_item != null) {
-                active_item.update_url ();
+                active_item.set_method (method);
             }
         }
 
-        public void adjust_visibility () {
-            foreach (var child in get_children ()) {
-                var dropdown = (Dropdown) child;
-                dropdown.adjust_visibility ();
+        public void update_active_url (string url) {
+            var active_item = this.request_items[active_id];
+
+            if (active_item != null) {
+                active_item.set_url (url);
             }
         }
 
-        public void update (Models.Collection collection) {
-            foreach (var child in get_children ()) {
-                var dropdown = (Dropdown) child;
+        //  public void adjust_visibility () {
+        //      foreach (var child in get_children ()) {
+        //          var dropdown = (Dropdown) child;
+        //          dropdown.adjust_visibility ();
+        //      }
+        //  }
 
-                if (dropdown.collection == collection) {
-                    dropdown.update ();
-                    break;
-                }
-            }
-        }
+        //  public void update (Models.Collection collection) {
+        //      foreach (var child in get_children ()) {
+        //          var dropdown = (Dropdown) child;
 
-        /* Adds active css-class to a  */
+        //          if (dropdown.collection == collection) {
+        //              dropdown.update ();
+        //              break;
+        //          }
+        //      }
+        //  }
+
+        /* Adds active css-class to selected item */
         public void select_request (uint id) {
             if (this.request_items.has_key (id)) {
                 if (this.active_id != null) {
@@ -141,6 +133,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                     var request = this.window.request_service.get_request_by_id (entry.id);
 
                     if (request != null) {
+                        if (request.collection_id != null) continue;
                         this.add_request (request);
                     } else {
                         error ("NO REQUEST FOUND\n");
@@ -169,7 +162,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                     case 1:
                         select_request (request.id);
                         result = true;
-                        request_item_selected (request.id);
+                        this.request_item_selected (request.id);
                         break;
                     default:
                         break;
@@ -186,6 +179,11 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 item_edit (request);
             });
 
+            dropdown.request_item_selected.connect ((id) => {
+                this.select_request (id);
+                this.request_item_selected (id);
+            });
+
             dropdown.item_clone.connect ((request) => {
                 item_clone (request);
             });
@@ -194,17 +192,8 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 item_deleted (request);
             });
 
-            dropdown.item_clicked.connect ((item) => {
-                if (active_item != null) {
-                    active_item.get_style_context ().remove_class ("active");
-                }
-                active_item = item;
-                active_item.get_style_context ().add_class ("active");
-                item_clicked (item);
-            });
-
-            dropdown.create_collection_request.connect ((collection) => {
-                create_collection_request (collection);
+            dropdown.create_collection_request.connect ((collection_id) => {
+                this.create_collection_request (collection_id);
             });
 
             dropdown.collection_edit.connect ((collection) => {
@@ -212,20 +201,20 @@ namespace Spectator.Widgets.Sidebar.Collection {
             });
 
             dropdown.collection_delete.connect ((collection) => {
-                collection_delete (collection);
                 dropdown.destroy ();
                 remove (dropdown);
+                collection_delete (collection);
             });
 
-            dropdown.active_item_changed.connect ((item) => {
-                if (active_item != null) {
-                    active_item.get_style_context ().remove_class ("active");
+            foreach (var request_id in collection.request_ids) {
+                var request = this.window.request_service.get_request_by_id (request_id);
+
+                if (request != null) {
+                    this.request_items[request.id] = dropdown.add_request (request);
                 }
-                active_item = item;
-                active_item.get_style_context ().add_class ("active");
-            });
+            }
 
-            add (dropdown);
+            this.add (dropdown);
         }
     }
 }

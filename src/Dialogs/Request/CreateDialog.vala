@@ -94,7 +94,7 @@ namespace Spectator.Dialogs.Request {
             } else {
                 var index = method_box.get_active ();
                 var request = new Models.Request (name, Models.Method.convert (index));
-                collection.add_request (request);
+                // collection.add_request (request);
                 creation (request);
                 destroy ();
             }

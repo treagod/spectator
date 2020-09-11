@@ -63,11 +63,11 @@ namespace Spectator.Dialogs.Request {
                     collections.foreach ((collection) => {
                         if (collection.id != item.collection_id) return true; // Continue
 
-                        collection.remove_request (item);
+                        //collection.remove_request (item);
                         return false;
                     });
 
-                    selected_collection.add_request (item);
+                    // selected_collection.add_request (item);
                 }
                 switch (id) {
                 case Gtk.ResponseType.APPLY:

@@ -66,7 +66,7 @@ namespace Spectator.Services {
 
             foreach (var request_item in request_items.get_elements ()) {
                 var request = deserialize_item_v1 (request_item.get_object ());
-                collection.add_request (request);
+                // collection.add_request (request);
                 request_loaded (request);
             }
         }
@@ -138,7 +138,7 @@ namespace Spectator.Services {
                     foreach (var collection in collections) {
                         if (collection.id == request.collection_id) {
                             collection_not_found = false;
-                            collection.add_request (request);
+                            // collection.add_request (request);
                             break;
                         }
                     }

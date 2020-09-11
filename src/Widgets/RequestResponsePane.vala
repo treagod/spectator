@@ -29,7 +29,6 @@ namespace Spectator.Widgets {
         private uint active_id;
 
         public signal void type_changed (RequestBody.ContentType type);
-        public signal void body_buffer_changed (string content);
         public signal void script_changed (string script);
         public signal void key_value_added (Pair item);
         public signal void key_value_removed (Pair item);
@@ -48,6 +47,7 @@ namespace Spectator.Widgets {
                 this.request_view.set_request_method (request.method);
                 this.request_view.set_script (request.script_code);
                 this.request_view.set_headers (request.headers);
+                this.request_view.set_body (request.request_body);
 
                 if (request.response != null) {
                     //
@@ -66,8 +66,34 @@ namespace Spectator.Widgets {
                 response_view.update (res);
             });
 
-            request_view.url_params_updated.connect ((items) => {
-                url_params_updated (items);
+            request_view.url_params_updated.connect ((query_pairs) => {
+                var request = this.window.request_service.get_request_by_id (active_id);
+
+                if (request != null) {
+                    this.url_changed (request.uri);
+                    var query_builder = new StringBuilder ();
+                    var first = true;
+
+                    foreach (var pair in query_pairs) {
+                        if (first) {
+                            first = false;
+                        } else {
+                            if (pair.key.strip ().length > 0) {
+                                query_builder.append ("&");
+                            }
+                        }
+                        if (pair.key.strip ().length > 0) {
+                            query_builder.append ("%s=%s".printf (pair.key, pair.val));
+                        }
+                    }
+
+                    var query_string = query_builder.str;
+
+                    if (query_string.length > 0) {
+                        request.query = query_builder.str;
+                        this.request_view.set_url_entry (request.uri);
+                    }
+                }
             });
 
             request_view.url_changed.connect ((url) => {
@@ -75,6 +101,7 @@ namespace Spectator.Widgets {
 
                 if (request != null) {
                     request.uri = url; // TODO: This allready saves the request, which should be explicit
+                    url_changed (url);
                 }
             });
 
@@ -82,8 +109,12 @@ namespace Spectator.Widgets {
                 cancel_process ();
             });
 
-            request_view.body_buffer_changed.connect ((content) => {
-                body_buffer_changed (content);
+            request_view.content_changed.connect ((content) => {
+                var request = this.window.request_service.get_request_by_id (active_id);
+
+                if (request != null) {
+                    request.request_body.content = content; // TODO: This allready saves the request, which should be explicit
+                }
             });
 
             request_view.request_activated.connect (() => {
@@ -91,11 +122,15 @@ namespace Spectator.Widgets {
             });
 
             request_view.method_changed.connect ((method) => {
-                method_changed (method);
+                var request = this.window.request_service.get_request_by_id (active_id);
+
+                if (request != null) {
+                    request.method = method; // TODO: This allready saves the request, which should be explicit
+                    method_changed (method);
+                }
             });
 
             request_view.header_added.connect ((header) => {
-                header_added (header);
                 var request = this.window.request_service.get_request_by_id (active_id);
 
                 if (request != null) {
@@ -104,7 +139,11 @@ namespace Spectator.Widgets {
             });
 
             request_view.script_changed.connect ((script) => {
-                script_changed (script);
+                var request = this.window.request_service.get_request_by_id (active_id);
+
+                if (request != null) {
+                    request.script_code = script;
+                }
             });
 
             request_view.header_deleted.connect ((header) => {
@@ -117,27 +156,39 @@ namespace Spectator.Widgets {
             });
 
             request_view.type_changed.connect ((type) => {
-                type_changed (type);
-            });
+                var request = this.window.request_service.get_request_by_id (active_id);
 
-            request_view.key_value_added.connect ((item) => {
-                key_value_added (item);
-            });
+                if (request != null) {
+                    if (type != request.request_body.type && request.request_body.content.length > 0) {
+                        var message_dialog = new Granite.MessageDialog.with_image_from_icon_name (
+                             _("Are you sure you want to change the type?"),
+                             _("This action will delete the current body content. Proceed changing the body type?"),
+                             "dialog-warning",
+                             Gtk.ButtonsType.CANCEL
+                        );
+                        message_dialog.transient_for = this.window;
 
-            request_view.key_value_updated.connect ((item) => {
-                key_value_updated (item);
-            });
+                        var suggested_button = new Gtk.Button.with_label (_("Change Type"));
+                        suggested_button.get_style_context ().add_class (Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION);
+                        message_dialog.add_action_widget (suggested_button, Gtk.ResponseType.ACCEPT);
 
-            request_view.key_value_removed.connect ((item) => {
-                key_value_removed (item);
+                        message_dialog.show_all ();
+                        if (message_dialog.run () == Gtk.ResponseType.ACCEPT) {
+                            request.request_body.content = "";
+                            request.request_body.type = type;
+                            request_view.reset_body ();
+                        }
+
+                        message_dialog.destroy ();
+                    } else {
+                        request.request_body.type = type;
+                    }
+                }
+                request_view.set_request_body (request.request_body);
             });
 
             pack1 (request_view, true, false);
             pack2 (response_view, true, false);
-        }
-
-        public void update_url_params (Models.Request item) {
-            request_view.update_url_params (item);
         }
 
         public Services.ScriptWriter get_console_writer () {

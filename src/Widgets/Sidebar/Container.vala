@@ -65,7 +65,7 @@ namespace Spectator.Widgets.Sidebar {
         public signal void selection_changed (Models.Request item); /* Deprecated */
         public signal void request_item_selected (uint id);
         public signal void notify_delete ();
-        public signal void create_collection_request (Models.Collection collection);
+        public signal void create_collection_request (uint id);
         public signal void collection_edit (Models.Collection collection);
         public signal void collection_delete (Models.Collection collection);
 
@@ -109,12 +109,12 @@ namespace Spectator.Widgets.Sidebar {
             });
 
             history.item_clicked.connect ((item) => {
-                selection_changed (item.item);
-                collection.change_active (item.item);
+                //  selection_changed (item.item);
+                //  collection.select_request (item.item);
             });
 
-            collection.create_collection_request.connect ((collection) => {
-                create_collection_request (collection);
+            collection.create_collection_request.connect ((collection_id) => {
+                create_collection_request (collection_id);
             });
 
             collection.collection_edit.connect ((collection) => {
@@ -188,21 +188,18 @@ namespace Spectator.Widgets.Sidebar {
         }
 
         public void update_active_method (Models.Method method) {
-            var sidebar_item = get_active ();
-
-            if (sidebar_item != null) {
-                sidebar_item.item.method = method;
-            }
+            collection.update_active_method (method);
+            //history.update_active_url ();
         }
 
-        public void update_active_url () {
-            collection.update_active_url ();
-            history.update_active_url ();
+        public void update_active_url (string url) {
+            collection.update_active_url (url);
+            //history.update_active_url ();
         }
 
-        public void update_collection (Models.Collection col) {
-            collection.update (col);
-        }
+        //  public void update_collection (Models.Collection col) {
+        //      collection.update (col);
+        //  }
 
         public void update_active () {
             Sidebar.Item? sidebar_item = get_active ();
