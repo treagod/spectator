@@ -20,134 +20,6 @@
 */
 
 namespace Spectator.Widgets.Sidebar {
-    public class Item : Gtk.FlowBoxChild {
-        static string no_url = "<small><i>" + (_("No URL specified")) + "</i></small>";
-        Gtk.EventBox item_box { get; set;}
-        Gtk.Label method;
-        Gtk.Label request_name;
-        Gtk.Label url;
-        public Models.Request item { get; set; }
-
-        public signal bool button_event (Gdk.EventButton event);
-
-        public signal void item_clicked ();
-        public signal void item_deleted (Models.Request item);
-        public signal void item_edit (Models.Request item);
-
-        private string get_method_label (Models.Method method) {
-            var dark_theme = Gtk.Settings.get_default ().gtk_application_prefer_dark_theme;
-            switch (method) {
-                case Models.Method.GET:
-                    var color = dark_theme ? "64baff" : "0d52bf";
-                    return "<span color=\"#" + color + "\">GET</span>";
-                case Models.Method.POST:
-                    var color = dark_theme ? "9bdb4d" : "3a9104";
-                    return "<span color=\"#" + color + "\">POST</span>";
-                case Models.Method.PUT:
-                    var color = dark_theme ? "ffe16b" : "ad5f00";
-                    return "<span color=\"#" + color + "\">PUT</span>";
-                case Models.Method.PATCH:
-                    var color = dark_theme ? "ffa154" : "cc3b02";
-                    return "<span color=\"#" + color + "\">PATCH</span>";
-                case Models.Method.DELETE:
-                    var color = dark_theme ? "ed5353" : "a10705";
-                    return "<span color=\"#" + color + "\">DELETE</span>";
-                case Models.Method.HEAD:
-                    var color = dark_theme ? "ad65d6" : "4c158a";
-                    return "<span color=\"#" + color + "\">HEAD</span>";
-                default:
-                    assert_not_reached ();
-            }
-        }
-
-        public Item (Models.Request it) {
-            item = it;
-
-            //TODO: make it more explicit, i.e. trigger refresh from controller
-            item.notify.connect (() => {
-                refresh ();
-            });
-            item_box = new Gtk.EventBox ();
-            var info_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-
-            request_name = new Gtk.Label (item.name);
-            request_name.halign = Gtk.Align.START;
-            request_name.ellipsize = Pango.EllipsizeMode.END;
-
-            url = new Gtk.Label ("");
-            url.halign = Gtk.Align.START;
-            url.use_markup = true;
-            url.ellipsize = Pango.EllipsizeMode.END;
-
-            set_formatted_uri (item.uri);
-
-            info_box.add (request_name);
-            info_box.add (url);
-            info_box.has_tooltip = true;
-
-            info_box.query_tooltip.connect ((x, y, keyboard_tooltip, tooltip) => {
-                if (item.uri == "") {
-                    return false;
-                }
-                tooltip.set_text (item.uri);
-                return true;
-            });
-
-            create_box_menu ();
-
-            method = new Gtk.Label (get_method_label (item.method));
-            method.set_justify (Gtk.Justification.CENTER);
-            method.halign = Gtk.Align.END;
-            method.get_style_context ().add_class ("sidebar-item-method");
-            method.margin_end = 10;
-            method.use_markup = true;
-
-            var container = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
-            container.margin = 4;
-
-            container.pack_start (info_box, true, true, 0);
-            container.pack_end (method, true, true, 2);
-
-            item_box.add (container);
-
-            add (item_box);
-        }
-
-        public void update_url () {
-            set_formatted_uri (item.uri);
-        }
-
-        public void refresh () {
-            method.label = get_method_label (item.method);
-            request_name.label = item.name;
-            set_formatted_uri (item.uri);
-            show_all ();
-        }
-
-        private void set_formatted_uri (string uri) {
-            if (item.uri.length > 0) {
-                url.label = "<small><i>" + escape_url (uri) + "</i></small>";
-            } else {
-                url.label = no_url;
-            }
-        }
-
-        private void create_box_menu () {
-            item_box.button_release_event.connect ((event) => {
-                return button_event (event);
-            });
-        }
-
-        private string escape_url (string url) {
-            var escaped_url = url;
-            escaped_url = escaped_url.replace ("&", "&amp;");
-            escaped_url = escaped_url.replace ("\"", "&quot;");
-            escaped_url = escaped_url.replace ("<", "&lt;");
-            escaped_url = escaped_url.replace (">", "&gt;");
-            return escaped_url;
-        }
-    }
-
     public class RequestListItem : Gtk.FlowBoxChild {
         static string no_url = "<small><i>" + (_("No URL specified")) + "</i></small>";
         private Gtk.EventBox item_box { get; set;}
@@ -211,7 +83,7 @@ namespace Spectator.Widgets.Sidebar {
                 if (url.label == "") {
                     return false;
                 }
-                tooltip.set_text (url.label);
+                tooltip.set_markup (url.label);
                 return true;
             });
 

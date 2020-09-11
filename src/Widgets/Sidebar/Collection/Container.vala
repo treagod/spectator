@@ -24,13 +24,11 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public signal void item_edit (Models.Request request);
         public signal void item_clone (Models.Request request);
         public signal void item_deleted (Models.Request request);
-        public signal void item_clicked (Item item); /* Deprecated? */
         public signal void request_item_selected (uint id);
         public signal void create_collection_request (uint id);
         public signal void collection_edit (Models.Collection collection);
         public signal void collection_delete (Models.Collection collection);
 
-        public Item? active_item { get; private set; }
         public uint? active_id { get; private set; }
         private Gee.HashMap<uint, RequestListItem> request_items;
         private Spectator.Window window;
@@ -52,7 +50,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                         var dropdown = (Dropdown) child;
 
                         dropdown.each_item ((item) => {
-                            item.refresh ();
+                            item.repaint ();
                         });
                     } else if (child is RequestListItem) {
                         var list_item = (RequestListItem) child;

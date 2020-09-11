@@ -103,11 +103,6 @@ namespace Spectator.Widgets.Sidebar {
                 item_deleted (request);
             });
 
-            collection.item_clicked.connect ((item) => {
-                selection_changed (item.item);
-                history.change_active (item.item);
-            });
-
             history.item_clicked.connect ((item) => {
                 //  selection_changed (item.item);
                 //  collection.select_request (item.item);
@@ -201,30 +196,8 @@ namespace Spectator.Widgets.Sidebar {
         //      collection.update (col);
         //  }
 
-        public void update_active () {
-            Sidebar.Item? sidebar_item = get_active ();
-
-            if (sidebar_item != null) {
-                sidebar_item.refresh ();
-            }
-        }
-
         public void history_delete (Models.Request request) {
             history.delete_request (request);
-        }
-
-        private Sidebar.Item? get_active () {
-            return collection.active_item;
-        }
-
-        public Models.Request? get_active_item () {
-            var sidebar_item = get_active ();
-
-            if (sidebar_item != null) {
-                return sidebar_item.item;
-            }
-
-            return null;
         }
 
         public void unselect_all () {

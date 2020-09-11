@@ -21,7 +21,7 @@
 
 namespace Spectator.Widgets.Sidebar.History {
     public class DateBox : Gtk.Box {
-        public delegate void ItemIterator (Item item);
+        public delegate void ItemIterator (RequestListItem item);
         private Gtk.Box items;
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -41,7 +41,7 @@ namespace Spectator.Widgets.Sidebar.History {
 
         public void each_item (ItemIterator iter) {
             items.foreach ((it) => {
-                var item = (Item) it;
+                var item = (RequestListItem) it;
 
                 iter (item);
             });
@@ -52,14 +52,15 @@ namespace Spectator.Widgets.Sidebar.History {
         }
 
         public void unselect_all () {
+            /* use this.each */
             items.foreach ((it) => {
-                var item = (Item) it;
+                var item = (RequestListItem) it;
 
                 item.get_style_context ().remove_class ("active");
             });
         }
 
-        public void add_item (Item item) {
+        public void add_item (RequestListItem item) {
             items.add (item);
         }
 
@@ -73,28 +74,28 @@ namespace Spectator.Widgets.Sidebar.History {
             return false;
         }
 
-        public Item? get_item (Models.Request request) {
-            Item? result = null;
+        public RequestListItem? get_item (Models.Request request) {
+            RequestListItem? result = null;
 
             items.foreach ((it) => {
-                var item = (Item) it;
+                var item = (RequestListItem) it;
 
-                if (item.item == request) {
-                    result = item;
-                    return;
-                }
+                //  if (item.item == request) {
+                //      result = item;
+                //      return;
+                //  }
             });
             return result;
         }
     }
 
     public class Container : Gtk.Box {
-        public signal void item_deleted (Models.Request item);
-        public signal void item_edited (Models.Request item);
-        public signal void item_clicked (Item item);
+        public signal void item_deleted (Models.Request item); /* Deprecated */
+        public signal void item_edited (Models.Request item); /* Deprecated */
+        public signal void item_clicked (RequestListItem item); /* Deprecated */
 
         private Gee.HashMap<string, DateBox> boxes;
-        private Item? active_item;
+        //private Item? active_item;
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -109,16 +110,16 @@ namespace Spectator.Widgets.Sidebar.History {
                 foreach (var entry in boxes.entries) {
                     var date_box = entry.value;
                     date_box.each_item ((item) => {
-                        item.refresh ();
+                        item.repaint ();
                     });
                 }
             });
         }
 
         public void update_active_url () {
-            if (active_item != null) {
-                active_item.update_url ();
-            }
+            //  if (active_item != null) {
+            //      active_item.update_url ();
+            //  }
         }
 
         public void unselect_all () {
@@ -147,41 +148,27 @@ namespace Spectator.Widgets.Sidebar.History {
         }
 
         public void change_active (Models.Request request) {
-            if (active_item != null) {
-                active_item.get_style_context ().remove_class ("active");
-                active_item = null;
-            }
+            //  if (active_item != null) {
+            //      active_item.get_style_context ().remove_class ("active");
+            //      active_item = null;
+            //  }
 
             foreach (var entry in boxes.entries) {
                 var date_box = entry.value;
                 var item = date_box.get_item (request);
 
-                if (item != null) {
-                    active_item = item;
-                    active_item.get_style_context ().add_class ("active");
-                    return;
-                }
+                //  if (item != null) {
+                //      active_item = item;
+                //      active_item.get_style_context ().add_class ("active");
+                //      return;
+                //  }
             }
         }
 
         private void add_history_item (string key_date, Models.Request request) {
-            var item = new Item (request);
-            item.button_event.connect ((event) => {
-                var result = false;
-                switch (event.button) {
-                    case 1:
-                        result = true;
-                        if (active_item != null) {
-                            active_item.get_style_context ().remove_class ("active");
-                        }
-                        active_item = item;
-                        active_item.get_style_context ().add_class ("active");
-                        item_clicked (item);
-                        break;
-                    default:
-                        break;
-                }
-                return result;
+            var item = new RequestListItem (request.id, request.name, request.uri, request.method);
+            item.clicked.connect ((event) => {
+                // Whatever
             });
 
             if (boxes.has_key (key_date)) {

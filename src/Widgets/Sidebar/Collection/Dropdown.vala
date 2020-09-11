@@ -21,7 +21,7 @@
 
 namespace Spectator.Widgets.Sidebar.Collection {
     public class Dropdown : Gtk.Box {
-        public delegate void ItemIterator (Item item);
+        public delegate void ItemIterator (RequestListItem item);
         private static string collection_open_icon = "folder-open";
         private static string collection_closed_icon = "folder";
 
@@ -32,7 +32,6 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public signal void collection_delete (Models.Collection collection);
         public signal void collection_edit (Models.Collection collection);
         public signal void create_collection_request (uint id);
-        public signal void active_item_changed (Item item);
 
         public uint collection_id { get; private set;}
         private Gtk.Label label;
@@ -66,23 +65,10 @@ namespace Spectator.Widgets.Sidebar.Collection {
             label.label = "<b>%s</b>".printf (name);
         }
 
-        public Item? get_item (Models.Request request) {
-            Item? result = null;
-            item_box.foreach ((it) => {
-                var item = (Item) it;
-
-                if (item.item == request) {
-                    result = item;
-                    return;
-                }
-            });
-            return result;
-        }
-
         //TODO: fast abort (bool return or something)
         public void each_item (ItemIterator iter) {
             item_box.foreach ((it) => {
-                var item = (Item) it;
+                var item = (RequestListItem) it;
 
                 iter (item);
             });
@@ -90,7 +76,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
 
         public void unselect_all () {
             item_box.foreach ((it) => {
-                var item = (Item) it;
+                var item = (RequestListItem) it;
 
                 item.get_style_context ().remove_class ("active");
             });
