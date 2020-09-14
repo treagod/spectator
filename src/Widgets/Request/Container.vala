@@ -85,7 +85,7 @@ namespace Spectator.Widgets.Request {
         }
 
         public void set_request_body (RequestBody body) {
-            this.body_view.body_type_box.active = body.type;
+            this.body_view.set_body_type (body.type);
         }
 
         public void set_request_url (string request_url) {
