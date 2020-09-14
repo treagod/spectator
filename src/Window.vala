@@ -124,7 +124,7 @@ namespace Spectator {
                    created request entry and display its content
                 */
                 if (this.request_service.add_request (request)) {
-                    this.sidebar.show_items ();
+                    this.sidebar.show_collection_items ();
                     this.sidebar.select_request (request.id);
                     this.display_request (request);
                 }
@@ -136,7 +136,7 @@ namespace Spectator {
             var dialog = new Dialogs.Collection.CollectionDialog (this);
             dialog.creation.connect ((collection) => {
                 if (this.collection_service.add_collection (collection)) {
-                    this.sidebar.show_items ();
+                    this.sidebar.show_collection_items ();
                 }
             });
             dialog.show_all ();
@@ -201,6 +201,35 @@ namespace Spectator {
                 }
             });
 
+            this.sidebar.request_delete_clicked.connect ((id) => {
+                var request = this.request_service.get_request_by_id (id);
+
+                if (request != null) {
+                    var message_dialog = new Granite.MessageDialog.with_image_from_icon_name (
+                        _("Delete Request?"),
+                        _("This action will permanently delete <b>%s</b>. This can't be undone!".printf (request.name)),
+                        "dialog-warning",
+                        Gtk.ButtonsType.CANCEL
+                   );
+                   message_dialog.transient_for = this;
+
+                   message_dialog.secondary_label.use_markup = true;
+
+                   var suggested_button = new Gtk.Button.with_label (_("Delete Request"));
+                   suggested_button.get_style_context ().add_class (Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION);
+                   message_dialog.add_action_widget (suggested_button, Gtk.ResponseType.ACCEPT);
+
+                   message_dialog.show_all ();
+                   if (message_dialog.run () == Gtk.ResponseType.ACCEPT) {
+                    this.request_service.delete_request (id);
+                    this.sidebar.show_items ();
+                    this.content.show_welcome ();
+                   }
+
+                   message_dialog.destroy ();
+                }
+            });
+
             this.sidebar.create_collection_request.connect ((id) => {
                 var collection = this.collection_service.get_collection_by_id (id);
 
@@ -210,7 +239,7 @@ namespace Spectator {
                     dialog.creation.connect ((request) => {
                         this.request_service.add_request (request);
                         this.collection_service.add_request_to_collection (id, request.id);
-                        this.sidebar.show_items ();
+                        this.sidebar.show_collection_items ();
                     });
 
                     dialog.show_all ();

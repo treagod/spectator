@@ -90,12 +90,16 @@ namespace Spectator.Widgets.Sidebar.History {
     }
 
     public class Container : Gtk.Box {
-        public signal void item_deleted (Models.Request item); /* Deprecated */
-        public signal void item_edited (Models.Request item); /* Deprecated */
-        public signal void item_clicked (RequestListItem item); /* Deprecated */
-
         private Gee.HashMap<string, DateBox> boxes;
-        //private Item? active_item;
+        private Spectator.Window window;
+
+        /* Create Interface for History/Collection.Container ?? */
+        public uint? active_id { get; private set; }
+        private Gee.HashMap<uint, RequestListItem> request_items;
+
+        public signal void request_item_selected (uint id);
+        public signal void request_edit_clicked (uint id);
+        public signal void request_delete_clicked (uint id);
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -103,8 +107,10 @@ namespace Spectator.Widgets.Sidebar.History {
             expand = false;
         }
 
-        public Container () {
-            boxes = new Gee.HashMap<string, DateBox> ();
+        public Container (Spectator.Window window) {
+            this.window = window;
+            this.request_items = new Gee.HashMap<uint, RequestListItem> ();
+            this.boxes = new Gee.HashMap<string, DateBox> ();
             get_style_context ().add_class ("history-box");
             Settings.get_instance ().theme_changed.connect (() => {
                 foreach (var entry in boxes.entries) {
@@ -116,72 +122,62 @@ namespace Spectator.Widgets.Sidebar.History {
             });
         }
 
-        public void update_active_url () {
-            //  if (active_item != null) {
-            //      active_item.update_url ();
-            //  }
-        }
-
-        public void unselect_all () {
-            foreach (var entry in boxes.entries) {
-                var date_box = entry.value;
-                date_box.unselect_all ();
-            }
-        }
-
-        public void delete_request (Models.Request request) {
-            foreach (var entry in boxes.entries) {
-                var date_box = entry.value;
-
-                // If the request item was deleted check if for the
-                // date box are any children left. If none, delete box
-                // Skip other boxes if deletion was succesfull
-                if (date_box.delete_request (request)) {
-                    if (date_box.item_size () == 0) {
-                        boxes.unset (entry.key);
-                        remove (date_box);
-                        date_box.destroy ();
-                    }
-                    return;
+        public void show_items () {
+            this.clear ();
+            foreach (var request in this.window.request_service.get_requests ()) {
+                if (request.last_sent != null) {
+                    this.add_request (request);
                 }
             }
         }
 
-        public void change_active (Models.Request request) {
-            //  if (active_item != null) {
-            //      active_item.get_style_context ().remove_class ("active");
-            //      active_item = null;
-            //  }
+        /* Common function with Collection.Container */
+        public void select_request (uint id) {
+            if (this.request_items.has_key (id)) {
+                if (this.active_id != null) {
+                    this.request_items[this.active_id].get_style_context ().remove_class ("active");
+                }
 
-            foreach (var entry in boxes.entries) {
-                var date_box = entry.value;
-                var item = date_box.get_item (request);
-
-                //  if (item != null) {
-                //      active_item = item;
-                //      active_item.get_style_context ().add_class ("active");
-                //      return;
-                //  }
+                var request_item = this.request_items[id];
+                request_item.get_style_context ().add_class ("active");
+                this.active_id = id;
+            } else {
+                if (this.active_id != null) {
+                    this.request_items[this.active_id].get_style_context ().remove_class ("active");
+                }
             }
         }
 
         private void add_history_item (string key_date, Models.Request request) {
-            var item = new RequestListItem (request.id, request.name, request.uri, request.method);
-            item.clicked.connect ((event) => {
-                // Whatever
+            var request_list_item = new RequestListItem (request.id, request.name, request.uri, request.method);
+
+            request_list_item.clicked.connect ((event) => {
+                this.request_item_selected (request.id);
+                this.select_request (request.id);
+            });
+
+            request_list_item.edit_clicked.connect (() => {
+                this.request_edit_clicked (request.id);
+            });
+
+            request_list_item.delete_clicked.connect (() => {
+                this.request_items.unset (request.id);
+                this.request_delete_clicked (request.id);
             });
 
             if (boxes.has_key (key_date)) {
                 var date_box = boxes[key_date];
-                date_box.add_item (item);
+                date_box.add_item (request_list_item);
                 date_box.show_all ();
             } else {
                 var date_box = new DateBox (key_date);
-                date_box.add_item (item);
+                date_box.add_item (request_list_item);
                 boxes[key_date] = date_box;
                 add (date_box);
                 date_box.show_all ();
             }
+
+            this.request_items[request.id] = request_list_item;
         }
 
         public void add_request (Models.Request request) {

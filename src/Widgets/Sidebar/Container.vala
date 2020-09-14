@@ -59,12 +59,10 @@ namespace Spectator.Widgets.Sidebar {
         private Spectator.Window window;
         private Granite.Widgets.ModeButton mode_buttons;
 
-        public signal void item_deleted (Models.Request item);
-        public signal void item_clone (Models.Request item);
-        public signal void item_edited (Models.Request item);
         public signal void selection_changed (Models.Request item); /* Deprecated */
         public signal void request_item_selected (uint id);
         public signal void request_edit_clicked (uint id);
+        public signal void request_delete_clicked (uint id);
         public signal void notify_delete ();
         public signal void create_collection_request (uint id);
         public signal void collection_edit (Models.Collection collection);
@@ -87,27 +85,10 @@ namespace Spectator.Widgets.Sidebar {
             width_request = 265;
 
             collection = new Collection.Container (window);
-            history = new History.Container ();
+            history = new History.Container (window);
 
             collection_scroll.add (collection);
             history_scroll.add (history);
-
-            collection.item_edit.connect ((request) => {
-                item_edited (request);
-            });
-
-            collection.item_clone.connect ((request) => {
-                item_clone (request);
-            });
-
-            collection.item_deleted.connect ((request) => {
-                item_deleted (request);
-            });
-
-            history.item_clicked.connect ((item) => {
-                //  selection_changed (item.item);
-                //  collection.select_request (item.item);
-            });
 
             collection.create_collection_request.connect ((collection_id) => {
                 create_collection_request (collection_id);
@@ -123,10 +104,28 @@ namespace Spectator.Widgets.Sidebar {
 
             collection.request_item_selected.connect ((id) => {
                 this.request_item_selected (id);
+                this.history.select_request (id);
             });
 
             collection.request_edit_clicked.connect ((id) => {
-                request_edit_clicked (id);
+                this.request_edit_clicked (id);
+            });
+
+            collection.request_delete_clicked.connect ((id) => {
+                this.request_delete_clicked (id);
+            });
+
+            history.request_item_selected.connect ((id) => {
+                this.request_item_selected (id);
+                this.collection.select_request (id);
+            });
+
+            history.request_edit_clicked.connect ((id) => {
+                this.request_edit_clicked (id);
+            });
+
+            history.request_delete_clicked.connect ((id) => {
+                this.request_delete_clicked (id);
             });
 
             stack = new Gtk.Stack ();
@@ -175,7 +174,16 @@ namespace Spectator.Widgets.Sidebar {
         }
 
         public void show_items () {
-            collection.show_items ();
+            this.show_collection_items ();
+            this.show_history_items ();
+        }
+
+        public void show_collection_items () {
+            this.collection.show_items ();
+        }
+
+        public void show_history_items () {
+            this.history.show_items ();
         }
 
         private Granite.Widgets.ModeButton create_mode_buttons () {
@@ -195,19 +203,6 @@ namespace Spectator.Widgets.Sidebar {
         public void update_active_url (string url) {
             collection.update_active_url (url);
             //history.update_active_url ();
-        }
-
-        //  public void update_collection (Models.Collection col) {
-        //      collection.update (col);
-        //  }
-
-        public void history_delete (Models.Request request) {
-            history.delete_request (request);
-        }
-
-        public void unselect_all () {
-            collection.unselect_all ();
-            history.unselect_all ();
         }
     }
 }

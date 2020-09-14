@@ -23,6 +23,7 @@ namespace Spectator {
     public interface IRequestService : Object {
         public abstract Gee.ArrayList<Models.Request> get_requests ();
         public abstract bool add_request (Models.Request request);
+        public abstract bool delete_request (uint id);
         public abstract bool set_collection_id_for_request (uint request_id, uint collection_id);
         public abstract Models.Request? get_request_by_id (uint id);
     }
@@ -31,6 +32,7 @@ namespace Spectator {
         private Gee.ArrayList<Models.Request> requests;
 
         public signal void request_added (Models.Request request);
+        public signal void request_deleted (uint id);
 
         public TestRequestService () {
             this.requests = new Gee.ArrayList<Models.Request> ();
@@ -44,6 +46,18 @@ namespace Spectator {
             this.request_added (request);
 
             return true;
+        }
+
+        public bool delete_request (uint id) {
+            foreach (var request in this.requests) {
+                if (request.id == id) {
+                    this.requests.remove (request);
+                    this.request_deleted (id);
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public bool set_collection_id_for_request (uint request_id, uint collection_id) {
@@ -89,6 +103,7 @@ namespace Spectator {
     public interface IOrderService : Object {
         public abstract Gee.ArrayList<Order> get_order ();
         public abstract void append_item (uint id, Order.Type type);
+        public abstract void delete_request (uint id);
     }
 
     public class TestOrderService : IOrderService, Object {
@@ -104,6 +119,15 @@ namespace Spectator {
 
         public void append_item (uint id, Order.Type type) {
             this.custom_order_entries.add(new Order(id, type));
+        }
+
+        public void delete_request (uint id) {
+            foreach (var entry in this.custom_order_entries) {
+                if (entry.id == id && entry.type == Order.Type.REQUEST) {
+                    this.custom_order_entries.remove (entry);
+                    break;
+                }
+            }
         }
     }
 
@@ -183,6 +207,10 @@ namespace Spectator {
                     os.append_item (request.id, Order.Type.REQUEST);
                 });
 
+                rs.request_deleted.connect ((id) => {
+                    os.delete_request (id);
+                });
+
                 var request = new Models.Request ("My Request", Models.Method.POST);
                 request.uri = "http://zeit.de";
                 request.script_code = "// function before_sending(request) {\n// }";
@@ -195,11 +223,16 @@ namespace Spectator {
 
                 request = new Models.Request ("Pokemon Gen 3", Models.Method.GET);
                 request.uri = "https://pokeapi.co/api/v2/generation/3/";
+                request.last_sent = new DateTime.now_local ();
 
                 rs.add_request (request);
 
                 request = new Models.Request ("Pokemon Gen 2", Models.Method.GET);
                 request.uri = "https://pokeapi.co/api/v2/generation/2/";
+                var time = new DateTime.now_local ();
+                time = time.add_days(-1);
+                time = time.add_minutes(-1);
+                request.last_sent = time;
 
                 rs.add_request (request);
 
