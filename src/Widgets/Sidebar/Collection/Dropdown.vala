@@ -34,18 +34,22 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public signal void collection_edit (Models.Collection collection);
         public signal void create_collection_request (uint id);
 
+        public signal void request_moved (uint target_id, uint moved_id);
+        public signal void request_dropped (uint id);
+
         public uint collection_id { get; private set;}
         private Gtk.Label label;
         private Gtk.Box box;
         private Gtk.Box item_box;
         private Gtk.Image indicator;
+        private Gtk.Revealer motion_revealer;
         private bool _expanded;
         public bool expanded {
             get {
                 return this._expanded;
             }
             set {
-                this._expanded = value;
+                this._expanded = true;//value;
                 // toggle collection visibility this.collection.items_visible = value;
                 if (_expanded) {
                     indicator.set_from_icon_name (collection_open_icon, Gtk.IconSize.BUTTON);
@@ -97,6 +101,10 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 request_edit_clicked (request.id);
             });
 
+            request_list_item.request_appended.connect ((dropped_id) => {
+                this.request_moved (request.id, dropped_id);
+            });
+
             request_list_item.show_all();
 
             return request_list_item;
@@ -104,7 +112,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
 
         public Dropdown (Models.Collection collection) {
             this.collection_id = collection.id;
-            this.box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 4);
+            this.box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 3);
             this.item_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 2);
             this.item_box.get_style_context ().add_class ("collection-items");
             this.label = new Gtk.Label ("<b>%s</b>".printf (collection.name));
@@ -173,8 +181,20 @@ namespace Spectator.Widgets.Sidebar.Collection {
             //      show_all ();
             //  });
 
+
+            var motion_grid = new Gtk.Grid ();
+            motion_grid.margin = 6;
+            motion_grid.get_style_context ().add_class ("grid-motion");
+
+            this.motion_revealer = new Gtk.Revealer ();
+            this.motion_revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_RIGHT;
+            this.motion_revealer.add (motion_grid);
+            this.motion_revealer.height_request = 24;
+
             box.add (indicator);
             box.add (label);
+            box.pack_end (motion_revealer, true, true);
+
 
             var event_box = create_event_box (collection);
 
@@ -184,6 +204,33 @@ namespace Spectator.Widgets.Sidebar.Collection {
 
             show_all ();
             item_box.hide ();
+            this.build_drag_and_drop ();
+        }
+
+        private void build_drag_and_drop () {
+            Gtk.drag_dest_set (this, Gtk.DestDefaults.ALL, TARGET_ENTRIES_LABEL, Gdk.DragAction.MOVE);
+            this.drag_data_received.connect (on_drag_data_received);
+            this.drag_motion.connect (on_drag_motion);
+            this.drag_leave.connect (on_drag_leave);
+        }
+
+        private void on_drag_data_received (Gdk.DragContext context, int x, int y,
+            Gtk.SelectionData selection_data, uint target_type, uint time) {
+            var row = ((Gtk.Widget[]) selection_data.get_data ())[0];
+            var source = (RequestListItem) row;
+
+            this.request_dropped (source.id);
+            this._expanded = true;
+        }
+
+        public bool on_drag_motion (Gdk.DragContext context, int x, int y, uint time) {
+            this.motion_revealer.reveal_child = true;
+
+            return true;
+        }
+
+        public void on_drag_leave (Gdk.DragContext context, uint time) {
+            this.motion_revealer.reveal_child = false;
         }
 
         // TODO: Adjust visibility without collection model

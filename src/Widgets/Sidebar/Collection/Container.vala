@@ -33,10 +33,13 @@ namespace Spectator.Widgets.Sidebar.Collection {
 
         public signal void request_moved (uint target_id, uint moved_id);
         public signal void request_moved_to_end (uint moved_id);
+        public signal void request_moved_after_collection_request (uint target_id, uint moved_id, uint collection_id);
+        public signal void request_added_to_collection (uint collection_id, uint id);
 
         public uint? active_id { get; private set; }
         private Gee.HashMap<uint, RequestListItem> request_items;
         private Spectator.Window window;
+        private Gtk.Revealer motion_revealer;
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -65,6 +68,22 @@ namespace Spectator.Widgets.Sidebar.Collection {
             });
 
             this.build_drag_and_drop ();
+            var motion_grid = new Gtk.Grid ();
+            motion_grid.margin = 6;
+            motion_grid.get_style_context ().add_class ("grid-motion");
+            motion_grid.height_request = 18;
+
+            this.motion_revealer = new Gtk.Revealer ();
+            this.motion_revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_DOWN;
+            this.motion_revealer.add (motion_grid);
+        }
+
+        public void drag_reavel_top () {
+            this.motion_revealer.reveal_child = true;
+        }
+
+        public void drag_hide_top () {
+            this.motion_revealer.reveal_child = false;
         }
 
         private void build_drag_and_drop () {
@@ -134,6 +153,8 @@ namespace Spectator.Widgets.Sidebar.Collection {
             foreach (var child in get_children ()) {
                 this.remove (child);
             }
+
+            this.add (motion_revealer);
 
             foreach (var entry in this.window.order_service.get_order ()) {
                 if (entry.type == Order.Type.REQUEST) {
@@ -222,6 +243,14 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 collection_delete (collection);
             });
 
+            dropdown.request_moved.connect ((target_id, moved_id) => {
+                this.request_moved_after_collection_request (target_id, moved_id, collection.id);
+            });
+
+            dropdown.request_dropped.connect ((id) => {
+                this.request_added_to_collection (collection.id, id);
+            });
+
             foreach (var request_id in collection.request_ids) {
                 var request = this.window.request_service.get_request_by_id (request_id);
 
@@ -229,6 +258,8 @@ namespace Spectator.Widgets.Sidebar.Collection {
                     this.request_items[request.id] = dropdown.add_request (request);
                 }
             }
+
+            dropdown.expanded = true;
 
             this.add (dropdown);
         }

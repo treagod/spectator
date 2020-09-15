@@ -26,6 +26,8 @@ namespace Spectator.Widgets.Sidebar {
         private Gtk.Label method;
         private Gtk.Label request_name;
         private Gtk.Label url;
+        private Gtk.Revealer motion_revealer;
+        private Gtk.Revealer content;
         public uint id { get; private set; }
 
         public signal void clicked ();
@@ -104,9 +106,28 @@ namespace Spectator.Widgets.Sidebar {
             container.pack_start (info_box, true, true, 0);
             container.pack_end (method, true, true, 2);
 
-            item_box.add (container);
+            /* Todo: Reorder widgets */
+            var motion_grid = new Gtk.Grid ();
+            motion_grid.margin = 6;
+            motion_grid.get_style_context ().add_class ("grid-motion");
+            motion_grid.height_request = 18;
 
-            this.add (item_box);
+            motion_revealer = new Gtk.Revealer ();
+            motion_revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_DOWN;
+            motion_revealer.add (motion_grid);
+
+            var revealer_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+            revealer_box.add (container);
+            revealer_box.add (motion_revealer);
+
+            content = new Gtk.Revealer ();
+            content.reveal_child = true;
+            content.transition_type = Gtk.RevealerTransitionType.SLIDE_DOWN;
+            item_box.add (revealer_box);
+
+            content.add (item_box);
+
+            this.add (content);
             this.build_drag_and_drop ();
         }
 
@@ -169,7 +190,7 @@ namespace Spectator.Widgets.Sidebar {
 
             row.draw (cr);
             Gtk.drag_set_icon_surface (context, surface);
-            //main_revealer.reveal_child = false;
+            content.reveal_child = false;
         }
 
         private void on_drag_data_get (Gtk.Widget widget, Gdk.DragContext context,
@@ -184,30 +205,18 @@ namespace Spectator.Widgets.Sidebar {
         }
 
         public bool on_drag_motion (Gdk.DragContext context, int x, int y, uint time) {
-            //  motion_revealer.reveal_child = true;
-
-            int index = get_index ();
-            Gtk.Allocation alloc;
-            get_allocation (out alloc);
-
-            int real_y = (index * alloc.height) - alloc.height + y;
-            //  check_scroll (real_y);
-
-            //  if (should_scroll && !scrolling) {
-            //      scrolling = true;
-            //      Timeout.add (SCROLL_DELAY, scroll);
-            //  }
+            motion_revealer.reveal_child = true;
 
             return true;
         }
 
         public void on_drag_leave (Gdk.DragContext context, uint time) {
-            //  motion_revealer.reveal_child = false;
+            motion_revealer.reveal_child = false;
             //  should_scroll = false;
         }
 
         public void clear_indicator (Gdk.DragContext context) {
-            //  main_revealer.reveal_child = true;
+            content.reveal_child = true;
         }
 
         public void set_url (string request_url) {

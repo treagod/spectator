@@ -26,8 +26,12 @@ namespace Spectator.Widgets.Sidebar {
 
     public class TitleBar : Gtk.Box {
         private Gtk.Label title;
+        private string collection_title_text = _("Collections");
+        private string history_title_text = _("History");
 
         public signal void request_dropped (uint id);
+        public signal void request_dragged ();
+        public signal void request_removed ();
 
         public string title_text {
             get {
@@ -38,10 +42,18 @@ namespace Spectator.Widgets.Sidebar {
             }
         }
 
-        public TitleBar (string text) {
+        public void show_collection () {
+            title_text = collection_title_text;
+        }
+
+        public void show_history () {
+            title_text = history_title_text;
+        }
+
+        public TitleBar () {
             orientation = Gtk.Orientation.VERTICAL;
 
-            title = new Gtk.Label (text);
+            title = new Gtk.Label (collection_title_text);
             title.get_style_context ().add_class ("h2");
             title.halign = Gtk.Align.CENTER;
             title.margin = 5;
@@ -57,22 +69,35 @@ namespace Spectator.Widgets.Sidebar {
         private void build_drag_and_drop () {
             Gtk.drag_dest_set (this, Gtk.DestDefaults.ALL, TARGET_ENTRIES_LABEL, Gdk.DragAction.MOVE);
             this.drag_data_received.connect (on_drag_data_received);
+            this.drag_motion.connect (on_drag_motion);
+            this.drag_leave.connect (on_drag_leave);
         }
 
         private void on_drag_data_received (Gdk.DragContext context, int x, int y,
             Gtk.SelectionData selection_data, uint target_type, uint time) {
+            /* Drag & Drop is only activated for collection mode */
+            if (title.label == collection_title_text) {
                 var row = ((Gtk.Widget[]) selection_data.get_data ())[0];
                 var source = (RequestListItem) row;
 
                 this.request_dropped (source.id);
+            }
+        }
+
+        public bool on_drag_motion (Gdk.DragContext context, int x, int y, uint time) {
+            request_dragged ();
+
+            return true;
+        }
+
+        public void on_drag_leave (Gdk.DragContext context, uint time) {
+            request_removed ();
         }
     }
 
     public class Container : Gtk.Box {
         private Gtk.ScrolledWindow collection_scroll;
         private Gtk.ScrolledWindow history_scroll;
-        private string collection_title_text = _("Collections");
-        private string history_title_text = _("History");
         private Gtk.Stack stack;
         public Collection.Container collection;
         public History.Container history;
@@ -100,7 +125,7 @@ namespace Spectator.Widgets.Sidebar {
             collection_scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             collection_scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
 
-            titlebar = new TitleBar (collection_title_text);
+            titlebar = new TitleBar ();
 
             orientation = Gtk.Orientation.VERTICAL;
             width_request = 265;
@@ -137,31 +162,52 @@ namespace Spectator.Widgets.Sidebar {
             });
 
             collection.request_moved.connect ((target_id, moved_id) => {
-                var moved_request = this.window.request_service.get_request_by_id (moved_id);
+                var target_request = this.window.request_service.get_request_by_id (target_id);
+                this.clear_request_collection (moved_id);
 
-                if (moved_request != null) {
-                    if (moved_request.collection_id != null) {
-                        var collection = this.window.collection_service.get_collection_by_id (moved_request.collection_id);
-                        if (collection != null) {
-                            collection.remove_request (moved_id);
-                        }
-
-                        moved_request.collection_id = null;
-                    }
+                if (target_request != null) {
+                    this.window.order_service.move_request (target_id, moved_id);
                 }
 
-                this.window.order_service.move_request (target_id, moved_id);
+                this.show_items ();
+            });
+
+            collection.request_moved_after_collection_request.connect ((target_id, moved_id, collection_id) => {
+                var moved_request = this.window.request_service.get_request_by_id (moved_id);
+                var target_request = this.window.request_service.get_request_by_id (target_id);
+
+                if (target_request != null) {
+                    moved_request.collection_id = target_request.collection_id;
+                    this.window.collection_service.append_after_request_to_collection (collection_id, target_id, moved_id);
+                }
+
+                this.show_items ();
+            });
+
+            collection.request_added_to_collection.connect ((collection_id, id) => {
+                this.clear_request_collection (id);
+                this.window.collection_service.add_request_to_collection_begin (collection_id, id);
                 this.show_items ();
             });
 
             collection.request_moved_to_end.connect ((id) => {
+                this.clear_request_collection (id);
                 this.window.order_service.move_request_to_end (id);
                 this.show_items ();
             });
 
             titlebar.request_dropped.connect ((id) => {
+                this.clear_request_collection (id);
                 this.window.order_service.move_request_to_begin (id);
                 this.show_items ();
+            });
+
+            titlebar.request_dragged.connect (() => {
+                collection.drag_reavel_top ();
+            });
+
+            titlebar.request_removed.connect (() => {
+                collection.drag_hide_top ();
             });
 
             history.request_item_selected.connect ((id) => {
@@ -188,10 +234,10 @@ namespace Spectator.Widgets.Sidebar {
             mode_buttons.mode_changed.connect (() => {
                 if (mode_buttons.selected == 0) {
                     stack.set_visible_child (collection_scroll);
-                    titlebar.title_text = collection_title_text;
+                    titlebar.show_collection ();
                 } else {
                     stack.set_visible_child (history_scroll);
-                    titlebar.title_text = history_title_text;
+                    titlebar.show_history ();
                 }
             });
 
@@ -202,16 +248,31 @@ namespace Spectator.Widgets.Sidebar {
             this.pack_end (this.mode_buttons, false, true, 0);
         }
 
+        private void clear_request_collection (uint request_id) {
+            var moved_request = this.window.request_service.get_request_by_id (request_id);
+
+            if (moved_request != null) {
+                if (moved_request.collection_id != null) {
+                    var collection = this.window.collection_service.get_collection_by_id (moved_request.collection_id);
+                    if (collection != null) {
+                        collection.remove_request (request_id);
+                    }
+
+                    moved_request.collection_id = null;
+                }
+            }
+        }
+
         public void show_history () {
             mode_buttons.selected = 1;
             stack.set_visible_child (history_scroll);
-            titlebar.title_text = history_title_text;
+            titlebar.show_history ();
         }
 
         public void show_collection () {
             mode_buttons.selected = 0;
             stack.set_visible_child (collection_scroll);
-            titlebar.title_text = collection_title_text;
+            titlebar.show_collection ();
         }
 
         public void add_collection (Models.Collection model) {

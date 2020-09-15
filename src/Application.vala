@@ -172,7 +172,9 @@ namespace Spectator {
         public abstract Gee.ArrayList<Models.Collection> get_collections ();
         public abstract bool add_collection (Models.Collection collection);
         public abstract bool add_request_to_collection (uint collection, uint request_id);
+        public abstract bool add_request_to_collection_begin (uint collection, uint request_id);
         public abstract Models.Collection? get_collection_by_id (uint id);
+        public abstract void append_after_request_to_collection (uint collection_id, uint target_id, uint moved_id);
     }
 
     public class TestCollectionService : ICollectionService, Object {
@@ -187,6 +189,19 @@ namespace Spectator {
         }
         public Gee.ArrayList<Models.Collection> get_collections () {
             return this.collections;
+        }
+
+        public bool add_request_to_collection_begin (uint collection_id, uint request_id) {
+            var collection = this.get_collection_by_id (collection_id);
+
+            if (collection != null) {
+                collection.request_ids.insert (0, request_id);
+                this.request_service.set_collection_id_for_request (request_id, collection_id);
+            } else {
+                return false;
+            }
+
+            return true;
         }
 
         public bool add_request_to_collection (uint collection_id, uint request_id) {
@@ -219,6 +234,22 @@ namespace Spectator {
             }
 
             return collection;
+        }
+
+        public void append_after_request_to_collection (uint collection_id, uint target_id, uint moved_id) {
+            var idx = 0;
+            var collection = this.get_collection_by_id (collection_id);
+
+            collection.request_ids.remove (moved_id);
+
+            // Get position to insert after
+            for (var i = 0; i < collection.request_ids.size; i++) {
+                if (collection.request_ids[i] == target_id) {
+                    idx = i;
+                    break;
+                }
+            }
+            collection.request_ids.insert (idx + 1, moved_id);
         }
     }
 
