@@ -26,12 +26,14 @@ namespace Spectator.Widgets.Sidebar {
         private Gtk.Label method;
         private Gtk.Label request_name;
         private Gtk.Label url;
-        uint id;
+        public uint id { get; private set; }
 
         public signal void clicked ();
         public signal void delete_clicked ();
         public signal void edit_clicked ();
         public signal void clone_clicked ();
+
+        public signal void request_appended (uint dropped_id);
 
         private string get_method_label (Models.Method method) {
             var dark_theme = Gtk.Settings.get_default ().gtk_application_prefer_dark_theme;
@@ -104,7 +106,108 @@ namespace Spectator.Widgets.Sidebar {
 
             item_box.add (container);
 
-            add (item_box);
+            this.add (item_box);
+            this.build_drag_and_drop ();
+        }
+
+        private void build_drag_and_drop () {
+            Gtk.drag_source_set (
+                this,
+                Gdk.ModifierType.BUTTON1_MASK,
+                TARGET_ENTRIES_LABEL,
+                Gdk.DragAction.MOVE
+            );
+
+            this.drag_begin.connect (on_drag_begin);
+            this.drag_data_get.connect (on_drag_data_get);
+
+            // Make this widget a DnD destination.
+            Gtk.drag_dest_set (
+                this,
+                Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
+                TARGET_ENTRIES_LABEL,
+                Gdk.DragAction.MOVE
+            );
+
+            drag_motion.connect (on_drag_motion);
+            drag_leave.connect (on_drag_leave);
+            drag_end.connect (clear_indicator);
+            drag_data_received.connect (on_data_received);
+        }
+
+        private void on_data_received (Gdk.DragContext context, int x, int y,
+            Gtk.SelectionData selection_data, uint target_type, uint time) {
+
+            var row = ((Gtk.Widget[]) selection_data.get_data ())[0];
+            var source = (RequestListItem) row;
+
+            this.request_appended (source.id);
+        }
+
+
+        private void on_drag_begin (Gtk.Widget widget, Gdk.DragContext context) {
+            var row = (RequestListItem) widget;
+
+            Gtk.Allocation alloc;
+            row.get_allocation (out alloc);
+
+            var surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, alloc.width, alloc.height);
+            var cr = new Cairo.Context (surface);
+            cr.set_source_rgba (0, 0, 0, 0.3);
+            cr.set_line_width (1);
+
+            cr.move_to (0, 0);
+            cr.line_to (alloc.width, 0);
+            cr.line_to (alloc.width, alloc.height);
+            cr.line_to (0, alloc.height);
+            cr.line_to (0, 0);
+            cr.stroke ();
+
+            cr.set_source_rgba (255, 255, 255, 0.5);
+            cr.rectangle (0, 0, alloc.width, alloc.height);
+            cr.fill ();
+
+            row.draw (cr);
+            Gtk.drag_set_icon_surface (context, surface);
+            //main_revealer.reveal_child = false;
+        }
+
+        private void on_drag_data_get (Gtk.Widget widget, Gdk.DragContext context,
+            Gtk.SelectionData selection_data, uint target_type, uint time) {
+            uchar[] data = new uchar[(sizeof (RequestListItem))];
+            ((Gtk.Widget[])data)[0] = widget;
+
+            /* TODO: only id? */
+            selection_data.set (
+                Gdk.Atom.intern_static_string ("REQUEST"), 32, data
+            );
+        }
+
+        public bool on_drag_motion (Gdk.DragContext context, int x, int y, uint time) {
+            //  motion_revealer.reveal_child = true;
+
+            int index = get_index ();
+            Gtk.Allocation alloc;
+            get_allocation (out alloc);
+
+            int real_y = (index * alloc.height) - alloc.height + y;
+            //  check_scroll (real_y);
+
+            //  if (should_scroll && !scrolling) {
+            //      scrolling = true;
+            //      Timeout.add (SCROLL_DELAY, scroll);
+            //  }
+
+            return true;
+        }
+
+        public void on_drag_leave (Gdk.DragContext context, uint time) {
+            //  motion_revealer.reveal_child = false;
+            //  should_scroll = false;
+        }
+
+        public void clear_indicator (Gdk.DragContext context) {
+            //  main_revealer.reveal_child = true;
         }
 
         public void set_url (string request_url) {

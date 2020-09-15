@@ -20,8 +20,15 @@
 */
 
 namespace Spectator.Widgets.Sidebar {
+    public const Gtk.TargetEntry[] TARGET_ENTRIES_LABEL = {
+        { "REQUEST", Gtk.TargetFlags.SAME_APP, 0 }
+    };
+
     public class TitleBar : Gtk.Box {
         private Gtk.Label title;
+
+        public signal void request_dropped (uint id);
+
         public string title_text {
             get {
                 return title.label;
@@ -44,6 +51,20 @@ namespace Spectator.Widgets.Sidebar {
 
             pack_start (title, true, true, 0);
             pack_start (separator, true, true, 0);
+            this.build_drag_and_drop ();
+        }
+
+        private void build_drag_and_drop () {
+            Gtk.drag_dest_set (this, Gtk.DestDefaults.ALL, TARGET_ENTRIES_LABEL, Gdk.DragAction.MOVE);
+            this.drag_data_received.connect (on_drag_data_received);
+        }
+
+        private void on_drag_data_received (Gdk.DragContext context, int x, int y,
+            Gtk.SelectionData selection_data, uint target_type, uint time) {
+                var row = ((Gtk.Widget[]) selection_data.get_data ())[0];
+                var source = (RequestListItem) row;
+
+                this.request_dropped (source.id);
         }
     }
 
@@ -115,6 +136,34 @@ namespace Spectator.Widgets.Sidebar {
                 this.request_delete_clicked (id);
             });
 
+            collection.request_moved.connect ((target_id, moved_id) => {
+                var moved_request = this.window.request_service.get_request_by_id (moved_id);
+
+                if (moved_request != null) {
+                    if (moved_request.collection_id != null) {
+                        var collection = this.window.collection_service.get_collection_by_id (moved_request.collection_id);
+                        if (collection != null) {
+                            collection.remove_request (moved_id);
+                        }
+
+                        moved_request.collection_id = null;
+                    }
+                }
+
+                this.window.order_service.move_request (target_id, moved_id);
+                this.show_items ();
+            });
+
+            collection.request_moved_to_end.connect ((id) => {
+                this.window.order_service.move_request_to_end (id);
+                this.show_items ();
+            });
+
+            titlebar.request_dropped.connect ((id) => {
+                this.window.order_service.move_request_to_begin (id);
+                this.show_items ();
+            });
+
             history.request_item_selected.connect ((id) => {
                 this.request_item_selected (id);
                 this.collection.select_request (id);
@@ -148,9 +197,9 @@ namespace Spectator.Widgets.Sidebar {
 
             mode_buttons.get_style_context ().add_class ("square");
 
-            pack_start (titlebar, false, true, 0);
-            pack_start (stack, true, true, 0);
-            pack_end (mode_buttons, false, true, 0);
+            this.pack_start (this.titlebar, false, true, 0);
+            this.pack_start (this.stack, true, true, 0);
+            this.pack_end (this.mode_buttons, false, true, 0);
         }
 
         public void show_history () {

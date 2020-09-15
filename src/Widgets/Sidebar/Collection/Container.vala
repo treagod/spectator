@@ -31,6 +31,9 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public signal void collection_edit (Models.Collection collection);
         public signal void collection_delete (Models.Collection collection);
 
+        public signal void request_moved (uint target_id, uint moved_id);
+        public signal void request_moved_to_end (uint moved_id);
+
         public uint? active_id { get; private set; }
         private Gee.HashMap<uint, RequestListItem> request_items;
         private Spectator.Window window;
@@ -60,6 +63,21 @@ namespace Spectator.Widgets.Sidebar.Collection {
                     }
                 });
             });
+
+            this.build_drag_and_drop ();
+        }
+
+        private void build_drag_and_drop () {
+            Gtk.drag_dest_set (this, Gtk.DestDefaults.ALL, TARGET_ENTRIES_LABEL, Gdk.DragAction.MOVE);
+            this.drag_data_received.connect (on_drag_data_received);
+        }
+
+        private void on_drag_data_received (Gdk.DragContext context, int x, int y,
+            Gtk.SelectionData selection_data, uint target_type, uint time) {
+                var row = ((Gtk.Widget[]) selection_data.get_data ())[0];
+                var source = (RequestListItem) row;
+
+                this.request_moved_to_end (source.id);
         }
 
         public void unselect_all () {
@@ -93,17 +111,6 @@ namespace Spectator.Widgets.Sidebar.Collection {
         //      foreach (var child in get_children ()) {
         //          var dropdown = (Dropdown) child;
         //          dropdown.adjust_visibility ();
-        //      }
-        //  }
-
-        //  public void update (Models.Collection collection) {
-        //      foreach (var child in get_children ()) {
-        //          var dropdown = (Dropdown) child;
-
-        //          if (dropdown.collection == collection) {
-        //              dropdown.update ();
-        //              break;
-        //          }
         //      }
         //  }
 
@@ -168,6 +175,10 @@ namespace Spectator.Widgets.Sidebar.Collection {
             request_list_item.delete_clicked.connect (() => {
                 this.request_items.unset (request.id);
                 this.request_delete_clicked (request.id);
+            });
+
+            request_list_item.request_appended.connect ((dropped_id) => {
+                this.request_moved (request.id, dropped_id);
             });
 
             request_list_item.show_all();

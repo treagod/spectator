@@ -104,6 +104,9 @@ namespace Spectator {
         public abstract Gee.ArrayList<Order> get_order ();
         public abstract void append_item (uint id, Order.Type type);
         public abstract void delete_request (uint id);
+        public abstract void move_request (uint target_id, uint moved_id);
+        public abstract void move_request_to_begin (uint moved_id);
+        public abstract void move_request_to_end (uint moved_id);
     }
 
     public class TestOrderService : IOrderService, Object {
@@ -128,6 +131,40 @@ namespace Spectator {
                     break;
                 }
             }
+        }
+
+        public void move_request (uint target_id, uint moved_id) {
+            var idx = 0;
+            this.remove_request (moved_id);
+
+            for (int i = 0; i < this.custom_order_entries.size; i++) {
+                var entry = this.custom_order_entries.get (i);
+                if (entry.id == target_id && entry.type == Order.Type.REQUEST) {
+                    idx = i;
+                    break;
+                }
+            }
+
+            this.custom_order_entries.insert (idx + 1, new Order (moved_id, Order.Type.REQUEST));
+        }
+
+        private void remove_request (uint id) {
+            foreach (var entry in this.custom_order_entries) {
+                if (entry.id == id && entry.type == Order.Type.REQUEST) {
+                    this.custom_order_entries.remove (entry);
+                    return;
+                }
+            }
+        }
+
+        public void move_request_to_end (uint moved_id) {
+            this.remove_request (moved_id);
+            this.custom_order_entries.add (new Order (moved_id, Order.Type.REQUEST));
+        }
+
+        public void move_request_to_begin (uint moved_id) {
+            this.remove_request (moved_id);
+            this.custom_order_entries.insert (0, new Order (moved_id, Order.Type.REQUEST));
         }
     }
 
