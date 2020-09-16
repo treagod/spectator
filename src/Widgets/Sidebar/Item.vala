@@ -128,10 +128,9 @@ namespace Spectator.Widgets.Sidebar {
             content.add (item_box);
 
             this.add (content);
-            this.build_drag_and_drop ();
         }
 
-        private void build_drag_and_drop () {
+        public void activate_drag_and_drop () {
             Gtk.drag_source_set (
                 this,
                 Gdk.ModifierType.BUTTON1_MASK,
