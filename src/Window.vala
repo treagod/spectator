@@ -188,6 +188,39 @@ namespace Spectator {
                 }
             });
 
+            this.sidebar.collection_request_delete_clicked.connect ((req_id) => {
+                var request = this.request_service.get_request_by_id (req_id);
+                if (request != null) {
+                    var message_dialog = new Granite.MessageDialog.with_image_from_icon_name (
+                        _("Delete Request?"),
+                        _("This action will permanently delete <b>%s</b>. This can't be undone!".printf (request.name)),
+                        "dialog-warning",
+                        Gtk.ButtonsType.CANCEL
+                   );
+                   message_dialog.transient_for = this;
+
+                   message_dialog.secondary_label.use_markup = true;
+
+                   var suggested_button = new Gtk.Button.with_label (_("Delete Request"));
+                   suggested_button.get_style_context ().add_class (Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION);
+                   message_dialog.add_action_widget (suggested_button, Gtk.ResponseType.ACCEPT);
+
+                   message_dialog.show_all ();
+                   if (message_dialog.run () == Gtk.ResponseType.ACCEPT) {
+                    var collection = this.collection_service.get_collection_by_id (request.collection_id);
+
+                    if (collection != null) {
+                        collection.request_ids.remove (req_id);
+                    }
+                    this.request_service.delete_request (req_id);
+                    this.sidebar.show_items ();
+                    this.content.show_welcome ();
+                   }
+
+                   message_dialog.destroy ();
+                }
+            });
+
             this.sidebar.request_edit_clicked.connect ((id) => {
                 var request = this.request_service.get_request_by_id (id);
 
@@ -277,8 +310,6 @@ namespace Spectator {
             settings.window_width = width;
             settings.window_height = height;
             settings.maximized = is_maximized;
-
-            //controller.save_data ();
 
             close_window ();
 

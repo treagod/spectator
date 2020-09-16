@@ -28,6 +28,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public signal void request_edit_clicked (uint id);
         public signal void request_clone_clicked (uint id);
         public signal void request_delete_clicked (uint id);
+        public signal void collection_request_delete_clicked (uint req_id);
         public signal void create_collection_request (uint id);
         public signal void collection_edit (uint id);
         public signal void collection_delete (uint id, bool contains_active_request);
@@ -224,8 +225,8 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 this.request_clone_clicked (id);
             });
 
-            dropdown.item_deleted.connect ((request) => {
-                item_deleted (request);
+            dropdown.request_delete_clicked.connect ((id) => {
+                this.collection_request_delete_clicked (id);
             });
 
             dropdown.create_collection_request.connect ((collection_id) => {

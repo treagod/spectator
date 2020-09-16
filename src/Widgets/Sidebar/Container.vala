@@ -109,6 +109,7 @@ namespace Spectator.Widgets.Sidebar {
         public signal void request_item_selected (uint id);
         public signal void request_edit_clicked (uint id);
         public signal void request_delete_clicked (uint id);
+        public signal void collection_request_delete_clicked (uint id);
         public signal void notify_delete ();
         public signal void create_collection_request (uint id);
         public signal void collection_edit (uint id);
@@ -206,6 +207,10 @@ This can't be undone!""".printf (collection.name)),
             collection.request_delete_clicked.connect ((id) => {
                 this.request_delete_clicked (id);
                 this.collection.unselect ();
+            });
+
+            collection.collection_request_delete_clicked.connect ((req_id) => {
+                this.collection_request_delete_clicked (req_id);
             });
 
             collection.request_moved.connect ((target_id, moved_id) => {
