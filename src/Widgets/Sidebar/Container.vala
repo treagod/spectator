@@ -191,6 +191,7 @@ namespace Spectator.Widgets.Sidebar {
             collection.request_moved_after_collection_request.connect ((target_id, moved_id, collection_id) => {
                 var moved_request = this.window.request_service.get_request_by_id (moved_id);
                 var target_request = this.window.request_service.get_request_by_id (target_id);
+                this.clear_request_collection (moved_id);
 
                 if (target_request != null) {
                     moved_request.collection_id = target_request.collection_id;

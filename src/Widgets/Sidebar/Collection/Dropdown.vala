@@ -35,6 +35,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public signal void collection_edit (Models.Collection collection);
         public signal void create_collection_request (uint id);
 
+        public signal void change_visibility (bool visible);
         public signal void request_moved (uint target_id, uint moved_id);
         public signal void request_dropped (uint id);
 
@@ -50,8 +51,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 return this._expanded;
             }
             set {
-                this._expanded = true;//value;
-                // toggle collection visibility this.collection.items_visible = value;
+                this._expanded = value;
                 if (_expanded) {
                     indicator.set_from_icon_name (collection_open_icon, Gtk.IconSize.BUTTON);
                     item_box.show ();
@@ -124,15 +124,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
             this.label.halign = Gtk.Align.START;
             this.label.use_markup = true;
             this.indicator = new Gtk.Image.from_icon_name (collection_open_icon, Gtk.IconSize.BUTTON);;
-            this._expanded = true;
-
-            //  collection.request_removed.connect ((request) => {
-            //      each_item ((item) => {
-            //          if (item.item == request) {
-            //              item_box.remove (item);
-            //          }
-            //      });
-            //  });
+            this.expanded = true;
 
             //  collection.request_added.connect ((request) => {
             //      var item = new Item (request);
@@ -238,15 +230,6 @@ namespace Spectator.Widgets.Sidebar.Collection {
             this.motion_revealer.reveal_child = false;
         }
 
-        // TODO: Adjust visibility without collection model
-        //  public void adjust_visibility () {
-        //      if (collection.items_visible) {
-        //          expanded = true;
-        //      } else {
-        //          expanded = false;
-        //      }
-        //  }
-
         private Gtk.EventBox create_event_box (Models.Collection model) {
             var event_box = new Gtk.EventBox ();
             event_box.add (box);
@@ -255,6 +238,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 switch (event.button) {
                     case 1:
                         expanded = !expanded;
+                        this.change_visibility (expanded);
                         result = true;
                         break;
                     case 3:

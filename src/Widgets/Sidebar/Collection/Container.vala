@@ -39,6 +39,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
 
         public uint? active_id { get; private set; }
         private Gee.HashMap<uint, RequestListItem> request_items;
+        private Gee.HashMap<uint, bool> collection_visiblity;
         private Spectator.Window window;
         private Gtk.Revealer motion_revealer;
 
@@ -51,6 +52,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
             this.window = window;
             this.active_id = null;
             this.request_items = new Gee.HashMap<uint, RequestListItem> ();
+            this.collection_visiblity = new Gee.HashMap<uint, bool> ();
             get_style_context ().add_class ("collection-box");
 
             Settings.get_instance ().theme_changed.connect (() => {
@@ -100,17 +102,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 this.request_moved_to_end (source.id);
         }
 
-        public void unselect_all () {
-            @foreach ((child) => {
-                var dropdown = (Dropdown) child;
-
-                dropdown.unselect_all ();
-                //  if (!dropdown.collection.items_visible) {
-                //      dropdown.expanded = false;
-                //  }
-            });
-        }
-
+        /* Deprecated? */
         public void update_active_method (Models.Method method) {
             var active_item = this.request_items[active_id];
 
@@ -119,6 +111,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
             }
         }
 
+        /* Deprecated? */
         public void update_active_url (string url) {
             var active_item = this.request_items[active_id];
 
@@ -126,13 +119,6 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 active_item.set_url (url);
             }
         }
-
-        //  public void adjust_visibility () {
-        //      foreach (var child in get_children ()) {
-        //          var dropdown = (Dropdown) child;
-        //          dropdown.adjust_visibility ();
-        //      }
-        //  }
 
         /* Adds active css-class to selected item */
         public void select_request (uint id) {
@@ -253,7 +239,13 @@ namespace Spectator.Widgets.Sidebar.Collection {
             });
 
             dropdown.request_dropped.connect ((id) => {
+                this.collection_visiblity[collection.id] = true;
+                dropdown.expanded = true;
                 this.request_added_to_collection (collection.id, id);
+            });
+
+            dropdown.change_visibility.connect((visible) => {
+                this.collection_visiblity[collection.id] = visible;
             });
 
             foreach (var request_id in collection.request_ids) {
@@ -264,7 +256,12 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 }
             }
 
-            dropdown.expanded = true;
+            // If collection is new, make it initially visible
+            if (!this.collection_visiblity.has_key(collection.id)) {
+                this.collection_visiblity[collection.id] = true;
+            }
+
+            dropdown.expanded = this.collection_visiblity[collection.id];
 
             this.add (dropdown);
         }
