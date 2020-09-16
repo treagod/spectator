@@ -29,7 +29,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public signal void request_clone_clicked (uint id);
         public signal void request_delete_clicked (uint id);
         public signal void create_collection_request (uint id);
-        public signal void collection_edit (Models.Collection collection);
+        public signal void collection_edit (uint id);
         public signal void collection_delete (uint id, bool contains_active_request);
 
         public signal void request_moved (uint target_id, uint moved_id);
@@ -225,8 +225,8 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 this.create_collection_request (collection_id);
             });
 
-            dropdown.collection_edit.connect ((collection) => {
-                collection_edit (collection);
+            dropdown.collection_edit.connect (() => {
+                collection_edit (collection.id);
             });
 
             dropdown.collection_delete.connect (() => {

@@ -111,7 +111,7 @@ namespace Spectator.Widgets.Sidebar {
         public signal void request_delete_clicked (uint id);
         public signal void notify_delete ();
         public signal void create_collection_request (uint id);
-        public signal void collection_edit (Models.Collection collection);
+        public signal void collection_edit (uint id);
 
         public Container (Spectator.Window window) {
             this.window = window;
@@ -139,8 +139,8 @@ namespace Spectator.Widgets.Sidebar {
                 create_collection_request (collection_id);
             });
 
-            collection.collection_edit.connect ((collection) => {
-                collection_edit (collection);
+            collection.collection_edit.connect ((id) => {
+                collection_edit (id);
             });
 
             collection.collection_delete.connect ((id, contains_active_request) => {

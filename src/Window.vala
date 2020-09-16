@@ -249,6 +249,20 @@ namespace Spectator {
                     dialog.show_all ();
                 }
             });
+
+            this.sidebar.collection_edit.connect ((id) => {
+                var collection = this.collection_service.get_collection_by_id (id);
+
+                if (collection != null) {
+                    var dialog = new Dialogs.Collection.UpdateCollectionDialog (this, collection);
+
+                    dialog.updated.connect (() => {
+                        this.sidebar.show_items ();
+                    });
+
+                    dialog.show_all();
+                }
+            });
         }
 
         protected override bool delete_event (Gdk.EventAny event) {

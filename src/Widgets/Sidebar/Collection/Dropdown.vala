@@ -32,7 +32,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public signal void request_edit_clicked (uint id);
         public signal void request_clone_clicked (uint id);
         public signal void collection_delete ();
-        public signal void collection_edit (Models.Collection collection);
+        public signal void collection_edit ();
         public signal void create_collection_request (uint id);
 
         public signal void change_visibility (bool visible);
@@ -198,7 +198,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                         });
 
                         edit_item.activate.connect (() => {
-                            collection_edit (model);
+                            collection_edit ();
                         });
 
                         delete_item.activate.connect (() => {

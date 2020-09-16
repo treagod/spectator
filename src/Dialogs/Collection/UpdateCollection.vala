@@ -35,7 +35,7 @@ namespace Spectator.Dialogs.Collection {
             modal = true;
             warning_active = false;
 
-            var request_name_label = new Gtk.Label (_("Name:"));
+            var collection_name_label = new Gtk.Label (_("Name:"));
             collection_name_entry = new Gtk.Entry ();
             collection_name_entry.text = collection.name;
             dialog_title = new DialogTitle (_("Update %s").printf (collection.name));
@@ -48,7 +48,7 @@ namespace Spectator.Dialogs.Collection {
             add_button (_("Update"), Gtk.ResponseType.APPLY);
 
             Gtk.Box hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 15);
-            hbox.pack_start (request_name_label, false, true, 0);
+            hbox.pack_start (collection_name_label, false, true, 0);
             hbox.pack_start (collection_name_entry, true, true, 0);
             hbox.margin_bottom = 20;
 
