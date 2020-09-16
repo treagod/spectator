@@ -90,6 +90,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
 
         public RequestListItem add_request (Models.Request request) {
             var request_list_item = new RequestListItem (request.id, request.name, request.uri, request.method);
+            request_list_item.activate_drag_and_drop ();
 
             this.item_box.add (request_list_item);
 
