@@ -135,6 +135,13 @@ namespace Spectator.Widgets.Sidebar.Collection {
             }
         }
 
+        public void unselect () {
+            if (this.active_id != null && this.request_items.has_key (this.active_id)) {
+                this.request_items[this.active_id].get_style_context ().remove_class ("active");
+            }
+            this.active_id = null;
+        }
+
         public void show_items () {
             /* Resets the list */
             foreach (var child in get_children ()) {

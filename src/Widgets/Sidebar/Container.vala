@@ -170,6 +170,7 @@ This can't be undone!""".printf (collection.name)),
 
                        if (contains_active_request) {
                            this.window.show_welcome ();
+                           this.collection.unselect ();
                        }
                    }
 
@@ -204,6 +205,7 @@ This can't be undone!""".printf (collection.name)),
 
             collection.request_delete_clicked.connect ((id) => {
                 this.request_delete_clicked (id);
+                this.collection.unselect ();
             });
 
             collection.request_moved.connect ((target_id, moved_id) => {
