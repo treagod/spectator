@@ -1,3 +1,9 @@
+com.github.treagod.spectator (0.4.2) bionic; urgency=low
+
+  * Fix representation of Spectator correctly in AppCenter
+
+ -- Marvin <marv.ahlgrimm@gmail.com>  Sun, 10 Sep 20 20:03:16 +0200
+
 com.github.treagod.spectator (0.4.1) bionic; urgency=medium
 
   * Fixed scroll bug in collection sidebar

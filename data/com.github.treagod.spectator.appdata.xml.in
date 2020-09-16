@@ -14,6 +14,16 @@
     </p>
   </description>
   <releases>
+    <release version="0.4.2" date="2020-09-10">
+      <description>
+        <p>AppCenter Fix</p>
+				<ul>
+          <li>
+            Spectator will now be displayed correctly in AppCenter once again.
+          </li>
+				</ul>
+      </description>
+    </release>
     <release version="0.4.1" date="2019-09-30">
       <description>
         <p>Collection improvements</p>
@@ -168,4 +178,3 @@
     <value key="x-appcenter-suggested-price">6</value>
   </custom>
 </component>
-
