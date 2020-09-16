@@ -30,6 +30,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public signal void item_deleted (Models.Request request);
         public signal void request_item_selected (uint id);
         public signal void request_edit_clicked (uint id);
+        public signal void request_clone_clicked (uint id);
         public signal void collection_delete (Models.Collection collection);
         public signal void collection_edit (Models.Collection collection);
         public signal void create_collection_request (uint id);
@@ -99,6 +100,10 @@ namespace Spectator.Widgets.Sidebar.Collection {
 
             request_list_item.edit_clicked.connect (() => {
                 request_edit_clicked (request.id);
+            });
+
+            request_list_item.clone_clicked.connect (() => {
+                request_clone_clicked (request.id);
             });
 
             request_list_item.request_appended.connect ((dropped_id) => {

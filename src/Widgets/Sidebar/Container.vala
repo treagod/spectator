@@ -157,6 +157,22 @@ namespace Spectator.Widgets.Sidebar {
                 this.request_edit_clicked (id);
             });
 
+            collection.request_clone_clicked.connect ((id) => {
+                var request = this.window.request_service.get_request_by_id (id);
+
+                if (request != null) {
+                    var new_request = new Models.Request.clone (request);
+                    this.window.request_service.add_request (new_request);
+
+                    if (new_request.collection_id != null) {
+                        this.window.collection_service.add_request_to_collection (new_request.collection_id, new_request.id);
+                    } else {
+                        this.window.order_service.move_request (request.id, new_request.id);
+                    }
+                    this.show_items ();
+                }
+            });
+
             collection.request_delete_clicked.connect ((id) => {
                 this.request_delete_clicked (id);
             });

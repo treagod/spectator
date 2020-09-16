@@ -26,6 +26,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public signal void item_deleted (Models.Request request);
         public signal void request_item_selected (uint id);
         public signal void request_edit_clicked (uint id);
+        public signal void request_clone_clicked (uint id);
         public signal void request_delete_clicked (uint id);
         public signal void create_collection_request (uint id);
         public signal void collection_edit (Models.Collection collection);
@@ -193,6 +194,10 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 this.request_edit_clicked (request.id);
             });
 
+            request_list_item.clone_clicked.connect (() => {
+                this.request_clone_clicked (request.id);
+            });
+
             request_list_item.delete_clicked.connect (() => {
                 this.request_items.unset (request.id);
                 this.request_delete_clicked (request.id);
@@ -221,8 +226,8 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 this.request_edit_clicked (id);
             });
 
-            dropdown.item_clone.connect ((request) => {
-                item_clone (request);
+            dropdown.request_clone_clicked.connect ((id) => {
+                this.request_clone_clicked (id);
             });
 
             dropdown.item_deleted.connect ((request) => {
