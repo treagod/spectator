@@ -30,7 +30,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public signal void request_delete_clicked (uint id);
         public signal void create_collection_request (uint id);
         public signal void collection_edit (Models.Collection collection);
-        public signal void collection_delete (Models.Collection collection);
+        public signal void collection_delete (uint id, bool contains_active_request);
 
         public signal void request_moved (uint target_id, uint moved_id);
         public signal void request_moved_to_end (uint moved_id);
@@ -229,10 +229,16 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 collection_edit (collection);
             });
 
-            dropdown.collection_delete.connect ((collection) => {
-                dropdown.destroy ();
-                remove (dropdown);
-                collection_delete (collection);
+            dropdown.collection_delete.connect (() => {
+                bool contains_active_request = false;
+
+                foreach (var request_id in collection.request_ids) {
+                    if (request_id == this.active_id) {
+                        contains_active_request = true;
+                        break;
+                    }
+                }
+                collection_delete (collection.id, contains_active_request);
             });
 
             dropdown.request_moved.connect ((target_id, moved_id) => {

@@ -104,6 +104,7 @@ namespace Spectator {
         public abstract Gee.ArrayList<Order> get_order ();
         public abstract void append_item (uint id, Order.Type type);
         public abstract void delete_request (uint id);
+        public abstract void delete_collection (uint id);
         public abstract void move_request (uint target_id, uint moved_id);
         public abstract void move_request_to_begin (uint moved_id);
         public abstract void move_request_to_end (uint moved_id);
@@ -124,13 +125,21 @@ namespace Spectator {
             this.custom_order_entries.add(new Order(id, type));
         }
 
-        public void delete_request (uint id) {
+        private void delete_entry (uint id, Order.Type type) {
             foreach (var entry in this.custom_order_entries) {
-                if (entry.id == id && entry.type == Order.Type.REQUEST) {
+                if (entry.id == id && entry.type == type) {
                     this.custom_order_entries.remove (entry);
                     break;
                 }
             }
+        }
+
+        public void delete_request (uint id) {
+            this.delete_entry (id, Order.Type.REQUEST);
+        }
+
+        public void delete_collection (uint id) {
+            this.delete_entry (id, Order.Type.COLLECTION);
         }
 
         public void move_request (uint target_id, uint moved_id) {
@@ -171,6 +180,7 @@ namespace Spectator {
     public interface ICollectionService : Object {
         public abstract Gee.ArrayList<Models.Collection> get_collections ();
         public abstract bool add_collection (Models.Collection collection);
+        public abstract bool delete_collection (uint id);
         public abstract bool add_request_to_collection (uint collection, uint request_id);
         public abstract bool add_request_to_collection_begin (uint collection, uint request_id);
         public abstract Models.Collection? get_collection_by_id (uint id);
@@ -182,6 +192,7 @@ namespace Spectator {
         private IRequestService request_service;
 
         public signal void collection_added (Models.Collection collection);
+        public signal void collection_deleted (uint id);
 
         public TestCollectionService (IRequestService request_service) {
             this.collections = new Gee.ArrayList<Models.Collection> ();
@@ -189,6 +200,21 @@ namespace Spectator {
         }
         public Gee.ArrayList<Models.Collection> get_collections () {
             return this.collections;
+        }
+
+        public bool delete_collection (uint id) {
+            foreach (var collection in this.collections) {
+                if (collection.id == id) {
+                    foreach (var req_id in collection.request_ids) {
+                        this.request_service.delete_request (req_id);
+                    }
+                    this.collections.remove (collection);
+
+                    this.collection_deleted (id);
+                    break;
+                }
+            }
+            return true;
         }
 
         public bool add_request_to_collection_begin (uint collection_id, uint request_id) {
@@ -269,6 +295,10 @@ namespace Spectator {
 
                 cs.collection_added.connect ((collection) => {
                     os.append_item (collection.id, Order.Type.COLLECTION);
+                });
+
+                cs.collection_deleted.connect ((id) => {
+                    os.delete_collection (id);
                 });
 
                 rs.request_added.connect ((request) => {

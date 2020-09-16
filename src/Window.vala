@@ -172,6 +172,10 @@ namespace Spectator {
              });
         }
 
+        public void show_welcome () {
+            this.content.show_welcome ();
+        }
+
         private void setup_sidebar_events () {
             /* Adds visual look to selected item, clearing previous selected item (if any) */
             this.sidebar.request_item_selected.connect ((id) => {

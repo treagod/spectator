@@ -44,7 +44,7 @@ namespace Spectator.Dialogs.Preference {
             var use_default_font_switch = new Gtk.Switch ();
             use_default_font_switch.halign = Gtk.Align.END;
             use_default_font_switch.active = settings.use_default_font;
-            use_default_font_switch.notify.connect (() => {
+            use_default_font_switch.state_set.connect (() => {
                 if (use_default_font_switch.active) {
                     settings.default_font ();
                 } else {
@@ -52,6 +52,7 @@ namespace Spectator.Dialogs.Preference {
                 }
                 font_button.sensitive = !use_default_font_switch.active;
                 settings.use_default_font = use_default_font_switch.active;
+                return true;
             });
 
 

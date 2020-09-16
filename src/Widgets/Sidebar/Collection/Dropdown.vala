@@ -31,7 +31,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public signal void request_item_selected (uint id);
         public signal void request_edit_clicked (uint id);
         public signal void request_clone_clicked (uint id);
-        public signal void collection_delete (Models.Collection collection);
+        public signal void collection_delete ();
         public signal void collection_edit (Models.Collection collection);
         public signal void create_collection_request (uint id);
 
@@ -127,59 +127,6 @@ namespace Spectator.Widgets.Sidebar.Collection {
             this.indicator = new Gtk.Image.from_icon_name (collection_open_icon, Gtk.IconSize.BUTTON);;
             this.expanded = true;
 
-            //  collection.request_added.connect ((request) => {
-            //      var item = new Item (request);
-            //      item_box.add (item);
-
-            //      item.button_event.connect ((event) => {
-            //          var result = false;
-            //          switch (event.button) {
-            //              case 1:
-            //                  result = true;
-            //                  item_clicked (item);
-            //                  break;
-            //              case 3:
-            //                  var menu = new Gtk.Menu ();
-            //                  var edit_item = new Gtk.MenuItem.with_label (_("Edit"));
-            //                  var clone_item = new Gtk.MenuItem.with_label (_("Clone"));
-            //                  var delete_item = new Gtk.MenuItem.with_label (_("Delete"));
-
-            //                  edit_item.activate.connect (() => {
-            //                      item_edit (item.item);
-            //                  });
-
-            //                  clone_item.activate.connect (() => {
-            //                      item_clone (item.item);
-            //                  });
-
-            //                  delete_item.activate.connect (() => {
-            //                      item_deleted (request);
-            //                      item_box.remove (item);
-            //                      item = null;
-            //                  });
-
-            //                  menu.add (edit_item);
-            //                  menu.add (clone_item);
-            //                  menu.add (delete_item);
-            //                  menu.show_all ();
-            //                  menu.popup_at_pointer (event);
-
-            //                  result = true;
-            //                  break;
-            //              default:
-            //                  break;
-            //          }
-            //          return result;
-            //      });
-
-            //      active_item_changed (item);
-
-            //      expanded = true;
-            //      collection.items_visible = true;
-            //      show_all ();
-            //  });
-
-
             var motion_grid = new Gtk.Grid ();
             motion_grid.margin = 6;
             motion_grid.get_style_context ().add_class ("grid-motion");
@@ -193,12 +140,10 @@ namespace Spectator.Widgets.Sidebar.Collection {
             box.add (label);
             box.pack_end (motion_revealer, true, true);
 
-
             var event_box = create_event_box (collection);
 
             add (event_box);
             add (item_box);
-
 
             show_all ();
             item_box.hide ();
@@ -257,7 +202,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                         });
 
                         delete_item.activate.connect (() => {
-                            collection_delete (model);
+                            collection_delete ();
                         });
 
                         menu.add (new_request_item);

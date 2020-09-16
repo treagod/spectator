@@ -52,8 +52,9 @@ namespace Spectator.Dialogs.Preference {
             });
 
             redirect_switch.active = settings.follow_redirects;
-            redirect_switch.notify.connect (() => {
+            redirect_switch.state_set.connect (() => {
                 settings.follow_redirects = redirect_switch.active;
+                return true;
             });
 
             settings.schema.bind ("dark-theme", dark_theme_switch, "active", SettingsBindFlags.DEFAULT);

@@ -112,7 +112,6 @@ namespace Spectator.Widgets.Sidebar {
         public signal void notify_delete ();
         public signal void create_collection_request (uint id);
         public signal void collection_edit (Models.Collection collection);
-        public signal void collection_delete (Models.Collection collection);
 
         public Container (Spectator.Window window) {
             this.window = window;
@@ -144,8 +143,38 @@ namespace Spectator.Widgets.Sidebar {
                 collection_edit (collection);
             });
 
-            collection.collection_delete.connect ((collection) => {
-                collection_delete (collection);
+            collection.collection_delete.connect ((id, contains_active_request) => {
+                var collection = this.window.collection_service.get_collection_by_id (id);
+
+                if (collection != null) {
+                    var message_dialog = new Granite.MessageDialog.with_image_from_icon_name (
+                        _("Delete Collection?"),
+                        _("""This action will permanently delete <b>%s</b>.
+All requests for this collection will also be deleted.
+This can't be undone!""".printf (collection.name)),
+                        "dialog-warning",
+                        Gtk.ButtonsType.CANCEL
+                   );
+                   message_dialog.transient_for = this.window;
+
+                   message_dialog.secondary_label.use_markup = true;
+
+                   var suggested_button = new Gtk.Button.with_label (_("Delete Collection"));
+                   suggested_button.get_style_context ().add_class (Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION);
+                   message_dialog.add_action_widget (suggested_button, Gtk.ResponseType.ACCEPT);
+
+                   message_dialog.show_all ();
+                   if (message_dialog.run () == Gtk.ResponseType.ACCEPT) {
+                       this.window.collection_service.delete_collection (collection.id);
+                       this.show_items ();
+
+                       if (contains_active_request) {
+                           this.window.show_welcome ();
+                       }
+                   }
+
+                   message_dialog.destroy ();
+                }
             });
 
             collection.request_item_selected.connect ((id) => {
