@@ -1,4 +1,4 @@
-com.github.treagod.spectator (0.4.2) bionic; urgency=low
+com.github.treagod.spectator (0.4.3) bionic; urgency=low
 
   * Fix representation of Spectator correctly in AppCenter
 
