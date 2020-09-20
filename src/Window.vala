@@ -27,8 +27,8 @@ namespace Spectator {
         private Widgets.Sidebar.Container sidebar;
         private Widgets.Content content;
 
-        private IRequestService _request_service;
-        public IRequestService request_service {
+        private Repository.IRequest _request_service;
+        public Repository.IRequest request_service {
             get {
                 return this._request_service;
             }
@@ -47,8 +47,8 @@ namespace Spectator {
             }
         }
 
-        private IOrderService _order_service;
-        public IOrderService order_service {
+        private Repository.ICustomOrder _order_service;
+        public Repository.ICustomOrder order_service {
             get {
                 return this._order_service;
             }
@@ -57,7 +57,7 @@ namespace Spectator {
             }
         }
 
-        public Window (Gtk.Application app, IRequestService request_service, ICollectionService collection_service, IOrderService order_service) {
+        public Window (Gtk.Application app, Repository.IRequest request_service, ICollectionService collection_service, Repository.ICustomOrder order_service) {
             var settings = Settings.get_instance ();
             // Store the main app to be used
             Object (application: app);

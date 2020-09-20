@@ -160,11 +160,12 @@ namespace Spectator.Services {
 
             var collection = new Models.Collection.with_id (id, name);
 
-            if (collection_object.has_member ("items_visible")) {
-                collection.items_visible = collection_object.get_boolean_member ("items_visible");
-            } else {
-                collection.items_visible = false;
-            }
+            /* Deprecated */
+            //  if (collection_object.has_member ("items_visible")) {
+            //      collection.items_visible = collection_object.get_boolean_member ("items_visible");
+            //  } else {
+            //      collection.items_visible = false;
+            //  }
 
             return collection;
         }

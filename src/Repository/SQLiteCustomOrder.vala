@@ -1,0 +1,186 @@
+/*
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
+*/
+
+namespace Spectator.Repository {
+    public class SQLiteCustomOrder : Repository.ICustomOrder, Object {
+        private weak Sqlite.Database db;
+
+        public SQLiteCustomOrder (Sqlite.Database db) {
+            this.db = db;
+        }
+
+        public Gee.ArrayList<Order> get_order () {
+            var order = new Gee.ArrayList<Order> ();
+            var query = "SELECT * FROM CustomOrder ORDER BY position ASC;";
+            Sqlite.Statement stmt;
+            int rc = db.prepare_v2 (query, query.length, out stmt);
+
+            int cols = stmt.column_count ();
+            while (stmt.step () == Sqlite.ROW) {
+                var entry = new Order (1, Order.Type.REQUEST); // Make empty constructor
+
+                for (int i = 0; i < cols; i++) {
+                    string col_name = stmt.column_name (i) ?? "<none>";
+
+                    switch (col_name) {
+                        case "id":
+                            entry.id = stmt.column_int (i);
+                            break;
+                        case "type":
+                            entry.type = (Order.Type) stmt.column_int (i) ;
+                            break;
+                    }
+                }
+
+                order.add (entry);
+            }
+
+            return order;
+        }
+
+        public void move_request (uint target_id, uint moved_id) {
+            this.db.exec ("BEGIN TRANSACTION;");
+            Sqlite.Statement stmt;
+            var reposition_other_query = """
+            UPDATE CustomOrder
+            SET position = CASE
+            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID) THEN position + 1
+            ELSE position - 1
+            END
+            WHERE
+            position
+            BETWEEN CASE
+            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID)
+            THEN (SELECT position FROM CustomOrder WHERE id = $TARGET_ID) + 1
+            ELSE (SELECT position FROM CustomOrder WHERE id = $MOVED_ID) + 1
+            END
+            AND CASE
+            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID)
+            THEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID) - 1
+            ELSE (SELECT position FROM CustomOrder WHERE id = $TARGET_ID)
+            END;
+            """.replace ("$MOVED_ID", "%u".printf (moved_id)).replace ("$TARGET_ID", "%u".printf (target_id));
+
+
+            var reposition_moved_request_query = """
+            UPDATE CustomOrder
+            SET position = (SELECT position FROM CustomOrder WHERE id = $TARGET_ID) + 1
+            WHERE id = $MOVED_ID;
+            """.replace ("$MOVED_ID", "%u".printf (moved_id)).replace ("$TARGET_ID", "%u".printf (target_id));
+
+            this.db.exec (reposition_other_query);
+            this.db.exec (reposition_moved_request_query);
+            this.db.exec ("COMMIT;");
+        }
+
+        public void move_request_to_end (uint moved_id) {
+            this.db.exec ("BEGIN TRANSACTION;");
+            Sqlite.Statement stmt;
+            string insert_query = """
+            UPDATE CustomOrder
+            SET position = position - 1
+            WHERE position > (SELECT position FROM CustomOrder WHERE id = $MOVED_ID);
+            """;
+
+            int ec = this.db.prepare_v2 (insert_query, insert_query.length, out stmt);
+            if (ec != Sqlite.OK) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+            }
+
+            int id_pos = stmt.bind_parameter_index ("$MOVED_ID");
+
+            stmt.bind_int (id_pos, (int) moved_id);
+
+            if (stmt.step () != Sqlite.DONE) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+            }
+
+            stmt.reset ();
+
+            insert_query = """
+            UPDATE CustomOrder
+            SET position = ((SELECT COUNT(*) FROM CustomOrder) - 1)
+            WHERE id = $MOVED_ID;
+            """;
+
+            ec = this.db.prepare_v2 (insert_query, insert_query.length, out stmt);
+            if (ec != Sqlite.OK) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+            }
+
+            id_pos = stmt.bind_parameter_index ("$MOVED_ID");
+
+            stmt.bind_int (id_pos, (int) moved_id);
+
+            if (stmt.step () != Sqlite.DONE) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+            }
+
+            this.db.exec ("COMMIT;");
+        }
+
+        public void move_request_to_begin (uint moved_id) {
+            this.db.exec ("BEGIN TRANSACTION;");
+            Sqlite.Statement stmt;
+            string insert_query = """
+            UPDATE CustomOrder
+            SET position = position + 1
+            WHERE position < (SELECT position FROM CustomOrder WHERE id = $MOVED_ID);
+            """;
+
+            int ec = this.db.prepare_v2 (insert_query, insert_query.length, out stmt);
+            if (ec != Sqlite.OK) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+            }
+
+            int id_pos = stmt.bind_parameter_index ("$MOVED_ID");
+
+            stmt.bind_int (id_pos, (int) moved_id);
+
+            if (stmt.step () != Sqlite.DONE) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+            }
+
+            stmt.reset ();
+
+            insert_query = """
+            UPDATE CustomOrder
+            SET position = 0
+            WHERE id = $MOVED_ID;
+            """;
+
+            ec = this.db.prepare_v2 (insert_query, insert_query.length, out stmt);
+            if (ec != Sqlite.OK) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+            }
+
+            id_pos = stmt.bind_parameter_index ("$MOVED_ID");
+
+            stmt.bind_int (id_pos, (int) moved_id);
+
+            if (stmt.step () != Sqlite.DONE) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+            }
+
+            this.db.exec ("COMMIT;");
+        }
+    }
+}

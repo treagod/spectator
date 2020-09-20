@@ -19,8 +19,12 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-public static int main (string[] args) {
-    var application = new Spectator.Application ();
 
-    return application.run (args);
-  }
+namespace Spectator.Repository {
+    public interface ICustomOrder : Object {
+        public abstract Gee.ArrayList<Order> get_order ();
+        public abstract void move_request (uint target_id, uint moved_id);
+        public abstract void move_request_to_begin (uint moved_id);
+        public abstract void move_request_to_end (uint moved_id);
+    }
+}

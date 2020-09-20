@@ -53,7 +53,9 @@ namespace Spectator.Dialogs.Request {
                 show_warning (_("Request name must not be empty."));
             } else {
                 var index = method_box.get_active ();
-                var request = new Models.Request (name, Models.Method.convert (index));
+                var request = new Models.Request ();
+                request.name = name;
+                request.method = Models.Method.convert (index);
                 creation (request);
                 destroy ();
             }

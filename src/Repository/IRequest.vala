@@ -19,8 +19,12 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-public static int main (string[] args) {
-    var application = new Spectator.Application ();
-
-    return application.run (args);
-  }
+namespace Spectator.Repository {
+    public interface IRequest : Object {
+        public abstract Gee.ArrayList<Models.Request> get_requests ();
+        public abstract bool add_request (Models.Request request);
+        public abstract bool delete_request (uint id);
+        public abstract bool set_collection_id_for_request (uint request_id, uint collection_id);
+        public abstract Models.Request? get_request_by_id (uint id);
+    }
+}

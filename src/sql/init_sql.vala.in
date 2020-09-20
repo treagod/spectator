@@ -19,8 +19,8 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-public static int main (string[] args) {
-    var application = new Spectator.Application ();
-
-    return application.run (args);
-  }
+namespace Spectator {
+    public const string SQL_INIT_CMD = """
+        @SQL@
+    """;
+}
