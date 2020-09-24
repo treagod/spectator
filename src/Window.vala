@@ -37,8 +37,8 @@ namespace Spectator {
             }
         }
 
-        private ICollectionService _collection_service;
-        public ICollectionService collection_service {
+        private Repository.ICollection _collection_service;
+        public Repository.ICollection collection_service {
             get {
                 return this._collection_service;
             }
@@ -57,7 +57,7 @@ namespace Spectator {
             }
         }
 
-        public Window (Gtk.Application app, Repository.IRequest request_service, ICollectionService collection_service, Repository.ICustomOrder order_service) {
+        public Window (Gtk.Application app, Repository.IRequest request_service, Repository.ICollection collection_service, Repository.ICustomOrder order_service) {
             var settings = Settings.get_instance ();
             // Store the main app to be used
             Object (application: app);

@@ -1,0 +1,127 @@
+/*
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
+*/
+
+
+namespace Spectator.Repository {
+    public class SQLiteCollection : ICollection, Object {
+        private weak Sqlite.Database db;
+        public signal void collection_deleted (uint id);
+
+        public SQLiteCollection (Sqlite.Database db) {
+            this.db = db;
+        }
+        public Gee.ArrayList<Models.Collection> get_collections () {
+            var collections = new Gee.ArrayList<Models.Collection> ();
+            var query = "SELECT * FROM Collection;";
+            Sqlite.Statement stmt;
+            int rc = db.prepare_v2 (query, query.length, out stmt);
+
+            int cols = stmt.column_count ();
+            while (stmt.step () == Sqlite.ROW) {
+                var collection = new Models.Collection ("ad"); // Make empty constructor
+
+                for (int i = 0; i < cols; i++) {
+                    string col_name = stmt.column_name (i) ?? "<none>";
+
+                    switch (col_name) {
+                        case "id":
+                            collection.id = stmt.column_int (i);
+                            break;
+                        case "name":
+                            collection.name = stmt.column_text (i) ;
+                            break;
+                    }
+                }
+                collections.add (collection);
+            }
+
+            return collections;
+        }
+
+        public bool delete_collection (uint id) {
+            return true;
+        }
+
+        public bool add_request_to_collection_begin (uint collection_id, uint request_id) {
+
+            return true;
+        }
+
+        public bool add_request_to_collection (uint collection_id, uint request_id) {
+            return true;
+        }
+
+        public bool add_collection (Models.Collection collection) {
+            if (this.db != null) {
+                Sqlite.Statement stmt;
+                string insert_query = "INSERT INTO Collection (name) VALUES ($NAME);";
+
+                int ec = db.prepare_v2 (insert_query, insert_query.length, out stmt);
+                if (ec != Sqlite.OK) {
+                    stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+                }
+
+                int name_pos = stmt.bind_parameter_index ("$NAME");
+
+                stmt.bind_text (name_pos, collection.name);
+
+                if (stmt.step () != Sqlite.DONE) {
+                    stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+                }
+
+                collection.id = (uint) this.db.last_insert_rowid ();
+            }
+
+            return true;
+        }
+
+        public Models.Collection? get_collection_by_id (uint id) {
+            var collection = new Models.Collection ("dummy");
+            var query = "SELECT * FROM Collection WHERE id = $COLLECTION_ID;";
+            Sqlite.Statement stmt;
+            int rc = db.prepare_v2 (query, query.length, out stmt);
+
+            int id_pos = stmt.bind_parameter_index ("$COLLECTION_ID");
+            stmt.bind_int (id_pos, (int) id);
+
+            int cols = stmt.column_count ();
+            while (stmt.step () == Sqlite.ROW) {
+                for (int i = 0; i < cols; i++) {
+                    string col_name = stmt.column_name (i) ?? "<none>";
+
+                    switch (col_name) {
+                        case "id":
+                            collection.id = stmt.column_int (i);
+                            break;
+                        case "name":
+                            collection.name = stmt.column_text (i) ;
+                            break;
+                    }
+                }
+            }
+
+            return collection;
+        }
+
+        public void append_after_request_to_collection (uint collection_id, uint target_id, uint moved_id) {
+        }
+    }
+}

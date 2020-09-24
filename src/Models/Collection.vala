@@ -23,7 +23,7 @@ namespace Spectator.Models {
     public class Collection {
         public Gee.ArrayList<uint> request_ids { get; private set; }
         public string name { get; set; }
-        public uint id { get; private set; }
+        public uint id { get; set; }
         private static uint max_id = 0; /* Deprected: move id generation out of model */
 
         public Collection (string nam) {
