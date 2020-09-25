@@ -289,7 +289,8 @@ namespace Spectator {
                 if (collection != null) {
                     var dialog = new Dialogs.Collection.UpdateCollectionDialog (this, collection);
 
-                    dialog.updated.connect (() => {
+                    dialog.updated.connect ((name) => {
+                        this.collection_service.rename (id, name);
                         this.sidebar.show_items ();
                     });
 

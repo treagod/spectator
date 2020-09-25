@@ -105,6 +105,30 @@ namespace Spectator.Repository {
             return true;
         }
 
+        public void rename (uint id, string name) {
+            Sqlite.Statement stmt;
+            string insert_query = """
+            UPDATE Collection
+            SET name = $NEW_NAME
+            WHERE id = $COLLECTION_ID;
+            """;
+
+            int ec = db.prepare_v2 (insert_query, insert_query.length, out stmt);
+            if (ec != Sqlite.OK) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+            }
+
+            int name_pos = stmt.bind_parameter_index ("$NEW_NAME");
+            stmt.bind_text (name_pos, name);
+
+            int id_pos = stmt.bind_parameter_index ("$COLLECTION_ID");
+            stmt.bind_int (id_pos, (int) id);
+
+            if (stmt.step () != Sqlite.DONE) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+            }
+        }
+
         public Models.Collection? get_collection_by_id (uint id) {
             var collection = new Models.Collection ("dummy");
             var query = "SELECT * FROM Collection WHERE id = $COLLECTION_ID;";

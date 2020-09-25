@@ -21,7 +21,7 @@
 
 namespace Spectator.Dialogs.Collection {
     public class UpdateCollectionDialog : Gtk.Dialog {
-        public signal void updated ();
+        public signal void updated (string name);
         protected Gtk.Entry collection_name_entry;
         private DialogTitle dialog_title;
         private bool warning_active;
@@ -75,8 +75,7 @@ namespace Spectator.Dialogs.Collection {
             if (name.length == 0) {
                 show_warning (_("Collection name must not be empty."));
             } else {
-                collection.name = collection_name_entry.text;
-                updated ();
+                updated (collection_name_entry.text);
                 destroy ();
             }
         }

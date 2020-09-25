@@ -24,6 +24,7 @@ namespace Spectator.Repository {
     public interface ICollection : Object {
         public abstract Gee.ArrayList<Models.Collection> get_collections ();
         public abstract bool add_collection (Models.Collection collection);
+        public abstract void rename (uint id, string name);
         public abstract bool delete_collection (uint id);
         public abstract bool add_request_to_collection (uint collection, uint request_id);
         public abstract bool add_request_to_collection_begin (uint collection, uint request_id);
