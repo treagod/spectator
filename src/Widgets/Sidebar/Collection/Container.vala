@@ -263,9 +263,8 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 this.collection_visiblity[collection.id] = visible;
             });
 
-            foreach (var request_id in collection.request_ids) {
-                var request = this.window.request_service.get_request_by_id (request_id);
-
+            var requests = this.window.collection_service.get_requests (collection.id);
+            foreach (var request in requests) {
                 if (request != null) {
                     this.request_items[request.id] = dropdown.add_request (request);
                 }

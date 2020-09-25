@@ -29,5 +29,6 @@ namespace Spectator.Repository {
         public abstract bool add_request_to_collection_begin (uint collection, uint request_id);
         public abstract Models.Collection? get_collection_by_id (uint id);
         public abstract void append_after_request_to_collection (uint collection_id, uint target_id, uint moved_id);
+        public abstract Gee.ArrayList<Models.Request> get_requests (uint id);
     }
 }

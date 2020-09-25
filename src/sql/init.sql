@@ -49,6 +49,8 @@ BEGIN
     WHERE position > (SELECT position FROM CustomOrder WHERE id = OLD.id AND type = 1);
     DELETE FROM CustomOrder
     WHERE id = OLD.id AND type = 1;
+    DELETE FROM Request
+    WHERE collection_id = OLD.id;
 END;
 
 CREATE INDEX IF NOT EXISTS "Entry" ON "CustomOrder" (

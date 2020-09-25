@@ -135,5 +135,48 @@ namespace Spectator.Repository {
 
         public void append_after_request_to_collection (uint collection_id, uint target_id, uint moved_id) {
         }
+
+        public Gee.ArrayList<Models.Request> get_requests (uint id) {
+            var requests = new Gee.ArrayList<Models.Request> ();
+
+            var query = "SELECT * FROM Request WHERE collection_id = $COLLECTION_ID;";
+            Sqlite.Statement stmt;
+            int rc = db.prepare_v2 (query, query.length, out stmt);
+
+            int id_pos = stmt.bind_parameter_index ("$COLLECTION_ID");
+            stmt.bind_int (id_pos, (int) id);
+
+            int cols = stmt.column_count ();
+            while (stmt.step () == Sqlite.ROW) {
+                var request = new Models.Request (); // Make empty constructor
+
+                for (int i = 0; i < cols; i++) {
+                    string col_name = stmt.column_name (i) ?? "<none>";
+
+                    switch (col_name) {
+                        case "id":
+                            request.id = stmt.column_int (i);
+                            break;
+                        case "name":
+                            request.name = stmt.column_text (i) ;
+                            break;
+                        case "url":
+                            request.uri = stmt.column_text (i) ?? "";
+                            break;
+                        case "method":
+                            request.method = Models.Method.convert (stmt.column_int (i));
+                            break;
+                        case "last_sent":
+                            request.last_sent = new DateTime.from_unix_local (stmt.column_int64 (i));
+                            break;
+                        case "collection_id":
+                            break; // NecessaryP
+                    }
+                }
+                requests.add (request);
+            }
+
+            return requests;
+        }
     }
 }
