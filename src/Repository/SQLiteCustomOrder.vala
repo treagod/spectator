@@ -69,26 +69,26 @@ namespace Spectator.Repository {
             return order;
         }
 
-        public void move_request (uint target_id, uint moved_id) {
+        public void move_request_after_request (uint target_id, uint moved_id) {
             this.db.exec ("BEGIN TRANSACTION;");
             Sqlite.Statement stmt;
             var reposition_other_query = """
             UPDATE CustomOrder
             SET position = CASE
-            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID) THEN position + 1
+            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 0) THEN position + 1
             ELSE position - 1
             END
             WHERE
             position
             BETWEEN CASE
-            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID)
-            THEN (SELECT position FROM CustomOrder WHERE id = $TARGET_ID) + 1
-            ELSE (SELECT position FROM CustomOrder WHERE id = $MOVED_ID) + 1
+            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 0)
+            THEN (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 0) + 1
+            ELSE (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) + 1
             END
             AND CASE
-            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID)
-            THEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID) - 1
-            ELSE (SELECT position FROM CustomOrder WHERE id = $TARGET_ID)
+            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 0)
+            THEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) - 1
+            ELSE (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 0)
             END;
             """.replace ("$MOVED_ID", "%u".printf (moved_id)).replace ("$TARGET_ID", "%u".printf (target_id));
 
@@ -96,7 +96,7 @@ namespace Spectator.Repository {
             var reposition_moved_request_query = """
             UPDATE CustomOrder
             SET position = (SELECT position FROM CustomOrder WHERE id = $TARGET_ID) + 1
-            WHERE id = $MOVED_ID;
+            WHERE id = $MOVED_ID AND type = 0;
             """.replace ("$MOVED_ID", "%u".printf (moved_id)).replace ("$TARGET_ID", "%u".printf (target_id));
 
             this.db.exec (reposition_other_query);
@@ -131,7 +131,7 @@ namespace Spectator.Repository {
             insert_query = """
             UPDATE CustomOrder
             SET position = ((SELECT COUNT(*) FROM CustomOrder) - 1)
-            WHERE id = $MOVED_ID;
+            WHERE id = $MOVED_ID AND type = 0;
             """;
 
             ec = this.db.prepare_v2 (insert_query, insert_query.length, out stmt);
@@ -150,13 +150,58 @@ namespace Spectator.Repository {
             this.db.exec ("COMMIT;");
         }
 
+
+        public bool add_request_to_collection_begin (uint collection_id, uint request_id) {
+            this.db.exec ("BEGIN TRANSACTION;");
+
+            var change_requests_collection_id_query = """
+            UPDATE Request
+            SET collection_id = $TARGET_ID
+            WHERE id = $MOVED_ID;
+            """.replace ("$MOVED_ID", "%u".printf (request_id)).replace ("$TARGET_ID", "%u".printf (collection_id));
+
+            var reposition_other_query = """
+            UPDATE CustomOrder
+            SET position = CASE
+            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 1) THEN position + 1
+            ELSE position - 1
+            END
+            WHERE
+            position
+            BETWEEN CASE
+            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID and type = 1)
+            THEN (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 1) + 1
+            ELSE (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) + 1
+            END
+            AND CASE
+            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 1)
+            THEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) - 1
+            ELSE (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 1)
+            END;
+            """.replace ("$MOVED_ID", "%u".printf (request_id)).replace ("$TARGET_ID", "%u".printf (collection_id));
+
+
+            var reposition_moved_request_query = """
+            UPDATE CustomOrder
+            SET position = (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 1) + 1
+            WHERE id = $MOVED_ID;
+            """.replace ("$MOVED_ID", "%u".printf (request_id)).replace ("$TARGET_ID", "%u".printf (collection_id));
+
+            this.db.exec (change_requests_collection_id_query);
+            this.db.exec (reposition_other_query);
+            this.db.exec (reposition_moved_request_query);
+            this.db.exec ("COMMIT;");
+
+            return true;
+        }
+
         public void move_request_to_begin (uint moved_id) {
             this.db.exec ("BEGIN TRANSACTION;");
             Sqlite.Statement stmt;
             string insert_query = """
             UPDATE CustomOrder
             SET position = position + 1
-            WHERE position < (SELECT position FROM CustomOrder WHERE id = $MOVED_ID);
+            WHERE position < (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0);
             """;
 
             int ec = this.db.prepare_v2 (insert_query, insert_query.length, out stmt);
@@ -177,7 +222,7 @@ namespace Spectator.Repository {
             insert_query = """
             UPDATE CustomOrder
             SET position = 0
-            WHERE id = $MOVED_ID;
+            WHERE id = $MOVED_ID AND type = 0;
             """;
 
             ec = this.db.prepare_v2 (insert_query, insert_query.length, out stmt);
@@ -193,6 +238,54 @@ namespace Spectator.Repository {
                 stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
             }
 
+            this.db.exec ("""
+            UPDATE Request
+            SET collection_id = NULL
+            WHERE id = $MOVED_ID;
+            """.replace ("$MOVED_ID", "%u".printf (moved_id)));
+
+            this.db.exec ("COMMIT;");
+        }
+
+        public void append_after_request_to_collection_requests (uint collection_id, uint target_id, uint moved_id) {
+            this.db.exec ("BEGIN TRANSACTION;");
+
+            var change_requests_collection_id_query = """
+            UPDATE Request
+            SET collection_id = $TARGET_ID
+            WHERE id = $MOVED_ID;
+            """.replace ("$MOVED_ID", "%u".printf (moved_id)).replace ("$TARGET_ID", "%u".printf (collection_id));
+
+            var reposition_other_query = """
+            UPDATE CustomOrder
+            SET position = CASE
+            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 0) THEN position + 1
+            ELSE position - 1
+            END
+            WHERE
+            position
+            BETWEEN CASE
+            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID and type = 0)
+            THEN (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 0) + 1
+            ELSE (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) + 1
+            END
+            AND CASE
+            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 0)
+            THEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) - 1
+            ELSE (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 0)
+            END;
+            """.replace ("$MOVED_ID", "%u".printf (moved_id)).replace ("$TARGET_ID", "%u".printf (target_id));
+
+
+            var reposition_moved_request_query = """
+            UPDATE CustomOrder
+            SET position = (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 0) + 1
+            WHERE id = $MOVED_ID;
+            """.replace ("$MOVED_ID", "%u".printf (moved_id)).replace ("$TARGET_ID", "%u".printf (target_id));
+
+            this.db.exec (change_requests_collection_id_query);
+            this.db.exec (reposition_other_query);
+            this.db.exec (reposition_moved_request_query);
             this.db.exec ("COMMIT;");
         }
     }

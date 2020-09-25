@@ -198,7 +198,7 @@ This can't be undone!""".printf (collection.name)),
                     if (new_request.collection_id != null) {
                         this.window.collection_service.add_request_to_collection (new_request.collection_id, new_request.id);
                     } else {
-                        this.window.order_service.move_request (request.id, new_request.id);
+                        this.window.order_service.move_request_after_request (request.id, new_request.id);
                     }
                     this.show_items ();
                 }
@@ -218,28 +218,23 @@ This can't be undone!""".printf (collection.name)),
                 this.clear_request_collection (moved_id);
 
                 if (target_request != null) {
-                    this.window.order_service.move_request (target_id, moved_id);
+                    this.window.order_service.move_request_after_request (target_id, moved_id);
                 }
 
                 this.show_items ();
             });
 
             collection.request_moved_after_collection_request.connect ((target_id, moved_id, collection_id) => {
-                var moved_request = this.window.request_service.get_request_by_id (moved_id);
-                var target_request = this.window.request_service.get_request_by_id (target_id);
                 this.clear_request_collection (moved_id);
 
-                if (target_request != null) {
-                    moved_request.collection_id = target_request.collection_id;
-                    this.window.collection_service.append_after_request_to_collection (collection_id, target_id, moved_id);
-                }
+                this.window.order_service.append_after_request_to_collection_requests (collection_id, target_id, moved_id);
 
                 this.show_items ();
             });
 
             collection.request_added_to_collection.connect ((collection_id, id) => {
                 this.clear_request_collection (id);
-                this.window.collection_service.add_request_to_collection_begin (collection_id, id);
+                this.window.order_service.add_request_to_collection_begin (collection_id, id);
                 this.show_items ();
             });
 

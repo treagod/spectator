@@ -74,11 +74,6 @@ namespace Spectator.Repository {
             return true;
         }
 
-        public bool add_request_to_collection_begin (uint collection_id, uint request_id) {
-
-            return true;
-        }
-
         public bool add_request_to_collection (uint collection_id, uint request_id) {
             return true;
         }
@@ -163,7 +158,13 @@ namespace Spectator.Repository {
         public Gee.ArrayList<Models.Request> get_requests (uint id) {
             var requests = new Gee.ArrayList<Models.Request> ();
 
-            var query = "SELECT * FROM Request WHERE collection_id = $COLLECTION_ID;";
+            var query = """
+            SELECT *
+            FROM Request
+            INNER JOIN CustomOrder ON Request.id = CustomOrder.id AND CustomOrder.type = 0
+            WHERE collection_id = $COLLECTION_ID
+            ORDER BY position;
+            """;
             Sqlite.Statement stmt;
             int rc = db.prepare_v2 (query, query.length, out stmt);
 

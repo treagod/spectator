@@ -23,8 +23,10 @@
 namespace Spectator.Repository {
     public interface ICustomOrder : Object {
         public abstract Gee.ArrayList<Order> get_order ();
-        public abstract void move_request (uint target_id, uint moved_id);
+        public abstract void move_request_after_request (uint target_id, uint moved_id);
         public abstract void move_request_to_begin (uint moved_id);
         public abstract void move_request_to_end (uint moved_id);
+        public abstract bool add_request_to_collection_begin (uint collection, uint request_id);
+        public abstract void append_after_request_to_collection_requests (uint collection_id, uint target_id, uint moved_id);
     }
 }
