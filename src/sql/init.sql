@@ -34,6 +34,9 @@ END;
 CREATE TRIGGER IF NOT EXISTS delete_custom_order_after_request_deletion
     AFTER DELETE ON Request
 BEGIN
+    UPDATE CustomOrder
+    SET position = position - 1
+    WHERE position > (SELECT position FROM CustomOrder WHERE id = OLD.id AND type = 0);
     DELETE FROM CustomOrder
     WHERE id = OLD.id AND type = 0;
 END;
@@ -41,6 +44,9 @@ END;
 CREATE TRIGGER IF NOT EXISTS delete_custom_order_after_collection_deletion
     AFTER DELETE ON Collection
 BEGIN
+    UPDATE CustomOrder
+    SET position = position - 1
+    WHERE position > (SELECT position FROM CustomOrder WHERE id = OLD.id AND type = 1);
     DELETE FROM CustomOrder
     WHERE id = OLD.id AND type = 1;
 END;

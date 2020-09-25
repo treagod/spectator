@@ -23,7 +23,6 @@
 namespace Spectator.Repository {
     public class SQLiteCollection : ICollection, Object {
         private weak Sqlite.Database db;
-        public signal void collection_deleted (uint id);
 
         public SQLiteCollection (Sqlite.Database db) {
             this.db = db;
@@ -57,6 +56,21 @@ namespace Spectator.Repository {
         }
 
         public bool delete_collection (uint id) {
+            Sqlite.Statement stmt;
+            string insert_query = "DELETE FROM Collection WHERE id = $COLLECTION_ID;";
+
+            int ec = db.prepare_v2 (insert_query, insert_query.length, out stmt);
+            if (ec != Sqlite.OK) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+            }
+
+            int id_pos = stmt.bind_parameter_index ("$COLLECTION_ID");
+            stmt.bind_int (id_pos, (int) id);
+
+            if (stmt.step () != Sqlite.DONE) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+            }
+
             return true;
         }
 
@@ -70,25 +84,23 @@ namespace Spectator.Repository {
         }
 
         public bool add_collection (Models.Collection collection) {
-            if (this.db != null) {
-                Sqlite.Statement stmt;
-                string insert_query = "INSERT INTO Collection (name) VALUES ($NAME);";
+            Sqlite.Statement stmt;
+            string insert_query = "INSERT INTO Collection (name) VALUES ($NAME);";
 
-                int ec = db.prepare_v2 (insert_query, insert_query.length, out stmt);
-                if (ec != Sqlite.OK) {
-                    stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
-                }
-
-                int name_pos = stmt.bind_parameter_index ("$NAME");
-
-                stmt.bind_text (name_pos, collection.name);
-
-                if (stmt.step () != Sqlite.DONE) {
-                    stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
-                }
-
-                collection.id = (uint) this.db.last_insert_rowid ();
+            int ec = db.prepare_v2 (insert_query, insert_query.length, out stmt);
+            if (ec != Sqlite.OK) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
             }
+
+            int name_pos = stmt.bind_parameter_index ("$NAME");
+
+            stmt.bind_text (name_pos, collection.name);
+
+            if (stmt.step () != Sqlite.DONE) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+            }
+
+            collection.id = (uint) this.db.last_insert_rowid ();
 
             return true;
         }

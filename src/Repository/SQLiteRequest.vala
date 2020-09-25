@@ -23,9 +23,6 @@ namespace Spectator.Repository {
     public class SQLiteRequest : IRequest, Object {
         private weak Sqlite.Database db;
 
-        public signal void request_added (Models.Request request);
-        public signal void request_deleted (uint id);
-
         public SQLiteRequest (Sqlite.Database db) {
             this.db = db;
         }
@@ -70,31 +67,27 @@ namespace Spectator.Repository {
         }
 
         public bool add_request (Models.Request request) {
-            if (this.db != null) {
-                Sqlite.Statement stmt;
-                string insert_query = """
-                INSERT INTO Request (name, method) VALUES ($NAME, $METHOD);
-                """;
+            Sqlite.Statement stmt;
+            string insert_query = """
+            INSERT INTO Request (name, method) VALUES ($NAME, $METHOD);
+            """;
 
-                int ec = db.prepare_v2 (insert_query, insert_query.length, out stmt);
-                if (ec != Sqlite.OK) {
-                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
-                }
-
-                int name_pos = stmt.bind_parameter_index ("$NAME");
-                int method_pos = stmt.bind_parameter_index ("$METHOD");
-
-                stmt.bind_text (name_pos, request.name);
-                stmt.bind_int (method_pos, request.method.to_i ());
-
-                if (stmt.step () != Sqlite.DONE) {
-                    stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
-                }
-
-                request.id = (uint) this.db.last_insert_rowid ();
+            int ec = db.prepare_v2 (insert_query, insert_query.length, out stmt);
+            if (ec != Sqlite.OK) {
+            stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
             }
 
-            this.request_added (request);
+            int name_pos = stmt.bind_parameter_index ("$NAME");
+            int method_pos = stmt.bind_parameter_index ("$METHOD");
+
+            stmt.bind_text (name_pos, request.name);
+            stmt.bind_int (method_pos, request.method.to_i ());
+
+            if (stmt.step () != Sqlite.DONE) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+            }
+
+            request.id = (uint) this.db.last_insert_rowid ();
 
             return true;
         }
@@ -117,8 +110,6 @@ namespace Spectator.Repository {
             if (stmt.step () != Sqlite.DONE) {
                 stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
             }
-
-            this.request_deleted (id);
 
             return false;
         }
