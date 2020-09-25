@@ -29,7 +29,20 @@ namespace Spectator.Repository {
 
         public Gee.ArrayList<Order> get_order () {
             var order = new Gee.ArrayList<Order> ();
-            var query = "SELECT * FROM CustomOrder ORDER BY position ASC;";
+            var query = """
+            SELECT CustomOrder.id, CustomOrder.type, CustomOrder.position FROM CustomOrder
+            INNER JOIN
+                (
+                    SELECT id, 0 AS type
+                    FROM Request
+                    WHERE Request.collection_id IS NULL
+                    UNION
+                    SELECT id, 1 as type
+                    FROM Collection
+                ) AS CollectionAndRequests
+            ON CustomOrder.id = CollectionAndRequests.id AND CustomOrder.type = CollectionAndRequests.type
+            ORDER BY CustomOrder.position ASC;
+            """;
             Sqlite.Statement stmt;
             int rc = db.prepare_v2 (query, query.length, out stmt);
 
