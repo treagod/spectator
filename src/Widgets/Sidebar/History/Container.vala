@@ -63,30 +63,6 @@ namespace Spectator.Widgets.Sidebar.History {
         public void add_item (RequestListItem item) {
             items.add (item);
         }
-
-        public bool delete_request (Models.Request request) {
-            var item = get_item (request);
-
-            if (item != null) {
-                items.remove (item);
-                return true;
-            }
-            return false;
-        }
-
-        public RequestListItem? get_item (Models.Request request) {
-            RequestListItem? result = null;
-
-            items.foreach ((it) => {
-                var item = (RequestListItem) it;
-
-                //  if (item.item == request) {
-                //      result = item;
-                //      return;
-                //  }
-            });
-            return result;
-        }
     }
 
     public class Container : Gtk.Box {
