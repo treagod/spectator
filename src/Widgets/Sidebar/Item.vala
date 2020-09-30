@@ -230,7 +230,7 @@ namespace Spectator.Widgets.Sidebar {
 
         public void repaint () {
             var idx = method.label.index_of (">");
-            var substr = method.label.substring(idx + 1);
+            var substr = method.label.substring (idx + 1);
             var method_str = substr.split ("<")[0];
             method.label = get_method_label (Models.Method.convert_from_string (method_str));
             show_all ();

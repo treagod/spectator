@@ -116,7 +116,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 this.request_moved (request.id, dropped_id);
             });
 
-            request_list_item.show_all();
+            request_list_item.show_all ();
 
             return request_list_item;
         }
@@ -129,7 +129,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
             this.label = new Gtk.Label ("<b>%s</b>".printf (collection.name));
             this.label.halign = Gtk.Align.START;
             this.label.use_markup = true;
-            this.indicator = new Gtk.Image.from_icon_name (collection_open_icon, Gtk.IconSize.BUTTON);;
+            this.indicator = new Gtk.Image.from_icon_name (collection_open_icon, Gtk.IconSize.BUTTON);
             this.expanded = true;
 
             var motion_grid = new Gtk.Grid ();

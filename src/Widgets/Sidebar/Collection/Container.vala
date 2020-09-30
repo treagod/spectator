@@ -202,7 +202,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 this.request_moved (request.id, dropped_id);
             });
 
-            request_list_item.show_all();
+            request_list_item.show_all ();
         }
 
         public void add_collection (Models.Collection collection) {
@@ -259,7 +259,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 this.request_added_to_collection (collection.id, id);
             });
 
-            dropdown.change_visibility.connect((visible) => {
+            dropdown.change_visibility.connect ((visible) => {
                 this.collection_visiblity[collection.id] = visible;
             });
 
@@ -271,7 +271,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
             }
 
             // If collection is new, make it initially visible
-            if (!this.collection_visiblity.has_key(collection.id)) {
+            if (!this.collection_visiblity.has_key (collection.id)) {
                 this.collection_visiblity[collection.id] = true;
             }
 
