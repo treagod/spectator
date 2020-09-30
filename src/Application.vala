@@ -43,8 +43,7 @@ namespace Spectator {
             Environment.get_home_dir (),
             ".local",
             "share",
-            Constants.PROJECT_NAME,
-            "%s.db".printf (Constants.PROJECT_NAME)
+            Constants.PROJECT_NAME
         );
         private Sqlite.Database db;
         construct {
@@ -52,13 +51,36 @@ namespace Spectator {
             application_id = "com.github.treagod.spectator";
         }
 
+        private void ensure_directory () {
+            if (FileUtils.test (this.app_data_dir, FileTest.EXISTS)) {
+                if (!GLib.FileUtils.test(this.app_data_dir, GLib.FileTest.IS_DIR)) {
+                    error ("%s must be a directory\n", this.app_data_dir);
+                }
+            } else {
+                try {
+                    File file = File.new_for_commandline_arg (this.app_data_dir);
+                    file.make_directory_with_parents ();
+                } catch (Error e) {
+                    error ("Could not create %s\n", this.app_data_dir);
+                    Process.exit(1);
+                }
+            }
+        }
+
         private void load_database () {
             string errmsg;
+            this.ensure_directory ();
 
-            int ec = Sqlite.Database.open (this.app_data_dir, out db);
+            int ec = Sqlite.Database.open (
+                Path.build_filename (
+                    this.app_data_dir,
+                    "%s.db".printf (Constants.PROJECT_NAME)
+                ),
+                out db
+            );
             if (ec != Sqlite.OK) {
                 stderr.printf ("Can't open database: %d: %s\n", db.errcode (), db.errmsg ());
-                //  return -1;
+                Process.exit(1);
             }
 
             string query = Spectator.SQL_INIT_CMD;
@@ -66,7 +88,7 @@ namespace Spectator {
             ec = db.exec (query, null, out errmsg);
             if (ec != Sqlite.OK) {
                 stderr.printf ("Error: %s\n", errmsg);
-                //  return -1;
+                Process.exit(1);
             }
         }
 
