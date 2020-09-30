@@ -227,8 +227,11 @@ namespace Spectator {
                 if (request != null) {
                     var dialog = new Dialogs.Request.UpdateDialog (this, request);
 
-                    dialog.updated.connect ((request) => {
-                        /* TODO: save/update machinism that is not executed on the model itself */
+                    dialog.updated.connect ((name, method) => {
+                        this.request_service.update_request (id, (updater) => {
+                            updater.update_name (name);
+                            updater.update_method (method);
+                        });
                         this.sidebar.show_items ();
                         this.sidebar.select_request (request.id);
                         this.display_request (request);

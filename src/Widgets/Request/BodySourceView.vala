@@ -23,6 +23,8 @@ namespace Spectator.Widgets.Request {
     public class BodySourceView : Gtk.SourceView {
         private new Gtk.SourceBuffer buffer;
         private Gtk.SourceLanguageManager manager;
+        private uint timeout_id;
+        public bool buffer_updated { get; private set; }
         public Gtk.SourceStyleSchemeManager style_scheme_manager;
 
         // Not optimal as every single keystroke invokes this signal.
@@ -35,6 +37,9 @@ namespace Spectator.Widgets.Request {
                 show_right_margin: false,
                 wrap_mode: Gtk.WrapMode.WORD_CHAR
             );
+
+            this.timeout_id = 0;
+            this.buffer_updated = true;
         }
 
         public void set_lang (string lang) {
@@ -91,7 +96,20 @@ namespace Spectator.Widgets.Request {
 
             buffer.language = manager.get_language ("plain");
             buffer.changed.connect (() => {
-                body_buffer_changed (buffer.text);
+                this.buffer_updated = false;
+                // Clear timeout if the user is already typing
+                if (timeout_id > 0) {
+                    Source.remove (timeout_id);
+                    timeout_id = 0;
+                }
+
+                timeout_id = Timeout.add (550, () => {
+                    print ("%s\n", buffer.text);
+                    body_buffer_changed (buffer.text);
+                    timeout_id = 0;
+                    this.buffer_updated = true;
+                    return false;
+                });
             });
             auto_indent = true;
         }

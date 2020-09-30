@@ -20,11 +20,48 @@
 */
 
 namespace Spectator.Repository {
+    public class SQLiteRequestUpdater : IRequestUpdater, Object {
+        public void update_name (string name) {
+            print ("Updating name to %s\n", name);
+        }
+
+        public void update_script (string script) {
+            //
+        }
+
+        public void update_method (Models.Method method) {
+            print ("Updating method to %s\n", method.to_str ());
+        }
+
+        public void update_url (string url) {
+            //
+        }
+
+        public void update_headers (Gee.ArrayList<Pair> headers) {
+            //
+        }
+
+        public void update_last_sent (DateTime last_sent) {
+            //
+        }
+
+
+        public void save () {
+            print("Saving\n");
+        }
+    }
     public class SQLiteRequest : IRequest, Object {
         private weak Sqlite.Database db;
 
         public SQLiteRequest (Sqlite.Database db) {
             this.db = db;
+        }
+
+
+        public void update_request (uint id, UpdateCallback cb) {
+            SQLiteRequestUpdater updater = new SQLiteRequestUpdater ();
+            cb (updater);
+            updater.save ();
         }
 
         public Gee.ArrayList<Models.Request> get_requests () {
@@ -56,8 +93,6 @@ namespace Spectator.Repository {
                         case "last_sent":
                             request.last_sent = new DateTime.from_unix_local (stmt.column_int64 (i));
                             break;
-                        case "collection_id":
-                            break; // NecessaryP
                     }
                 }
                 requests.add (request);

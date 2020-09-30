@@ -21,7 +21,7 @@
 
 namespace Spectator.Dialogs.Request {
     public class UpdateDialog : Dialog {
-        public signal void updated (Models.Request item);
+        public signal void updated (string name, Models.Method method);
 
         public UpdateDialog (Gtk.ApplicationWindow parent, Models.Request request) {
             base (_("Update Request"), parent);
@@ -52,9 +52,7 @@ namespace Spectator.Dialogs.Request {
             if (name.length == 0) {
                 show_warning (_("Request name must not be empty."));
             } else {
-                request.name = request_name_entry.text;
-                request.method = Models.Method.convert (method_box.active);
-                updated (request);
+                updated (request_name_entry.text, Models.Method.convert (method_box.active));
                 destroy ();
             }
         }

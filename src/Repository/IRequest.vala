@@ -20,9 +20,21 @@
 */
 
 namespace Spectator.Repository {
+    public interface IRequestUpdater : Object {
+        public abstract void update_name (string name);
+        public abstract void update_script (string script);
+        public abstract void update_method (Models.Method method);
+        public abstract void update_url (string url);
+        public abstract void update_headers (Gee.ArrayList<Pair> headers);
+        public abstract void update_last_sent (DateTime last_sent);
+    }
+
+    public delegate void UpdateCallback (IRequestUpdater updater);
+
     public interface IRequest : Object {
         public abstract Gee.ArrayList<Models.Request> get_requests ();
         public abstract bool add_request (Models.Request request);
+        public abstract void update_request (uint id, UpdateCallback cb);
         public abstract bool delete_request (uint id);
         public abstract bool set_collection_id_for_request (uint request_id, uint collection_id);
         public abstract Models.Request? get_request_by_id (uint id);
