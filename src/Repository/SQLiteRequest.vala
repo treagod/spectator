@@ -91,7 +91,12 @@ namespace Spectator.Repository {
                             request.method = Models.Method.convert (stmt.column_int (i));
                             break;
                         case "last_sent":
-                            request.last_sent = new DateTime.from_unix_local (stmt.column_int64 (i));
+                            unowned var last_sent_value = stmt.column_value (i);
+                            
+                            if (last_sent_value.to_type () != Sqlite.NULL) {
+                                request.last_sent = new DateTime.from_unix_local (stmt.column_int64 (i));
+                            }
+                            
                             break;
                     }
                 }
@@ -147,17 +152,6 @@ namespace Spectator.Repository {
             }
 
             return false;
-        }
-
-        public bool set_collection_id_for_request (uint request_id, uint collection_id) {
-            var request = this.get_request_by_id (request_id);
-
-            if (request != null) {
-                // request.collection_id = collection_id;
-                return true;
-            } else {
-                return false;
-            }
         }
 
         public Models.Request? get_request_by_id (uint id) {

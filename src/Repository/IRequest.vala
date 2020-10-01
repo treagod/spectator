@@ -36,7 +36,6 @@ namespace Spectator.Repository {
         public abstract bool add_request (Models.Request request);
         public abstract void update_request (uint id, UpdateCallback cb);
         public abstract bool delete_request (uint id);
-        public abstract bool set_collection_id_for_request (uint request_id, uint collection_id);
         public abstract Models.Request? get_request_by_id (uint id);
     }
 }
