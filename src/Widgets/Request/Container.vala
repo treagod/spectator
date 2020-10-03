@@ -39,7 +39,7 @@ namespace Spectator.Widgets.Request {
         }
 
         public signal void response_received (ResponseItem it);
-        public signal void type_changed (RequestBody.ContentType type);
+        public signal void body_type_changed (RequestBody.ContentType type);
         public signal void content_changed (string content);
         public signal void body_buffer_changed (string content);
         public signal void script_changed (string script);
@@ -118,11 +118,12 @@ namespace Spectator.Widgets.Request {
             header_view.provider = new HeaderProvider ();
 
             header_view.item_added.connect ((header) => {
-                header_added (header);
+                print ("header added\n");
+                header_added (new Header (header.key, header.val));
             });
 
             header_view.item_deleted.connect ((header) => {
-                header_deleted (header);
+                header_deleted (new Header (header.key, header.val));
             });
 
             return header_view;
@@ -206,7 +207,7 @@ namespace Spectator.Widgets.Request {
             var body_view = new BodyView ();
 
             body_view.type_changed.connect ((type) => {
-                type_changed (type);
+                this.body_type_changed (type);
             });
 
             body_view.content_changed.connect ((content) => {
@@ -226,24 +227,6 @@ namespace Spectator.Widgets.Request {
             stack.add_titled (url_params_view, "url_params", "parameters");
             stack.add_titled (body_view, "body", "body");
             stack.add_titled (scripting_view, "scripting", "scripting");
-        }
-
-        public void update_url_params (Models.Request item) {
-            var query = item.query;
-            var params = query.split ("&");
-            url_params_view.clear ();
-
-            foreach (var param in params) {
-                if (param != "") {
-                    var kv = param.split ("=");
-                    if (kv.length == 2) {
-                        url_params_view.add_field (new Pair (kv[0], kv[1]));
-                    } else if (kv.length == 1) {
-                        url_params_view.add_field (new Pair (kv[0], ""));
-                    }
-
-                }
-            }
         }
 
         private void setup_tabs (Gtk.Label header_params_label, Gtk.Label url_params_label,
@@ -303,16 +286,16 @@ namespace Spectator.Widgets.Request {
             return new Services.TextBufferWriter (scripting_view.console_buffer);
         }
 
-        public void set_item (Models.Request request) {
-            url_entry.change_status (request.status);
-            url_entry.set_text (request.uri);
-            url_entry.set_method (request.method);
-            scripting_view.change_console (request);
-            body_view.set_body (request.request_body);
-            update_url_params (request);
-            update_tabs (request.method);
-            set_headers (request.headers);
-            show_all ();
-        }
+        //  public void set_item (Models.Request request) {
+        //      url_entry.change_status (request.status);
+        //      url_entry.set_text (request.uri);
+        //      url_entry.set_method (request.method);
+        //      scripting_view.change_console (request);
+        //      body_view.set_body (request.request_body);
+        //      update_url_params (request);
+        //      update_tabs (request.method);
+        //      set_headers (request.headers);
+        //      show_all ();
+        //  }
     }
 }

@@ -24,9 +24,11 @@ namespace Spectator.Widgets.Request {
         private Gtk.Stack body_content;
         public Gtk.ComboBoxText body_type_box;
         private Gtk.ComboBoxText language_box;
+        private Gtk.Box body_content_type_selections;
         private KeyValueList form_data;
         private KeyValueList urlencoded;
         private Gtk.ScrolledWindow raw_body;
+        private bool ignore_signal;
 
         public signal void type_changed (RequestBody.ContentType type);
         public signal void body_buffer_changed (string content);
@@ -44,6 +46,7 @@ namespace Spectator.Widgets.Request {
         public BodyView () {
             body_content = new Gtk.Stack ();
             body_content.hexpand = true;
+            this.ignore_signal = true;
 
             setup_body_type_box ();
             setup_language_box ();
@@ -54,6 +57,7 @@ namespace Spectator.Widgets.Request {
 
             body_content.set_visible_child (form_data);
             add (body_content);
+            this.ignore_signal = false;
         }
 
         private void setup_language_box () {
@@ -83,7 +87,7 @@ namespace Spectator.Widgets.Request {
                     break;
                 }
 
-                send_language_box_signal (index);
+                if (!this.ignore_signal) send_language_box_signal (index);
             });
         }
 
@@ -109,32 +113,32 @@ namespace Spectator.Widgets.Request {
             body_type_box.append_text ("form-data");
             body_type_box.append_text ("x-www-form-urlencoded");
             body_type_box.append_text ("raw");
-            body_type_box.active = 0;
         }
 
         private void setup_body_type_behaviour () {
-            var body_content_type_selections = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 4);
+            body_content_type_selections = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 4);
             body_content_type_selections.margin_bottom = 12;
             body_content_type_selections.halign = Gtk.Align.START;
 
             body_type_box.changed.connect (() => {
+                /* TODO: Only fire if the user changes the content */
                 var index = body_type_box.get_active ();
                 body_content_type_selections.remove (language_box);
 
                 switch (index) {
                     case 0:
                     body_content.set_visible_child (form_data);
-                    type_changed (RequestBody.ContentType.FORM_DATA);
+                    if (!this.ignore_signal) type_changed (RequestBody.ContentType.FORM_DATA);
                     break;
                     case 1:
                     body_content.set_visible_child (urlencoded);
-                    type_changed (RequestBody.ContentType.URLENCODED);
+                    if (!this.ignore_signal) type_changed (RequestBody.ContentType.URLENCODED);
                     break;
                     case 2:
                     body_content_type_selections.pack_end (language_box);
                     body_content_type_selections.reorder_child (language_box, 0);
                     body_content.set_visible_child (raw_body);
-                    send_language_box_signal (language_box.active);
+                    if (!this.ignore_signal) send_language_box_signal (language_box.active);
                     break;
                     default:
                     assert_not_reached ();
@@ -170,6 +174,7 @@ namespace Spectator.Widgets.Request {
         }
 
         public void set_content (string content, RequestBody.ContentType type) {
+            this.ignore_signal = true;
             this.set_body_type (type);
 
             if (type == RequestBody.ContentType.FORM_DATA) {
@@ -182,13 +187,16 @@ namespace Spectator.Widgets.Request {
                 var source_view = (BodySourceView) raw_body.get_child ();
                 source_view.set_content (content);
             }
+            this.ignore_signal = false;
         }
 
         public void reset_content () {
+            this.ignore_signal = true;
             this.form_data.clear ();
             this.urlencoded.clear ();
             var source_view = (BodySourceView) raw_body.get_child ();
             source_view.set_content ("");
+            this.ignore_signal = false;
         }
 
         private void setup_form_data () {
@@ -239,7 +247,6 @@ namespace Spectator.Widgets.Request {
         }
 
         public void set_body_type (RequestBody.ContentType type) {
-            // FORM_DATA, URLENCODED, PLAIN, JSON, XML, HTML
             switch (type) {
                 case RequestBody.ContentType.FORM_DATA:
                     body_type_box.active = 0;
@@ -266,16 +273,6 @@ namespace Spectator.Widgets.Request {
                 default:
                     assert_not_reached ();
             }
-        }
-
-        public void set_body (RequestBody body) {
-            this.set_body_type (body.type);
-
-            var source_view = (BodySourceView) raw_body.get_child ();
-            source_view.set_content (body.raw);
-
-            form_data.change_rows (body.form_data);
-            urlencoded.change_rows (body.urlencoded);
         }
     }
 }

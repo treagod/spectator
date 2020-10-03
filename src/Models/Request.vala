@@ -29,7 +29,7 @@ namespace Spectator.Models {
         public RequestStatus status { get; set; }
         public ResponseItem? response { get; set; }
         public string script_code;
-        public Gee.ArrayList<Pair> headers { get; private set; }
+        public Gee.ArrayList<Header> headers { get; private set; }
         public DateTime? last_sent;
         public string query {
             owned get {
@@ -42,14 +42,19 @@ namespace Spectator.Models {
                 return uri.substring (idx + 1);
             } public set {
                 var idx = uri.index_of_char ('?');
+                string q = "";
+
+                if (value.length > 0) {
+                    q = "?%s".printf (value);
+                }
 
                 // If a '?' exists in the URI, cut it with the tail of and
                 // replace it with the new query
                 if (idx < 0) {
-                    uri = "%s?%s".printf (uri, value);
+                    uri = "%s%s".printf (uri, q);
                 } else {
                     var tmp = uri.substring (0, idx);
-                    uri = "%s?%s".printf (tmp, value);
+                    uri = "%s%s".printf (tmp, q);
                 }
             }
         }
@@ -94,7 +99,7 @@ namespace Spectator.Models {
         }
 
         private void setup (string nam, Method meth) {
-            headers = new Gee.ArrayList<Pair> ();
+            headers = new Gee.ArrayList<Header> ();
             script_code = "";
             name = nam;
             uri = "";
@@ -108,11 +113,11 @@ namespace Spectator.Models {
             return tmp != null;
         }
 
-        public void add_header (Pair header) {
+        public void add_header (Header header) {
             headers.add (header);
         }
 
-        public void remove_header (Pair header) {
+        public void remove_header (Header header) {
             headers.remove (header);
         }
     }

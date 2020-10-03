@@ -53,7 +53,7 @@ namespace Spectator.Services {
             builder.set_member_name ("body");
             builder.begin_object ();
             builder.set_member_name ("active_type");
-            builder.add_int_value (RequestBody.ContentType.to_i (request.request_body.type));
+            builder.add_int_value (request.request_body.type.to_i ());
             builder.set_member_name ("form_data");
             builder.begin_array ();
             foreach (var pair in request.request_body.form_data) {

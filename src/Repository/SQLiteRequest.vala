@@ -20,36 +20,6 @@
 */
 
 namespace Spectator.Repository {
-    public class SQLiteRequestUpdater : IRequestUpdater, Object {
-        public void update_name (string name) {
-            print ("Updating name to %s\n", name);
-        }
-
-        public void update_script (string script) {
-            //
-        }
-
-        public void update_method (Models.Method method) {
-            print ("Updating method to %s\n", method.to_str ());
-        }
-
-        public void update_url (string url) {
-            //
-        }
-
-        public void update_headers (Gee.ArrayList<Pair> headers) {
-            //
-        }
-
-        public void update_last_sent (DateTime last_sent) {
-            //
-        }
-
-
-        public void save () {
-            print("Saving\n");
-        }
-    }
     public class SQLiteRequest : IRequest, Object {
         private weak Sqlite.Database db;
 
@@ -59,14 +29,25 @@ namespace Spectator.Repository {
 
 
         public void update_request (uint id, UpdateCallback cb) {
-            SQLiteRequestUpdater updater = new SQLiteRequestUpdater ();
+            var request = this.get_request_by_id (id);
+
+            if (request == null) {
+                warning ("Could not update non existing request with id %u\n", id);
+                return;
+            }
+
+            SQLiteRequestUpdater updater = new SQLiteRequestUpdater (request, this.db);
             cb (updater);
             updater.save ();
         }
 
         public Gee.ArrayList<Models.Request> get_requests () {
             var requests = new Gee.ArrayList<Models.Request> ();
-            var query = "SELECT * FROM Request;";
+            var query = """
+            SELECT Request.id, name, method, url, last_sent, type as body_type, content as body_content
+            FROM Request
+            INNER JOIN RequestBody ON Request.id = RequestBody.id;
+            """;
             Sqlite.Statement stmt;
             int rc = db.prepare_v2 (query, query.length, out stmt);
 
@@ -97,6 +78,12 @@ namespace Spectator.Repository {
                                 request.last_sent = new DateTime.from_unix_local (stmt.column_int64 (i));
                             }
                             
+                            break;
+                        case "body_type":
+                            request.request_body.type = RequestBody.ContentType.convert (stmt.column_int (i));
+                            break;
+                        case "body_content":
+                            request.request_body.content = stmt.column_text (i);
                             break;
                     }
                 }
@@ -156,7 +143,11 @@ namespace Spectator.Repository {
 
         public Models.Request? get_request_by_id (uint id) {
             var request = new Models.Request ();
-            var query = "SELECT * FROM Request WHERE id = $REQUEST_ID;";
+            var query = """
+            SELECT Request.id, name, method, url, last_sent, type as body_type, content as body_content
+            FROM Request
+            INNER JOIN RequestBody ON Request.id = RequestBody.id
+            WHERE Request.id = $REQUEST_ID;""";
             Sqlite.Statement stmt;
             int rc = db.prepare_v2 (query, query.length, out stmt);
 
@@ -182,10 +173,19 @@ namespace Spectator.Repository {
                             request.method = Models.Method.convert (stmt.column_int (i));
                             break;
                         case "last_sent":
-                            request.last_sent = new DateTime.from_unix_local (stmt.column_int64 (i));
+                            unowned var last_sent_value = stmt.column_value (i);
+                                
+                            if (last_sent_value.to_type () != Sqlite.NULL) {
+                                request.last_sent = new DateTime.from_unix_local (stmt.column_int64 (i));
+                            }
+                            
                             break;
-                        case "collection_id":
-                            break; // NecessaryP
+                        case "body_type":
+                            request.request_body.type = RequestBody.ContentType.convert (stmt.column_int (i));
+                            break;
+                        case "body_content":
+                            request.request_body.content = stmt.column_text (i);
+                            break;
                     }
                 }
             }

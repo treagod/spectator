@@ -71,7 +71,6 @@ namespace Spectator.Repository {
 
         public void move_request_after_request (uint target_id, uint moved_id) {
             this.db.exec ("BEGIN TRANSACTION;");
-            Sqlite.Statement stmt;
             var reposition_other_query = """
             UPDATE CustomOrder
             SET position = CASE

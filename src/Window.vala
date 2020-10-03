@@ -164,12 +164,39 @@ namespace Spectator {
         }
 
         private void setup_content_events () {
-            this.content.url_changed.connect ((url) => {
+            this.content.url_changed.connect ((id, url) => {
                 this.sidebar.update_active_url (url);
+                this.request_service.update_request (id, (updater) => {
+                    updater.update_url (url);
+                });
             });
 
-            this.content.method_changed.connect ((method) => {
+            this.content.method_changed.connect ((id, method) => {
                 this.sidebar.update_active_method (method);
+                this.request_service.update_request (id, (updater) => {
+                    updater.update_method (method);
+                });
+             });
+
+            this.content.body_type_changed.connect ((id, body_type) => {
+                print(" asd\n");
+                this.request_service.update_request (id, (updater) => {
+                    updater.update_body_type (body_type);
+                });
+             });
+
+             this.content.body_reset.connect ((id, body_type) => {
+                this.request_service.update_request (id, (updater) => {
+                    updater.update_body_type (body_type);
+                    updater.update_body_content ("");
+                });
+             });
+
+             this.content.body_content_changed.connect ((id, body_content) => {
+                print("meh\n");
+                this.request_service.update_request (id, (updater) => {
+                    updater.update_body_content (body_content);
+                });
              });
         }
 

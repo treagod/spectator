@@ -8,6 +8,13 @@ create table if not exists Request (
     FOREIGN KEY (collection_id) REFERENCES Collection(id) ON DELETE CASCADE
 );
 
+create table if not exists RequestBody (
+    id              INTEGER              PRIMARY KEY              NOT NULL,
+    type            INTEGER,
+    content         TEXT,
+    FOREIGN KEY (id) REFERENCES Request(id)
+);
+
 create table if not exists Collection (
     id		  INTEGER		PRIMARY KEY     AUTOINCREMENT NOT NULL,
     name	  TEXT				     	NOT NULL
@@ -25,6 +32,12 @@ BEGIN
     INSERT INTO CustomOrder (id, type, position) VALUES (NEW.id, 0, (SELECT COUNT(*) FROM CustomOrder));
 END;
 
+CREATE TRIGGER IF NOT EXISTS insert_request_body_after_request_creation
+    AFTER INSERT ON Request
+BEGIN
+    INSERT INTO RequestBody (id, type, content) VALUES (NEW.id, 0, "");
+END;
+
 CREATE TRIGGER IF NOT EXISTS insert_custom_order_after_collection_creation
     AFTER INSERT ON Collection
 BEGIN
@@ -39,6 +52,12 @@ BEGIN
     WHERE position > (SELECT position FROM CustomOrder WHERE id = OLD.id AND type = 0);
     DELETE FROM CustomOrder
     WHERE id = OLD.id AND type = 0;
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_request_body_after_request_deletion
+    AFTER DELETE ON Request
+BEGIN
+    DELETE FROM RequestBody WHERE id = OLD.id;
 END;
 
 CREATE TRIGGER IF NOT EXISTS delete_custom_order_after_collection_deletion

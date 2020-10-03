@@ -62,7 +62,6 @@ namespace Spectator {
                     file.make_directory_with_parents ();
                 } catch (Error e) {
                     error ("Could not create %s\n", this.app_data_dir);
-                    Process.exit(1);
                 }
             }
         }

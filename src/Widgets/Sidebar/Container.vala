@@ -120,7 +120,6 @@ namespace Spectator.Widgets.Sidebar {
             history_scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             history_scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
 
-
             collection_scroll = new Gtk.ScrolledWindow (null, null);
             collection_scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             collection_scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;

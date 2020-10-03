@@ -27,22 +27,21 @@ namespace Spectator.Widgets {
         private Gtk.InfoBar infobar;
         private Gtk.Label infolabel;
         private Spectator.Window window;
+        private uint active_id;
 
-        public signal void url_changed (string url);
-        public signal void method_changed (Models.Method method);
+        public signal void url_changed (uint id, string url);
+        public signal void method_changed (uint id, Models.Method method);
+        public signal void body_type_changed (uint id, RequestBody.ContentType type);
+        public signal void body_reset (uint id, RequestBody.ContentType type);
+        public signal void body_content_changed (uint id, string content);
         public async signal void request_activated ();
         public signal void cancel_process ();
-        public signal void type_changed (RequestBody.ContentType type);
         public signal void script_changed (string script);
 
-        public signal void item_changed (Models.Request item);
         public signal void welcome_activated (int index);
         public signal void header_added (Pair header);
         public signal void header_deleted (Pair header);
         public signal void url_params_updated (Gee.ArrayList<Pair> items);
-        public signal void key_value_added (Pair item);
-        public signal void key_value_removed (Pair item);
-        public signal void key_value_updated (Pair item);
 
         private void create_activated_welcome_dialog (int i) {
             switch (i) {
@@ -58,6 +57,7 @@ namespace Spectator.Widgets {
         }
 
         public void display_request (uint id) {
+            this.active_id = id;
             this.req_res_pane.display_request (id);
             this.stack.set_visible_child (this.req_res_pane);
         }
@@ -80,24 +80,8 @@ namespace Spectator.Widgets {
 
             req_res_pane = new RequestResponsePane (this.window);
 
-            req_res_pane.type_changed.connect ((type) => {
-                type_changed (type);
-            });
-
             req_res_pane.script_changed.connect ((script) => {
                 script_changed (script);
-            });
-
-            req_res_pane.key_value_added.connect ((item) => {
-                key_value_added (item);
-            });
-
-            req_res_pane.key_value_updated.connect ((item) => {
-                key_value_updated (item);
-            });
-
-            req_res_pane.key_value_removed.connect ((item) => {
-                key_value_removed (item);
             });
 
             req_res_pane.cancel_process.connect (() => {
@@ -178,7 +162,7 @@ namespace Spectator.Widgets {
 
         private void setup_request_signals (RequestResponsePane request) {
             request.url_changed.connect ((url) => {
-                url_changed (url);
+                url_changed (this.active_id, url);
             });
 
             request.request_activated.connect (() => {
@@ -186,7 +170,19 @@ namespace Spectator.Widgets {
             });
 
             request.method_changed.connect ((method) => {
-                method_changed (method);
+                method_changed (this.active_id, method);
+            });
+
+            request.type_changed.connect ((type) => {
+                this.body_type_changed (this.active_id, type);
+            });
+
+            request.reset_body.connect ((type) => {
+                this.body_reset (this.active_id, type);
+            });
+
+            request.content_changed.connect ((content) => {
+                this.body_content_changed (this.active_id, content);
             });
 
             request.header_added.connect ((header) => {

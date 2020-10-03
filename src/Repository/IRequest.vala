@@ -26,6 +26,8 @@ namespace Spectator.Repository {
         public abstract void update_method (Models.Method method);
         public abstract void update_url (string url);
         public abstract void update_headers (Gee.ArrayList<Pair> headers);
+        public abstract void update_body_content (string body);
+        public abstract void update_body_type (RequestBody.ContentType type);
         public abstract void update_last_sent (DateTime last_sent);
     }
 

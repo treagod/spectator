@@ -24,11 +24,12 @@ namespace Spectator.Widgets {
         private Request.Container request_view;
         private Response.Container response_view;
         private Gee.HashMap<Models.Request, int> tab_indecies;
-        private Models.Request last_item;
         private Spectator.Window window;
         private uint active_id;
 
         public signal void type_changed (RequestBody.ContentType type);
+        public signal void reset_body (RequestBody.ContentType type);
+        public signal void content_changed (string content);
         public signal void script_changed (string script);
         public signal void key_value_added (Pair item);
         public signal void key_value_removed (Pair item);
@@ -71,7 +72,6 @@ namespace Spectator.Widgets {
                 var request = this.window.request_service.get_request_by_id (active_id);
 
                 if (request != null) {
-                    this.url_changed (request.uri);
                     var query_builder = new StringBuilder ();
                     var first = true;
 
@@ -88,12 +88,9 @@ namespace Spectator.Widgets {
                         }
                     }
 
-                    var query_string = query_builder.str;
-
-                    if (query_string.length > 0) {
-                        request.query = query_builder.str;
-                        this.request_view.set_url_entry (request.uri);
-                    }
+                    request.query = query_builder.str;
+                    this.request_view.set_url_entry (request.uri);
+                    this.url_changed (request.uri);
                 }
             });
 
@@ -102,7 +99,7 @@ namespace Spectator.Widgets {
 
                 if (request != null) {
                     request.uri = url; // TODO: This allready saves the request, which should be explicit
-                    url_changed (url);
+                    
                 }
             });
 
@@ -114,7 +111,7 @@ namespace Spectator.Widgets {
                 var request = this.window.request_service.get_request_by_id (active_id);
 
                 if (request != null) {
-                    request.request_body.content = content; // TODO: This allready saves the request, which should be explicit
+                    this.content_changed (content);
                 }
             });
 
@@ -156,7 +153,7 @@ namespace Spectator.Widgets {
                 }
             });
 
-            request_view.type_changed.connect ((type) => {
+            request_view.body_type_changed.connect ((type) => {
                 var request = this.window.request_service.get_request_by_id (active_id);
 
                 if (request != null) {
@@ -178,11 +175,13 @@ namespace Spectator.Widgets {
                             request.request_body.content = "";
                             request.request_body.type = type;
                             request_view.reset_body ();
+                            this.reset_body (type);
                         }
 
                         message_dialog.destroy ();
                     } else {
                         request.request_body.type = type;
+                        this.type_changed (type);
                     }
                 }
                 request_view.set_request_body (request.request_body);
@@ -196,17 +195,17 @@ namespace Spectator.Widgets {
             return request_view.get_console_writer ();
         }
 
-        private void adjust_tab (Models.Request item) {
-            tab_indecies[last_item] = request_view.tab_index;
-            last_item = item;
-            request_view.set_item (item);
-            if (!tab_indecies.has_key (item)) {
-                request_view.tab_index = 0;
-                tab_indecies[item] = 0;
-            } else {
-                request_view.tab_index = tab_indecies[item];
-            }
-        }
+        //  private void adjust_tab (Models.Request item) {
+        //      tab_indecies[last_item] = request_view.tab_index;
+        //      last_item = item;
+        //      request_view.set_item (item);
+        //      if (!tab_indecies.has_key (item)) {
+        //          request_view.tab_index = 0;
+        //          tab_indecies[item] = 0;
+        //      } else {
+        //          request_view.tab_index = tab_indecies[item];
+        //      }
+        //  }
 
         public void update_response (Models.Request request) {
             if (request.response != null) {

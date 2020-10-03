@@ -95,7 +95,7 @@ namespace Spectator.Widgets.Request {
             set_show_line_numbers (false);
 
             buffer.language = manager.get_language ("plain");
-            buffer.changed.connect (() => {
+            buffer.end_user_action.connect (() => {
                 this.buffer_updated = false;
                 // Clear timeout if the user is already typing
                 if (timeout_id > 0) {
@@ -104,7 +104,6 @@ namespace Spectator.Widgets.Request {
                 }
 
                 timeout_id = Timeout.add (550, () => {
-                    print ("%s\n", buffer.text);
                     body_buffer_changed (buffer.text);
                     timeout_id = 0;
                     this.buffer_updated = true;

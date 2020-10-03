@@ -29,4 +29,13 @@ namespace Spectator {
            val = v;
        }
    }
+
+   public class Header : Pair {
+       public uint id;
+       public DateTime created_at;
+
+       public Header (string k, string v) {
+           base(k, v);
+       }
+   }
 }

@@ -25,8 +25,8 @@ namespace Spectator.Widgets.Request {
         public signal void method_changed (Models.Method method);
         public signal void request_activated ();
         public signal void cancel_process ();
-        public signal void header_added (Pair header);
-        public signal void header_deleted (Pair header);
+        public signal void header_added (Header header);
+        public signal void header_deleted (Header header);
         public signal void url_params_updated (Gee.ArrayList<Pair> items);
     }
 }

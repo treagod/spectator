@@ -88,8 +88,8 @@ namespace Spectator {
                 }
             }
 
-            public static int to_i (ContentType type) {
-                switch (type) {
+            public int to_i () {
+                switch (this) {
                     case ContentType.FORM_DATA:
                     return 0;
                     case ContentType.URLENCODED:
