@@ -271,7 +271,6 @@ namespace Spectator {
 
             this.sidebar.request_delete_clicked.connect ((id) => {
                 var request = this.request_service.get_request_by_id (id);
-                print ("sad\n");
 
                 if (request != null) {
                     var message_dialog = new Granite.MessageDialog.with_image_from_icon_name (
