@@ -171,6 +171,13 @@ namespace Spectator {
                 });
             });
 
+            this.content.request_sent.connect ((id) => {
+                this.request_service.update_request (id, (updater) => {
+                    updater.update_last_sent(new DateTime.now_local ());
+                });
+                this.sidebar.show_history_items ();
+            });
+
             this.content.method_changed.connect ((id, method) => {
                 this.sidebar.update_active_method (method);
                 this.request_service.update_request (id, (updater) => {
@@ -179,7 +186,6 @@ namespace Spectator {
              });
 
             this.content.body_type_changed.connect ((id, body_type) => {
-                print(" asd\n");
                 this.request_service.update_request (id, (updater) => {
                     updater.update_body_type (body_type);
                 });
@@ -193,7 +199,6 @@ namespace Spectator {
              });
 
              this.content.body_content_changed.connect ((id, body_content) => {
-                print("meh\n");
                 this.request_service.update_request (id, (updater) => {
                     updater.update_body_content (body_content);
                 });

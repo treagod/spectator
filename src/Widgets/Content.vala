@@ -26,7 +26,7 @@ namespace Spectator.Widgets {
         private RequestResponsePane req_res_pane;
         private Gtk.InfoBar infobar;
         private Gtk.Label infolabel;
-        private Spectator.Window window;
+        private weak Spectator.Window window;
         private uint active_id;
 
         public signal void url_changed (uint id, string url);
@@ -34,7 +34,6 @@ namespace Spectator.Widgets {
         public signal void body_type_changed (uint id, RequestBody.ContentType type);
         public signal void body_reset (uint id, RequestBody.ContentType type);
         public signal void body_content_changed (uint id, string content);
-        public async signal void request_activated ();
         public signal void cancel_process ();
         public signal void script_changed (string script);
 
@@ -42,6 +41,7 @@ namespace Spectator.Widgets {
         public signal void header_added (Pair header);
         public signal void header_deleted (Pair header);
         public signal void url_params_updated (Gee.ArrayList<Pair> items);
+        public signal void request_sent (uint id);
 
         private void create_activated_welcome_dialog (int i) {
             switch (i) {
@@ -75,7 +75,7 @@ namespace Spectator.Widgets {
                             _("Create a new collection to arrange your requests."));
 
             welcome.activated.connect ((index) => {
-                create_activated_welcome_dialog (index);
+                this.create_activated_welcome_dialog (index);
             });
 
             req_res_pane = new RequestResponsePane (this.window);
@@ -133,23 +133,9 @@ namespace Spectator.Widgets {
             infobar.revealed = true;
         }
 
-        public void update_response (Models.Request request) {
-            req_res_pane.update_response (request);
-            if (infobar.revealed) {
-                reset_infobar ();
-            }
-        }
-
         public void reset_infobar () {
             infolabel.label = "";
             infobar.revealed = false;
-        }
-
-        public void update_chunk_response (Models.Request request) {
-            req_res_pane.update_chunk_response (request);
-            if (infobar.revealed) {
-                reset_infobar ();
-            }
         }
 
         public void update_status (Models.Request request) {
@@ -162,11 +148,15 @@ namespace Spectator.Widgets {
 
         private void setup_request_signals (RequestResponsePane request) {
             request.url_changed.connect ((url) => {
-                url_changed (this.active_id, url);
+                this.url_changed (this.active_id, url);
             });
 
-            request.request_activated.connect (() => {
-                request_activated ();
+            request.request_sent.connect ((id) => {
+                this.request_sent (id);
+            });
+
+            request.send_error.connect ((error) => {
+                this.set_error (error);
             });
 
             request.method_changed.connect ((method) => {

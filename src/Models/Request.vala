@@ -27,7 +27,6 @@ namespace Spectator.Models {
         public RequestBody request_body { get; private set; }
         public Method method { get; set; }
         public RequestStatus status { get; set; }
-        public ResponseItem? response { get; set; }
         public string script_code;
         public Gee.ArrayList<Header> headers { get; private set; }
         public DateTime? last_sent;

@@ -38,7 +38,6 @@ namespace Spectator.Widgets.Request {
             }
         }
 
-        public signal void response_received (ResponseItem it);
         public signal void body_type_changed (RequestBody.ContentType type);
         public signal void content_changed (string content);
         public signal void body_buffer_changed (string content);
@@ -70,8 +69,6 @@ namespace Spectator.Widgets.Request {
             this.body_label = new Gtk.Label (_("Body"));
 
             this.setup_tabs (header_params_label, url_params_label, body_label, script_label);
-
-            this.body_label.sensitive = false;
 
             this.stack.set_visible_child_name ("header");
 
@@ -163,24 +160,27 @@ namespace Spectator.Widgets.Request {
             url_entry.margin_bottom = 10;
 
             url_entry.url_changed.connect ((url) => {
-                url_changed (url);
+                this.url_changed (url);
                 this.url_params_view.change_rows (this.convert_query_to_pairs (url));
             });
 
             url_entry.method_changed.connect ((method) => {
-                method_changed (method);
-                update_tabs (method);
+                this.method_changed (method);
             });
 
             url_entry.request_activated.connect (() => {
-                request_activated ();
+                this.request_activated ();
             });
 
             url_entry.cancel_process.connect (() => {
-                cancel_process ();
+                this.cancel_process ();
             });
 
             return url_entry;
+        }
+
+        public void set_request_status (Models.RequestStatus status) {
+            this.url_entry.set_request_status (status);
         }
 
         private KeyValueList create_url_params_view () {
@@ -242,10 +242,6 @@ namespace Spectator.Widgets.Request {
 
             tabs.mode_changed.connect ((tab) => {
                 if (tab == body_label ) {
-                    if (body_label.sensitive == false) {
-                        tabs.set_active (current_index);
-                        return;
-                    }
                     stack.set_visible_child_name ("body");
                     current_index = tabs.selected;
                 } else if (tab == header_params_label) {
@@ -262,22 +258,6 @@ namespace Spectator.Widgets.Request {
             });
         }
 
-        // update_tabs checks on item change which HTTP method is selected.
-        // When POST, PUT or PATCH is selected the user will be able to
-        // select the Body Tab
-        // For all other methods this method checks if the Body Tab was selected. If
-        // the Body tab was selected, select Headers Tab. Furthermore disable Body Tab
-        private void update_tabs (Models.Method method) {
-            if (method == Models.Method.POST || method == Models.Method.PUT || method == Models.Method.PATCH) {
-                body_label.sensitive = true;
-            } else {
-                if (tabs.selected == 2) {
-                    tabs.set_active (0);
-                }
-                body_label.sensitive = false;
-            }
-        }
-
         public void update_status (Models.Request request) {
             url_entry.change_status (request.status);
         }
@@ -285,17 +265,5 @@ namespace Spectator.Widgets.Request {
         public Services.ScriptWriter get_console_writer () {
             return new Services.TextBufferWriter (scripting_view.console_buffer);
         }
-
-        //  public void set_item (Models.Request request) {
-        //      url_entry.change_status (request.status);
-        //      url_entry.set_text (request.uri);
-        //      url_entry.set_method (request.method);
-        //      scripting_view.change_console (request);
-        //      body_view.set_body (request.request_body);
-        //      update_url_params (request);
-        //      update_tabs (request.method);
-        //      set_headers (request.headers);
-        //      show_all ();
-        //  }
     }
 }

@@ -65,16 +65,16 @@ namespace Spectator.Widgets.Response {
             current_view.show_view (0);
         }
 
-        public void update_test (Models.Request request) {
-            var res = request.response;
+        //  public void update_test (Models.Request request) {
+        //      var res = request.response;
 
-            set_content_type (res);
-            update_view (res);
-            status_bar.update (res);
-            var current_view = (AbstractTypeView) stack.get_visible_child ();
-            current_view.update (res);
-            current_view.show_view (0);
-        }
+        //      set_content_type (res);
+        //      update_view (res);
+        //      status_bar.update (res);
+        //      var current_view = (AbstractTypeView) stack.get_visible_child ();
+        //      current_view.update (res);
+        //      current_view.show_view (0);
+        //  }
 
         private void update_view (ResponseItem? it) {
             if (it == null) {

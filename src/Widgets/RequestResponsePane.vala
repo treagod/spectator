@@ -23,9 +23,9 @@ namespace Spectator.Widgets {
     class RequestResponsePane : Gtk.Paned, Request.Interface {
         private Request.Container request_view;
         private Response.Container response_view;
-        private Gee.HashMap<Models.Request, int> tab_indecies;
-        private Spectator.Window window;
+        private weak Spectator.Window window;
         private uint active_id;
+        private SendingService sending_service;
 
         public signal void type_changed (RequestBody.ContentType type);
         public signal void reset_body (RequestBody.ContentType type);
@@ -35,6 +35,8 @@ namespace Spectator.Widgets {
         public signal void key_value_removed (Pair item);
         public signal void key_value_updated (Pair item);
         public signal void request_edit_clicked (uint id);
+        public signal void send_error (string error);
+        public signal void request_sent (uint id);
 
         public void display_request (uint id) {
             this.active_id = id;
@@ -51,9 +53,14 @@ namespace Spectator.Widgets {
                 this.request_view.set_headers (request.headers);
                 this.request_view.set_body (request.request_body);
 
-                if (request.response != null) {
-                    //
-                } else {}
+                if (this.sending_service.request_was_sent (id)) {
+                    this.response_view.update (this.sending_service.get_response (id));
+                    this.request_view.set_request_status (Models.RequestStatus.SENT);
+                    this.response_view.show ();
+                } else {
+                    this.request_view.set_request_status (Models.RequestStatus.NOT_SENT);
+                    this.response_view.hide ();
+                }
             }
         }
 
@@ -61,11 +68,12 @@ namespace Spectator.Widgets {
             this.window = window;
             this.request_view = new Request.Container ();
             this.response_view = new Response.Container ();
-            this.response_view = new Response.Container ();
-            this.tab_indecies = new Gee.HashMap<Models.Request, int> ();
-
-            request_view.response_received.connect ((res) => {
-                response_view.update (res);
+            this.sending_service = new SendingService ();
+            this.sending_service.finished_request.connect ((request, res) => {
+                this.request_view.set_request_status (Models.RequestStatus.SENT);
+                this.response_view.update (res);
+                this.response_view.show ();
+                this.request_sent (request.id);
             });
 
             request_view.url_params_updated.connect ((query_pairs) => {
@@ -95,12 +103,7 @@ namespace Spectator.Widgets {
             });
 
             request_view.url_changed.connect ((url) => {
-                var request = this.window.request_service.get_request_by_id (active_id);
-
-                if (request != null) {
-                    request.uri = url; // TODO: This allready saves the request, which should be explicit
-                    
-                }
+                this.url_changed (url);
             });
 
             request_view.cancel_process.connect (() => {
@@ -116,16 +119,20 @@ namespace Spectator.Widgets {
             });
 
             request_view.request_activated.connect (() => {
-                request_activated ();
+                var req = this.window.request_service.get_request_by_id (this.active_id);
+
+                // if (valid_uri == false) {
+
+                if (Services.Utilities.valid_uri_string (req.uri)) {
+                    this.request_view.set_request_status (Models.RequestStatus.SENDING);
+                    this.sending_service.send_request.begin (req);
+                } else {
+                    this.send_error ("Invalid URI");
+                }
             });
 
             request_view.method_changed.connect ((method) => {
-                var request = this.window.request_service.get_request_by_id (active_id);
-
-                if (request != null) {
-                    request.method = method; // TODO: This allready saves the request, which should be explicit
-                    method_changed (method);
-                }
+                this.method_changed (method);
             });
 
             request_view.header_added.connect ((header) => {
@@ -195,57 +202,12 @@ namespace Spectator.Widgets {
             return request_view.get_console_writer ();
         }
 
-        //  private void adjust_tab (Models.Request item) {
-        //      tab_indecies[last_item] = request_view.tab_index;
-        //      last_item = item;
-        //      request_view.set_item (item);
-        //      if (!tab_indecies.has_key (item)) {
-        //          request_view.tab_index = 0;
-        //          tab_indecies[item] = 0;
-        //      } else {
-        //          request_view.tab_index = tab_indecies[item];
-        //      }
-        //  }
-
-        public void update_response (Models.Request request) {
-            if (request.response != null) {
-                response_view.update_test (request);
-                response_view.show_all ();
-
-                if (get_child2 () == null) {
-                    pack2 (response_view, true, false);
-                }
-            } else {
-                if (get_child2 () != null) {
-                    remove (response_view);
-                }
-            }
-
-            show_all ();
-        }
-
-        public void update_chunk_response (Models.Request item) {
-            // TODO: Handle in view itself
-            item.response.add_header ("Content-Type", "text/plain");
-            update_response (item);
-        }
-
         public void update_status (Models.Request request) {
             request_view.update_status (request);
         }
 
         construct {
             orientation = Gtk.Orientation.HORIZONTAL;
-        }
-
-        private class ResponseViewCache {
-            public ResponseItem response;
-            public Response.Container view;
-
-            public ResponseViewCache (ResponseItem i, Response.Container v) {
-                response = i;
-                view = v;
-            }
         }
     }
 }

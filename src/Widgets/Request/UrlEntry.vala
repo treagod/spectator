@@ -118,8 +118,11 @@ namespace Spectator.Widgets.Request {
         }
 
         private void widget_activate () {
-            change_status (Models.RequestStatus.SENDING);
-            request_activated ();
+            this.request_activated ();
+        }
+
+        public void set_request_status (Models.RequestStatus status) {
+            this.change_status (status);
         }
     }
 }

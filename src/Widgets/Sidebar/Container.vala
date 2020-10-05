@@ -102,7 +102,7 @@ namespace Spectator.Widgets.Sidebar {
         public Collection.Container collection;
         public History.Container history;
         private TitleBar titlebar;
-        private Spectator.Window window;
+        private weak Spectator.Window window;
         private Granite.Widgets.ModeButton mode_buttons;
 
         public signal void selection_changed (Models.Request item); /* Deprecated */

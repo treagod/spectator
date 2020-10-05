@@ -25,11 +25,18 @@ namespace Spectator.Widgets.Response {
         public HeaderList () {
             idx = 0;
             column_spacing = 18;
+            row_spacing = 5;
+            margin_left = 25;
+            margin_right = 25;
         }
 
         public void add_header (string key, string val) {
             var key_l = new Gtk.Label ("<b>%s</b>".printf (key));
             var val_l = new Gtk.Label (val);
+            key_l.wrap_mode = Pango.WrapMode.CHAR;
+            key_l.wrap = true;
+            val_l.wrap_mode = Pango.WrapMode.CHAR;
+            val_l.wrap = true;
 
             key_l.use_markup = true;
 

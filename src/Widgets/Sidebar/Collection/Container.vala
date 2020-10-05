@@ -41,7 +41,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public uint? active_id { get; private set; }
         private Gee.HashMap<uint, RequestListItem> request_items;
         private Gee.HashMap<uint, bool> collection_visiblity;
-        private Spectator.Window window;
+        private weak Spectator.Window window;
         private Gtk.Revealer motion_revealer;
 
         construct {

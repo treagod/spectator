@@ -67,7 +67,7 @@ namespace Spectator.Widgets.Sidebar.History {
 
     public class Container : Gtk.Box {
         private Gee.HashMap<string, DateBox> boxes;
-        private Spectator.Window window;
+        private weak Spectator.Window window;
 
         /* Create Interface for History/Collection.Container ?? */
         public uint? active_id { get; private set; }
