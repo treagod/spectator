@@ -27,7 +27,7 @@ namespace Spectator.Widgets.Response {
             column_spacing = 18;
             row_spacing = 5;
             margin_left = 25;
-            margin_right = 25;
+            margin_right = 25; // TODO: CSS!!
         }
 
         public void add_header (string key, string val) {

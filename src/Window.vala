@@ -230,8 +230,8 @@ namespace Spectator {
                         "dialog-warning",
                         Gtk.ButtonsType.CANCEL
                    );
-                   message_dialog.transient_for = this;
 
+                   message_dialog.transient_for = this;
                    message_dialog.secondary_label.use_markup = true;
 
                    var suggested_button = new Gtk.Button.with_label (_("Delete Request"));
@@ -240,11 +240,6 @@ namespace Spectator {
 
                    message_dialog.show_all ();
                    if (message_dialog.run () == Gtk.ResponseType.ACCEPT) {
-                    var collection = this.collection_service.get_collection_by_id (request.collection_id);
-
-                    if (collection != null) {
-                        collection.request_ids.remove (req_id);
-                    }
                     this.request_service.delete_request (req_id);
                     this.sidebar.show_items ();
                     this.content.show_welcome ();
@@ -276,6 +271,7 @@ namespace Spectator {
 
             this.sidebar.request_delete_clicked.connect ((id) => {
                 var request = this.request_service.get_request_by_id (id);
+                print ("sad\n");
 
                 if (request != null) {
                     var message_dialog = new Granite.MessageDialog.with_image_from_icon_name (
@@ -284,8 +280,8 @@ namespace Spectator {
                         "dialog-warning",
                         Gtk.ButtonsType.CANCEL
                    );
-                   message_dialog.transient_for = this;
 
+                   message_dialog.transient_for = this;
                    message_dialog.secondary_label.use_markup = true;
 
                    var suggested_button = new Gtk.Button.with_label (_("Delete Request"));

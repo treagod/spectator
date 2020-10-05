@@ -75,6 +75,27 @@ namespace Spectator.Repository {
         }
 
         public bool add_request_to_collection (uint collection_id, uint request_id) {
+            Sqlite.Statement stmt;
+            string insert_query = """
+            UPDATE Request
+            SET collection_id = $COLLECTION_ID
+            WHERE id = $REQUEST_ID;
+            """;
+
+            int ec = db.prepare_v2 (insert_query, insert_query.length, out stmt);
+            if (ec != Sqlite.OK) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+            }
+
+            int collection_id_pos = stmt.bind_parameter_index ("$COLLECTION_ID");
+            stmt.bind_int (collection_id_pos, (int) collection_id);
+
+            int request_id_pos = stmt.bind_parameter_index ("$REQUEST_ID");
+            stmt.bind_int (request_id_pos, (int) request_id);
+
+            if (stmt.step () != Sqlite.DONE) {
+                stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
+            }
             return true;
         }
 
