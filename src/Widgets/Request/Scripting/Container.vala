@@ -20,11 +20,20 @@
 */
 
 namespace Spectator.Widgets.Request.Scripting {
+    private class BufferContent {
+        public Services.ConsoleMessageType message_type { get; private set; }
+        public string content { get; private set; }
+
+        public BufferContent (string content, Services.ConsoleMessageType mt) {
+            this.content = content;
+            this.message_type = mt;
+        }
+    }
     class Container : Gtk.Box {
         private ScriptingSourceView scripting_view;
         private Gtk.TextView console;
         private uint active_id;
-        private Gee.HashMap<uint, Gee.ArrayList<string>> buffers;
+        private Gee.HashMap<uint, Gee.ArrayList<BufferContent>> buffers;
         private Gtk.ScrolledWindow scrolled_console;
         private Gtk.TextBuffer console_buffer {
             get {
@@ -39,7 +48,7 @@ namespace Spectator.Widgets.Request.Scripting {
         public signal void script_changed (string script);
 
         public Container () {
-            buffers = new Gee.HashMap<uint, Gee.ArrayList<string>> ();
+            buffers = new Gee.HashMap<uint, Gee.ArrayList<BufferContent>> ();
             orientation = Gtk.Orientation.VERTICAL;
             spacing = 5;
             scripting_view = new ScriptingSourceView ();
@@ -98,20 +107,10 @@ namespace Spectator.Widgets.Request.Scripting {
 
         public void update_buffer (uint id, string text, Services.ConsoleMessageType mt) {
             if (!buffers.has_key (id)) {
-                buffers[id] = new Gee.ArrayList<string> ();
+                buffers[id] = new Gee.ArrayList<BufferContent> ();
             }
 
-            switch (mt) {
-                case Services.ConsoleMessageType.LOG:
-                    buffers[id].add ("$_ %s".printf (text));
-                    break;
-                case Services.ConsoleMessageType.ERROR:
-                    buffers[id].add ("ERROR: %s".printf (text));
-                    break;
-                case Services.ConsoleMessageType.WARNING:
-                    buffers[id].add ("WARNING: %s".printf (text));
-                break;
-            }
+            buffers[id].add (new BufferContent (text, mt));
 
             if (active_id == id) {
                 this.show_buffer_content (id);
@@ -120,7 +119,7 @@ namespace Spectator.Widgets.Request.Scripting {
 
         public void set_script_buffer (uint id) {
             if (!buffers.has_key (id)) {
-                buffers[id] = new Gee.ArrayList<string> ();
+                buffers[id] = new Gee.ArrayList<BufferContent> ();
             }
             active_id = id;
             this.show_buffer_content (id);
@@ -128,17 +127,39 @@ namespace Spectator.Widgets.Request.Scripting {
 
         private void show_buffer_content (uint id) {
             bool first = true;
-            var builder = new StringBuilder ();
-
-            foreach (var s in buffers[id]) {
+            var buffer = new Gtk.TextBuffer (null);
+            foreach (var buffer_content in buffers[id]) {
+                var builder = new StringBuilder ();
                 if (first) {
                     first = false;
                 } else {
                     builder.append_c ('\n');
                 }
-                builder.append (s);
+
+                Gtk.TextIter iter;
+                buffer.get_end_iter (out iter);
+                switch (buffer_content.message_type) {
+                    case Services.ConsoleMessageType.LOG:
+                        builder.append ("<span color='green'>Spectator</span> $ %s".printf (buffer_content.content));
+                        var content = builder.str;
+                        buffer.insert_markup (ref iter, content, content.length);
+                        break;
+                    case Services.ConsoleMessageType.ERROR:
+                        builder.append ("<span color='red'>%s</span>".printf (buffer_content.content));
+                        var content = builder.str;
+                        buffer.insert_markup (ref iter, content, content.length);
+                        break;
+                    case Services.ConsoleMessageType.WARNING:
+                        builder.append ("<span color='yellow'>%s</span>".printf (buffer_content.content));
+                        var content = builder.str;
+                        buffer.insert_markup (ref iter, content, content.length);
+                        break;
+                }
             }
-            this.console_buffer.text = builder.str;
+
+            this.console.buffer = buffer;
+
+
             this.scrolled_console.size_allocate.connect (() => {
                 var vadjustment = this.scrolled_console.get_vadjustment ();
                 vadjustment.set_value (vadjustment.get_upper ());
