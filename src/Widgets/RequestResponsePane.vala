@@ -50,6 +50,7 @@ namespace Spectator.Widgets {
                 this.request_view.set_request_url (request.uri);
                 this.request_view.set_request_method (request.method);
                 this.request_view.set_script (request.script_code);
+                this.request_view.set_script_buffer (request.id);
                 this.request_view.set_headers (request.headers);
                 this.request_view.set_body (request.request_body);
 
@@ -69,6 +70,11 @@ namespace Spectator.Widgets {
             this.request_view = new Request.Container ();
             this.response_view = new Response.Container ();
             this.sending_service = new SendingService ();
+
+            this.sending_service.request_script_output.connect ((id, str, type) => {
+                this.request_view.update_buffer (id, str, type);
+            });
+
             this.sending_service.finished_request.connect ((request, res) => {
                 this.request_view.set_request_status (Models.RequestStatus.SENT);
                 this.response_view.update (res);
@@ -144,11 +150,9 @@ namespace Spectator.Widgets {
             });
 
             request_view.script_changed.connect ((script) => {
-                var request = this.window.request_service.get_request_by_id (active_id);
-
-                if (request != null) {
-                    request.script_code = script;
-                }
+                this.window.request_service.update_request (active_id, (updater) => {
+                    updater.update_script (script);
+                });
             });
 
             request_view.header_deleted.connect ((header) => {
@@ -196,10 +200,6 @@ namespace Spectator.Widgets {
 
             pack1 (request_view, true, false);
             pack2 (response_view, true, false);
-        }
-
-        public Services.ScriptWriter get_console_writer () {
-            return request_view.get_console_writer ();
         }
 
         public void update_status (Models.Request request) {

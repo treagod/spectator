@@ -22,9 +22,7 @@
 namespace Spectator.Services {
     [Compact]
     public class ScriptContext : Duktape.Context {
-        public ScriptContext (ScriptWriter writer) {
-            push_ref (writer);
-            put_global_string (Duktape.hidden_symbol ("writer"));
+        public ScriptContext () {
         }
 
         public void set_writer (ScriptWriter writer) {

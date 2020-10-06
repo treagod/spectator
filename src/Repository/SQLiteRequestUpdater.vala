@@ -83,7 +83,8 @@ namespace Spectator.Repository {
             SET name = $NAME,
                 method = $METHOD,
                 url = $URL,
-                last_sent = $LAST_SENT
+                last_sent = $LAST_SENT,
+                script = $SCRIPT
             WHERE id = $REQUEST_ID;
             """;
 
@@ -97,10 +98,12 @@ namespace Spectator.Repository {
             int url_pos = stmt.bind_parameter_index ("$URL");
             int last_sent_pos = stmt.bind_parameter_index ("$LAST_SENT");
             int id_pos = stmt.bind_parameter_index ("$REQUEST_ID");
+            int script_pos = stmt.bind_parameter_index ("$SCRIPT");
 
             stmt.bind_text (name_pos, request.name);
             stmt.bind_int (method_pos, request.method.to_i ());
             stmt.bind_text (url_pos, request.uri);
+            stmt.bind_text (script_pos, request.script_code);
             stmt.bind_int (id_pos, (int) request.id);
 
             if (request.last_sent == null) {

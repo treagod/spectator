@@ -23,13 +23,14 @@ namespace Spectator.Widgets.Request.Scripting {
     class Container : Gtk.Box {
         private ScriptingSourceView scripting_view;
         private Gtk.TextView console;
-        private Gee.HashMap<Models.Request, Gtk.TextBuffer> request_consoles;
+        private uint active_id;
+        private Gee.HashMap<uint, Gee.ArrayList<string>> buffers;
         private Gtk.ScrolledWindow scrolled_console;
-        public Gtk.TextBuffer console_buffer {
+        private Gtk.TextBuffer console_buffer {
             get {
                 return console.buffer;
             }
-            private set {
+            set {
                 console.buffer = value;
             }
         }
@@ -38,7 +39,7 @@ namespace Spectator.Widgets.Request.Scripting {
         public signal void script_changed (string script);
 
         public Container () {
-            request_consoles = new Gee.HashMap<Models.Request, Gtk.TextBuffer> ();
+            buffers = new Gee.HashMap<uint, Gee.ArrayList<string>> ();
             orientation = Gtk.Orientation.VERTICAL;
             spacing = 5;
             scripting_view = new ScriptingSourceView ();
@@ -46,6 +47,7 @@ namespace Spectator.Widgets.Request.Scripting {
             scripting_view.changed.connect ((script) => {
                 script_changed (script);
             });
+
             var paned = new Gtk.Paned (Gtk.Orientation.VERTICAL);
             get_style_context ().add_class ("console-box");
 
@@ -94,25 +96,57 @@ namespace Spectator.Widgets.Request.Scripting {
             add (button_box);
         }
 
-        public void update_script_buffer (string buffer) {
-            scripting_view.update_buffer (buffer);
-        }
+        public void update_buffer (uint id, string text, Services.ConsoleMessageType mt) {
+            if (!buffers.has_key (id)) {
+                buffers[id] = new Gee.ArrayList<string> ();
+            }
 
-        public void change_console (Models.Request request) {
-            if (request_consoles.has_key (request)) {
-                console.buffer = request_consoles[request];
-            } else {
-                var buffer = new Gtk.TextBuffer (null);
-                buffer.notify["text"].connect (() => {
-                    scrolled_console.vadjustment.value = scrolled_console.vadjustment.upper;
-                });
-                request_consoles[request] = buffer;
-                console.buffer = buffer;
+            switch (mt) {
+                case Services.ConsoleMessageType.LOG:
+                    buffers[id].add ("$_ %s".printf (text));
+                    break;
+                case Services.ConsoleMessageType.ERROR:
+                    buffers[id].add ("ERROR: %s".printf (text));
+                    break;
+                case Services.ConsoleMessageType.WARNING:
+                    buffers[id].add ("WARNING: %s".printf (text));
+                break;
+            }
+
+            if (active_id == id) {
+                this.show_buffer_content (id);
             }
         }
 
-        public new void grab_focus () {
-            scripting_view.grab_focus ();
+        public void set_script_buffer (uint id) {
+            if (!buffers.has_key (id)) {
+                buffers[id] = new Gee.ArrayList<string> ();
+            }
+            active_id = id;
+            this.show_buffer_content (id);
+        }
+
+        private void show_buffer_content (uint id) {
+            bool first = true;
+            var builder = new StringBuilder ();
+
+            foreach (var s in buffers[id]) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append_c ('\n');
+                }
+                builder.append (s);
+            }
+            this.console_buffer.text = builder.str;
+            this.scrolled_console.size_allocate.connect (() => {
+                var vadjustment = this.scrolled_console.get_vadjustment ();
+                vadjustment.set_value (vadjustment.get_upper ());
+            });
+        }
+
+        public void update_script_buffer (string buffer) {
+            scripting_view.update_buffer (buffer);
         }
     }
 }

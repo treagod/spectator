@@ -73,11 +73,11 @@ namespace Spectator.Repository {
                             break;
                         case "last_sent":
                             unowned var last_sent_value = stmt.column_value (i);
-                            
+
                             if (last_sent_value.to_type () != Sqlite.NULL) {
                                 request.last_sent = new DateTime.from_unix_local (stmt.column_int64 (i));
                             }
-                            
+
                             break;
                         case "body_type":
                             request.request_body.type = RequestBody.ContentType.convert (stmt.column_int (i));
@@ -144,7 +144,7 @@ namespace Spectator.Repository {
         public Models.Request? get_request_by_id (uint id) {
             var request = new Models.Request ();
             var query = """
-            SELECT Request.id, name, method, url, last_sent, type as body_type, content as body_content
+            SELECT Request.id, name, method, script, url, last_sent, type as body_type, content as body_content
             FROM Request
             INNER JOIN RequestBody ON Request.id = RequestBody.id
             WHERE Request.id = $REQUEST_ID;""";
@@ -172,13 +172,16 @@ namespace Spectator.Repository {
                         case "method":
                             request.method = Models.Method.convert (stmt.column_int (i));
                             break;
+                        case "script":
+                            request.script_code = stmt.column_text (i);
+                            break;
                         case "last_sent":
                             unowned var last_sent_value = stmt.column_value (i);
-                                
+
                             if (last_sent_value.to_type () != Sqlite.NULL) {
                                 request.last_sent = new DateTime.from_unix_local (stmt.column_int64 (i));
                             }
-                            
+
                             break;
                         case "body_type":
                             request.request_body.type = RequestBody.ContentType.convert (stmt.column_int (i));

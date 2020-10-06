@@ -146,6 +146,12 @@ namespace Spectator.Repository {
                 stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
             }
 
+            this.db.exec ("""
+            UPDATE Request
+            SET collection_id = NULL
+            WHERE id = $MOVED_ID;
+            """.replace ("$MOVED_ID", "%u".printf (moved_id)));
+
             this.db.exec ("COMMIT;");
         }
 

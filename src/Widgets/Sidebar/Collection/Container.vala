@@ -43,6 +43,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         private Gee.HashMap<uint, bool> collection_visiblity;
         private weak Spectator.Window window;
         private Gtk.Revealer motion_revealer;
+        private Gtk.Revealer motion_revealer_bottom;
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -61,8 +62,8 @@ namespace Spectator.Widgets.Sidebar.Collection {
                     if (child is Dropdown) {
                         var dropdown = (Dropdown) child;
 
-                        dropdown.each_item ((item) => {
-                            item.repaint ();
+                        dropdown.each_item ((request) => {
+                            request.repaint ();
                         });
                     } else if (child is RequestListItem) {
                         var list_item = (RequestListItem) child;
@@ -80,6 +81,15 @@ namespace Spectator.Widgets.Sidebar.Collection {
             this.motion_revealer = new Gtk.Revealer ();
             this.motion_revealer.transition_type = Gtk.RevealerTransitionType.SLIDE_DOWN;
             this.motion_revealer.add (motion_grid);
+
+            var motion_grid_bottom = new Gtk.Grid ();
+            motion_grid_bottom.margin = 6;
+            motion_grid_bottom.get_style_context ().add_class ("grid-motion");
+            motion_grid_bottom.height_request = 18;
+
+            this.motion_revealer_bottom = new Gtk.Revealer ();
+            this.motion_revealer_bottom.transition_type = Gtk.RevealerTransitionType.NONE;
+            this.motion_revealer_bottom.add (motion_grid_bottom);
         }
 
         public void drag_reavel_top () {
@@ -93,6 +103,18 @@ namespace Spectator.Widgets.Sidebar.Collection {
         private void build_drag_and_drop () {
             Gtk.drag_dest_set (this, Gtk.DestDefaults.ALL, TARGET_ENTRIES_LABEL, Gdk.DragAction.MOVE);
             this.drag_data_received.connect (on_drag_data_received);
+            this.drag_motion.connect (on_drag_motion);
+            this.drag_leave.connect (on_drag_leave);
+        }
+
+        private bool on_drag_motion (Gdk.DragContext context, int x, int y, uint time) {
+            this.motion_revealer_bottom.reveal_child = true;
+
+            return true;
+        }
+
+        private void on_drag_leave (Gdk.DragContext context, uint time) {
+            this.motion_revealer_bottom.reveal_child = false;
         }
 
         private void on_drag_data_received (Gdk.DragContext context, int x, int y,
@@ -149,7 +171,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                 this.remove (child);
             }
 
-            this.add (motion_revealer);
+            this.pack_start (motion_revealer, false, false);
 
             foreach (var entry in this.window.order_service.get_order ()) {
                 if (entry.type == Order.Type.REQUEST) {
@@ -171,6 +193,8 @@ namespace Spectator.Widgets.Sidebar.Collection {
                     }
                 }
             }
+
+            this.add (motion_revealer_bottom);
         }
 
         public void add_request (Models.Request request) {

@@ -73,7 +73,8 @@ namespace Spectator.Models {
             code = "";
             evaluated = false;
             writer = new Services.StdoutWriter ();
-            context = new Services.ScriptContext (writer);
+            context = new Services.ScriptContext ();
+            context.set_writer (writer);
             context.push_content_type_object ();
         }
 

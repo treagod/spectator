@@ -26,8 +26,7 @@ namespace Spectator.Widgets.Response {
             idx = 0;
             column_spacing = 18;
             row_spacing = 5;
-            margin_left = 25;
-            margin_right = 25; // TODO: CSS!!
+            get_style_context ().add_class ("response-header-list");
         }
 
         public void add_header (string key, string val) {

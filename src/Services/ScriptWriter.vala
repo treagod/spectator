@@ -21,9 +21,29 @@
 
 namespace Spectator.Services {
     public interface ScriptWriter : Object {
+        public signal void written (string str);
+        public signal void error_written (string str);
+        public signal void warning_written (string str);
+
+
         public abstract void write (string str);
         public abstract void error (string str);
         public abstract void warning (string str);
+    }
+
+    public class BufferWriter : ScriptWriter, Object {
+        public void write (string str) {
+            written (str);
+        }
+
+        public void error (string str) {
+            error_written (str);
+        }
+
+        public void warning (string str) {
+            warning_written (str);
+        }
+
     }
 
     public class StdoutWriter : ScriptWriter, Object {

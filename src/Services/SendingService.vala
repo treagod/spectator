@@ -21,10 +21,13 @@
 
 namespace Spectator {
     public class SendingService : Object {
+        public signal void request_script_output (uint id, string str, Services.ConsoleMessageType mt);
         private Gee.HashMap<uint, ResponseItem> responses;
+        private Services.ScriptRuntime javascript_runtime;
 
         public SendingService () {
             this.responses = new Gee.HashMap<uint, ResponseItem> ();
+            this.javascript_runtime = new Services.ScriptRuntime ();
         }
 
         public signal void finished_request (Models.Request request, ResponseItem response);
@@ -39,7 +42,11 @@ namespace Spectator {
         }
 
         public async void send_request (Models.Request request) {
-            var action = new Services.RequestAction (request);
+            var script_runner = this.javascript_runtime.get_runner (request);
+            script_runner.console_output.connect ((str, type) => {
+                this.request_script_output (request.id, str, type);
+            });
+            var action = new Services.RequestAction (request, script_runner);
             action.make_request.begin ();
 
             action.request_got_chunk.connect  ((res) => {

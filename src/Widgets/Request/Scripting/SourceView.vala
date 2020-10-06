@@ -23,6 +23,7 @@ namespace Spectator.Widgets.Request {
     class ScriptingSourceView : Gtk.SourceView {
         public signal void changed (string script);
         public new Gtk.SourceBuffer buffer;
+        private uint timeout_id;
         public Gtk.SourceStyleSchemeManager style_scheme_manager;
 
         private void set_default_font () {
@@ -80,8 +81,18 @@ namespace Spectator.Widgets.Request {
             buffer.language = manager.get_language ("js");
             set_buffer (buffer);
 
-            buffer.changed.connect (() => {
-                changed (buffer.text);
+            buffer.end_user_action.connect (() => {
+                // Clear timeout if the user is already typing
+                if (timeout_id > 0) {
+                    Source.remove (timeout_id);
+                    timeout_id = 0;
+                }
+
+                timeout_id = Timeout.add (550, () => {
+                    changed (buffer.text);
+                    timeout_id = 0;
+                    return false;
+                });
             });
         }
         public void update_buffer (string code) {

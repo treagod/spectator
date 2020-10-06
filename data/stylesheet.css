@@ -184,3 +184,8 @@
 	background-color: alpha (#3689e6, 0.25);
     border-radius: 4px;
 }
+
+.response-header-list {
+    margin-left: 0.75em;
+    margin-right: 0.75em;
+}

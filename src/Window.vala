@@ -60,7 +60,6 @@ namespace Spectator {
         public Window (Gtk.Application app, Repository.IRequest request_service,
                        Repository.ICollection collection_service, Repository.ICustomOrder order_service) {
             var settings = Settings.get_instance ();
-            // Store the main app to be used
             Object (application: app);
 
             Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = settings.dark_theme;
@@ -86,8 +85,7 @@ namespace Spectator {
             this.headerbar = new Widgets.HeaderBar ();
             this.setup_headerbar_events ();
             this.set_titlebar (this.headerbar);
-
-            create_paned ();
+            this.create_paned ();
         }
 
         private void setup_headerbar_events () {

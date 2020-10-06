@@ -35,7 +35,6 @@ namespace Spectator.Widgets {
         public signal void body_reset (uint id, RequestBody.ContentType type);
         public signal void body_content_changed (uint id, string content);
         public signal void cancel_process ();
-        public signal void script_changed (string script);
 
         public signal void welcome_activated (int index);
         public signal void header_added (Pair header);
@@ -79,10 +78,6 @@ namespace Spectator.Widgets {
             });
 
             req_res_pane = new RequestResponsePane (this.window);
-
-            req_res_pane.script_changed.connect ((script) => {
-                script_changed (script);
-            });
 
             req_res_pane.cancel_process.connect (() => {
                 cancel_process ();
@@ -140,10 +135,6 @@ namespace Spectator.Widgets {
 
         public void update_status (Models.Request request) {
             req_res_pane.update_status (request);
-        }
-
-        public Services.ScriptWriter get_console_writer () {
-            return req_res_pane.get_console_writer ();
         }
 
         private void setup_request_signals (RequestResponsePane request) {

@@ -27,25 +27,22 @@ namespace Spectator.Services {
         private Timer timer;
         private Soup.Session session;
         private bool is_canceled;
+        private ScriptRunner script_runner;
 
         public signal void finished_request (ResponseItem response);
+        public signal void script_log (string log);
         public signal void request_got_chunk (ResponseItem response);
         public signal void request_failed (Models.Request item);
         public signal void proxy_failed (Models.Request item);
         public signal void aborted ();
 
 
-        public RequestAction (Models.Request req) {
+        public RequestAction (Models.Request req, ScriptRunner runner) {
             this.request = req;
+            this.script_runner = runner;
             this.response = new ResponseItem ();
             this.session = new Soup.Session ();
             this.is_canceled = false;
-        }
-
-        public RequestAction.with_writer (Models.Request req, Services.ScriptWriter writer) {
-            request = req;
-            session = new Soup.Session ();
-            is_canceled = false;
         }
 
         public async void make_request () {
@@ -148,11 +145,6 @@ namespace Spectator.Services {
         }
 
         private async void perform_request () {
-            //  if (!script.execute_before_sending (tmp_req)) {
-            //      aborted ();
-            //      return;
-            //  }
-
             session.timeout = (uint) settings.timeout;
 
             var method = this.request.method;
@@ -237,7 +229,12 @@ namespace Spectator.Services {
                 var body = this.request.request_body;
                 if (is_raw_type (body.type)) {
                     if (content_type_set) {
-                        msg.set_request (null, Soup.MemoryUse.COPY, body.raw.data);
+                        if (content_type_set) {
+                            msg.set_request (null, Soup.MemoryUse.COPY, body.raw.data);
+                        } else {
+                            msg.set_request (RequestBody.ContentType.to_mime (body.type),
+                                             Soup.MemoryUse.COPY, body.raw.data);
+                        }
                     } else {
                         msg.set_request (RequestBody.ContentType.to_mime (body.type),
                                          Soup.MemoryUse.COPY, body.raw.data);
@@ -276,6 +273,10 @@ namespace Spectator.Services {
                 session.user_agent = user_agent;
             }
 
+
+            if (script_runner.valid) {
+                script_runner.run_before_sending ();
+            }
             timer = new Timer ();
             session.queue_message (msg, read_response);
         }

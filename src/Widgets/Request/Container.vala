@@ -98,6 +98,10 @@ namespace Spectator.Widgets.Request {
             this.scripting_view.update_script_buffer (script);
         }
 
+        public void set_script_buffer (uint id) {
+            this.scripting_view.set_script_buffer (id);
+        }
+
         public void set_body (RequestBody body) {
             this.body_view.set_content (body.content, body.type);
         }
@@ -124,6 +128,10 @@ namespace Spectator.Widgets.Request {
             });
 
             return header_view;
+        }
+
+        public void update_buffer (uint id, string text, Services.ConsoleMessageType mt) {
+            this.scripting_view.update_buffer (id, text, mt);
         }
 
         private Gee.ArrayList<Pair> convert_query_to_pairs (string url) {
@@ -260,10 +268,6 @@ namespace Spectator.Widgets.Request {
 
         public void update_status (Models.Request request) {
             url_entry.change_status (request.status);
-        }
-
-        public Services.ScriptWriter get_console_writer () {
-            return new Services.TextBufferWriter (scripting_view.console_buffer);
         }
     }
 }
