@@ -110,9 +110,9 @@ namespace Spectator.Widgets.Request {
 
         private void setup_body_type_box () {
             body_type_box = new Gtk.ComboBoxText ();
-            body_type_box.append_text ("form-data");
-            body_type_box.append_text ("x-www-form-urlencoded");
-            body_type_box.append_text ("raw");
+            body_type_box.append_text ("Form Data");
+            body_type_box.append_text ("Urlencoded");
+            body_type_box.append_text ("Text");
         }
 
         private void setup_body_type_behaviour () {
@@ -121,7 +121,6 @@ namespace Spectator.Widgets.Request {
             body_content_type_selections.halign = Gtk.Align.START;
 
             body_type_box.changed.connect (() => {
-                /* TODO: Only fire if the user changes the content */
                 var index = body_type_box.get_active ();
                 body_content_type_selections.remove (language_box);
 
