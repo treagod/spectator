@@ -141,12 +141,10 @@ namespace Spectator.Widgets {
                 this.method_changed (method);
             });
 
-            request_view.header_added.connect ((header) => {
-                var request = this.window.request_service.get_request_by_id (active_id);
-
-                if (request != null) {
-                    request.add_header(header);
-                }
+            request_view.header_added.connect ((headers) => {
+                this.window.request_service.update_request (active_id, (updater) => {
+                    updater.update_headers (headers);
+                });
             });
 
             request_view.script_changed.connect ((script) => {
@@ -155,13 +153,10 @@ namespace Spectator.Widgets {
                 });
             });
 
-            request_view.header_deleted.connect ((header) => {
-                header_added (header);
-                var request = this.window.request_service.get_request_by_id (active_id);
-
-                if (request != null) {
-                    request.remove_header (header);
-                }
+            request_view.header_deleted.connect ((headers) => {
+                this.window.request_service.update_request (active_id, (updater) => {
+                    updater.update_headers (headers);
+                });
             });
 
             request_view.body_type_changed.connect ((type) => {

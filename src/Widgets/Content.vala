@@ -37,8 +37,6 @@ namespace Spectator.Widgets {
         public signal void cancel_process ();
 
         public signal void welcome_activated (int index);
-        public signal void header_added (Pair header);
-        public signal void header_deleted (Pair header);
         public signal void url_params_updated (Gee.ArrayList<Pair> items);
         public signal void request_sent (uint id);
 
@@ -164,14 +162,6 @@ namespace Spectator.Widgets {
 
             request.content_changed.connect ((content) => {
                 this.body_content_changed (this.active_id, content);
-            });
-
-            request.header_added.connect ((header) => {
-                header_added (header);
-            });
-
-            request.header_deleted.connect ((header) => {
-                header_deleted (header);
             });
 
             request.url_params_updated.connect ((items) => {

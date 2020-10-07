@@ -92,7 +92,7 @@ namespace Spectator.Services {
         var request = get_request (ctx);
 
         if (ctx.is_string (-1) && ctx.is_string (-2)) {
-            request.add_header (new Spectator.Header (ctx.get_string (-2), ctx.get_string (-1)));
+            request.add_header (new Spectator.Pair (ctx.get_string (-2), ctx.get_string (-1)));
         }
         return 0;
     }

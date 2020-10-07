@@ -119,6 +119,20 @@ namespace Spectator.Repository {
             return true;
         }
 
+        private Gee.ArrayList<Pair> deserialize_key_value_content (string content) {
+            var pairs = new Gee.ArrayList<Pair> ();
+            var pair_strings = content.split("\n");
+
+            foreach (var pair in pair_strings) {
+                if (pair.strip ().length > 0) {
+                    var key_value = pair.split(">>|<<");
+                    pairs.add (new Pair(key_value[0], key_value[1]));
+                }
+            }
+
+            return pairs;
+        }
+
         public bool delete_request (uint id) {
             Sqlite.Statement stmt;
             string insert_query = """
@@ -144,7 +158,7 @@ namespace Spectator.Repository {
         public Models.Request? get_request_by_id (uint id) {
             var request = new Models.Request ();
             var query = """
-            SELECT Request.id, name, method, script, url, last_sent, type as body_type, content as body_content
+            SELECT Request.id, name, method, headers, script, url, last_sent, type as body_type, content as body_content
             FROM Request
             INNER JOIN RequestBody ON Request.id = RequestBody.id
             WHERE Request.id = $REQUEST_ID;""";
@@ -188,6 +202,9 @@ namespace Spectator.Repository {
                             break;
                         case "body_content":
                             request.request_body.content = stmt.column_text (i);
+                            break;
+                        case "headers":
+                            request.headers = deserialize_key_value_content (stmt.column_text (i));
                             break;
                     }
                 }

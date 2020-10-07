@@ -54,7 +54,8 @@ namespace Spectator.Repository {
         }
 
         public void update_headers (Gee.ArrayList<Pair> headers) {
-            //
+            request.headers = headers;
+            this.update_request = true;
         }
 
         public void update_body_type (RequestBody.ContentType type) {
@@ -84,7 +85,8 @@ namespace Spectator.Repository {
                 method = $METHOD,
                 url = $URL,
                 last_sent = $LAST_SENT,
-                script = $SCRIPT
+                script = $SCRIPT,
+                headers = $HEADERS
             WHERE id = $REQUEST_ID;
             """;
 
@@ -99,12 +101,14 @@ namespace Spectator.Repository {
             int last_sent_pos = stmt.bind_parameter_index ("$LAST_SENT");
             int id_pos = stmt.bind_parameter_index ("$REQUEST_ID");
             int script_pos = stmt.bind_parameter_index ("$SCRIPT");
+            int headers_pos = stmt.bind_parameter_index ("$HEADERS");
 
             stmt.bind_text (name_pos, request.name);
             stmt.bind_int (method_pos, request.method.to_i ());
             stmt.bind_text (url_pos, request.uri);
             stmt.bind_text (script_pos, request.script_code);
             stmt.bind_int (id_pos, (int) request.id);
+            stmt.bind_text (headers_pos, serialize_key_value_content (request.headers));
 
             if (request.last_sent == null) {
                 stmt.bind_null (last_sent_pos);
@@ -142,6 +146,14 @@ namespace Spectator.Repository {
             if (stmt.step () != Sqlite.DONE) {
                 stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
             }
+        }
+
+        private string serialize_key_value_content (Gee.ArrayList<Pair> pairs) {
+            var form_data_builder = new StringBuilder ();
+            foreach (var entry in pairs) {
+                form_data_builder.append ("%s>>|<<%s\n".printf (entry.key, entry.val));
+            }
+            return form_data_builder.str;
         }
 
         public void save () {

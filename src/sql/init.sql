@@ -3,6 +3,7 @@ create table if not exists Request (
     name            TEXT                 NOT NULL,
     method          INT,
     url             TEXT,
+    headers         TEXT DEFAULT "",
     script       	TEXT DEFAULT "",
     last_sent       INT,
     collection_id   INT,

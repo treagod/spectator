@@ -119,12 +119,15 @@ namespace Spectator.Widgets.Request {
             header_view.provider = new HeaderProvider ();
 
             header_view.item_added.connect ((header) => {
-                print ("header added\n");
-                header_added (new Header (header.key, header.val));
+                header_added (header_view.get_all_items ());
+            });
+
+            header_view.item_updated.connect (() => {
+                header_added (header_view.get_all_items ());
             });
 
             header_view.item_deleted.connect ((header) => {
-                header_deleted (new Header (header.key, header.val));
+                header_deleted (header_view.get_all_items ());
             });
 
             return header_view;

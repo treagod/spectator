@@ -28,7 +28,7 @@ namespace Spectator.Models {
         public Method method { get; set; }
         public RequestStatus status { get; set; }
         public string script_code;
-        public Gee.ArrayList<Header> headers { get; private set; }
+        public Gee.ArrayList<Pair> headers { get; set; }
         public DateTime? last_sent;
         public string query {
             owned get {
@@ -98,7 +98,7 @@ namespace Spectator.Models {
         }
 
         private void setup (string nam, Method meth) {
-            headers = new Gee.ArrayList<Header> ();
+            headers = new Gee.ArrayList<Pair> ();
             script_code = "";
             name = nam;
             uri = "";
@@ -112,11 +112,11 @@ namespace Spectator.Models {
             return tmp != null;
         }
 
-        public void add_header (Header header) {
+        public void add_header (Pair header) {
             headers.add (header);
         }
 
-        public void remove_header (Header header) {
+        public void remove_header (Pair header) {
             headers.remove (header);
         }
     }
