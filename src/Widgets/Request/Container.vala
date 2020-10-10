@@ -28,7 +28,6 @@ namespace Spectator.Widgets.Request {
         private Spectator.Widgets.Request.Scripting.Container scripting_view;
         private Granite.Widgets.ModeButton tabs;
         private Gtk.Stack stack;
-        private Gtk.Label body_label;
 
         public int tab_index {
             get {
@@ -60,18 +59,10 @@ namespace Spectator.Widgets.Request {
             });
 
             this.init_stack ();
+            this.stack.set_visible_child_name ("header");
+            this.setup_tabs ();
 
             this.add (url_entry);
-
-            var header_params_label = new Gtk.Label (_("Headers"));
-            var url_params_label = new Gtk.Label (_("Parameters"));
-            var script_label = new Gtk.Label (_("Script"));
-            this.body_label = new Gtk.Label (_("Body"));
-
-            this.setup_tabs (header_params_label, url_params_label, body_label, script_label);
-
-            this.stack.set_visible_child_name ("header");
-
             this.add (tabs);
             this.add (stack);
             this.show_all ();
@@ -240,10 +231,14 @@ namespace Spectator.Widgets.Request {
             stack.add_titled (scripting_view, "scripting", "scripting");
         }
 
-        private void setup_tabs (Gtk.Label header_params_label, Gtk.Label url_params_label,
-                Gtk.Label body_label, Gtk.Label script_label) {
+        private void setup_tabs () {
             tabs = new Granite.Widgets.ModeButton ();
             int current_index = 0;
+
+            var header_params_label = new Gtk.Label (_("Headers"));
+            var url_params_label = new Gtk.Label (_("Parameters"));
+            var script_label = new Gtk.Label (_("Script"));
+            var body_label = new Gtk.Label (_("Body"));
 
             tabs.append (header_params_label);
             tabs.append (url_params_label);

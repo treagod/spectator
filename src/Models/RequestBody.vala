@@ -22,48 +22,41 @@
 namespace Spectator {
     public class RequestBody {
         public ContentType type;
-        /* Deprecated */
-        public Gee.ArrayList<Pair> form_data { get; private set; }
-        /* Deprecated */
-        public Gee.ArrayList<Pair> urlencoded { get; private set; }
-        /* Deprecated */
-        public string raw;
         public string content;
 
         public RequestBody () {
-            raw = "";
             this.content = "";
-            type = FORM_DATA;
-            form_data = new Gee.ArrayList<Pair> ();
-            urlencoded = new Gee.ArrayList<Pair> ();
+            this.type = FORM_DATA;
         }
 
         public void add_key_value (Pair pair) {
-            if (type == FORM_DATA) {
-                form_data.add (pair);
-            } else if (type == URLENCODED) {
-                urlencoded.add (pair);
-            }
+            //  if (type == FORM_DATA) {
+            //      form_data.add (pair);
+            //  } else if (type == URLENCODED) {
+            //      urlencoded.add (pair);
+            //  }
         }
 
-        public void update_key_value (Pair pair) {
-            if (type == FORM_DATA) {
-                if (form_data.contains (pair)) {
-                    // do something..
-                }
-            } else if (type == URLENCODED) {
-                if (urlencoded.contains (pair)) {
-                    // do something..
-                }
-            }
+        public Gee.ArrayList<Pair> get_as_form_data () {
+            return deserialize_content ();
         }
 
-        public void remove_key_value (Pair pair) {
-            if (type == FORM_DATA) {
-                form_data.remove (pair);
-            } else if (type == URLENCODED) {
-                urlencoded.remove (pair);
+        private Gee.ArrayList<Pair> deserialize_content () {
+            var pairs = new Gee.ArrayList<Pair> ();
+            var pair_strings = content.split("\n");
+
+            foreach (var pair in pair_strings) {
+                if (pair.strip ().length > 0) {
+                    var key_value = pair.split(">>|<<");
+                    pairs.add (new Pair(key_value[0], key_value[1]));
+                }
             }
+
+            return pairs;
+        }
+
+        public Gee.ArrayList<Pair> get_as_urlencoded () {
+            return deserialize_content ();
         }
 
         public enum ContentType {

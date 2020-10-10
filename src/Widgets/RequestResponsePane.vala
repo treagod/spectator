@@ -193,8 +193,8 @@ namespace Spectator.Widgets {
                 request_view.set_request_body (request.request_body);
             });
 
-            pack1 (request_view, true, false);
-            pack2 (response_view, true, false);
+            pack1 (request_view, false, false);
+            pack2 (response_view, false, false);
         }
 
         public void update_status (Models.Request request) {

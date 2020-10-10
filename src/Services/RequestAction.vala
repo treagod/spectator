@@ -207,7 +207,7 @@ namespace Spectator.Services {
             }
 
             var user_agent = "";
-            var content_type_set = false;
+            var content_type = "";
 
             foreach (var header in this.request.headers) {
                 if (header.key == "User-Agent") {
@@ -217,7 +217,7 @@ namespace Spectator.Services {
 
                 // TODO: better handling of user defined content type
                 if (header.key == "Content-Type") {
-                    content_type_set = true;
+                    content_type = header.val;
                     continue;
                 }
 
@@ -225,25 +225,21 @@ namespace Spectator.Services {
                 msg.request_headers.append (header.key, header.val);
             }
 
-            if (method == Models.Method.POST || method == Models.Method.PUT || method == Models.Method.PATCH) {
-                var body = this.request.request_body;
+            var body = this.request.request_body;
                 if (is_raw_type (body.type)) {
-                    if (content_type_set) {
-                        if (content_type_set) {
-                            msg.set_request (null, Soup.MemoryUse.COPY, body.raw.data);
-                        } else {
-                            msg.set_request (RequestBody.ContentType.to_mime (body.type),
-                                             Soup.MemoryUse.COPY, body.raw.data);
-                        }
+                    // If a content type was set, use this content type
+                    // Otherwise try to infer it from the body type
+                    if (content_type.strip ().length > 0) {
+                        msg.set_request (content_type, Soup.MemoryUse.COPY, body.content.data);
                     } else {
                         msg.set_request (RequestBody.ContentType.to_mime (body.type),
-                                         Soup.MemoryUse.COPY, body.raw.data);
+                                         Soup.MemoryUse.COPY, body.content.data);
                     }
                 } else if (body.type == RequestBody.ContentType.FORM_DATA) {
                     var multipart = new Soup.Multipart ("multipart/form-data");
 
                     // TODO: Support file upload
-                    foreach (var pair in body.form_data) {
+                    foreach (var pair in body.get_as_form_data ()) {
                         multipart.append_form_string (pair.key, pair.val);
                     }
 
@@ -251,7 +247,7 @@ namespace Spectator.Services {
                 } else if (body.type == RequestBody.ContentType.URLENCODED) {
                     var builder = new StringBuilder ();
                     var first = true;
-                    foreach (var pair in body.urlencoded) {
+                    foreach (var pair in body.get_as_urlencoded ()) {
                         if (first) {
                             first = false;
                         } else {
@@ -264,7 +260,6 @@ namespace Spectator.Services {
                     }
                     msg.set_request ("application/x-www-form-urlencoded", Soup.MemoryUse.COPY, builder.str.data);
                 }
-            }
 
             // Use applications User-Agent if none was defined
             if (user_agent == "") {

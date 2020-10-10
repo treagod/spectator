@@ -112,7 +112,7 @@ namespace Spectator.Services {
             request.request_body.type =
                     RequestBody.ContentType.convert ((int) body.get_int_member ("active_type"));
 
-            request.request_body.raw = body.get_string_member ("raw") ?? "";
+            request.request_body.content = body.get_string_member ("raw") ?? "";
 
             return request;
         }
@@ -227,7 +227,7 @@ namespace Spectator.Services {
             request.request_body.type =
                     RequestBody.ContentType.convert ((int) body.get_int_member ("active_type"));
 
-            request.request_body.raw = body.get_string_member ("raw") ?? "";
+            request.request_body.content = body.get_string_member ("raw") ?? "";
 
             return request;
         }

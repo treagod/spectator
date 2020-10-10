@@ -158,6 +158,7 @@ namespace Spectator.Widgets.Request {
             return form_data_builder.str;
         }
 
+        // TODO: refactor to model method
         private Gee.ArrayList<Pair> deserialize_key_value_content (string content) {
             var pairs = new Gee.ArrayList<Pair> ();
             var pair_strings = content.split("\n");

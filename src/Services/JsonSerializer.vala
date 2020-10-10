@@ -19,6 +19,11 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
+/*
+DEPRECATED!!!
+DEPRECATED!!!
+*/
+
 namespace Spectator.Services {
     public class JsonSerializer {
         private string data;
@@ -56,7 +61,7 @@ namespace Spectator.Services {
             builder.add_int_value (request.request_body.type.to_i ());
             builder.set_member_name ("form_data");
             builder.begin_array ();
-            foreach (var pair in request.request_body.form_data) {
+            foreach (var pair in request.request_body.get_as_form_data ()) {
                 builder.begin_object ();
                 builder.set_member_name ("key");
                 builder.add_string_value (pair.key);
@@ -67,7 +72,7 @@ namespace Spectator.Services {
             builder.end_array (); // Form data
             builder.set_member_name ("urlencoded");
             builder.begin_array ();
-            foreach (var pair in request.request_body.urlencoded) {
+            foreach (var pair in request.request_body.get_as_urlencoded ()) {
                 builder.begin_object ();
                 builder.set_member_name ("key");
                 builder.add_string_value (pair.key);
@@ -77,7 +82,7 @@ namespace Spectator.Services {
             }
             builder.end_array (); // Urlencoded
             builder.set_member_name ("raw");
-            builder.add_string_value (request.request_body.raw);
+            builder.add_string_value (request.request_body.content);
             builder.end_object (); // body
         }
 
