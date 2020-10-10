@@ -63,7 +63,6 @@ namespace Spectator.Widgets.Response {
             //  la.halign = Gtk.Align.CENTER;
             //  box.pack_start (la, false, false);
             //  box.pack_start (test, true, true);
-            //  print("asd\n");
             //  var dropdown_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
             //  dropdown_box.add (box);
             //  dropdown_box.add (new Gtk.Label ("asd"));

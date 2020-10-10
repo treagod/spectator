@@ -53,7 +53,7 @@ namespace Spectator {
 
         private void ensure_directory () {
             if (FileUtils.test (this.app_data_dir, FileTest.EXISTS)) {
-                if (!GLib.FileUtils.test(this.app_data_dir, GLib.FileTest.IS_DIR)) {
+                if (!FileUtils.test(this.app_data_dir, GLib.FileTest.IS_DIR)) {
                     error ("%s must be a directory\n", this.app_data_dir);
                 }
             } else {
@@ -91,12 +91,41 @@ namespace Spectator {
             }
         }
 
+        private void load_legacy (Repository.ICollection collections, Repository.IRequest requests) {
+            var legacy_store_path = Path.build_filename (
+                this.app_data_dir,
+                "settings.json"
+            );
+
+            // Skip if no settings.json exists
+            if (!FileUtils.test(legacy_store_path, GLib.FileTest.IS_REGULAR)) return;
+
+            var ser = new Services.JsonDeserializer ();
+            ser.collection_loaded.connect ((collection) => {
+                collections.add_collection (collection);
+            });
+
+            ser.request_added_to_collection.connect ((collection, request) => {
+                requests.add_request (request);
+                collections.add_request_to_collection (collection.id, request.id);
+            });
+            ser.load_data_from_file (legacy_store_path);
+
+            try {
+                var file = File.new_for_path (legacy_store_path);
+                file.delete ();
+            } catch (Error err) {
+                print ("Could not delete file %s\n", legacy_store_path);
+            }
+        }
+
         protected override void activate () {
             this.load_database ();
             if (!running) {
                 var rs = new Repository.SQLiteRequest (db);
                 var cs = new Repository.SQLiteCollection (db);
                 var os = new Repository.SQLiteCustomOrder (db);
+                this.load_legacy (cs, rs);
 
                 var window = new Spectator.Window(this, rs, cs, os);
                 this.add_window (window);

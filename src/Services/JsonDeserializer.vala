@@ -67,7 +67,7 @@ namespace Spectator.Services {
             foreach (var request_item in request_items.get_elements ()) {
                 var request = deserialize_item_v1 (request_item.get_object ());
                 // collection.add_request (request);
-                request_loaded (request);
+                request_added_to_collection (collection, request);
             }
         }
 
@@ -118,39 +118,29 @@ namespace Spectator.Services {
         }
 
         private void load_v2 (Json.Object object) {
-            var collection_array = object.get_array_member ("collections");
-            var collections = new Gee.ArrayList<Models.Collection> ();
-            foreach (var collection_element in collection_array.get_elements ()) {
-                var collection = deserialize_collection (collection_element.get_object ());
-                collections.add (collection);
-
-                collection_loaded (collection);
-            }
-
+            var requests = new Gee.ArrayList<Models.Request> ();
             var items = object.get_member ("request_items");
             var request_items = items.get_array ();
 
             foreach (var request_item in request_items.get_elements ()) {
                 var request = deserialize_item (request_item.get_object ());
 
-                if (request.collection_id != null) {
-                    bool collection_not_found = true;
-                    foreach (var collection in collections) {
-                        if (collection.id == request.collection_id) {
-                            collection_not_found = false;
-                            // collection.add_request (request);
-                            break;
-                        }
-                    }
+                requests.add (request);
+            }
 
-                    if (collection_not_found) {
-                        request.collection_id = null;
+
+            var collection_array = object.get_array_member ("collections");
+            foreach (var collection_element in collection_array.get_elements ()) {
+                var collection = deserialize_collection (collection_element.get_object ());
+                var old_id = collection.id;
+
+                collection_loaded (collection);
+
+                foreach (var req in requests) {
+                    if (req.collection_id == old_id) {
+                        this.request_added_to_collection (collection, req);
                     }
-                } else {
-                    //
                 }
-
-                request_loaded (request);
             }
         }
 
@@ -159,13 +149,6 @@ namespace Spectator.Services {
             var name = collection_object.get_string_member ("name");
 
             var collection = new Models.Collection.with_id (id, name);
-
-            /* Deprecated */
-            //  if (collection_object.has_member ("items_visible")) {
-            //      collection.items_visible = collection_object.get_boolean_member ("items_visible");
-            //  } else {
-            //      collection.items_visible = false;
-            //  }
 
             return collection;
         }
