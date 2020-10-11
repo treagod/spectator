@@ -80,7 +80,7 @@ namespace Spectator.Widgets.Response {
             pack_start (stack);
         }
 
-        public void update (ResponseItem? it) {
+        public void update (Models.Response? it) {
             set_content_type (it);
             update_view (it);
             status_bar.update (it);
@@ -89,7 +89,7 @@ namespace Spectator.Widgets.Response {
             current_view.show_view (0);
         }
 
-        private void update_view (ResponseItem? it) {
+        private void update_view (Models.Response? it) {
             if (it == null) {
                 stack.set_visible_child (json_view);
                 return;
@@ -108,7 +108,7 @@ namespace Spectator.Widgets.Response {
             }
         }
 
-        private void set_content_type (ResponseItem? it) {
+        private void set_content_type (Models.Response? it) {
             if (it == null) {
                 status_bar.set_active_type (StatusBar.Type.UNKOWN);
                 return;

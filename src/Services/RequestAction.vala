@@ -22,16 +22,16 @@
 namespace Spectator.Services {
     public class RequestAction {
         public Models.Request request { get; private set; }
-        public ResponseItem response;
+        public Models.Response response;
         private Settings settings = Settings.get_instance ();
         private Timer timer;
         private Soup.Session session;
         private bool is_canceled;
         private ScriptRunner script_runner;
 
-        public signal void finished_request (ResponseItem response);
+        public signal void finished_request (Models.Response response);
         public signal void script_log (string log);
-        public signal void request_got_chunk (ResponseItem response);
+        public signal void request_got_chunk (Models.Response response);
         public signal void request_failed (Models.Request item);
         public signal void proxy_failed (Models.Request item);
         public signal void aborted ();
@@ -40,7 +40,7 @@ namespace Spectator.Services {
         public RequestAction (Models.Request req, ScriptRunner runner) {
             this.request = req;
             this.script_runner = runner;
-            this.response = new ResponseItem ();
+            this.response = new Models.Response ();
             this.session = new Soup.Session ();
             this.is_canceled = false;
         }
@@ -103,7 +103,7 @@ namespace Spectator.Services {
                 }
             }
 
-            var res = new ResponseItem ();
+            var res = new Models.Response ();
             res.url = request.uri;
 
             // Performance new request to redirected location

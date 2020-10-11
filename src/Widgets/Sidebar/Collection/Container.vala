@@ -174,7 +174,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
             this.pack_start (motion_revealer, false, false);
 
             foreach (var entry in this.window.order_service.get_order ()) {
-                if (entry.type == Order.Type.REQUEST) {
+                if (entry.type == Models.Order.Type.REQUEST) {
                     var request = this.window.request_service.get_request_by_id (entry.id);
 
                     if (request != null) {
@@ -183,7 +183,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
                     } else {
                         error ("NO REQUEST FOUND\n");
                     }
-                } else if (entry.type == Order.Type.COLLECTION) {
+                } else if (entry.type == Models.Order.Type.COLLECTION) {
                     var collection = this.window.collection_service.get_collection_by_id (entry.id);
 
                     if (collection != null) {

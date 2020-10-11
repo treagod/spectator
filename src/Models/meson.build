@@ -5,5 +5,6 @@ sources += files(
     'Method.vala',
     'RequestBody.vala',
 	'ResponseItem.vala',
-    'Script.vala'
+    'Script.vala',
+    'Order.vala'
 )

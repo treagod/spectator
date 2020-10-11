@@ -60,7 +60,7 @@ namespace Spectator.Widgets.Response {
             }
         }
 
-        public override void update (ResponseItem? it) {
+        public override void update (Models.Response? it) {
             if (it == null) {
                  response_text.buffer.text = "";
                  response_text_raw.buffer.text = "";

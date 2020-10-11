@@ -32,7 +32,7 @@ namespace Spectator.Widgets.Response.StatusBar {
         private Gtk.Box response_size_box;
         private Gtk.Label response_size_label;
         private Gtk.Stack content_type;
-        private ResponseItem? item;
+        private Models.Response? item;
 
         public signal void view_changed (int i);
 
@@ -128,7 +128,7 @@ namespace Spectator.Widgets.Response.StatusBar {
             pack_end (content_type, false, false);
         }
 
-        public void update (ResponseItem? it) {
+        public void update (Models.Response? it) {
             item = it;
             http_status_box.get_style_context ().remove_class ("ok-status-box");
             http_status_box.get_style_context ().remove_class ("redirect-status-box");

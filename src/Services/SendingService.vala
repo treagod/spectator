@@ -22,22 +22,22 @@
 namespace Spectator {
     public class SendingService : Object {
         public signal void request_script_output (uint id, string str, Services.ConsoleMessageType mt);
-        private Gee.HashMap<uint, ResponseItem> responses;
+        private Gee.HashMap<uint, Models.Response> responses;
         private Services.ScriptRuntime javascript_runtime;
 
         public SendingService () {
-            this.responses = new Gee.HashMap<uint, ResponseItem> ();
+            this.responses = new Gee.HashMap<uint, Models.Response> ();
             this.javascript_runtime = new Services.ScriptRuntime ();
         }
 
-        public signal void finished_request (Models.Request request, ResponseItem response);
-        public signal void response_chunk (Models.Request request, ResponseItem response);
+        public signal void finished_request (Models.Request request, Models.Response response);
+        public signal void response_chunk (Models.Request request, Models.Response response);
 
         public bool request_was_sent (uint id) {
             return this.responses.has_key (id);
         }
 
-        public ResponseItem? get_response (uint id) {
+        public Models.Response? get_response (uint id) {
             return this.responses[id];
         }
 

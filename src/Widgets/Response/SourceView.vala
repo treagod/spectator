@@ -47,7 +47,7 @@ namespace Spectator.Widgets.Response {
             buffer.text = res;
         }
 
-        public void insert (ResponseItem? res) {
+        public void insert (Models.Response? res) {
             if (res == null) {
                 buffer.text = "";
             }

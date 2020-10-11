@@ -22,6 +22,6 @@
 namespace Spectator.Widgets.Response {
     public abstract class AbstractTypeView : Gtk.Stack {
         public abstract void show_view (int i);
-        public abstract void update (ResponseItem? it);
+        public abstract void update (Models.Response? it);
     }
 }

@@ -27,8 +27,8 @@ namespace Spectator.Repository {
             this.db = db;
         }
 
-        public Gee.ArrayList<Order> get_order () {
-            var order = new Gee.ArrayList<Order> ();
+        public Gee.ArrayList<Models.Order> get_order () {
+            var order = new Gee.ArrayList<Models.Order> ();
             var query = """
             SELECT CustomOrder.id, CustomOrder.type, CustomOrder.position FROM CustomOrder
             INNER JOIN
@@ -48,7 +48,7 @@ namespace Spectator.Repository {
 
             int cols = stmt.column_count ();
             while (stmt.step () == Sqlite.ROW) {
-                var entry = new Order (1, Order.Type.REQUEST); // Make empty constructor
+                var entry = new Models.Order (1, Models.Order.Type.REQUEST); // Make empty constructor
 
                 for (int i = 0; i < cols; i++) {
                     string col_name = stmt.column_name (i) ?? "<none>";
@@ -58,7 +58,7 @@ namespace Spectator.Repository {
                             entry.id = stmt.column_int (i);
                             break;
                         case "type":
-                            entry.type = (Order.Type) stmt.column_int (i) ;
+                            entry.type = (Models.Order.Type) stmt.column_int (i) ;
                             break;
                     }
                 }

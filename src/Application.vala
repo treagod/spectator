@@ -20,22 +20,6 @@
 */
 
 namespace Spectator {
-
-    public class Order {
-        public enum Type {
-            REQUEST,
-            COLLECTION
-        }
-
-        public Type type;
-        public uint id;
-
-        public Order (uint id, Type type) {
-            this.type = type;
-            this.id = id;
-        }
-    }
-
     public class Application : Gtk.Application {
         // Avoid multiple instances
         public bool running = false;

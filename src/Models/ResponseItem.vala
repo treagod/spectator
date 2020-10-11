@@ -19,8 +19,8 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace Spectator {
-    public class ResponseItem {
+namespace Spectator.Models {
+    public class Response {
         public string url { get; set; }
         public string raw { get; set; }
         public string data { get; set; }
@@ -31,7 +31,7 @@ namespace Spectator {
 
         public Gee.HashMap<string, string> headers { get; private set; }
 
-        public ResponseItem () {
+        public Response () {
             headers = new Gee.HashMap<string, string> ();
         }
 
