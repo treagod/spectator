@@ -19,8 +19,12 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace Spectator {
+namespace Spectator.Queries {
     public const string SQL_INIT_CMD = """
         @SQL@
     """;
+
+    namespace CustomOrder {
+        public const string MOVE_REQUEST_AFTER_REQUEST = """@CUSTOM_ORDER_MOVE_REQUEST_AFTER_REQUEST@""";
+    }
 }

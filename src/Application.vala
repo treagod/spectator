@@ -66,7 +66,7 @@ namespace Spectator {
                 Process.exit(1);
             }
 
-            string query = Spectator.SQL_INIT_CMD;
+            string query = Spectator.Queries.SQL_INIT_CMD;
 
             ec = db.exec (query, null, out errmsg);
             if (ec != Sqlite.OK) {

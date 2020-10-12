@@ -71,25 +71,7 @@ namespace Spectator.Repository {
 
         public void move_request_after_request (uint target_id, uint moved_id) {
             this.db.exec ("BEGIN TRANSACTION;");
-            var reposition_other_query = """
-            UPDATE CustomOrder
-            SET position = CASE
-            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 0) THEN position + 1
-            ELSE position - 1
-            END
-            WHERE
-            position
-            BETWEEN CASE
-            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 0)
-            THEN (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 0) + 1
-            ELSE (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) + 1
-            END
-            AND CASE
-            WHEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) > (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 0)
-            THEN (SELECT position FROM CustomOrder WHERE id = $MOVED_ID AND type = 0) - 1
-            ELSE (SELECT position FROM CustomOrder WHERE id = $TARGET_ID AND type = 0)
-            END;
-            """.replace ("$MOVED_ID", "%u".printf (moved_id)).replace ("$TARGET_ID", "%u".printf (target_id));
+            var reposition_other_query = Queries.CustomOrder.MOVE_REQUEST_AFTER_REQUEST.replace ("$MOVED_ID", "%u".printf (moved_id)).replace ("$TARGET_ID", "%u".printf (target_id));
 
 
             var reposition_moved_request_query = """
