@@ -26,7 +26,7 @@ namespace Spectator.Dialogs.Collection {
         private DialogTitle dialog_title;
         private bool warning_active;
 
-        public CollectionDialog (Gtk.ApplicationWindow parent) {
+        public CollectionDialog (Spectator.Window parent) {
             border_width = 5;
             set_size_request (425, 100);
             deletable = false;

@@ -26,7 +26,7 @@ namespace Spectator.Dialogs.Collection {
         private DialogTitle dialog_title;
         private bool warning_active;
 
-        public UpdateCollectionDialog (Gtk.ApplicationWindow parent, Models.Collection collection) {
+        public UpdateCollectionDialog (Spectator.Window parent, Models.Collection collection) {
             border_width = 5;
             set_size_request (425, 100);
             deletable = false;

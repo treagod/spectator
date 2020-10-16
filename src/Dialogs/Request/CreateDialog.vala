@@ -24,7 +24,7 @@ namespace Spectator.Dialogs.Request {
         public signal void creation (Models.Request request);
         public signal void collection_created (Models.Collection collection);
 
-        public CreateDialogNew (Gtk.ApplicationWindow parent) {
+        public CreateDialogNew (Spectator.Window parent) {
             base (_("Create Request"), parent);
             request_name_entry.text = _("My Request");
 

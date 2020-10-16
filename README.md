@@ -31,6 +31,7 @@ You'll need the following dependencies:
 * libjson-glib-dev
 * libxml2-dev
 * libsqlite3
+* libhandy-1-dev
 * duktape-dev
 * valac
 

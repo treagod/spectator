@@ -23,7 +23,7 @@ namespace Spectator.Dialogs.Request {
     public class UpdateDialog : Dialog {
         public signal void updated (string name, Models.Method method);
 
-        public UpdateDialog (Gtk.ApplicationWindow parent, Models.Request request) {
+        public UpdateDialog (Spectator.Window parent, Models.Request request) {
             base (_("Update Request"), parent);
             request_name_entry.text = request.name;
             method_box.active = request.method.to_i ();

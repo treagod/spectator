@@ -23,7 +23,7 @@ namespace Spectator.Dialogs.Request {
     public class CreateDialogWithCollection : Dialog {
         public signal void creation (Models.Request request);
 
-        public CreateDialogWithCollection (Gtk.ApplicationWindow parent, Models.Collection collection) {
+        public CreateDialogWithCollection (Spectator.Window parent, Models.Collection collection) {
             base (_("Create Request for %s".printf (collection.name)), parent);
             request_name_entry.text = _("My Request");
 

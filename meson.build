@@ -17,6 +17,7 @@ dependencies = [
     dependency('json-glib-1.0'), # Deprecated
     dependency('libxml-2.0'),
     dependency('sqlite3'),
+    dependency('libhandy-1', version: '>=0.90.0'),
     c_deps
 ]
 
