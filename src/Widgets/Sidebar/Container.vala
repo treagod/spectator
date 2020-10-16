@@ -20,8 +20,13 @@
 */
 
 namespace Spectator.Widgets.Sidebar {
+    public enum DnDTarget {
+        REQUEST,
+        COLLECTION
+    }
     public const Gtk.TargetEntry[] TARGET_ENTRIES_LABEL = {
-        { "REQUEST", Gtk.TargetFlags.SAME_APP, 0 }
+        { "REQUEST", Gtk.TargetFlags.SAME_APP, DnDTarget.REQUEST },
+        { "COLLECTION", Gtk.TargetFlags.SAME_APP, DnDTarget.COLLECTION },
     };
 
     public class TitleBar : Gtk.Box {

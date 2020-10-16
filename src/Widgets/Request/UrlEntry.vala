@@ -40,9 +40,17 @@ namespace Spectator.Widgets.Request {
             margin_top = 4;
             margin_bottom = 4;
 
-            url_entry.key_release_event.connect (() => {
+            url_entry.changed.connect (() => {
+                update_hightlighing ();
+            });
+
+            url_entry.key_release_event.connect ((event) => {
                 notify_url_change ();
                 return true;
+            });
+
+            url_entry.copy_clipboard.connect (() => {
+                // Copy processed url (without #{})
             });
         }
 
@@ -64,8 +72,85 @@ namespace Spectator.Widgets.Request {
             add (method_box);
         }
 
+        private void update_hightlighing () {
+            unowned string url = url_entry.text;
+            unichar c;
+            uint start = 0;
+            uint end = 0;
+            url_entry.attributes = new Pango.AttrList ();
+
+            for (int i = 0; url.get_next_char (ref i, out c);) {
+                var found_comment = false;
+
+                if (c == '#') {
+                    start = i;
+                    url.get_next_char (ref i, out c);
+
+                    if (c == '{') {
+                        var s = "";
+                        while (true) {
+                            url.get_next_char (ref i, out c);
+                            if (c == '}') {
+                                found_comment = true;
+                                break;
+                            }
+
+                            if (c == '\0') {
+                                break;
+                            }
+                            s += c.to_string ();
+                        }
+                        end = i;
+                    }
+                }
+
+                if (found_comment) {
+                    var a = (Pango.AttrColor) Pango.attr_foreground_new (0,0,0);
+                    a.color.parse ("#0e9a83");
+                    var w = Pango.attr_weight_new (Pango.Weight.BOLD);
+                    a.start_index = start - 1;
+                    a.end_index = end;
+                    w.start_index = start - 1;
+                    w.end_index = end;
+                    url_entry.attributes.insert (a.copy());
+                    url_entry.attributes.insert (w.copy());
+
+                    w = Pango.attr_scale_new (0);
+                    w.start_index = start - 1;
+                    w.end_index = start + 1;
+                    url_entry.attributes.insert (w.copy());
+
+                    w = Pango.attr_scale_new (0);
+                    w.start_index = end - 1;
+                    w.end_index = end;
+                    url_entry.attributes.insert (w.copy());
+                }
+            }
+        }
+
         public void set_text (string url) {
             url_entry.text = url;
+            update_hightlighing ();
+
+            //  if (url.length > 5) {
+
+            //      var attr = Pango.attr_scale_new (0);
+            //      attr.start_index = 25;
+            //      attr.end_index = 27;
+            //      url_entry.attributes.insert (attr.copy());
+            //      attr.start_index = 35;
+            //      attr.end_index = 36;
+            //      url_entry.attributes.insert (attr.copy());
+            //      attr = Pango.attr_weight_new (Pango.Weight.BOLD);
+            //      attr.start_index = 27;
+            //      attr.end_index = 35;
+            //      url_entry.attributes.insert (attr.copy());
+            //      var cattr = (Pango.AttrColor) Pango.attr_foreground_new (0, 0, 0);
+            //      cattr.color.parse ("#0e9a83");
+            //      cattr.start_index = 27;
+            //      cattr.end_index = 35;
+            //      url_entry.attributes.insert (cattr.copy());
+            //  }
         }
 
         public string get_text () {
