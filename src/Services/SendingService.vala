@@ -23,10 +23,12 @@ namespace Spectator {
     public class SendingService : Object {
         public signal void request_script_output (uint id, string str, Services.ConsoleMessageType mt);
         private Gee.HashMap<uint, Models.Response> responses;
+        private Gee.HashMap<uint, Services.RequestAction> running_actions;
         private Services.ScriptRuntime javascript_runtime;
 
         public SendingService () {
             this.responses = new Gee.HashMap<uint, Models.Response> ();
+            this.running_actions = new Gee.HashMap<uint, Services.RequestAction> ();
             this.javascript_runtime = new Services.ScriptRuntime ();
         }
 
@@ -35,6 +37,14 @@ namespace Spectator {
 
         public bool request_was_sent (uint id) {
             return this.responses.has_key (id);
+        }
+
+        public void cancel (uint id) {
+            if (this.running_actions.has_key (id)) {
+                var action = this.running_actions[id];
+                action.cancel ();
+                this.running_actions.unset (id);
+            }
         }
 
         public Models.Response? get_response (uint id) {
@@ -47,6 +57,7 @@ namespace Spectator {
                 this.request_script_output (request.id, str, type);
             });
             var action = new Services.RequestAction (request, script_runner);
+            this.running_actions[request.id] = action;
             action.make_request.begin ();
 
             action.request_got_chunk.connect  ((res) => {
@@ -54,6 +65,7 @@ namespace Spectator {
             });
 
             action.finished_request.connect ((res) => {
+                this.running_actions.unset (request.id);
                 this.responses[request.id] = res;
                 this.finished_request (request, res);
             });

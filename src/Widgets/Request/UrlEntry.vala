@@ -131,26 +131,6 @@ namespace Spectator.Widgets.Request {
         public void set_text (string url) {
             url_entry.text = url;
             update_hightlighing ();
-
-            //  if (url.length > 5) {
-
-            //      var attr = Pango.attr_scale_new (0);
-            //      attr.start_index = 25;
-            //      attr.end_index = 27;
-            //      url_entry.attributes.insert (attr.copy());
-            //      attr.start_index = 35;
-            //      attr.end_index = 36;
-            //      url_entry.attributes.insert (attr.copy());
-            //      attr = Pango.attr_weight_new (Pango.Weight.BOLD);
-            //      attr.start_index = 27;
-            //      attr.end_index = 35;
-            //      url_entry.attributes.insert (attr.copy());
-            //      var cattr = (Pango.AttrColor) Pango.attr_foreground_new (0, 0, 0);
-            //      cattr.color.parse ("#0e9a83");
-            //      cattr.start_index = 27;
-            //      cattr.end_index = 35;
-            //      url_entry.attributes.insert (cattr.copy());
-            //  }
         }
 
         public string get_text () {
@@ -189,6 +169,7 @@ namespace Spectator.Widgets.Request {
             url_entry.icon_press.connect (() => {
                 if (processing) {
                     cancel_process ();
+                    this.change_status (Models.RequestStatus.SENT);
                 } else {
                     widget_activate ();
                 }

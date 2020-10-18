@@ -113,7 +113,7 @@ namespace Spectator.Widgets {
             });
 
             request_view.cancel_process.connect (() => {
-                cancel_process ();
+                this.sending_service.cancel (active_id);
             });
 
             request_view.content_changed.connect ((content) => {
