@@ -114,7 +114,7 @@ namespace Spectator {
                 var window = new Spectator.Window(this, rs, cs, os);
                 this.add_window (window);
 
-                window.show_all ();
+                window.show_content ();
                 running = true;
             }
         }

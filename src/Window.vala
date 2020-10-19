@@ -73,6 +73,10 @@ namespace Spectator {
             this.request_service = request_service;
             this.collection_service = collection_service;
             this.order_service = order_service;
+        }
+
+        public void show_content () {
+            this.show_all ();
             this.sidebar.show_items ();
         }
 
