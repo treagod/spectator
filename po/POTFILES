@@ -4,8 +4,6 @@ src/Window.vala
 src/Models/Pair.vala
 src/Models/RequestBody.vala
 src/Models/ResponseItem.vala
-src/Controllers/Request.vala
-src/Controllers/Main.vala
 src/Services/Settings.vala
 src/Services/RequestAction.vala
 src/Dialogs/Request/Dialog.vala
