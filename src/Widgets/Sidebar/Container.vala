@@ -198,18 +198,22 @@ This can't be undone!""".printf (collection.name)),
                 if (request != null) {
                     var new_request = new Models.Request.clone (request);
                     this.window.request_service.add_request (new_request);
+                    this.window.request_service.update_request(new_request.id, (updater) => {
+                        updater.update_body_type (new_request.request_body.type);
+                        updater.update_body_content (new_request.request_body.content);
+                    });
 
                     if (new_request.collection_id != null) {
                         this.window.collection_service.add_request_to_collection (
                             new_request.collection_id,
                             new_request.id
                         );
-                    } else {
-                        this.window.order_service.move_request_after_request (
-                            request.id,
-                            new_request.id
-                        );
                     }
+
+                    this.window.order_service.move_request_after_request (
+                        request.id,
+                        new_request.id
+                    );
                     this.show_items ();
                 }
             });

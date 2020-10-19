@@ -44,7 +44,7 @@ namespace Spectator.Repository {
         public Gee.ArrayList<Models.Request> get_requests () {
             var requests = new Gee.ArrayList<Models.Request> ();
             var query = """
-            SELECT Request.id, name, method, url, last_sent, type as body_type, content as body_content
+            SELECT Request.id, script, name, method, url, last_sent, type as body_type, content as body_content
             FROM Request
             INNER JOIN RequestBody ON Request.id = RequestBody.id;
             """;
@@ -67,6 +67,9 @@ namespace Spectator.Repository {
                             break;
                         case "url":
                             request.uri = stmt.column_text (i) ?? "";
+                            break;
+                        case "script":
+                            request.script_code = stmt.column_text (i) ?? "";
                             break;
                         case "method":
                             request.method = Models.Method.convert (stmt.column_int (i));
@@ -96,7 +99,10 @@ namespace Spectator.Repository {
         public bool add_request (Models.Request request) {
             Sqlite.Statement stmt;
             string insert_query = """
-            INSERT INTO Request (name, method) VALUES ($NAME, $METHOD);
+            INSERT INTO Request
+                (name, method, url, headers, script)
+            VALUES
+                ($NAME, $METHOD, $URL, $HEADERS, $SCRIPT);
             """;
 
             int ec = db.prepare_v2 (insert_query, insert_query.length, out stmt);
@@ -106,9 +112,15 @@ namespace Spectator.Repository {
 
             int name_pos = stmt.bind_parameter_index ("$NAME");
             int method_pos = stmt.bind_parameter_index ("$METHOD");
+            int url_pos = stmt.bind_parameter_index ("$URL");
+            int headers_pos = stmt.bind_parameter_index ("$HEADERS");
+            int script_pos = stmt.bind_parameter_index ("$SCRIPT");
 
             stmt.bind_text (name_pos, request.name);
             stmt.bind_int (method_pos, request.method.to_i ());
+            stmt.bind_text (url_pos, request.uri);
+            stmt.bind_text (headers_pos, serialize_key_value_content (request.headers));
+            stmt.bind_text (script_pos, request.script_code);
 
             if (stmt.step () != Sqlite.DONE) {
                 stderr.printf ("Error: %d: %s\n", db.errcode (), db.errmsg ());
@@ -158,7 +170,7 @@ namespace Spectator.Repository {
         public Models.Request? get_request_by_id (uint id) {
             var request = new Models.Request ();
             var query = """
-            SELECT Request.id, name, method, headers, script, url, last_sent, type as body_type, content as body_content
+            SELECT Request.id, name, method, headers, collection_id, script, url, last_sent, type as body_type, content as body_content
             FROM Request
             INNER JOIN RequestBody ON Request.id = RequestBody.id
             WHERE Request.id = $REQUEST_ID;""";
@@ -206,11 +218,26 @@ namespace Spectator.Repository {
                         case "headers":
                             request.headers = deserialize_key_value_content (stmt.column_text (i));
                             break;
+                        case "collection_id":
+                            unowned var collection_id_value = stmt.column_value (i);
+
+                            if (collection_id_value.to_type () != Sqlite.NULL) {
+                                request.collection_id = stmt.column_int (i);
+                            }
+                            break;
                     }
                 }
             }
 
             return request;
+        }
+
+        private string serialize_key_value_content (Gee.ArrayList<Pair> pairs) {
+            var form_data_builder = new StringBuilder ();
+            foreach (var entry in pairs) {
+                form_data_builder.append ("%s>>|<<%s\n".printf (entry.key, entry.val));
+            }
+            return form_data_builder.str;
         }
     }
 }

@@ -178,7 +178,9 @@ namespace Spectator.Widgets.Sidebar.Collection {
                     var request = this.window.request_service.get_request_by_id (entry.id);
 
                     if (request != null) {
-                        if (request.collection_id != null) continue;
+                        if (request.collection_id != null) {
+                            continue;
+                        }
                         this.add_request (request);
                     } else {
                         error ("NO REQUEST FOUND\n");
