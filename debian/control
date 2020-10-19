@@ -13,7 +13,6 @@ Build-Depends: meson,
                libgtksourceview-3.0-dev,
                libwebkit2gtk-4.0-dev,
                libxml2-dev,
-               libhandy-1-dev,
                sqlite
 Standards-Version: 4.1.1
 

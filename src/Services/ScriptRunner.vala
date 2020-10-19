@@ -55,7 +55,7 @@ namespace Spectator.Services {
         }
 
         public void run_before_sending () {
-            unowned var runner_context = create_runner_context ();
+            unowned ScriptContext runner_context = create_runner_context ();
             runner_context.push_ref (writer);
             runner_context.put_global_string (Duktape.hidden_symbol ("writer"));
 
@@ -96,7 +96,7 @@ namespace Spectator.Services {
         }
 
         private void eval_code () {
-            unowned var runner_context = create_runner_context ();
+            unowned ScriptContext runner_context = create_runner_context ();
 
             if (runner_context.peval_string (this.request.script_code) != 0) {
                 this.error = runner_context.safe_to_string (-1);

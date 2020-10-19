@@ -75,7 +75,7 @@ namespace Spectator.Repository {
                             request.method = Models.Method.convert (stmt.column_int (i));
                             break;
                         case "last_sent":
-                            unowned var last_sent_value = stmt.column_value (i);
+                            unowned Sqlite.Value last_sent_value = stmt.column_value (i);
 
                             if (last_sent_value.to_type () != Sqlite.NULL) {
                                 request.last_sent = new DateTime.from_unix_local (stmt.column_int64 (i));
@@ -202,7 +202,7 @@ namespace Spectator.Repository {
                             request.script_code = stmt.column_text (i);
                             break;
                         case "last_sent":
-                            unowned var last_sent_value = stmt.column_value (i);
+                            unowned Sqlite.Value last_sent_value = stmt.column_value (i);
 
                             if (last_sent_value.to_type () != Sqlite.NULL) {
                                 request.last_sent = new DateTime.from_unix_local (stmt.column_int64 (i));
@@ -219,7 +219,7 @@ namespace Spectator.Repository {
                             request.headers = deserialize_key_value_content (stmt.column_text (i));
                             break;
                         case "collection_id":
-                            unowned var collection_id_value = stmt.column_value (i);
+                            unowned Sqlite.Value collection_id_value = stmt.column_value (i);
 
                             if (collection_id_value.to_type () != Sqlite.NULL) {
                                 request.collection_id = stmt.column_int (i);
