@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -32,7 +32,7 @@ namespace Spectator.Widgets.Response.StatusBar {
         private Gtk.Box response_size_box;
         private Gtk.Label response_size_label;
         private Gtk.Stack content_type;
-        private ResponseItem? item;
+        private Models.Response? item;
 
         public signal void view_changed (int i);
 
@@ -91,7 +91,7 @@ namespace Spectator.Widgets.Response.StatusBar {
             http_status_label = new Gtk.Label (_("No status"));
             http_status_box.get_style_context ().add_class ("no-info-box");
             http_status_label.halign = Gtk.Align.CENTER;
-            http_status_label.margin = 3;
+            http_status_label.margin = 5;
 
             http_status_box.add (http_status_label);
 
@@ -99,7 +99,7 @@ namespace Spectator.Widgets.Response.StatusBar {
             request_time_label = new Gtk.Label (_("No duration"));
             request_time_box.get_style_context ().add_class ("no-info-box");
             request_time_label.halign = Gtk.Align.CENTER;
-            request_time_label.margin = 3;
+            request_time_label.margin = 5;
 
             request_time_box.add (request_time_label);
 
@@ -107,7 +107,7 @@ namespace Spectator.Widgets.Response.StatusBar {
             response_size_label = new Gtk.Label (_("No size"));
             response_size_box.get_style_context ().add_class ("no-info-box");
             response_size_label.halign = Gtk.Align.CENTER;
-            response_size_label.margin = 3;
+            response_size_label.margin = 5;
 
             response_size_box.add (response_size_label);
 
@@ -128,7 +128,7 @@ namespace Spectator.Widgets.Response.StatusBar {
             pack_end (content_type, false, false);
         }
 
-        public void update (ResponseItem? it) {
+        public void update (Models.Response? it) {
             item = it;
             http_status_box.get_style_context ().remove_class ("ok-status-box");
             http_status_box.get_style_context ().remove_class ("redirect-status-box");

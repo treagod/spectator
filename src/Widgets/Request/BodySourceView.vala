@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -23,6 +23,8 @@ namespace Spectator.Widgets.Request {
     public class BodySourceView : Gtk.SourceView {
         private new Gtk.SourceBuffer buffer;
         private Gtk.SourceLanguageManager manager;
+        private uint timeout_id;
+        public bool buffer_updated { get; private set; }
         public Gtk.SourceStyleSchemeManager style_scheme_manager;
 
         // Not optimal as every single keystroke invokes this signal.
@@ -35,6 +37,9 @@ namespace Spectator.Widgets.Request {
                 show_right_margin: false,
                 wrap_mode: Gtk.WrapMode.WORD_CHAR
             );
+
+            this.timeout_id = 0;
+            this.buffer_updated = true;
         }
 
         public void set_lang (string lang) {
@@ -90,8 +95,20 @@ namespace Spectator.Widgets.Request {
             set_show_line_numbers (false);
 
             buffer.language = manager.get_language ("plain");
-            buffer.changed.connect (() => {
-                body_buffer_changed (buffer.text);
+            buffer.end_user_action.connect (() => {
+                this.buffer_updated = false;
+                // Clear timeout if the user is already typing
+                if (timeout_id > 0) {
+                    Source.remove (timeout_id);
+                    timeout_id = 0;
+                }
+
+                timeout_id = Timeout.add (550, () => {
+                    body_buffer_changed (buffer.text);
+                    timeout_id = 0;
+                    this.buffer_updated = true;
+                    return false;
+                });
             });
             auto_indent = true;
         }

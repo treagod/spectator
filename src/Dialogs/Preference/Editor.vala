@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -20,6 +20,7 @@
 */
 
 namespace Spectator.Dialogs.Preference {
+    /* TODO: Unify tab content */
     public class Editor : Gtk.Box {
         construct {
             orientation = Gtk.Orientation.VERTICAL;
@@ -44,7 +45,7 @@ namespace Spectator.Dialogs.Preference {
             var use_default_font_switch = new Gtk.Switch ();
             use_default_font_switch.halign = Gtk.Align.END;
             use_default_font_switch.active = settings.use_default_font;
-            use_default_font_switch.notify.connect (() => {
+            use_default_font_switch.state_set.connect (() => {
                 if (use_default_font_switch.active) {
                     settings.default_font ();
                 } else {
@@ -52,6 +53,7 @@ namespace Spectator.Dialogs.Preference {
                 }
                 font_button.sensitive = !use_default_font_switch.active;
                 settings.use_default_font = use_default_font_switch.active;
+                return true;
             });
 
 
@@ -66,49 +68,72 @@ namespace Spectator.Dialogs.Preference {
             fbox.max_children_per_line = 1;
             fbox.column_spacing = 0;
 
-            var ra_box = create_radio_button_box ();
+            var tree_view = this.editor_style_tree_view ();
 
             option_grid.attach (use_default_font_label, 0, 0, 1, 1);
             option_grid.attach (use_default_font_switch, 1, 0, 1, 1);
             option_grid.attach (font_label, 0, 1, 1, 1);
             option_grid.attach (font_button, 1, 1, 1, 1);
             option_grid.attach (scheme_label, 0, 2, 1, 1);
-            option_grid.attach (ra_box, 1, 2, 1, 1);
+            option_grid.attach (tree_view, 1, 2, 1, 1);
 
             add (option_grid);
         }
 
-        private Gtk.Box create_radio_button_box () {
+        private Gtk.TreeView editor_style_tree_view () {
+            var tree_view = new Gtk.TreeView ();
+            var list_store = new Gtk.ListStore (1, typeof (string));
             var settings = Settings.get_instance ();
+
+            tree_view.set_model (list_store);
+            tree_view.set_headers_visible (false);
+
+            tree_view.insert_column_with_attributes (-1, _("Editor Styles"), new Gtk.CellRendererText (), "text", 0, null);
+
+            Gtk.TreeIter iter;
             var scheme_manager = Gtk.SourceStyleSchemeManager.get_default ();
-            var ra_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-            ra_box.get_style_context ().add_class ("theme-selection");
-            Gtk.RadioButton radio_button = null;
 
-            var editor_scheme = settings.editor_scheme;
             foreach (var id in scheme_manager.scheme_ids) {
-                var label = create_label_for_id (id);
+                list_store.append (out iter);
+                list_store.set (iter, 0, this.create_label_for_id (id));
 
-                if (radio_button == null) {
-                    radio_button = new Gtk.RadioButton.with_label (null, label);
-                } else {
-                    radio_button = new Gtk.RadioButton.with_label_from_widget (radio_button, label);
-                }
-
-                radio_button.hide ();
-
-                ra_box.pack_start (radio_button);
-                radio_button.clicked.connect (() => {
-                    settings.editor_scheme = id;
-                    settings.editor_scheme_changed ();
-                });
-
-                if (id == editor_scheme) {
-                    radio_button.active = true;
+                if (id == settings.editor_scheme) {
+                    tree_view.get_selection ().select_iter (iter);
                 }
             }
 
-            return ra_box;
+            tree_view.get_selection ().changed.connect ((tree_selection) => {
+                Gtk.TreeModel model;
+                Gtk.TreeIter iter2;
+                string label;
+
+                if (tree_selection.get_selected (out model, out iter2)) {
+                    model.get (iter2, 0, out label);
+
+
+                    settings.editor_scheme = this.create_id_from_label (label);
+                    settings.editor_scheme_changed ();
+                }
+            });
+
+            return tree_view;
+        }
+
+        private string create_id_from_label (string label) {
+            var label_parts = label.split (" ");
+            var id_builder = new StringBuilder ();
+            bool first = true;
+
+            foreach (var part in label_parts) {
+                if (first) {
+                    first = false;
+                } else {
+                    id_builder.append_c ('-');
+                }
+                id_builder.append (part.down());
+            }
+
+            return id_builder.str.strip ();
         }
 
         private string create_label_for_id (string id) {
@@ -120,7 +145,7 @@ namespace Spectator.Dialogs.Preference {
                 builder.append (part);
             }
 
-            return builder.str;
+            return builder.str.strip ();
         }
     }
 }

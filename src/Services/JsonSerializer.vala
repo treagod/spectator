@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -17,6 +17,11 @@
 * Boston, MA 02110-1301 USA
 *
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
+*/
+
+/*
+DEPRECATED!!!
+DEPRECATED!!!
 */
 
 namespace Spectator.Services {
@@ -53,10 +58,10 @@ namespace Spectator.Services {
             builder.set_member_name ("body");
             builder.begin_object ();
             builder.set_member_name ("active_type");
-            builder.add_int_value (RequestBody.ContentType.to_i (request.request_body.type));
+            builder.add_int_value (request.request_body.type.to_i ());
             builder.set_member_name ("form_data");
             builder.begin_array ();
-            foreach (var pair in request.request_body.form_data) {
+            foreach (var pair in request.request_body.get_as_form_data ()) {
                 builder.begin_object ();
                 builder.set_member_name ("key");
                 builder.add_string_value (pair.key);
@@ -67,7 +72,7 @@ namespace Spectator.Services {
             builder.end_array (); // Form data
             builder.set_member_name ("urlencoded");
             builder.begin_array ();
-            foreach (var pair in request.request_body.urlencoded) {
+            foreach (var pair in request.request_body.get_as_urlencoded ()) {
                 builder.begin_object ();
                 builder.set_member_name ("key");
                 builder.add_string_value (pair.key);
@@ -77,7 +82,7 @@ namespace Spectator.Services {
             }
             builder.end_array (); // Urlencoded
             builder.set_member_name ("raw");
-            builder.add_string_value (request.request_body.raw);
+            builder.add_string_value (request.request_body.content);
             builder.end_object (); // body
         }
 
@@ -116,7 +121,7 @@ namespace Spectator.Services {
             builder.set_member_name ("name");
             builder.add_string_value (collection.name);
             builder.set_member_name ("items_visible");
-            builder.add_boolean_value (collection.items_visible);
+            // builder.add_boolean_value (collection.items_visible); Deprecated
 
             builder.end_object ();
         }

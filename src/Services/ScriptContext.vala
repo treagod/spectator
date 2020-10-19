@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -22,9 +22,7 @@
 namespace Spectator.Services {
     [Compact]
     public class ScriptContext : Duktape.Context {
-        public ScriptContext (ScriptWriter writer) {
-            push_ref (writer);
-            put_global_string (Duktape.hidden_symbol ("writer"));
+        public ScriptContext () {
         }
 
         public void set_writer (ScriptWriter writer) {

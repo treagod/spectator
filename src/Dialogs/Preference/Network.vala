@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -115,11 +115,12 @@ namespace Spectator.Dialogs.Preference {
                 settings.proxy_password = password_entry.text;
             });
 
-            user_information_switch.notify.connect (() => {
+            user_information_switch.state_set.connect (() => {
                 var use_userinformation = user_information_switch.active;
                 settings.use_userinformation = use_userinformation;
                 username_entry.sensitive = use_userinformation;
                 password_entry.sensitive = use_userinformation;
+                return true;
             });
 
             username_entry.sensitive = user_information_switch.active;
@@ -152,7 +153,7 @@ namespace Spectator.Dialogs.Preference {
 
             option_grid.hexpand = true;
 
-            use_proxy_switch.notify.connect (() => {
+            use_proxy_switch.state_set.connect (() => {
                 var use_proxy = use_proxy_switch.active;
                 settings.use_proxy = use_proxy;
                 proxy_entry.sensitive = use_proxy;
@@ -161,6 +162,7 @@ namespace Spectator.Dialogs.Preference {
                 user_information_switch.sensitive = use_proxy;
                 username_entry.sensitive = user_information_switch.active && use_proxy;
                 password_entry.sensitive = user_information_switch.active && use_proxy;
+                return true;
             });
 
             add (option_grid);

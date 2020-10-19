@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -23,7 +23,7 @@ namespace Spectator.Dialogs.Request {
     public class CreateDialogWithCollection : Dialog {
         public signal void creation (Models.Request request);
 
-        public CreateDialogWithCollection (Gtk.ApplicationWindow parent, Models.Collection collection) {
+        public CreateDialogWithCollection (Spectator.Window parent, Models.Collection collection) {
             base (_("Create Request for %s".printf (collection.name)), parent);
             request_name_entry.text = _("My Request");
 
@@ -53,8 +53,9 @@ namespace Spectator.Dialogs.Request {
                 show_warning (_("Request name must not be empty."));
             } else {
                 var index = method_box.get_active ();
-                var request = new Models.Request (name, Models.Method.convert (index));
-                collection.add_request (request);
+                var request = new Models.Request ();
+                request.name = name;
+                request.method = Models.Method.convert (index);
                 creation (request);
                 destroy ();
             }

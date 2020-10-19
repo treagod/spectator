@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -20,8 +20,24 @@
 */
 
 namespace Spectator.Widgets.Sidebar {
+    public enum DnDTarget {
+        REQUEST,
+        COLLECTION
+    }
+    public const Gtk.TargetEntry[] TARGET_ENTRIES_LABEL = {
+        { "REQUEST", Gtk.TargetFlags.SAME_APP, DnDTarget.REQUEST },
+        { "COLLECTION", Gtk.TargetFlags.SAME_APP, DnDTarget.COLLECTION },
+    };
+
     public class TitleBar : Gtk.Box {
         private Gtk.Label title;
+        private string collection_title_text = _("Collections");
+        private string history_title_text = _("History");
+
+        public signal void request_dropped (uint id);
+        public signal void request_dragged ();
+        public signal void request_removed ();
+
         public string title_text {
             get {
                 return title.label;
@@ -31,10 +47,18 @@ namespace Spectator.Widgets.Sidebar {
             }
         }
 
-        public TitleBar (string text) {
+        public void show_collection () {
+            title_text = collection_title_text;
+        }
+
+        public void show_history () {
+            title_text = history_title_text;
+        }
+
+        public TitleBar () {
             orientation = Gtk.Orientation.VERTICAL;
 
-            title = new Gtk.Label (text);
+            title = new Gtk.Label (collection_title_text);
             title.get_style_context ().add_class ("h2");
             title.halign = Gtk.Align.CENTER;
             title.margin = 5;
@@ -44,30 +68,59 @@ namespace Spectator.Widgets.Sidebar {
 
             pack_start (title, true, true, 0);
             pack_start (separator, true, true, 0);
+            this.build_drag_and_drop ();
+        }
+
+        private void build_drag_and_drop () {
+            Gtk.drag_dest_set (this, Gtk.DestDefaults.ALL, TARGET_ENTRIES_LABEL, Gdk.DragAction.MOVE);
+            this.drag_data_received.connect (on_drag_data_received);
+            this.drag_motion.connect (on_drag_motion);
+            this.drag_leave.connect (on_drag_leave);
+        }
+
+        private void on_drag_data_received (Gdk.DragContext context, int x, int y,
+            Gtk.SelectionData selection_data, uint target_type, uint time) {
+            /* Drag & Drop is only activated for collection mode */
+            if (title.label == collection_title_text) {
+                var row = ((Gtk.Widget[]) selection_data.get_data ())[0];
+                var source = (RequestListItem) row;
+
+                this.request_dropped (source.id);
+            }
+        }
+
+        public bool on_drag_motion (Gdk.DragContext context, int x, int y, uint time) {
+            request_dragged ();
+
+            return true;
+        }
+
+        public void on_drag_leave (Gdk.DragContext context, uint time) {
+            request_removed ();
         }
     }
 
     public class Container : Gtk.Box {
         private Gtk.ScrolledWindow collection_scroll;
         private Gtk.ScrolledWindow history_scroll;
-        private string collection_title_text = _("Collections");
-        private string history_title_text = _("History");
         private Gtk.Stack stack;
         public Collection.Container collection;
         public History.Container history;
         private TitleBar titlebar;
+        private weak Spectator.Window window;
         private Granite.Widgets.ModeButton mode_buttons;
 
-        public signal void item_deleted (Models.Request item);
-        public signal void item_clone (Models.Request item);
-        public signal void item_edited (Models.Request item);
-        public signal void selection_changed (Models.Request item);
+        public signal void selection_changed (Models.Request item); /* Deprecated */
+        public signal void request_item_selected (uint id);
+        public signal void request_edit_clicked (uint id);
+        public signal void request_delete_clicked (uint id);
+        public signal void collection_request_delete_clicked (uint id);
         public signal void notify_delete ();
-        public signal void create_collection_request (Models.Collection collection);
-        public signal void collection_edit (Models.Collection collection);
-        public signal void collection_delete (Models.Collection collection);
+        public signal void create_collection_request (uint id);
+        public signal void collection_edit (uint id);
 
-        public Container () {
+        public Container (Spectator.Window window) {
+            this.window = window;
             history_scroll = new Gtk.ScrolledWindow (null, null);
             history_scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             history_scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
@@ -76,49 +129,164 @@ namespace Spectator.Widgets.Sidebar {
             collection_scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             collection_scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
 
-            titlebar = new TitleBar (collection_title_text);
+            titlebar = new TitleBar ();
 
             orientation = Gtk.Orientation.VERTICAL;
             width_request = 265;
 
-            collection = new Collection.Container ();
-            history = new History.Container ();
+            collection = new Collection.Container (window);
+            history = new History.Container (window);
 
             collection_scroll.add (collection);
             history_scroll.add (history);
 
-            collection.item_edit.connect ((request) => {
-                item_edited (request);
+            collection.create_collection_request.connect ((collection_id) => {
+                create_collection_request (collection_id);
             });
 
-            collection.item_clone.connect ((request) => {
-                item_clone (request);
+            collection.collection_edit.connect ((id) => {
+                collection_edit (id);
             });
 
-            collection.item_deleted.connect ((request) => {
-                item_deleted (request);
+            collection.collection_delete.connect ((id, contains_active_request) => {
+                var collection = this.window.collection_service.get_collection_by_id (id);
+
+                if (collection != null) {
+                    var message_dialog = new Granite.MessageDialog.with_image_from_icon_name (
+                        _("Delete Collection?"),
+                        _("""This action will permanently delete <b>%s</b>.
+All requests for this collection will also be deleted.
+This can't be undone!""".printf (collection.name)),
+                        "dialog-warning",
+                        Gtk.ButtonsType.CANCEL
+                   );
+                   message_dialog.transient_for = this.window;
+
+                   message_dialog.secondary_label.use_markup = true;
+
+                   var suggested_button = new Gtk.Button.with_label (_("Delete Collection"));
+                   suggested_button.get_style_context ().add_class (Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION);
+                   message_dialog.add_action_widget (suggested_button, Gtk.ResponseType.ACCEPT);
+
+                   message_dialog.show_all ();
+                   if (message_dialog.run () == Gtk.ResponseType.ACCEPT) {
+                       this.window.collection_service.delete_collection (collection.id);
+                       this.show_items ();
+
+                       if (contains_active_request) {
+                           this.window.show_welcome ();
+                           this.collection.unselect ();
+                       }
+                   }
+
+                   message_dialog.destroy ();
+                }
             });
 
-            collection.item_clicked.connect ((item) => {
-                selection_changed (item.item);
-                history.change_active (item.item);
+            collection.request_item_selected.connect ((id) => {
+                this.request_item_selected (id);
+                this.history.select_request (id);
             });
 
-            history.item_clicked.connect ((item) => {
-                selection_changed (item.item);
-                collection.change_active (item.item);
+            collection.request_edit_clicked.connect ((id) => {
+                this.request_edit_clicked (id);
             });
 
-            collection.create_collection_request.connect ((collection) => {
-                create_collection_request (collection);
+            collection.request_clone_clicked.connect ((id) => {
+                var request = this.window.request_service.get_request_by_id (id);
+
+                if (request != null) {
+                    var new_request = new Models.Request.clone (request);
+                    this.window.request_service.add_request (new_request);
+                    this.window.request_service.update_request(new_request.id, (updater) => {
+                        updater.update_body_type (new_request.request_body.type);
+                        updater.update_body_content (new_request.request_body.content);
+                    });
+
+                    if (new_request.collection_id != null) {
+                        this.window.collection_service.add_request_to_collection (
+                            new_request.collection_id,
+                            new_request.id
+                        );
+                    }
+
+                    this.window.order_service.move_request_after_request (
+                        request.id,
+                        new_request.id
+                    );
+                    this.show_items ();
+                }
             });
 
-            collection.collection_edit.connect ((collection) => {
-                collection_edit (collection);
+            collection.request_delete_clicked.connect ((id) => {
+                this.request_delete_clicked (id);
+                this.collection.unselect ();
             });
 
-            collection.collection_delete.connect ((collection) => {
-                collection_delete (collection);
+            collection.collection_request_delete_clicked.connect ((req_id) => {
+                this.collection_request_delete_clicked (req_id);
+            });
+
+            collection.request_moved.connect ((target_id, moved_id) => {
+                var target_request = this.window.request_service.get_request_by_id (target_id);
+                this.clear_request_collection (moved_id);
+
+                if (target_request != null) {
+                    this.window.order_service.move_request_after_request (target_id, moved_id);
+                }
+
+                this.show_items ();
+            });
+
+            collection.request_moved_after_collection_request.connect ((target_id, moved_id, collection_id) => {
+                this.clear_request_collection (moved_id);
+
+                this.window.order_service.append_after_request_to_collection_requests (
+                    collection_id,
+                    target_id,
+                    moved_id
+                );
+
+                this.show_items ();
+            });
+
+            collection.request_added_to_collection.connect ((collection_id, id) => {
+                this.clear_request_collection (id);
+                this.window.order_service.add_request_to_collection_begin (collection_id, id);
+                this.show_items ();
+            });
+
+            collection.request_moved_to_end.connect ((id) => {
+                this.clear_request_collection (id);
+                this.window.order_service.move_request_to_end (id);
+                this.show_items ();
+            });
+
+            titlebar.request_dropped.connect ((id) => {
+                this.clear_request_collection (id);
+                this.window.order_service.move_request_to_begin (id);
+                this.show_items ();
+            });
+
+            titlebar.request_dragged.connect (() => {
+                collection.drag_reavel_top ();
+            });
+
+            titlebar.request_removed.connect (() => {
+                collection.drag_hide_top ();
+            });
+
+            history.request_item_selected.connect ((id) => {
+                this.request_item_selected (id);
+                this.collection.select_request (id);
+            });
+
+            history.request_edit_clicked.connect ((id) => {
+                this.request_edit_clicked (id);
+            });
+
+            history.request_delete_clicked.connect ((id) => {
+                this.request_delete_clicked (id);
             });
 
             stack = new Gtk.Stack ();
@@ -132,34 +300,66 @@ namespace Spectator.Widgets.Sidebar {
             mode_buttons.mode_changed.connect (() => {
                 if (mode_buttons.selected == 0) {
                     stack.set_visible_child (collection_scroll);
-                    titlebar.title_text = collection_title_text;
+                    titlebar.show_collection ();
                 } else {
                     stack.set_visible_child (history_scroll);
-                    titlebar.title_text = history_title_text;
+                    titlebar.show_history ();
                 }
             });
 
             mode_buttons.get_style_context ().add_class ("square");
 
-            pack_start (titlebar, false, true, 0);
-            pack_start (stack, true, true, 0);
-            pack_end (mode_buttons, false, true, 0);
+            this.pack_start (this.titlebar, false, true, 0);
+            this.pack_start (this.stack, true, true, 0);
+            this.pack_end (this.mode_buttons, false, true, 0);
+        }
+
+        private void clear_request_collection (uint request_id) {
+            var moved_request = this.window.request_service.get_request_by_id (request_id);
+
+            if (moved_request != null) {
+                if (moved_request.collection_id != null) {
+                    var collection = this.window.collection_service.get_collection_by_id (moved_request.collection_id);
+                    if (collection != null) {
+                        collection.remove_request (request_id);
+                    }
+
+                    moved_request.collection_id = null;
+                }
+            }
         }
 
         public void show_history () {
             mode_buttons.selected = 1;
             stack.set_visible_child (history_scroll);
-            titlebar.title_text = history_title_text;
+            titlebar.show_history ();
         }
 
         public void show_collection () {
             mode_buttons.selected = 0;
             stack.set_visible_child (collection_scroll);
-            titlebar.title_text = collection_title_text;
+            titlebar.show_collection ();
         }
 
         public void add_collection (Models.Collection model) {
             collection.add_collection (model);
+        }
+
+        public void select_request (uint id) {
+            collection.select_request (id);
+        }
+
+        public void show_items () {
+            this.show_collection_items ();
+            this.show_history_items ();
+        }
+
+        public void show_collection_items () {
+            this.collection.show_items ();
+        }
+
+        public void show_history_items () {
+            this.history.show_items ();
         }
 
         private Granite.Widgets.ModeButton create_mode_buttons () {
@@ -172,51 +372,13 @@ namespace Spectator.Widgets.Sidebar {
         }
 
         public void update_active_method (Models.Method method) {
-            var sidebar_item = get_active ();
-
-            if (sidebar_item != null) {
-                sidebar_item.item.method = method;
-            }
+            collection.update_active_method (method);
+            //history.update_active_url ();
         }
 
-        public void update_active_url () {
-            collection.update_active_url ();
-            history.update_active_url ();
-        }
-
-        public void update_collection (Models.Collection col) {
-            collection.update (col);
-        }
-
-        public void update_active () {
-            Sidebar.Item? sidebar_item = get_active ();
-
-            if (sidebar_item != null) {
-                sidebar_item.refresh ();
-            }
-        }
-
-        public void history_delete (Models.Request request) {
-            history.delete_request (request);
-        }
-
-        private Sidebar.Item? get_active () {
-            return collection.active_item;
-        }
-
-        public Models.Request? get_active_item () {
-            var sidebar_item = get_active ();
-
-            if (sidebar_item != null) {
-                return sidebar_item.item;
-            }
-
-            return null;
-        }
-
-        public void unselect_all () {
-            collection.unselect_all ();
-            history.unselect_all ();
+        public void update_active_url (string url) {
+            collection.update_active_url (url);
+            //history.update_active_url ();
         }
     }
 }

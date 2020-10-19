@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -33,7 +33,6 @@ namespace Spectator.Dialogs.Preference {
             option_grid.column_spacing = 12;
             option_grid.row_spacing = 6;
 
-
             var theme_label = new Gtk.Label (_("Dark Theme"));
             theme_label.halign = Gtk.Align.START;
             var dark_theme_switch = new Gtk.Switch ();
@@ -46,14 +45,16 @@ namespace Spectator.Dialogs.Preference {
 
             dark_theme_switch.active = Gtk.Settings.get_default ().gtk_application_prefer_dark_theme;
 
-            dark_theme_switch.notify.connect (() => {
+            dark_theme_switch.state_set.connect (() => {
                 Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = dark_theme_switch.active;
                 settings.theme_changed ();
+                return true;
             });
 
             redirect_switch.active = settings.follow_redirects;
-            redirect_switch.notify.connect (() => {
+            redirect_switch.state_set.connect (() => {
                 settings.follow_redirects = redirect_switch.active;
+                return true;
             });
 
             settings.schema.bind ("dark-theme", dark_theme_switch, "active", SettingsBindFlags.DEFAULT);

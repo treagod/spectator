@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -62,6 +62,15 @@ namespace Duktape {
 
         [CCode (cname = "duk_push_number")]
         public void push_number (double number);
+
+        [CCode (cname = "duk_push_thread")]
+        public int push_thread ();
+
+        [CCode (cname = "duk_get_context")]
+        public unowned Context get_context (int id);
+
+        [CCode (cname = "duk_remove")]
+        public void remove (int id);
 
         [CCode (cname = "duk_push_int")]
         public void push_int (int i);

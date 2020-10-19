@@ -23,4 +23,4 @@ public static int main (string[] args) {
     var application = new Spectator.Application ();
 
     return application.run (args);
-}
+  }

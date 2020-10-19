@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -25,8 +25,8 @@ namespace Spectator.Widgets.Request {
         public signal void method_changed (Models.Method method);
         public signal void request_activated ();
         public signal void cancel_process ();
-        public signal void header_added (Pair header);
-        public signal void header_deleted (Pair header);
+        public signal void header_added (Gee.ArrayList<Pair> headers);
+        public signal void header_deleted (Gee.ArrayList<Pair> headers);
         public signal void url_params_updated (Gee.ArrayList<Pair> items);
     }
 }

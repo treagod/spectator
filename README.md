@@ -30,6 +30,8 @@ You'll need the following dependencies:
 * libwebkit2gtk-4.0-dev
 * libjson-glib-dev
 * libxml2-dev
+* libsqlite3
+* libhandy-1-dev
 * duktape-dev
 * valac
 
@@ -43,4 +45,3 @@ To install, use `ninja install`, then execute with `com.github.treagod.spectator
 
     sudo ninja install
     com.github.treagod.spectator
-

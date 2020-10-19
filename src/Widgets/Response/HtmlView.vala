@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -99,7 +99,7 @@ namespace Spectator.Widgets.Response {
             }
         }
 
-        public override void update (ResponseItem? it) {
+        public override void update (Models.Response? it) {
             if (web_view == null) {
                 init_web_view ();
             }

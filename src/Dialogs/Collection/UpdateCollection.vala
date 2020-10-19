@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -21,12 +21,12 @@
 
 namespace Spectator.Dialogs.Collection {
     public class UpdateCollectionDialog : Gtk.Dialog {
-        public signal void updated ();
+        public signal void updated (string name);
         protected Gtk.Entry collection_name_entry;
         private DialogTitle dialog_title;
         private bool warning_active;
 
-        public UpdateCollectionDialog (Gtk.ApplicationWindow parent, Models.Collection collection) {
+        public UpdateCollectionDialog (Spectator.Window parent, Models.Collection collection) {
             border_width = 5;
             set_size_request (425, 100);
             deletable = false;
@@ -35,7 +35,7 @@ namespace Spectator.Dialogs.Collection {
             modal = true;
             warning_active = false;
 
-            var request_name_label = new Gtk.Label (_("Name:"));
+            var collection_name_label = new Gtk.Label (_("Name:"));
             collection_name_entry = new Gtk.Entry ();
             collection_name_entry.text = collection.name;
             dialog_title = new DialogTitle (_("Update %s").printf (collection.name));
@@ -48,7 +48,7 @@ namespace Spectator.Dialogs.Collection {
             add_button (_("Update"), Gtk.ResponseType.APPLY);
 
             Gtk.Box hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 15);
-            hbox.pack_start (request_name_label, false, true, 0);
+            hbox.pack_start (collection_name_label, false, true, 0);
             hbox.pack_start (collection_name_entry, true, true, 0);
             hbox.margin_bottom = 20;
 
@@ -75,8 +75,7 @@ namespace Spectator.Dialogs.Collection {
             if (name.length == 0) {
                 show_warning (_("Collection name must not be empty."));
             } else {
-                collection.name = collection_name_entry.text;
-                updated ();
+                updated (collection_name_entry.text);
                 destroy ();
             }
         }

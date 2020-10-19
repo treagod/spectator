@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -26,7 +26,7 @@ namespace Spectator.Dialogs.Request {
         private DialogTitle dialog_title;
         private bool warning_active;
 
-        protected Dialog (string titl, Gtk.ApplicationWindow parent) {
+        protected Dialog (string titl, Spectator.Window parent) {
             title = titl;
             border_width = 5;
             set_size_request (425, 100);

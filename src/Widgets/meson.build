@@ -11,6 +11,7 @@ sources += files(
     'Response/Container.vala',
     'Response/AbstractTypeView.vala',
     'Response/HtmlView.vala',
+    'Response/ModeButton.vala',
     'Response/DefaultView.vala',
     'Response/XmlView.vala',
     'Response/XmlTreeView.vala',

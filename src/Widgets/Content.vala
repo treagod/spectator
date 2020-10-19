@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -26,29 +26,45 @@ namespace Spectator.Widgets {
         private RequestResponsePane req_res_pane;
         private Gtk.InfoBar infobar;
         private Gtk.Label infolabel;
+        private weak Spectator.Window window;
+        private uint active_id;
 
-        public signal void url_changed (string url);
-        public signal void method_changed (Models.Method method);
-        public async signal void request_activated ();
+        public signal void url_changed (uint id, string url);
+        public signal void method_changed (uint id, Models.Method method);
+        public signal void body_type_changed (uint id, RequestBody.ContentType type);
+        public signal void body_reset (uint id, RequestBody.ContentType type);
+        public signal void body_content_changed (uint id, string content);
         public signal void cancel_process ();
-        public signal void type_changed (RequestBody.ContentType type);
-        public signal void body_buffer_changed (string content);
-        public signal void script_changed (string script);
 
-        public signal void item_changed (Models.Request item);
         public signal void welcome_activated (int index);
-        public signal void header_added (Pair header);
-        public signal void header_deleted (Pair header);
         public signal void url_params_updated (Gee.ArrayList<Pair> items);
-        public signal void key_value_added (Pair item);
-        public signal void key_value_removed (Pair item);
-        public signal void key_value_updated (Pair item);
+        public signal void request_sent (uint id);
 
-        public Content () {
-            stack = new Gtk.Stack ();
-            infobar = new Gtk.InfoBar ();
-            infolabel = new Gtk.Label ("");
-            welcome = new Granite.Widgets.Welcome (_(Constants.RELEASE_NAME),
+        private void create_activated_welcome_dialog (int i) {
+            switch (i) {
+                case 0:
+                this.window.create_request_dialog ();
+                break;
+                case 1:
+                this.window.create_collection_dialog ();
+                break;
+                default:
+                assert_not_reached ();
+            }
+        }
+
+        public void display_request (uint id) {
+            this.active_id = id;
+            this.req_res_pane.display_request (id);
+            this.stack.set_visible_child (this.req_res_pane);
+        }
+
+        public Content (Spectator.Window window) {
+            this.stack = new Gtk.Stack ();
+            this.infobar = new Gtk.InfoBar ();
+            this.infolabel = new Gtk.Label ("");
+            this.window = window;
+            this.welcome = new Granite.Widgets.Welcome (_(Constants.RELEASE_NAME),
                                                    _("Inspect your HTTP transmissions to the web"));
             welcome.hexpand = true;
             welcome.append ("bookmark-new", _("Create Request"), _("Create a new request to the web."));
@@ -56,34 +72,10 @@ namespace Spectator.Widgets {
                             _("Create a new collection to arrange your requests."));
 
             welcome.activated.connect ((index) => {
-                welcome_activated (index);
+                this.create_activated_welcome_dialog (index);
             });
 
-            req_res_pane = new RequestResponsePane ();
-
-            req_res_pane.type_changed.connect ((type) => {
-                type_changed (type);
-            });
-
-            req_res_pane.body_buffer_changed.connect ((content) => {
-                body_buffer_changed (content);
-            });
-
-            req_res_pane.script_changed.connect ((script) => {
-                script_changed (script);
-            });
-
-            req_res_pane.key_value_added.connect ((item) => {
-                key_value_added (item);
-            });
-
-            req_res_pane.key_value_updated.connect ((item) => {
-                key_value_updated (item);
-            });
-
-            req_res_pane.key_value_removed.connect ((item) => {
-                key_value_removed (item);
-            });
+            req_res_pane = new RequestResponsePane (this.window);
 
             req_res_pane.cancel_process.connect (() => {
                 cancel_process ();
@@ -117,10 +109,6 @@ namespace Spectator.Widgets {
             margin = 0;
         }
 
-        public void update_url_bar (string uri) {
-            req_res_pane.update_url_bar (uri);
-        }
-
         public void set_warning (string message) {
             infobar.message_type = Gtk.MessageType.WARNING;
 
@@ -138,61 +126,42 @@ namespace Spectator.Widgets {
             infobar.revealed = true;
         }
 
-        public void show_request (Models.Request item) {
-            req_res_pane.set_item (item);
-            stack.set_visible_child (req_res_pane);
-        }
-
-        public void update_response (Models.Request request) {
-            req_res_pane.update_response (request);
-            if (infobar.revealed) {
-                reset_infobar ();
-            }
-        }
-
         public void reset_infobar () {
             infolabel.label = "";
-                infobar.revealed = false;
-        }
-
-        public void update_chunk_response (Models.Request request) {
-            req_res_pane.update_chunk_response (request);
-            if (infobar.revealed) {
-                reset_infobar ();
-            }
+            infobar.revealed = false;
         }
 
         public void update_status (Models.Request request) {
             req_res_pane.update_status (request);
         }
 
-        public void update_url_params (Models.Request item) {
-            req_res_pane.update_url_params (item);
-        }
-
-        public Services.ScriptWriter get_console_writer () {
-            return req_res_pane.get_console_writer ();
-        }
-
         private void setup_request_signals (RequestResponsePane request) {
             request.url_changed.connect ((url) => {
-                url_changed (url);
+                this.url_changed (this.active_id, url);
             });
 
-            request.request_activated.connect (() => {
-                request_activated ();
+            request.request_sent.connect ((id) => {
+                this.request_sent (id);
+            });
+
+            request.send_error.connect ((error) => {
+                this.set_error (error);
             });
 
             request.method_changed.connect ((method) => {
-                method_changed (method);
+                method_changed (this.active_id, method);
             });
 
-            request.header_added.connect ((header) => {
-                header_added (header);
+            request.type_changed.connect ((type) => {
+                this.body_type_changed (this.active_id, type);
             });
 
-            request.header_deleted.connect ((header) => {
-                header_deleted (header);
+            request.reset_body.connect ((type) => {
+                this.body_reset (this.active_id, type);
+            });
+
+            request.content_changed.connect ((content) => {
+                this.body_content_changed (this.active_id, content);
             });
 
             request.url_params_updated.connect ((items) => {

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -72,9 +72,14 @@ namespace Spectator.Widgets.Response {
         private void init_tree (Json.Node node) {
             store = new Gtk.TreeStore (2, typeof (string), typeof (string));
             set_model (store);
-            insert_column_with_attributes (-1, (_("Key")), new Gtk.CellRendererText (), "text", 0, null);
-            insert_column_with_attributes (-1, (_("Value")), new Gtk.CellRendererText (), "text", 1, null);
+            var key_renderer = new Gtk.CellRendererText ();
+            key_renderer.wrap_mode = Pango.WrapMode.WORD_CHAR;
 
+            var value_renderer = new Gtk.CellRendererText ();
+            value_renderer.wrap_mode = Pango.WrapMode.WORD_CHAR;
+
+            insert_column_with_attributes (-1, (_("Key")), key_renderer, "text", 0, null);
+            insert_column_with_attributes (-1, (_("Value")), value_renderer, "text", 1, null);
             init_top_level (node);
         }
 
@@ -93,6 +98,15 @@ namespace Spectator.Widgets.Response {
                 store.set (root.iter, 0, "", 1, "null", -1);
             } else {
                 add_key_value ("", node, root);
+            }
+
+            var column = get_column (1);
+            column.resizable = true;
+            column.set_sizing (Gtk.TreeViewColumnSizing.AUTOSIZE);
+            foreach (var cell in column.get_cells ()) {
+                var text_cell = (Gtk.CellRendererText) cell;
+                text_cell.wrap_width = 120;
+                text_cell.wrap_mode = Pango.WrapMode.CHAR;
             }
         }
 

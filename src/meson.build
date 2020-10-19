@@ -22,8 +22,9 @@ sources = files(
     'Duktape/duktape.vapi'
 )
 
-subdir('Controllers')
+subdir('sql')
 subdir('Dialogs')
 subdir('Models')
 subdir('Services')
 subdir('Widgets')
+subdir('Repository')

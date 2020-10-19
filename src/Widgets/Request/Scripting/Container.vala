@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -20,16 +20,26 @@
 */
 
 namespace Spectator.Widgets.Request.Scripting {
+    private class BufferContent {
+        public Services.ConsoleMessageType message_type { get; private set; }
+        public string content { get; private set; }
+
+        public BufferContent (string content, Services.ConsoleMessageType mt) {
+            this.content = content;
+            this.message_type = mt;
+        }
+    }
     class Container : Gtk.Box {
         private ScriptingSourceView scripting_view;
         private Gtk.TextView console;
-        private Gee.HashMap<Models.Request, Gtk.TextBuffer> request_consoles;
+        private uint active_id;
+        private Gee.HashMap<uint, Gee.ArrayList<BufferContent>> buffers;
         private Gtk.ScrolledWindow scrolled_console;
-        public Gtk.TextBuffer console_buffer {
+        private Gtk.TextBuffer console_buffer {
             get {
                 return console.buffer;
             }
-            private set {
+            set {
                 console.buffer = value;
             }
         }
@@ -38,7 +48,7 @@ namespace Spectator.Widgets.Request.Scripting {
         public signal void script_changed (string script);
 
         public Container () {
-            request_consoles = new Gee.HashMap<Models.Request, Gtk.TextBuffer> ();
+            buffers = new Gee.HashMap<uint, Gee.ArrayList<BufferContent>> ();
             orientation = Gtk.Orientation.VERTICAL;
             spacing = 5;
             scripting_view = new ScriptingSourceView ();
@@ -46,6 +56,7 @@ namespace Spectator.Widgets.Request.Scripting {
             scripting_view.changed.connect ((script) => {
                 script_changed (script);
             });
+
             var paned = new Gtk.Paned (Gtk.Orientation.VERTICAL);
             get_style_context ().add_class ("console-box");
 
@@ -94,25 +105,69 @@ namespace Spectator.Widgets.Request.Scripting {
             add (button_box);
         }
 
-        public void update_script_buffer (string buffer) {
-            scripting_view.update_buffer (buffer);
-        }
+        public void update_buffer (uint id, string text, Services.ConsoleMessageType mt) {
+            if (!buffers.has_key (id)) {
+                buffers[id] = new Gee.ArrayList<BufferContent> ();
+            }
 
-        public void change_console (Models.Request request) {
-            if (request_consoles.has_key (request)) {
-                console.buffer = request_consoles[request];
-            } else {
-                var buffer = new Gtk.TextBuffer (null);
-                buffer.notify["text"].connect (() => {
-                    scrolled_console.vadjustment.value = scrolled_console.vadjustment.upper;
-                });
-                request_consoles[request] = buffer;
-                console.buffer = buffer;
+            buffers[id].add (new BufferContent (text, mt));
+
+            if (active_id == id) {
+                this.show_buffer_content (id);
             }
         }
 
-        public new void grab_focus () {
-            scripting_view.grab_focus ();
+        public void set_script_buffer (uint id) {
+            if (!buffers.has_key (id)) {
+                buffers[id] = new Gee.ArrayList<BufferContent> ();
+            }
+            active_id = id;
+            this.show_buffer_content (id);
+        }
+
+        private void show_buffer_content (uint id) {
+            bool first = true;
+            var buffer = new Gtk.TextBuffer (null);
+            foreach (var buffer_content in buffers[id]) {
+                var builder = new StringBuilder ();
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append_c ('\n');
+                }
+
+                Gtk.TextIter iter;
+                buffer.get_end_iter (out iter);
+                switch (buffer_content.message_type) {
+                    case Services.ConsoleMessageType.LOG:
+                        builder.append ("<span color='green'>Spectator</span> $ %s".printf (buffer_content.content));
+                        var content = builder.str;
+                        buffer.insert_markup (ref iter, content, content.length);
+                        break;
+                    case Services.ConsoleMessageType.ERROR:
+                        builder.append ("<span color='red'>%s</span>".printf (buffer_content.content));
+                        var content = builder.str;
+                        buffer.insert_markup (ref iter, content, content.length);
+                        break;
+                    case Services.ConsoleMessageType.WARNING:
+                        builder.append ("<span color='yellow'>%s</span>".printf (buffer_content.content));
+                        var content = builder.str;
+                        buffer.insert_markup (ref iter, content, content.length);
+                        break;
+                }
+            }
+
+            this.console.buffer = buffer;
+
+
+            this.scrolled_console.size_allocate.connect (() => {
+                var vadjustment = this.scrolled_console.get_vadjustment ();
+                vadjustment.set_value (vadjustment.get_upper ());
+            });
+        }
+
+        public void update_script_buffer (string buffer) {
+            scripting_view.update_buffer (buffer);
         }
     }
 }

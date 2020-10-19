@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -51,12 +51,36 @@ namespace Spectator.Widgets.Response {
                 var current_view = (AbstractTypeView) stack.get_visible_child ();
                 current_view.show_view (i);
             });
+            status_bar.halign = Gtk.Align.START;
 
-            pack_start (status_bar, false, false, 15);
+            // TODO: Implement later!
+            // Gtk.Popover?
+            //  var tabs = new ModeButton ();
+            //  tabs.halign = Gtk.Align.CENTER;
+            //  var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 1);
+            //  var la = new Gtk.Label ("JSON");
+            //  var test = new Gtk.Image.from_icon_name ("pan-down-symbolic", Gtk.IconSize.BUTTON);
+            //  la.halign = Gtk.Align.CENTER;
+            //  box.pack_start (la, false, false);
+            //  box.pack_start (test, true, true);
+            //  var dropdown_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+            //  dropdown_box.add (box);
+            //  dropdown_box.add (new Gtk.Label ("asd"));
+            //  dropdown_box.
+            //  tabs.append_with_right_click_event (dropdown_box, (event) => {
+
+            //      return true;
+            //  });
+            //  tabs.append (new Gtk.Label ("Preview"));
+            //  tabs.append (new Gtk.Label ("Header"));
+            //  tabs.append (new Gtk.Label ("Info"));
+
+            pack_start (status_bar, false, false, 9);
+            // pack_start (tabs, false, false, 3);
             pack_start (stack);
         }
 
-        public void update (ResponseItem? it) {
+        public void update (Models.Response? it) {
             set_content_type (it);
             update_view (it);
             status_bar.update (it);
@@ -65,18 +89,7 @@ namespace Spectator.Widgets.Response {
             current_view.show_view (0);
         }
 
-        public void update_test (Models.Request request) {
-            var res = request.response;
-
-            set_content_type (res);
-            update_view (res);
-            status_bar.update (res);
-            var current_view = (AbstractTypeView) stack.get_visible_child ();
-            current_view.update (res);
-            current_view.show_view (0);
-        }
-
-        private void update_view (ResponseItem? it) {
+        private void update_view (Models.Response? it) {
             if (it == null) {
                 stack.set_visible_child (json_view);
                 return;
@@ -95,7 +108,7 @@ namespace Spectator.Widgets.Response {
             }
         }
 
-        private void set_content_type (ResponseItem? it) {
+        private void set_content_type (Models.Response? it) {
             if (it == null) {
                 status_bar.set_active_type (StatusBar.Type.UNKOWN);
                 return;
@@ -136,3 +149,4 @@ namespace Spectator.Widgets.Response {
         }
     }
 }
+

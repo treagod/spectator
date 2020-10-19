@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -22,6 +22,6 @@
 namespace Spectator.Widgets.Response {
     public abstract class AbstractTypeView : Gtk.Stack {
         public abstract void show_view (int i);
-        public abstract void update (ResponseItem? it);
+        public abstract void update (Models.Response? it);
     }
 }

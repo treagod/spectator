@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -26,7 +26,17 @@ namespace Spectator.Dialogs.Collection {
         private DialogTitle dialog_title;
         private bool warning_active;
 
-        public CollectionDialog (Gtk.ApplicationWindow parent) {
+        private void create_collection () {
+            var collection_name = collection_name_entry.text.chomp ();
+            if (collection_name.length == 0) {
+                show_warning (_("Request name must not be empty."));
+            } else {
+                creation (new Models.Collection (collection_name));
+                destroy ();
+            }
+        }
+
+        public CollectionDialog (Spectator.Window parent) {
             border_width = 5;
             set_size_request (425, 100);
             deletable = false;
@@ -37,16 +47,10 @@ namespace Spectator.Dialogs.Collection {
 
             var request_name_label = new Gtk.Label (_("Name:"));
             collection_name_entry = new Gtk.Entry ();
+            collection_name_entry.text = "New Collection";
             dialog_title = new DialogTitle (_("New Collection"));
 
-            collection_name_entry.activate.connect (() => {
-                if (name.length == 0) {
-                    show_warning (_("Request name must not be empty."));
-                } else {
-                    creation (new Models.Collection (collection_name_entry.text));
-                    destroy ();
-                }
-            });
+            collection_name_entry.activate.connect (create_collection);
 
             add_button (_("Close"), Gtk.ResponseType.CLOSE);
             add_button (_("Create"), Gtk.ResponseType.APPLY);
@@ -66,14 +70,7 @@ namespace Spectator.Dialogs.Collection {
             response.connect ((source, id) => {
                 switch (id) {
                 case Gtk.ResponseType.APPLY:
-
-                if (name.length == 0) {
-                    show_warning (_("Collection name must not be empty."));
-                } else {
-                    creation (new Models.Collection (collection_name_entry.text));
-                    destroy ();
-                }
-
+                    create_collection ();
                     break;
                 case Gtk.ResponseType.CLOSE:
                     destroy ();

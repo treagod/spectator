@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -21,47 +21,38 @@
 
 namespace Spectator.Services {
     public class RequestAction {
-        public Models.Request item { get; private set; }
+        public Models.Request request { get; private set; }
+        public Models.Response response;
         private Settings settings = Settings.get_instance ();
         private Timer timer;
         private Soup.Session session;
-        private MainLoop loop;
         private bool is_canceled;
-        private Models.Script script;
+        private ScriptRunner script_runner;
 
-        public signal void finished_request ();
-        public signal void request_got_chunk ();
+        public signal void finished_request (Models.Response response);
+        public signal void script_log (string log);
+        public signal void request_got_chunk (Models.Response response);
         public signal void request_failed (Models.Request item);
-        public signal void invalid_uri (Models.Request item);
         public signal void proxy_failed (Models.Request item);
         public signal void aborted ();
 
 
-        public RequestAction (Models.Request it) {
-            item = it;
-            script = new Models.Script.with_code (item.script_code);
-            session = new Soup.Session ();
-            is_canceled = false;
-        }
-
-        public RequestAction.with_writer (Models.Request it, Services.ScriptWriter writer) {
-            item = it;
-            script = new Models.Script.with_code (item.script_code);
-            script.set_writer (writer);
-            session = new Soup.Session ();
-            is_canceled = false;
+        public RequestAction (Models.Request req, ScriptRunner runner) {
+            this.request = req;
+            this.script_runner = runner;
+            this.response = new Models.Response ();
+            this.session = new Soup.Session ();
+            this.is_canceled = false;
         }
 
         public async void make_request () {
             yield perform_request ();
-            item.status = Models.RequestStatus.SENDING;
         }
 
         public void cancel () {
             is_canceled = true;
             session.flush_queue ();
             session.abort ();
-            loop.quit ();
         }
 
         private bool is_raw_type (RequestBody.ContentType type) {
@@ -89,7 +80,7 @@ namespace Spectator.Services {
         private void read_response (Soup.Session sess, Soup.Message mess) {
             if (mess.response_body.data == null) {
                 if (!is_canceled) {
-                    request_failed (item);
+                    request_failed (this.request);
                 }
                 return;
             }
@@ -108,12 +99,12 @@ namespace Spectator.Services {
                     mess.request_headers.append ("Proxy-Authorization", "Basic %s".printf (auth_string_b64));
                     sess.send_message (mess);
                 } else {
-                    proxy_failed (item);
+                    proxy_failed (this.request);
                 }
             }
 
-            var res = new ResponseItem ();
-            res.url = item.uri;
+            var res = new Models.Response ();
+            res.url = request.uri;
 
             // Performance new request to redirected location
             if (mess.status_code == 302 && settings.follow_redirects) {
@@ -143,75 +134,55 @@ namespace Spectator.Services {
             res.raw = builder.str;
             res.data = body_data;
 
-            item.status = Models.RequestStatus.SENT;
-            item.response = res;
             timer.stop ();
 
             ulong _;
             var seconds = timer.elapsed (out _);
 
-            item.response.duration = seconds;
+            res.duration = seconds;
 
-            finished_request ();
-            loop.quit ();
+            this.finished_request (res);
         }
 
         private async void perform_request () {
-            var valid_uri = Utilities.valid_uri_string (item.uri);
-
-            // Explicit comparison because.. seems to be a compiler bug?
-            // if (valid_uri) always evaluates to true
-            if (valid_uri == false) {
-                invalid_uri (item);
-                return;
-            }
-
-            var tmp_req = new Models.Request.duplicate (item);
-
-            if (!script.execute_before_sending (tmp_req)) {
-                aborted ();
-                return;
-            }
-
-            loop = new MainLoop ();
-
             session.timeout = (uint) settings.timeout;
 
-            var method = tmp_req.method;
+            var method = this.request.method;
 
-            var msg = new Soup.Message (method.to_str (), tmp_req.uri);
+            var msg = new Soup.Message (method.to_str (), this.request.uri);
 
             msg.got_headers.connect (() => {
                 var is_chunked = false;
                 var builder = new StringBuilder ();
+
                 msg.response_headers.foreach ((name, val) => {
                     if (name == "Transfer-Encoding" && val == "chunked") {
                         is_chunked = true;
-                        var res = new ResponseItem ();
+
                         msg.response_headers.foreach ((key, val) => {
-                            res.add_header (key, val);
+                            this.response.add_header (key, val);
                             builder.append ("%s: %s\r\n".printf (key, val));
                         });
                         builder.append ("\r\n");
-                        res.status_code = msg.status_code;
-                        item.response = res;
-                        item.response.data = "";
+                        this.response.status_code = msg.status_code;
+                        this.response.data = "";
                     }
                 });
+
                 if (is_chunked) {
                     msg.got_chunk.connect ((chunk) => {
                         var tmp = (string) chunk.data;
                         tmp = tmp.substring (0, ((int) chunk.length));
 
-                        item.response.data += tmp;
+                        this.response.data += tmp;
                         builder.append (tmp);
-                        item.response.raw = builder.str;
-                        item.response.size += chunk.length;
+                        this.response.raw = builder.str;
+                        this.response.size += chunk.length;
                         ulong _;
                         var seconds = timer.elapsed (out _);
 
-                        item.response.duration = seconds;
-                        request_got_chunk ();
+                        this.response.duration = seconds;
+                        request_got_chunk (this.response);
                     });
                 }
             });
@@ -236,9 +207,9 @@ namespace Spectator.Services {
             }
 
             var user_agent = "";
-            var content_type_set = false;
+            var content_type = "";
 
-            foreach (var header in tmp_req.headers) {
+            foreach (var header in this.request.headers) {
                 if (header.key == "User-Agent") {
                     user_agent = header.val;
                     continue;
@@ -246,7 +217,7 @@ namespace Spectator.Services {
 
                 // TODO: better handling of user defined content type
                 if (header.key == "Content-Type") {
-                    content_type_set = true;
+                    content_type = header.val;
                     continue;
                 }
 
@@ -254,20 +225,21 @@ namespace Spectator.Services {
                 msg.request_headers.append (header.key, header.val);
             }
 
-            if (method == Models.Method.POST || method == Models.Method.PUT || method == Models.Method.PATCH) {
-                var body = tmp_req.request_body;
+            var body = this.request.request_body;
                 if (is_raw_type (body.type)) {
-                    if (content_type_set) {
-                        msg.set_request (null, Soup.MemoryUse.COPY, body.raw.data);
+                    // If a content type was set, use this content type
+                    // Otherwise try to infer it from the body type
+                    if (content_type.strip ().length > 0) {
+                        msg.set_request (content_type, Soup.MemoryUse.COPY, body.content.data);
                     } else {
                         msg.set_request (RequestBody.ContentType.to_mime (body.type),
-                                         Soup.MemoryUse.COPY, body.raw.data);
+                                         Soup.MemoryUse.COPY, body.content.data);
                     }
                 } else if (body.type == RequestBody.ContentType.FORM_DATA) {
                     var multipart = new Soup.Multipart ("multipart/form-data");
 
                     // TODO: Support file upload
-                    foreach (var pair in body.form_data) {
+                    foreach (var pair in body.get_as_form_data ()) {
                         multipart.append_form_string (pair.key, pair.val);
                     }
 
@@ -275,7 +247,7 @@ namespace Spectator.Services {
                 } else if (body.type == RequestBody.ContentType.URLENCODED) {
                     var builder = new StringBuilder ();
                     var first = true;
-                    foreach (var pair in body.urlencoded) {
+                    foreach (var pair in body.get_as_urlencoded ()) {
                         if (first) {
                             first = false;
                         } else {
@@ -288,7 +260,6 @@ namespace Spectator.Services {
                     }
                     msg.set_request ("application/x-www-form-urlencoded", Soup.MemoryUse.COPY, builder.str.data);
                 }
-            }
 
             // Use applications User-Agent if none was defined
             if (user_agent == "") {
@@ -297,6 +268,10 @@ namespace Spectator.Services {
                 session.user_agent = user_agent;
             }
 
+
+            if (script_runner.valid) {
+                script_runner.run_before_sending ();
+            }
             timer = new Timer ();
             session.queue_message (msg, read_response);
         }

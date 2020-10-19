@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -22,14 +22,17 @@
 namespace Spectator.Widgets.Request {
     class BodyView : Gtk.Box {
         private Gtk.Stack body_content;
-        private Gtk.ComboBoxText body_type_box;
+        public Gtk.ComboBoxText body_type_box;
         private Gtk.ComboBoxText language_box;
+        private Gtk.Box body_content_type_selections;
         private KeyValueList form_data;
         private KeyValueList urlencoded;
         private Gtk.ScrolledWindow raw_body;
+        private bool ignore_signal;
 
         public signal void type_changed (RequestBody.ContentType type);
         public signal void body_buffer_changed (string content);
+        public signal void content_changed (string content);
 
         public signal void key_value_added (Pair item);
         public signal void key_value_removed (Pair item);
@@ -43,6 +46,7 @@ namespace Spectator.Widgets.Request {
         public BodyView () {
             body_content = new Gtk.Stack ();
             body_content.hexpand = true;
+            this.ignore_signal = true;
 
             setup_body_type_box ();
             setup_language_box ();
@@ -53,6 +57,7 @@ namespace Spectator.Widgets.Request {
 
             body_content.set_visible_child (form_data);
             add (body_content);
+            this.ignore_signal = false;
         }
 
         private void setup_language_box () {
@@ -82,7 +87,7 @@ namespace Spectator.Widgets.Request {
                     break;
                 }
 
-                send_language_box_signal (index);
+                if (!this.ignore_signal) send_language_box_signal (index);
             });
         }
 
@@ -105,16 +110,15 @@ namespace Spectator.Widgets.Request {
 
         private void setup_body_type_box () {
             body_type_box = new Gtk.ComboBoxText ();
-            body_type_box.append_text ("form-data");
-            body_type_box.append_text ("x-www-form-urlencoded");
-            body_type_box.append_text ("raw");
-            body_type_box.active = 0;
+            body_type_box.append_text ("Form Data");
+            body_type_box.append_text ("Urlencoded");
+            body_type_box.append_text ("Text");
         }
 
         private void setup_body_type_behaviour () {
-            var body_content_type_selections = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 4);
+            body_content_type_selections = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 4);
             body_content_type_selections.margin_bottom = 12;
-            body_content_type_selections.halign = Gtk.Align.END;
+            body_content_type_selections.halign = Gtk.Align.START;
 
             body_type_box.changed.connect (() => {
                 var index = body_type_box.get_active ();
@@ -123,17 +127,17 @@ namespace Spectator.Widgets.Request {
                 switch (index) {
                     case 0:
                     body_content.set_visible_child (form_data);
-                    type_changed (RequestBody.ContentType.FORM_DATA);
+                    if (!this.ignore_signal) type_changed (RequestBody.ContentType.FORM_DATA);
                     break;
                     case 1:
                     body_content.set_visible_child (urlencoded);
-                    type_changed (RequestBody.ContentType.URLENCODED);
+                    if (!this.ignore_signal) type_changed (RequestBody.ContentType.URLENCODED);
                     break;
                     case 2:
-                    body_content_type_selections.add (language_box);
+                    body_content_type_selections.pack_end (language_box);
                     body_content_type_selections.reorder_child (language_box, 0);
                     body_content.set_visible_child (raw_body);
-                    send_language_box_signal (language_box.active);
+                    if (!this.ignore_signal) send_language_box_signal (language_box.active);
                     break;
                     default:
                     assert_not_reached ();
@@ -141,24 +145,73 @@ namespace Spectator.Widgets.Request {
                 body_content_type_selections.show_all ();
             });
 
-            body_content_type_selections.add (body_type_box);
+            body_content_type_selections.pack_start (body_type_box, false, true);
 
             add (body_content_type_selections);
+        }
+
+        private string serialize_key_value_content (Gee.ArrayList<Pair> pairs) {
+            var form_data_builder = new StringBuilder ();
+            foreach (var entry in pairs) {
+                form_data_builder.append ("%s>>|<<%s\n".printf (entry.key, entry.val));
+            }
+            return form_data_builder.str;
+        }
+
+        // TODO: refactor to model method
+        private Gee.ArrayList<Pair> deserialize_key_value_content (string content) {
+            var pairs = new Gee.ArrayList<Pair> ();
+            var pair_strings = content.split("\n");
+
+            foreach (var pair in pair_strings) {
+                if (pair.strip ().length > 0) {
+                    var key_value = pair.split(">>|<<");
+                    pairs.add (new Pair(key_value[0], key_value[1]));
+                }
+            }
+
+            return pairs;
+        }
+
+        public void set_content (string content, RequestBody.ContentType type) {
+            this.ignore_signal = true;
+            this.set_body_type (type);
+
+            if (type == RequestBody.ContentType.FORM_DATA) {
+                this.form_data.change_rows (this.deserialize_key_value_content (content));
+                this.form_data.show_all ();
+            } else if (type == RequestBody.ContentType.URLENCODED) {
+                /* TODO: Do we need two different lists? */
+                this.urlencoded.change_rows (this.deserialize_key_value_content (content));
+            } else {
+                var source_view = (BodySourceView) raw_body.get_child ();
+                source_view.set_content (content);
+            }
+            this.ignore_signal = false;
+        }
+
+        public void reset_content () {
+            this.ignore_signal = true;
+            this.form_data.clear ();
+            this.urlencoded.clear ();
+            var source_view = (BodySourceView) raw_body.get_child ();
+            source_view.set_content ("");
+            this.ignore_signal = false;
         }
 
         private void setup_form_data () {
             form_data = new KeyValueList (_("Add"));
 
-            form_data.item_added.connect ((item) => {
-                key_value_added (item);
+            form_data.item_added.connect (() => {
+                this.content_changed (serialize_key_value_content (form_data.get_all_items ()));
             });
 
             form_data.item_updated.connect ((item) => {
-                key_value_updated (item);
+                this.content_changed (serialize_key_value_content (form_data.get_all_items ()));
             });
 
             form_data.item_deleted.connect ((item) => {
-                key_value_removed (item);
+                this.content_changed (serialize_key_value_content (form_data.get_all_items ()));
             });
 
             body_content.add (form_data);
@@ -168,15 +221,15 @@ namespace Spectator.Widgets.Request {
             urlencoded = new KeyValueList (_("Add"));
 
             urlencoded.item_added.connect ((item) => {
-                key_value_added (item);
+                this.content_changed (serialize_key_value_content (urlencoded.get_all_items ()));
             });
 
             urlencoded.item_updated.connect ((item) => {
-                key_value_updated (item);
+                this.content_changed (serialize_key_value_content (urlencoded.get_all_items ()));
             });
 
             urlencoded.item_deleted.connect ((item) => {
-                key_value_removed (item);
+                this.content_changed (serialize_key_value_content (urlencoded.get_all_items ()));
             });
 
             body_content.add (urlencoded);
@@ -187,15 +240,14 @@ namespace Spectator.Widgets.Request {
             raw_body.vexpand = true;
             var raw_body_source_view = new BodySourceView ();
             raw_body_source_view.body_buffer_changed.connect ((content) => {
-                body_buffer_changed (content);
+                this.content_changed (content);
             });
             raw_body.add (raw_body_source_view);
             body_content.add (raw_body);
         }
 
-        public void set_body (RequestBody body) {
-            // FORM_DATA, URLENCODED, PLAIN, JSON, XML, HTML
-            switch (body.type) {
+        public void set_body_type (RequestBody.ContentType type) {
+            switch (type) {
                 case RequestBody.ContentType.FORM_DATA:
                     body_type_box.active = 0;
                     break;
@@ -219,14 +271,8 @@ namespace Spectator.Widgets.Request {
                     language_box.active = 3;
                     break;
                 default:
-                assert_not_reached ();
+                    assert_not_reached ();
             }
-
-            var source_view = (BodySourceView) raw_body.get_child ();
-            source_view.set_content (body.raw);
-
-            form_data.change_rows (body.form_data);
-            urlencoded.change_rows (body.urlencoded);
         }
     }
 }

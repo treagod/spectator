@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -40,8 +40,18 @@ namespace Spectator.Widgets.Request {
             margin_top = 4;
             margin_bottom = 4;
 
-            url_entry.changed.connect (notify_url_change);
+            url_entry.changed.connect (() => {
+                update_hightlighing ();
+            });
 
+            url_entry.key_release_event.connect ((event) => {
+                notify_url_change ();
+                return true;
+            });
+
+            url_entry.copy_clipboard.connect (() => {
+                // Copy processed url (without #{})
+            });
         }
 
         private void init_method_box () {
@@ -62,10 +72,65 @@ namespace Spectator.Widgets.Request {
             add (method_box);
         }
 
+        private void update_hightlighing () {
+            unowned string url = url_entry.text;
+            unichar c;
+            uint start = 0;
+            uint end = 0;
+            url_entry.attributes = new Pango.AttrList ();
+
+            for (int i = 0; url.get_next_char (ref i, out c);) {
+                var found_comment = false;
+
+                if (c == '#') {
+                    start = i;
+                    url.get_next_char (ref i, out c);
+
+                    if (c == '{') {
+                        var s = "";
+                        while (true) {
+                            url.get_next_char (ref i, out c);
+                            if (c == '}') {
+                                found_comment = true;
+                                break;
+                            }
+
+                            if (c == '\0') {
+                                break;
+                            }
+                            s += c.to_string ();
+                        }
+                        end = i;
+                    }
+                }
+
+                if (found_comment) {
+                    var a = (Pango.AttrColor) Pango.attr_foreground_new (0,0,0);
+                    a.color.parse ("#0e9a83");
+                    var w = Pango.attr_weight_new (Pango.Weight.BOLD);
+                    a.start_index = start - 1;
+                    a.end_index = end;
+                    w.start_index = start - 1;
+                    w.end_index = end;
+                    url_entry.attributes.insert (a.copy());
+                    url_entry.attributes.insert (w.copy());
+
+                    w = Pango.attr_scale_new (0);
+                    w.start_index = start - 1;
+                    w.end_index = start + 1;
+                    url_entry.attributes.insert (w.copy());
+
+                    w = Pango.attr_scale_new (0);
+                    w.start_index = end - 1;
+                    w.end_index = end;
+                    url_entry.attributes.insert (w.copy());
+                }
+            }
+        }
+
         public void set_text (string url) {
-            url_entry.changed.disconnect (notify_url_change);
             url_entry.text = url;
-            url_entry.changed.connect (notify_url_change);
+            update_hightlighing ();
         }
 
         public string get_text () {
@@ -104,6 +169,7 @@ namespace Spectator.Widgets.Request {
             url_entry.icon_press.connect (() => {
                 if (processing) {
                     cancel_process ();
+                    this.change_status (Models.RequestStatus.SENT);
                 } else {
                     widget_activate ();
                 }
@@ -118,8 +184,11 @@ namespace Spectator.Widgets.Request {
         }
 
         private void widget_activate () {
-            change_status (Models.RequestStatus.SENDING);
-            request_activated ();
+            this.request_activated ();
+        }
+
+        public void set_request_status (Models.RequestStatus status) {
+            this.change_status (status);
         }
     }
 }
