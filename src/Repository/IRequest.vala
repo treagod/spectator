@@ -35,6 +35,7 @@ namespace Spectator.Repository {
 
     public interface IRequest : Object {
         public abstract Gee.ArrayList<Models.Request> get_requests ();
+        public abstract Gee.ArrayList<Models.Request> get_requests_ordered_by_sent ();
         public abstract bool add_request (Models.Request request);
         public abstract void update_request (uint id, UpdateCallback cb);
         public abstract bool delete_request (uint id);

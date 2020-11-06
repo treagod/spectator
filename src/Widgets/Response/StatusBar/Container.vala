@@ -31,61 +31,12 @@ namespace Spectator.Widgets.Response.StatusBar {
         private Gtk.Label request_time_label;
         private Gtk.Box response_size_box;
         private Gtk.Label response_size_label;
-        private Gtk.Stack content_type;
         private Models.Response? item;
-
-        public signal void view_changed (int i);
 
         construct {
             orientation = Gtk.Orientation.HORIZONTAL;
             spacing = 7;
             get_style_context ().add_class ("response-statusbar");
-            content_type = new Gtk.Stack ();
-
-            var plain_selection = new Gtk.ComboBoxText ();
-            plain_selection.append_text (_("Text"));
-            plain_selection.append_text (_("Raw"));
-            plain_selection.active = 0;
-
-            plain_selection.changed.connect (() => {
-                view_changed (plain_selection.get_active ());
-            });
-
-            var html_selection = new Gtk.ComboBoxText ();
-
-            html_selection.append_text (_("Source Code"));
-            html_selection.append_text (_("Headers"));
-            html_selection.append_text (_("Web View"));
-            html_selection.active = 0;
-
-            html_selection.changed.connect (() => {
-                view_changed (html_selection.get_active ());
-            });
-
-            var xml_selection = new Gtk.ComboBoxText ();
-
-            xml_selection.append_text (_("XML Tree"));
-            xml_selection.append_text (_("Source Code"));
-            xml_selection.append_text (_("Headers"));
-            xml_selection.append_text (_("Raw"));
-
-            xml_selection.active = 0;
-
-            xml_selection.changed.connect (() => {
-                view_changed (xml_selection.get_active ());
-            });
-
-            var json_selection = new Gtk.ComboBoxText ();
-
-            json_selection.append_text (_("JSON Tree"));
-            json_selection.append_text (_("Prettified"));
-            json_selection.append_text (_("Headers"));
-            json_selection.append_text (_("Raw"));
-            json_selection.active = 0;
-
-            json_selection.changed.connect (() => {
-                view_changed (json_selection.get_active ());
-            });
 
             http_status_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL,9);
             http_status_label = new Gtk.Label (_("No status"));
@@ -115,17 +66,9 @@ namespace Spectator.Widgets.Response.StatusBar {
             add (request_time_box);
             add (response_size_box);
 
-            content_type.add_named (plain_selection, "no-type");
-            content_type.add_named (html_selection, "html_selection");
-            content_type.add_named (xml_selection, "xml_selection");
-            content_type.add_named (json_selection, "json_selection");
-            content_type.set_visible_child_name ("no-type");
-
             Settings.get_instance ().theme_changed.connect (() => {
                 update (item);
             });
-
-            pack_end (content_type, false, false);
         }
 
         public void update (Models.Response? it) {
@@ -182,28 +125,6 @@ namespace Spectator.Widgets.Response.StatusBar {
             // Assuming nobody is downloading more or equal than 1 TB...
             // if you do, please give send me an email with proof (marv.ahlgrimm@gmail.com)
             return ("%" + int64.FORMAT + " " + _("B")).printf (response_size);
-        }
-
-        public void set_active_type (Type typ) {
-            switch (typ) {
-                case Type.HTML:
-                    content_type.visible_child_name = "html_selection";
-                    break;
-                case Type.JSON:
-                    content_type.visible_child_name = "json_selection";
-                    break;
-                case Type.XML:
-                    content_type.visible_child_name = "xml_selection";
-                    break;
-                default:
-                    content_type.visible_child_name = "no-type";
-                    break;
-            }
-
-            if (content_type.visible_child_name != "no-type") {
-                var combo = (Gtk.ComboBoxText) content_type.get_visible_child ();
-                combo.active = 0;
-            }
         }
     }
 

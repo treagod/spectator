@@ -46,6 +46,11 @@ namespace Spectator.Repository {
             Sqlite.Statement stmt;
             int rc = db.prepare_v2 (query, query.length, out stmt);
 
+            if (rc == Sqlite.ERROR) {
+                warning ("Could not load order\n");
+                return order;
+            }
+
             int cols = stmt.column_count ();
             while (stmt.step () == Sqlite.ROW) {
                 var entry = new Models.Order (1, Models.Order.Type.REQUEST); // Make empty constructor

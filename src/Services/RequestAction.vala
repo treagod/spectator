@@ -122,6 +122,12 @@ namespace Spectator.Services {
                                                    res.status_code,
                                                    Soup.Status.get_phrase (res.status_code)));
 
+            var cookies = Soup.cookies_from_request (mess);
+
+            foreach (var cookie in cookies) {
+                response.add_cookie (cookie.name, cookie.value);
+            }
+
             mess.response_headers.foreach ((key, val) => {
                 res.add_header (key, val);
                 builder.append ("%s: %s\r\n".printf (key, val));

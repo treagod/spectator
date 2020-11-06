@@ -96,7 +96,6 @@ namespace Spectator.Widgets.Sidebar.Collection {
             this.item_box.add (request_list_item);
 
             request_list_item.clicked.connect (() => {
-                request_item_selected (request.id);
                 this.request_item_selected (request.id);
             });
 

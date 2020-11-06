@@ -51,6 +51,73 @@ namespace Spectator.Repository {
             Sqlite.Statement stmt;
             int rc = db.prepare_v2 (query, query.length, out stmt);
 
+            if (rc == Sqlite.ERROR) {
+                warning ("Could not load requests\n");
+                return requests;
+            }
+
+            int cols = stmt.column_count ();
+            while (stmt.step () == Sqlite.ROW) {
+                var request = new Models.Request (); // Make empty constructor
+
+                for (int i = 0; i < cols; i++) {
+                    string col_name = stmt.column_name (i) ?? "<none>";
+
+                    switch (col_name) {
+                        case "id":
+                            request.id = stmt.column_int (i);
+                            break;
+                        case "name":
+                            request.name = stmt.column_text (i) ;
+                            break;
+                        case "url":
+                            request.uri = stmt.column_text (i) ?? "";
+                            break;
+                        case "script":
+                            request.script_code = stmt.column_text (i) ?? "";
+                            break;
+                        case "method":
+                            request.method = Models.Method.convert (stmt.column_int (i));
+                            break;
+                        case "last_sent":
+                            unowned Sqlite.Value last_sent_value = stmt.column_value (i);
+
+                            if (last_sent_value.to_type () != Sqlite.NULL) {
+                                request.last_sent = new DateTime.from_unix_local (stmt.column_int64 (i));
+                            }
+
+                            break;
+                        case "body_type":
+                            request.request_body.type = RequestBody.ContentType.convert (stmt.column_int (i));
+                            break;
+                        case "body_content":
+                            request.request_body.content = stmt.column_text (i);
+                            break;
+                    }
+                }
+                requests.add (request);
+            }
+
+            return requests;
+        }
+
+        public Gee.ArrayList<Models.Request> get_requests_ordered_by_sent () {
+            var requests = new Gee.ArrayList<Models.Request> ();
+            var query = """
+            SELECT Request.id, script, name, method, url, last_sent, type as body_type, content as body_content
+            FROM Request
+            INNER JOIN RequestBody ON Request.id = RequestBody.id
+            WHERE Request.last_sent IS NOT NULL
+            ORDER BY Request.last_sent DESC;
+            """;
+            Sqlite.Statement stmt;
+            int rc = db.prepare_v2 (query, query.length, out stmt);
+
+            if (rc == Sqlite.ERROR) {
+                warning ("Could not load requests\n");
+                return requests;
+            }
+
             int cols = stmt.column_count ();
             while (stmt.step () == Sqlite.ROW) {
                 var request = new Models.Request (); // Make empty constructor
@@ -176,6 +243,11 @@ namespace Spectator.Repository {
             WHERE Request.id = $REQUEST_ID;""";
             Sqlite.Statement stmt;
             int rc = db.prepare_v2 (query, query.length, out stmt);
+
+            if (rc == Sqlite.ERROR) {
+                warning ("Could not load request\n");
+                return null;
+            }
 
             int id_pos = stmt.bind_parameter_index ("$REQUEST_ID");
             stmt.bind_int (id_pos, (int) id);

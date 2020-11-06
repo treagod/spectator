@@ -100,10 +100,8 @@ namespace Spectator.Widgets.Sidebar.History {
 
         public void show_items () {
             this.clear ();
-            foreach (var request in this.window.request_service.get_requests ()) {
-                if (request.last_sent != null) {
-                    this.add_request (request);
-                }
+            foreach (var request in this.window.request_service.get_requests_ordered_by_sent ()) {
+                this.add_request (request);
             }
         }
 

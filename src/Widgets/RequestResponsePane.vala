@@ -22,10 +22,11 @@
 namespace Spectator.Widgets {
     class RequestResponsePane : Gtk.Paned, Request.Interface {
         private Request.Container request_view;
-        private Response.Container response_view;
+        private Response.Container current_response_view;
         private weak Spectator.Window window;
         private uint active_id;
         private SendingService sending_service;
+        private Gee.HashMap<uint, Response.Container> response_views;
 
         public signal void type_changed (RequestBody.ContentType type);
         public signal void reset_body (RequestBody.ContentType type);
@@ -54,13 +55,16 @@ namespace Spectator.Widgets {
                 this.request_view.set_headers (request.headers);
                 this.request_view.set_body (request.request_body);
 
-                if (this.sending_service.request_was_sent (id)) {
-                    this.response_view.update (this.sending_service.get_response (id));
+                if (this.response_views.has_key (id)) {
+                    var res_view = response_views[id];
+                    remove (current_response_view);
+                    this.current_response_view = res_view;
+                    pack2 (current_response_view, false, false);
                     this.request_view.set_request_status (Models.RequestStatus.SENT);
-                    this.response_view.show ();
+                    this.current_response_view.show ();
                 } else {
                     this.request_view.set_request_status (Models.RequestStatus.NOT_SENT);
-                    this.response_view.hide ();
+                    this.current_response_view.hide ();
                 }
             }
         }
@@ -68,8 +72,9 @@ namespace Spectator.Widgets {
         public RequestResponsePane (Spectator.Window window) {
             this.window = window;
             this.request_view = new Request.Container ();
-            this.response_view = new Response.Container ();
+            this.current_response_view = new Response.Container ();
             this.sending_service = new SendingService ();
+            response_views = new Gee.HashMap<uint, Response.Container> ();
 
             this.sending_service.request_script_output.connect ((id, str, type) => {
                 this.request_view.update_buffer (id, str, type);
@@ -77,9 +82,22 @@ namespace Spectator.Widgets {
 
             this.sending_service.finished_request.connect ((request, res) => {
                 this.request_view.set_request_status (Models.RequestStatus.SENT);
-                this.response_view.update (res);
-                this.response_view.show ();
-                this.request_sent (request.id);
+                Response.Container res_view;
+
+                // Use response view from cache if available
+                if (response_views.has_key (request.id)) {
+                    res_view = response_views[request.id];
+                } else {
+                    res_view = new Response.Container ();
+                    response_views[request.id] = res_view;
+                }
+
+                remove (current_response_view);
+                current_response_view = res_view;
+                request_sent (request.id);
+                pack2 (current_response_view, false, false);
+                current_response_view.show_all ();
+                res_view.update (res);
             });
 
             request_view.url_params_updated.connect ((query_pairs) => {
@@ -194,7 +212,7 @@ namespace Spectator.Widgets {
             });
 
             pack1 (request_view, false, false);
-            pack2 (response_view, false, false);
+            pack2 (current_response_view, false, false);
         }
 
         public void update_status (Models.Request request) {

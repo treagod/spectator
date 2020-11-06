@@ -156,6 +156,9 @@ namespace Spectator.Services {
             data = generator.to_data (null);
         }
 
+        /*
+            Deprecated
+        */
         public void write_to_file (string filepath) {
             var file = File.new_for_path (filepath);
 
@@ -171,8 +174,12 @@ namespace Spectator.Services {
                 string dir_path = Path.get_dirname (filepath);
 
                 File dir = File.new_for_path (dir_path);
-                dir.make_directory_with_parents ();
-                write_to_file (filepath);
+                try {
+                    dir.make_directory_with_parents ();
+                    write_to_file (filepath);
+                }catch (Error e) {
+                    stderr.printf ("Error during saving settings: %s\n", e.message);
+                }
             } catch (Error e) {
                 stderr.printf ("Error during saving settings: %s\n", e.message);
             }

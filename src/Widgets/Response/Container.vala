@@ -20,112 +20,242 @@
 */
 
 namespace Spectator.Widgets.Response {
+    public enum CurrentView {
+        None,
+        JsonTreeView,
+        PrettifiedSourceView,
+        SourceView,
+        XmlTreeView,
+        WebkitView,
+        HeaderView,
+        CookiesView,
+        InfoView
+    }
+
     class Container : Gtk.Box {
         private StatusBar.Container status_bar;
-        private AbstractTypeView html_view;
-        private AbstractTypeView json_view;
-        private AbstractTypeView xml_view;
-        private AbstractTypeView plain_view;
+        private ModeDropdown mode_dropdown;
         private Gtk.Stack stack;
+        private HeaderList header_list;
+        private Gtk.ScrolledWindow header_scroll;
+        private HeaderList cookie_list;
+        private Gtk.ScrolledWindow cookie_scroll;
+        private ModeButton tabs;
+        private SourceView source_view;
+        private Gtk.ScrolledWindow text_scrolled;
+        private SourceView plain_view;
+        private Gtk.ScrolledWindow plain_scrolled;
+        private JsonTreeView json_tree_view;
+        private Gtk.ScrolledWindow json_scrolled;
+        private XmlTreeView xml_tree_view;
+        private Gtk.ScrolledWindow xml_scrolled;
+        private CurrentView current_view;
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
+            margin = 4;
+        }
+
+        private bool is_dropdown_view () {
+            if (
+                current_view == CurrentView.JsonTreeView ||
+                current_view == CurrentView.PrettifiedSourceView ||
+                current_view == CurrentView.XmlTreeView
+            ) {
+                return true;
+            }
+            return false;
         }
 
         public Container () {
             stack = new Gtk.Stack ();
-            html_view = new HtmlView ();
-            json_view = new JsonView ();
-            xml_view = new XmlView ();
-            plain_view = new DefaultView ();
+            source_view = new SourceView ();
+            text_scrolled = new Gtk.ScrolledWindow (null, null);
+            text_scrolled.add (source_view);
+            plain_view = new SourceView ();
+            plain_scrolled = new Gtk.ScrolledWindow (null, null);
+            plain_scrolled.add (plain_view);
+            header_scroll = new Gtk.ScrolledWindow (null, null);
+            header_list = new HeaderList ();
+            header_scroll.add (header_list);
+            cookie_scroll = new Gtk.ScrolledWindow (null, null);
+            cookie_list = new HeaderList ();
+            cookie_scroll.add (cookie_list);
+            json_scrolled = new Gtk.ScrolledWindow (null, null);
+            json_tree_view = new JsonTreeView.empty ();
+            json_scrolled.add (json_tree_view);
+            xml_scrolled = new Gtk.ScrolledWindow (null, null);
+            xml_tree_view = new XmlTreeView.empty ();
+            xml_scrolled.add (xml_tree_view);
+            current_view = CurrentView.None;
 
-            stack.add_named (html_view, "html_view");
-            stack.add_named (json_view, "json_view");
-            stack.add_named (xml_view, "xml_view");
-            stack.add_named (plain_view, "plain_view");
-            stack.set_visible_child (plain_view);
+            stack.add_named (text_scrolled, "prettified_view");
+            stack.add_named (header_scroll, "headers");
+            stack.add_named (cookie_scroll, "cookies");
+            stack.add_named (json_scrolled, "json_tree_view");
+            stack.add_named (xml_scrolled, "xml_tree_view");
+            stack.add_named (plain_scrolled, "plain_view");
+            stack.set_visible_child (json_scrolled);
 
             status_bar = new StatusBar.Container ();
-
-            status_bar.view_changed.connect ((i) => {
-                var current_view = (AbstractTypeView) stack.get_visible_child ();
-                current_view.show_view (i);
-            });
             status_bar.halign = Gtk.Align.START;
 
-            // TODO: Implement later!
-            // Gtk.Popover?
-            //  var tabs = new ModeButton ();
-            //  tabs.halign = Gtk.Align.CENTER;
-            //  var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 1);
-            //  var la = new Gtk.Label ("JSON");
-            //  var test = new Gtk.Image.from_icon_name ("pan-down-symbolic", Gtk.IconSize.BUTTON);
-            //  la.halign = Gtk.Align.CENTER;
-            //  box.pack_start (la, false, false);
-            //  box.pack_start (test, true, true);
-            //  var dropdown_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-            //  dropdown_box.add (box);
-            //  dropdown_box.add (new Gtk.Label ("asd"));
-            //  dropdown_box.
-            //  tabs.append_with_right_click_event (dropdown_box, (event) => {
+            tabs = new ModeButton ();
+            tabs.halign = Gtk.Align.CENTER;
+            mode_dropdown = new ModeDropdown (stack);
 
-            //      return true;
-            //  });
-            //  tabs.append (new Gtk.Label ("Preview"));
-            //  tabs.append (new Gtk.Label ("Header"));
-            //  tabs.append (new Gtk.Label ("Info"));
+            var locked = false;
 
-            pack_start (status_bar, false, false, 9);
-            // pack_start (tabs, false, false, 3);
+            tabs.append_with_right_click_event (mode_dropdown, (event) => {
+                if (is_dropdown_view ()) {
+                    if (locked) {
+                        locked = false;
+                    } else {
+                        mode_dropdown.dropdown ();
+                    }
+                }
+
+                return true;
+            });
+
+            var header_label = new Gtk.Label ("Header");
+            var cookie_label = new Gtk.Label ("Cookies");
+            //var info_label = new Gtk.Label ("Info");
+            tabs.append (header_label);
+            tabs.append (cookie_label);
+            //tabs.append (info_label);
+
+            tabs.mode_changed.connect ((widget) => {
+                if (widget == header_label) {
+                    stack.set_visible_child (header_scroll);
+                    current_view = CurrentView.HeaderView;
+                } else if (widget == cookie_label) {
+                    stack.set_visible_child (cookie_scroll);
+                    current_view = CurrentView.CookiesView;
+                } else if (widget == mode_dropdown) {
+                    current_view = mode_dropdown.current_view;
+
+                    switch (current_view) {
+                        case CurrentView.JsonTreeView:
+                        stack.set_visible_child (json_scrolled);
+                        break;
+                        case CurrentView.XmlTreeView:
+                        stack.set_visible_child (xml_scrolled);
+                        break;
+                        case CurrentView.PrettifiedSourceView:
+                        stack.set_visible_child (text_scrolled);
+                        break;
+                        default:
+                        stack.set_visible_child (plain_scrolled);
+                        break;
+                    }
+                    locked = true;
+                }
+            });
+
+            pack_start (status_bar, false, false, 4);
+            pack_start (tabs, false, false, 3);
             pack_start (stack);
+            tabs.set_active (0);
+
+            locked = false;
         }
 
-        public void update (Models.Response? it) {
-            set_content_type (it);
-            update_view (it);
-            status_bar.update (it);
-            var current_view = (AbstractTypeView) stack.get_visible_child ();
-            current_view.update (it);
-            current_view.show_view (0);
-        }
+        public void update (Models.Response response) {
+            status_bar.update (response);
+            header_list.clear ();
+            cookie_list.clear ();
 
-        private void update_view (Models.Response? it) {
-            if (it == null) {
-                stack.set_visible_child (json_view);
-                return;
-            }
-
-            var content_type = it.headers["Content-Type"];
-
-            if (is_html (content_type)) {
-                stack.set_visible_child (html_view);
-            } else if (is_json (content_type)) {
-                stack.set_visible_child (json_view);
-            } else if (is_xml (content_type)) {
-                stack.set_visible_child (xml_view);
+            if (response.headers.size == 0) {
+                header_list.add_header ("No headers", "");
             } else {
-                stack.set_visible_child (plain_view);
-            }
-        }
-
-        private void set_content_type (Models.Response? it) {
-            if (it == null) {
-                status_bar.set_active_type (StatusBar.Type.UNKOWN);
-                return;
-            }
-
-            var content_type = it.headers["Content-Type"];
-            if (content_type != null) {
-                if (is_html (content_type)) {
-                    status_bar.set_active_type (StatusBar.Type.HTML);
-                } else if (is_json (content_type)) {
-                    status_bar.set_active_type (StatusBar.Type.JSON);
-                } else if (is_xml (content_type)) {
-                    status_bar.set_active_type (StatusBar.Type.XML);
-                } else {
-                    status_bar.set_active_type (StatusBar.Type.UNKOWN);
+                foreach (var header in response.headers) {
+                    header_list.add_header(header.key, header.value);
                 }
             }
+
+            if (response.cookies.size == 0) {
+                cookie_list.add_header ("No cookies", "");
+            } else {
+                foreach (var cookie in response.cookies) {
+                    cookie_list.add_header (cookie.key, cookie.value);
+                }
+            }
+
+            header_list.show_all ();
+            cookie_list.show_all ();
+            var content_type = response.headers["Content-Type"];
+
+            if (is_json (content_type)) {
+                json_tree_view.clear ();
+                mode_dropdown.set_items (ModeDropdown.DropdownItems.Json);
+                source_view.set_lang ("json");
+                json_tree_view.update_from_string (response.data);
+            } else if (is_html (content_type)) {
+                mode_dropdown.set_items (ModeDropdown.DropdownItems.Html);
+                source_view.set_lang ("html");
+            } else if (is_xml (content_type)) {
+                mode_dropdown.set_items (ModeDropdown.DropdownItems.Xml);
+                xml_tree_view.clear ();
+                xml_tree_view.update_from_string (response.data);
+                source_view.set_lang ("xml");
+            } else {
+                mode_dropdown.set_items (ModeDropdown.DropdownItems.Other);
+            }
+
+            if (current_view != CurrentView.None) {
+                mode_dropdown.current_view = current_view;
+
+                switch (current_view) {
+                case CurrentView.JsonTreeView:
+                    stack.set_visible_child (json_scrolled);
+                    tabs.set_active (0);
+                    break;
+                case CurrentView.XmlTreeView:
+                    stack.set_visible_child (xml_scrolled);
+                    tabs.set_active (0);
+                    break;
+                case CurrentView.PrettifiedSourceView:
+                    stack.set_visible_child (text_scrolled);
+                    tabs.set_active (0);
+                    break;
+                case CurrentView.HeaderView:
+                    stack.set_visible_child (header_scroll);
+                    tabs.set_active (1);
+                    break;
+                case CurrentView.CookiesView:
+                    stack.set_visible_child (cookie_scroll);
+                    tabs.set_active (2);
+                    break;
+                case CurrentView.SourceView:
+                    stack.set_visible_child (plain_scrolled);
+                    tabs.set_active (0);
+                    break;
+                default:
+                    stack.set_visible_child (plain_scrolled);
+                    break;
+                }
+            } else {
+                if (is_json (content_type)) {
+                    stack.set_visible_child (json_scrolled);
+                    current_view = CurrentView.JsonTreeView;
+                } else if (is_html (content_type)) {
+                    stack.set_visible_child (text_scrolled);
+                    current_view = CurrentView.PrettifiedSourceView;
+                } else if (is_xml (content_type)) {
+                    stack.set_visible_child (xml_scrolled);
+                    current_view = CurrentView.XmlTreeView;
+                } else {
+                    stack.set_visible_child (plain_scrolled);
+                    current_view = CurrentView.SourceView;
+                }
+
+                mode_dropdown.current_view = current_view;
+                tabs.set_active (0);
+            }
+
+            source_view.buffer.text = response.data;
+            plain_view.buffer.text = response.data;
         }
 
         private bool is_html (string type) {

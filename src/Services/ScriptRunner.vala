@@ -110,7 +110,6 @@ namespace Spectator.Services {
 
     public class ScriptRuntime : Object {
         private ScriptContext context;
-        private ScriptWriter writer;
 
         public ScriptRuntime () {
             this.context = new ScriptContext ();

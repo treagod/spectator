@@ -33,6 +33,11 @@ namespace Spectator.Repository {
             Sqlite.Statement stmt;
             int rc = db.prepare_v2 (query, query.length, out stmt);
 
+            if (rc == Sqlite.ERROR) {
+                warning ("Could not load collections\n");
+                return collections;
+            }
+
             int cols = stmt.column_count ();
             while (stmt.step () == Sqlite.ROW) {
                 var collection = new Models.Collection ("ad"); // Make empty constructor
@@ -151,6 +156,11 @@ namespace Spectator.Repository {
             Sqlite.Statement stmt;
             int rc = db.prepare_v2 (query, query.length, out stmt);
 
+            if (rc == Sqlite.ERROR) {
+                warning ("Could not load collection\n");
+                return null;
+            }
+
             int id_pos = stmt.bind_parameter_index ("$COLLECTION_ID");
             stmt.bind_int (id_pos, (int) id);
 
@@ -188,6 +198,11 @@ namespace Spectator.Repository {
             """;
             Sqlite.Statement stmt;
             int rc = db.prepare_v2 (query, query.length, out stmt);
+
+            if (rc == Sqlite.ERROR) {
+                warning ("Could not load requests\n");
+                return requests;
+            }
 
             int id_pos = stmt.bind_parameter_index ("$COLLECTION_ID");
             stmt.bind_int (id_pos, (int) id);

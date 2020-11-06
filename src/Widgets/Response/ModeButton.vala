@@ -147,17 +147,7 @@ namespace Spectator {
             event_box.button_release_event.connect ((event) => {
                 // Call it explicitly as connecting delegate to signal still experimental
                 // and does not work here
-                if (event.button == 3) {
-                    if (event.button == 3) {
-                        var menu = new Gtk.Menu ();
-
-
-                        var edit_item = new Gtk.MenuItem.with_label ("Test");
-                        menu.width_request = w.get_allocated_width ();
-                        menu.add (edit_item);
-                        menu.show_all ();
-                        menu.popup_at_widget (w, Gdk.Gravity.CENTER, Gdk.Gravity.SOUTH);
-                    }
+                if (event.button == 1) {
                     event_func (event);
                 }
 
