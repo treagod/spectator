@@ -38,7 +38,7 @@ namespace Spectator.Widgets.Response.StatusBar {
             spacing = 7;
             get_style_context ().add_class ("response-statusbar");
 
-            http_status_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL,9);
+            http_status_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 9);
             http_status_label = new Gtk.Label (_("No status"));
             http_status_box.get_style_context ().add_class ("no-info-box");
             http_status_label.halign = Gtk.Align.CENTER;
@@ -46,7 +46,7 @@ namespace Spectator.Widgets.Response.StatusBar {
 
             http_status_box.add (http_status_label);
 
-            request_time_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL,9);
+            request_time_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 9);
             request_time_label = new Gtk.Label (_("No duration"));
             request_time_box.get_style_context ().add_class ("no-info-box");
             request_time_label.halign = Gtk.Align.CENTER;
@@ -54,7 +54,7 @@ namespace Spectator.Widgets.Response.StatusBar {
 
             request_time_box.add (request_time_label);
 
-            response_size_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL,9);
+            response_size_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 9);
             response_size_label = new Gtk.Label (_("No size"));
             response_size_box.get_style_context ().add_class ("no-info-box");
             response_size_label.halign = Gtk.Align.CENTER;

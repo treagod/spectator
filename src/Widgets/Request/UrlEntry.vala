@@ -23,6 +23,7 @@ namespace Spectator.Widgets.Request {
     public class UrlEntry : Gtk.Grid {
         private Gtk.ComboBoxText method_box;
         private Gtk.Entry url_entry;
+        private Services.UrlVariableEngine variable_engine;
         private bool processing = false;
 
         public signal void url_changed (string url);
@@ -37,12 +38,9 @@ namespace Spectator.Widgets.Request {
         public UrlEntry () {
             init_method_box ();
             init_url_entry ();
-            margin_top = 4;
-            margin_bottom = 4;
-
-            url_entry.changed.connect (() => {
-                update_hightlighing ();
-            });
+            margin_top = 2;
+            margin_bottom = 1;
+            variable_engine = new Services.UrlVariableEngine (url_entry);
 
             url_entry.key_release_event.connect ((event) => {
                 notify_url_change ();
@@ -72,65 +70,9 @@ namespace Spectator.Widgets.Request {
             add (method_box);
         }
 
-        private void update_hightlighing () {
-            unowned string url = url_entry.text;
-            unichar c;
-            uint start = 0;
-            uint end = 0;
-            url_entry.attributes = new Pango.AttrList ();
-
-            for (int i = 0; url.get_next_char (ref i, out c);) {
-                var found_comment = false;
-
-                if (c == '#') {
-                    start = i;
-                    url.get_next_char (ref i, out c);
-
-                    if (c == '{') {
-                        var s = "";
-                        while (true) {
-                            url.get_next_char (ref i, out c);
-                            if (c == '}') {
-                                found_comment = true;
-                                break;
-                            }
-
-                            if (c == '\0') {
-                                break;
-                            }
-                            s += c.to_string ();
-                        }
-                        end = i;
-                    }
-                }
-
-                if (found_comment) {
-                    var a = (Pango.AttrColor) Pango.attr_foreground_new (0,0,0);
-                    a.color.parse ("#0e9a83");
-                    var w = Pango.attr_weight_new (Pango.Weight.BOLD);
-                    a.start_index = start - 1;
-                    a.end_index = end;
-                    w.start_index = start - 1;
-                    w.end_index = end;
-                    url_entry.attributes.insert (a.copy());
-                    url_entry.attributes.insert (w.copy());
-
-                    w = Pango.attr_scale_new (0);
-                    w.start_index = start - 1;
-                    w.end_index = start + 1;
-                    url_entry.attributes.insert (w.copy());
-
-                    w = Pango.attr_scale_new (0);
-                    w.start_index = end - 1;
-                    w.end_index = end;
-                    url_entry.attributes.insert (w.copy());
-                }
-            }
-        }
-
         public void set_text (string url) {
             url_entry.text = url;
-            update_hightlighing ();
+            variable_engine.update_highlighting ();
         }
 
         public string get_text () {

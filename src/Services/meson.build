@@ -6,6 +6,7 @@ sources += files(
 	'JsonDeserializer.vala',
     'ScriptContext.vala',
     'ScriptRunner.vala',
+    'UrlAttributeEngine.vala',
 	'RequestAction.vala',
     'SendingService.vala',
     'Scripting/Http.vala',

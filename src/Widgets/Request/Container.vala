@@ -159,7 +159,7 @@ namespace Spectator.Widgets.Request {
 
         private UrlEntry create_url_entry () {
             var url_entry = new UrlEntry ();
-            url_entry.margin_bottom = 10;
+            url_entry.margin_bottom = 7;
 
             url_entry.url_changed.connect ((url) => {
                 this.url_changed (url);
@@ -222,8 +222,8 @@ namespace Spectator.Widgets.Request {
         private void init_stack () {
             stack = new Gtk.Stack ();
             stack.margin = 0;
-            stack.margin_bottom = 18;
-            stack.margin_top = 18;
+            stack.margin_bottom = 15;
+            stack.margin_top = 15;
 
             stack.add_titled (header_view, "header", "header");
             stack.add_titled (url_params_view, "url_params", "parameters");
