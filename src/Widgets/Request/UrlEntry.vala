@@ -25,6 +25,9 @@ namespace Spectator.Widgets.Request {
         private Gtk.Entry url_entry;
         private Services.UrlVariableEngine variable_engine;
         private bool processing = false;
+        private Gtk.Box popover_box;
+        private Gtk.Popover popover;
+        private Gdk.Rectangle r;
 
         public signal void url_changed (string url);
         public signal void method_changed (Models.Method method);
@@ -36,14 +39,43 @@ namespace Spectator.Widgets.Request {
         }
 
         public UrlEntry () {
+
             init_method_box ();
             init_url_entry ();
             margin_top = 2;
             margin_bottom = 1;
             variable_engine = new Services.UrlVariableEngine (url_entry);
 
+            popover = new Gtk.Popover (url_entry);
+            popover_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
+            popover.add(popover_box);
+            var model_button = new Gtk.ModelButton ();
+            model_button.label = "foo";
+            popover_box.add (model_button);
+            model_button = new Gtk.ModelButton ();
+            model_button.label = "bar";
+            popover_box.add (model_button);
+            popover.set_position(Gtk.PositionType.BOTTOM);
+
+
             url_entry.key_release_event.connect ((event) => {
                 notify_url_change ();
+
+                if (event.state == Gdk.ModifierType.CONTROL_MASK && event.keyval == Gdk.Key.space) {
+                    var layout = url_entry.get_layout ();
+                    var index = url_entry.text_index_to_layout_index (url_entry.cursor_position + 1);
+                    var rec = layout.index_to_pos (index);
+                    r = Gdk.Rectangle ();
+                    r.height = 20;
+                    r.width = rec.width / Pango.SCALE;
+                    r.x = rec.x / Pango.SCALE;
+                    r.y = 0;
+                    popover.set_relative_to (url_entry);
+                    popover.set_pointing_to (r);
+                    popover.show_all ();
+                    popover.popup ();
+                }
+
                 return true;
             });
 
