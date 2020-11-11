@@ -63,12 +63,13 @@ namespace Spectator.Widgets.Request {
 
                 if (event.state == Gdk.ModifierType.CONTROL_MASK && event.keyval == Gdk.Key.space) {
                     var layout = url_entry.get_layout ();
-                    var index = url_entry.text_index_to_layout_index (url_entry.cursor_position + 1);
-                    var rec = layout.index_to_pos (index);
+                    var index = url_entry.text_index_to_layout_index (url_entry.cursor_position);
+                    print ("%d\n", index + 1);
+                    var rec = layout.index_to_pos (index + 1);
                     r = Gdk.Rectangle ();
                     r.height = 20;
                     r.width = rec.width / Pango.SCALE;
-                    r.x = rec.x / Pango.SCALE;
+                    r.x = (rec.x / Pango.SCALE);
                     r.y = 0;
                     popover.set_relative_to (url_entry);
                     popover.set_pointing_to (r);
