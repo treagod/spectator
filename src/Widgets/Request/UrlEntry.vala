@@ -49,14 +49,12 @@ namespace Spectator.Widgets.Request {
             popover = new Gtk.Popover (url_entry);
             popover_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
             popover.add(popover_box);
-            var model_button = new Gtk.ModelButton ();
-            model_button.label = "foo";
-            popover_box.add (model_button);
-            model_button = new Gtk.ModelButton ();
-            model_button.label = "bar";
-            popover_box.add (model_button);
             popover.set_position(Gtk.PositionType.BOTTOM);
-
+            popover.closed.connect (() => {
+                foreach (var child in popover_box.get_children ()) {
+                    popover_box.remove (child);
+                }
+            });
 
             url_entry.key_release_event.connect ((event) => {
                 notify_url_change ();
@@ -64,7 +62,6 @@ namespace Spectator.Widgets.Request {
                 if (event.state == Gdk.ModifierType.CONTROL_MASK && event.keyval == Gdk.Key.space) {
                     var layout = url_entry.get_layout ();
                     var index = url_entry.text_index_to_layout_index (url_entry.cursor_position);
-                    print ("%d\n", index + 1);
                     var rec = layout.index_to_pos (index + 1);
                     r = Gdk.Rectangle ();
                     r.height = 20;
