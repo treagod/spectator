@@ -1,3 +1,16 @@
+com.github.treagod.spectator (0.5.1) bionic; urgency=low
+
+  * Update description
+
+ -- Marvin <marv.ahlgrimm@gmail.com>  Sun, 12 Nov 20 20:03:16 +0200
+
+
+com.github.treagod.spectator (0.5.0) bionic; urgency=medium
+
+  * Redesign of UI
+
+ -- Marvin <marv.ahlgrimm@gmail.com>  Sun, 12 Nov 20 20:03:16 +0200
+
 com.github.treagod.spectator (0.4.3) bionic; urgency=low
 
   * Fix representation of Spectator correctly in AppCenter

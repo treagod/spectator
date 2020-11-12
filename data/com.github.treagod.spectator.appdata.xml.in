@@ -14,6 +14,25 @@
     </p>
   </description>
   <releases>
+    <release version="0.5.1" date="2020-11-12">
+      <description>
+        <p>Description Update</p>
+      </description>
+    </release>
+    <release version="0.5.0" date="2020-11-12">
+      <description>
+        <p>Spectator 0.5.0 introduces 2 changes to the UI</p>
+				<ul>
+          <li>Drag & Drop for Requests in the sidebar</li>
+          <li>Redesigned response view selection</li>
+          <li>
+            <ul>
+              <li>The seleceted response view will now be cached per response</li>
+            </ul>
+          </li>
+				</ul>
+      </description>
+    </release>
     <release version="0.4.3" date="2020-09-10">
       <description>
         <p>AppCenter Fix</p>
@@ -44,15 +63,15 @@
       <description>
         <p>Introduction of request collections</p>
 				<ul>
+          <li>Added collection and history view in sidebar</li>
           <li>
-            Added collection and history view in sidebar
             <ul>
               <li>Requests can now be grouped into collections</li>
               <li>Each request will be saved in a seperate history</li>
             </ul>
           </li>
+          <li>Added keyboard shortcuts</li>
           <li>
-            Added keyboard shortcuts
             <ul>
               <li><strong>Ctlr+n:</strong> Create a new request</li>
               <li><strong>Ctlr+Shift+n:</strong> Create a new collection</li>
