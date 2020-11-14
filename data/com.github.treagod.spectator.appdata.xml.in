@@ -14,7 +14,12 @@
     </p>
   </description>
   <releases>
-    <release version="0.5.4" date="2020-11-42">
+    <release version="0.5.5" date="2020-11-14">
+      <description>
+        <p>Description fix</p>
+      </description>
+    </release>
+    <release version="0.5.4" date="2020-11-14">
       <description>
         <p>Fix a bug where a plain response would cause an error</p>
       </description>
@@ -37,14 +42,10 @@
     <release version="0.5.0" date="2020-11-12">
       <description>
         <p>Spectator 0.5.0 introduces 2 changes to the UI</p>
+        <p>Drag &amp; Drop for Requests in the sidebar</p>
+        <p>Redesigned response view selection</p>
 				<ul>
-          <li>Drag &amp; Drop for Requests in the sidebar</li>
-          <li>Redesigned response view selection</li>
-          <li>
-            <ul>
-              <li>The seleceted response view will now be cached per response</li>
-            </ul>
-          </li>
+          <li>The seleceted response view will now be cached per response</li>
 				</ul>
       </description>
     </release>
@@ -77,28 +78,22 @@
     <release version="0.4.0" date="2019-07-28">
       <description>
         <p>Introduction of request collections</p>
+        <p>Added collection and history view in sidebar</p>
 				<ul>
-          <li>Added collection and history view in sidebar</li>
-          <li>
-            <ul>
-              <li>Requests can now be grouped into collections</li>
-              <li>Each request will be saved in a seperate history</li>
-            </ul>
-          </li>
-          <li>Added keyboard shortcuts</li>
-          <li>
-            <ul>
-              <li><strong>Ctlr+n:</strong> Create a new request</li>
-              <li><strong>Ctlr+Shift+n:</strong> Create a new collection</li>
-              <li><strong>Ctlr+l:</strong> Switch to collection view in sidebar</li>
-              <li><strong>Ctlr+h:</strong> Switch to history view in sidebar</li>
-              <li><strong>Ctlr+,:</strong> Open settings dialog</li>
-            </ul>
-          </li>
-          <li>Sidebar is now resizable</li>
-          <li>WebKit will now be lazy-loaded</li>
-          <li>Added more translations</li>
-				</ul>
+          <li>Requests can now be grouped into collections</li>
+          <li>Each request will be saved in a seperate history</li>
+        </ul>
+        <p>Added keyboard shortcuts</p>
+        <ul>
+          <li><strong>Ctlr+n:</strong> Create a new request</li>
+          <li><strong>Ctlr+Shift+n:</strong> Create a new collection</li>
+          <li><strong>Ctlr+l:</strong> Switch to collection view in sidebar</li>
+          <li><strong>Ctlr+h:</strong> Switch to history view in sidebar</li>
+          <li><strong>Ctlr+,:</strong> Open settings dialog</li>
+        </ul>
+        <p>Sidebar is now resizable</p>
+        <p>WebKit will now be lazy-loaded</p>
+        <p>Added more translations</p>
       </description>
     </release>
     <release version="0.3.1" date="2019-05-29">
