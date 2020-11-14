@@ -1,3 +1,9 @@
+com.github.treagod.spectator (0.5.4) bionic; urgency=low
+
+  * Fix a bug where a plain response would cause an error
+
+ -- Marvin <marv.ahlgrimm@gmail.com>  Sun, 14 Nov 20 20:03:16 +0200
+
 com.github.treagod.spectator (0.5.3) bionic; urgency=low
 
   * Update dependency
