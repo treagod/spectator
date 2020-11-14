@@ -46,7 +46,6 @@ namespace Spectator.Widgets.Response {
                     break;
                     default:
                     label.label = PlainLabel;
-                    current_view = CurrentView.SourceView;
                     break;
                 }
             }

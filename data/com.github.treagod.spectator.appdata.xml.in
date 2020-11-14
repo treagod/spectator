@@ -33,7 +33,7 @@
       <description>
         <p>Spectator 0.5.0 introduces 2 changes to the UI</p>
 				<ul>
-          <li>Drag & Drop for Requests in the sidebar</li>
+          <li>Drag &amp; Drop for Requests in the sidebar</li>
           <li>Redesigned response view selection</li>
           <li>
             <ul>
