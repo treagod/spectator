@@ -35,29 +35,35 @@ namespace Spectator {
             application_id = "com.github.treagod.spectator";
         }
 
-        private void ensure_directory () {
-            if (FileUtils.test (this.app_data_dir, FileTest.EXISTS)) {
-                if (!FileUtils.test(this.app_data_dir, GLib.FileTest.IS_DIR)) {
-                    error ("%s must be a directory\n", this.app_data_dir);
+        private void ensure_directory (string db_path) {
+            if (FileUtils.test (db_path, FileTest.EXISTS)) {
+                if (!FileUtils.test(db_path, GLib.FileTest.IS_DIR)) {
+                    error ("%s must be a directory\n", db_path);
                 }
             } else {
                 try {
-                    File file = File.new_for_commandline_arg (this.app_data_dir);
+                    File file = File.new_for_commandline_arg (db_path);
                     file.make_directory_with_parents ();
                 } catch (Error e) {
-                    error ("Could not create %s\n", this.app_data_dir);
+                    error ("Could not create %s\n", db_path);
                 }
             }
         }
 
         private void load_database () {
             string errmsg;
-            this.ensure_directory ();
-            string db_path = Environment.get_variable ("XDG_DATA_HOME");
+            string? db_path = Environment.get_variable ("XDG_DATA_HOME");
 
             if (db_path == null) {
-                Path.build_filename (
+                this.ensure_directory (this.app_data_dir);
+                db_path = Path.build_filename (
                     this.app_data_dir,
+                    "%s.db".printf (Constants.PROJECT_NAME)
+                );
+            } else if(db_path.length > 0) {
+                this.ensure_directory (db_path);
+                db_path = Path.build_filename (
+                    db_path,
                     "%s.db".printf (Constants.PROJECT_NAME)
                 );
             }
