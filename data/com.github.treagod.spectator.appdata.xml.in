@@ -85,11 +85,11 @@
         </ul>
         <p>Added keyboard shortcuts</p>
         <ul>
-          <li><strong>Ctlr+n:</strong> Create a new request</li>
-          <li><strong>Ctlr+Shift+n:</strong> Create a new collection</li>
-          <li><strong>Ctlr+l:</strong> Switch to collection view in sidebar</li>
-          <li><strong>Ctlr+h:</strong> Switch to history view in sidebar</li>
-          <li><strong>Ctlr+,:</strong> Open settings dialog</li>
+          <li>Ctlr+n: Create a new request</li>
+          <li>Ctlr+Shift+n: Create a new collection</li>
+          <li>Ctlr+l: Switch to collection view in sidebar</li>
+          <li>Ctlr+h: Switch to history view in sidebar</li>
+          <li>Ctlr+,: Open settings dialog</li>
         </ul>
         <p>Sidebar is now resizable</p>
         <p>WebKit will now be lazy-loaded</p>
