@@ -1,3 +1,9 @@
+com.github.treagod.spectator (0.5.6) bionic; urgency=low
+
+  * Use $XDG_DATA_HOME for database path
+
+ -- Marvin <marv.ahlgrimm@gmail.com>  Mon, 16 Nov 20 20:03:16 +0200
+
 com.github.treagod.spectator (0.5.5) bionic; urgency=low
 
   * Description fix
@@ -14,26 +20,26 @@ com.github.treagod.spectator (0.5.3) bionic; urgency=low
 
   * Update dependency
 
- -- Marvin <marv.ahlgrimm@gmail.com>  Sun, 12 Nov 20 20:03:16 +0200
+ -- Marvin <marv.ahlgrimm@gmail.com>  Thu, 12 Nov 20 20:03:16 +0200
 
 com.github.treagod.spectator (0.5.2) bionic; urgency=low
 
   * Update dependency
 
- -- Marvin <marv.ahlgrimm@gmail.com>  Sun, 12 Nov 20 20:03:16 +0200
+ -- Marvin <marv.ahlgrimm@gmail.com>  Thu, 12 Nov 20 20:03:16 +0200
 
 com.github.treagod.spectator (0.5.1) bionic; urgency=low
 
   * Update description
 
- -- Marvin <marv.ahlgrimm@gmail.com>  Sun, 12 Nov 20 20:03:16 +0200
+ -- Marvin <marv.ahlgrimm@gmail.com>  Thu, 12 Nov 20 20:03:16 +0200
 
 
 com.github.treagod.spectator (0.5.0) bionic; urgency=medium
 
   * Redesign of UI
 
- -- Marvin <marv.ahlgrimm@gmail.com>  Sun, 12 Nov 20 20:03:16 +0200
+ -- Marvin <marv.ahlgrimm@gmail.com>  Thu, 12 Nov 20 20:03:16 +0200
 
 com.github.treagod.spectator (0.4.3) bionic; urgency=low
 
