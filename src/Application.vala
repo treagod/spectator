@@ -53,12 +53,17 @@ namespace Spectator {
         private void load_database () {
             string errmsg;
             this.ensure_directory ();
+            string db_path = Environment.get_variable ("XDG_DATA_HOME");
 
-            int ec = Sqlite.Database.open (
+            if (db_path == null) {
                 Path.build_filename (
                     this.app_data_dir,
                     "%s.db".printf (Constants.PROJECT_NAME)
-                ),
+                );
+            }
+
+            int ec = Sqlite.Database.open (
+                db_path,
                 out db
             );
             if (ec != Sqlite.OK) {
