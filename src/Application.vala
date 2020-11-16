@@ -56,8 +56,13 @@ namespace Spectator {
             string db_path = Environment.get_variable ("XDG_DATA_HOME");
 
             if (db_path == null) {
-                Path.build_filename (
+                db_path = Path.build_filename (
                     this.app_data_dir,
+                    "%s.db".printf (Constants.PROJECT_NAME)
+                );
+            } else {
+                db_path = Path.build_filename (
+                    db_path,
                     "%s.db".printf (Constants.PROJECT_NAME)
                 );
             }
