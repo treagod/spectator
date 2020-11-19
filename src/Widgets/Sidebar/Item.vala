@@ -172,10 +172,11 @@ namespace Spectator.Widgets.Sidebar {
             row.get_allocation (out alloc);
 
             var surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, alloc.width, alloc.height);
+
+            // Draw border arround widget
             var cr = new Cairo.Context (surface);
             cr.set_source_rgba (0, 0, 0, 0.3);
             cr.set_line_width (1);
-
             cr.move_to (0, 0);
             cr.line_to (alloc.width, 0);
             cr.line_to (alloc.width, alloc.height);
@@ -183,6 +184,7 @@ namespace Spectator.Widgets.Sidebar {
             cr.line_to (0, 0);
             cr.stroke ();
 
+            // Set white overlay for widget
             cr.set_source_rgba (255, 255, 255, 0.5);
             cr.rectangle (0, 0, alloc.width, alloc.height);
             cr.fill ();
