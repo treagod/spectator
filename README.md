@@ -7,6 +7,10 @@ API endpoints of your HTTP server.
 
 ![Screenshot GET JSON](screenshots/screenshot1.png)
 
+## Download
+
+<a href="https://appcenter.elementary.io/com.github.treagod.spectator/"><img  height='80' src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter"></a><a href='https://flathub.org/apps/details/com.github.treagod.spectator'><img height='80' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
+
 ## Features
 
 - [x] Do requests to a web server
