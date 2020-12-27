@@ -31,7 +31,7 @@ namespace Spectator.Widgets.Sidebar {
 
     public class TitleBar : Gtk.Box {
         private Gtk.Label title;
-        private string collection_title_text = _("Collections");
+        private string collection_title_text = _("My Enviroment");
         private string history_title_text = _("History");
 
         public signal void request_dropped (uint id);
@@ -62,11 +62,49 @@ namespace Spectator.Widgets.Sidebar {
             title.get_style_context ().add_class ("h2");
             title.halign = Gtk.Align.CENTER;
             title.margin = 5;
+            var down_arrow = new Gtk.Image.from_icon_name ("pan-down-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
+            var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+            var event_box = new Gtk.EventBox ();
+            box.add(title);
+            box.add (down_arrow);
+            box.hexpand = true;
+            box.halign = Gtk.Align.CENTER;
+            var popover = new Gtk.Popover (down_arrow);
+
+            var pop_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 2);
+            var button = new Gtk.ModelButton ();
+                button.label = "My Environment";
+                button.clicked.connect (() => {
+                    title.label = "My Environement";
+                });
+                pop_box.add(button);
+
+                button = new Gtk.ModelButton ();
+                button.label = "Shourney";
+                button.clicked.connect (() => {
+                    title.label = "Shourney";
+                });
+                pop_box.add(button);
+
+                button = new Gtk.ModelButton ();
+                button.label = "My Website";
+                button.clicked.connect (() => {
+                    title.label = "My Website";
+                });
+                pop_box.add(button);
+                pop_box.show_all ();
+                popover.add (pop_box);
+
+            event_box.add (box);
+            event_box.button_release_event.connect (() => {
+                popover.popup ();
+                return true;
+            });
 
             var separator = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
             separator.margin_top = 2;
 
-            pack_start (title, true, true, 0);
+            pack_start (event_box, true, true, 0);
             pack_start (separator, true, true, 0);
             this.build_drag_and_drop ();
         }
