@@ -169,7 +169,7 @@ namespace Spectator.Widgets.Response {
             if (response.headers.size == 0) {
                 header_list.add_header ("No headers", "");
             } else {
-                foreach (var header in response.headers) {
+                foreach (var header in response.headers.entries) {
                     header_list.add_header(header.key, header.value);
                 }
             }
@@ -177,7 +177,7 @@ namespace Spectator.Widgets.Response {
             if (response.cookies.size == 0) {
                 cookie_list.add_header ("No cookies", "");
             } else {
-                foreach (var cookie in response.cookies) {
+                foreach (var cookie in response.cookies.entries) {
                     cookie_list.add_header (cookie.key, cookie.value);
                 }
             }
