@@ -34,6 +34,7 @@ namespace Spectator.Widgets {
         }
 
         public signal void preference_clicked ();
+        public signal void environments_clicked ();
 
         public HeaderBar () {
             Object (
@@ -49,16 +50,18 @@ namespace Spectator.Widgets {
             _new_collection = new Gtk.Button.from_icon_name ("folder-new", Gtk.IconSize.LARGE_TOOLBAR);
             _new_collection.tooltip_text = _("Create Collection");
 
-            var preference_button = new Gtk.Button.from_icon_name ("open-menu", Gtk.IconSize.LARGE_TOOLBAR);
-            preference_button.tooltip_text = _("Preferences");
-
             var preference_dialog_button = new Gtk.ModelButton ();
-            preference_button.label = _("Open preferences");
+            preference_dialog_button.text = _("Preferences");
             preference_dialog_button.show_all ();
+
+            var environment_dialog_button = new Gtk.ModelButton ();
+            environment_dialog_button.text = _("Environments");
+            environment_dialog_button.show_all ();
 
             var menu_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 2);
 
             menu_box.add (preference_dialog_button);
+            menu_box.add (environment_dialog_button);
             menu_box.show_all ();
 
             var menu = new Gtk.Popover (null);
@@ -70,8 +73,12 @@ namespace Spectator.Widgets {
             app_menu.popover = menu;
             app_menu.show_all ();
 
-            preference_button.clicked.connect (() => {
-                // preference_clicked ();
+            preference_dialog_button.clicked.connect (() => {
+                preference_clicked ();
+            });
+
+            environment_dialog_button.clicked.connect (() => {
+                environments_clicked ();
             });
 
             title = Constants.RELEASE_NAME;
