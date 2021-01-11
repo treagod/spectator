@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 Marvin Ahlgrimm (https://github.com/treagod)
+* Copyright (c) 2021 Marvin Ahlgrimm (https://github.com/treagod)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
