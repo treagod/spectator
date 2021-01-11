@@ -101,6 +101,10 @@ namespace Spectator {
                 open_preferences ();
             });
 
+            this.headerbar.environments_clicked.connect (() => {
+                open_environments ();
+            });
+
             this.headerbar.new_collection.clicked.connect (() => {
                 this.create_collection_dialog ();
             });
@@ -108,6 +112,12 @@ namespace Spectator {
 
         private void open_preferences () {
             var dialog = new Dialogs.Preferences (this);
+
+            dialog.show_all ();
+        }
+
+        private void open_environments () {
+            var dialog = new Dialogs.Environments (this);
 
             dialog.show_all ();
         }
