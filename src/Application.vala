@@ -120,9 +120,10 @@ namespace Spectator {
                 var rs = new Repository.SQLiteRequest (db);
                 var cs = new Repository.SQLiteCollection (db);
                 var os = new Repository.SQLiteCustomOrder (db);
+                var es = new Repository.InMemoryEnvironment ();
                 this.load_legacy (cs, rs);
 
-                var window = new Spectator.Window(this, rs, cs, os);
+                var window = new Spectator.Window(this, rs, cs, os, es);
                 this.add_window (window);
 
                 window.show_content ();

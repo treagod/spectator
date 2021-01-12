@@ -19,29 +19,14 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace Spectator.Dialogs {
-    public class Environments : Gtk.Dialog {
-        public Environments (Gtk.Window parent) {
-            title = _("Environments");
-            border_width = 5;
-            deletable = false;
-            resizable = false;
-            transient_for = parent;
-            modal = true;
+namespace Spectator.Models {
+    public class Environment {
+        public string name { get; private set; }
+        public Gee.HashMap<string, string> variables { get; private set; }
 
-            add_button (_("Close"), Gtk.ResponseType.CLOSE);
-
-            response.connect ((source, id) => {
-                destroy ();
-            });
-
-            var content = get_content_area () as Gtk.Box;
-
-            content.width_request = 675;
-            content.height_request = 460;
-
-            content.margin = 15;
-            content.margin_top = 0;
+        public Environment (string n) {
+            name = n;
+            variables = new Gee.HashMap<string, string> ();
         }
     }
 }

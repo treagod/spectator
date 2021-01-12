@@ -31,6 +31,8 @@ namespace Spectator.Widgets.Sidebar {
 
     public class TitleBar : Gtk.Box {
         private Gtk.Label title;
+        private weak Window window;
+        private Gtk.Box environment_box;
         private string collection_title_text = _("My Enviroment");
         private string history_title_text = _("History");
 
@@ -55,7 +57,8 @@ namespace Spectator.Widgets.Sidebar {
             title_text = history_title_text;
         }
 
-        public TitleBar () {
+        public TitleBar (Window win) {
+            this.window = win;
             orientation = Gtk.Orientation.VERTICAL;
 
             title = new Gtk.Label (collection_title_text);
@@ -71,29 +74,9 @@ namespace Spectator.Widgets.Sidebar {
             box.halign = Gtk.Align.CENTER;
             var popover = new Gtk.Popover (down_arrow);
 
-            var pop_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 2);
-            var button = new Gtk.ModelButton ();
-                button.label = "My Environment";
-                button.clicked.connect (() => {
-                    title.label = "My Environement";
-                });
-                pop_box.add(button);
+            environment_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 2);
 
-                button = new Gtk.ModelButton ();
-                button.label = "Shourney";
-                button.clicked.connect (() => {
-                    title.label = "Shourney";
-                });
-                pop_box.add(button);
-
-                button = new Gtk.ModelButton ();
-                button.label = "My Website";
-                button.clicked.connect (() => {
-                    title.label = "My Website";
-                });
-                pop_box.add(button);
-                pop_box.show_all ();
-                popover.add (pop_box);
+            popover.add (environment_box);
 
             event_box.add (box);
             event_box.button_release_event.connect (() => {
@@ -136,6 +119,19 @@ namespace Spectator.Widgets.Sidebar {
         public void on_drag_leave (Gdk.DragContext context, uint time) {
             request_removed ();
         }
+
+        public void show_environments () {
+            foreach (var env in window.environment_service.get_environments ()) {
+                var button = new Gtk.ModelButton ();
+    
+                button.label = env.name;
+                button.clicked.connect (() => {
+                    title.label = env.name;
+                });
+                environment_box.add(button);
+                environment_box.show_all ();
+            }
+        }
     }
 
     public class Container : Gtk.Box {
@@ -166,8 +162,7 @@ namespace Spectator.Widgets.Sidebar {
             collection_scroll = new Gtk.ScrolledWindow (null, null);
             collection_scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             collection_scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
-
-            titlebar = new TitleBar ();
+            titlebar = new TitleBar (window);
 
             orientation = Gtk.Orientation.VERTICAL;
             width_request = 265;
@@ -390,6 +385,7 @@ This can't be undone!""".printf (collection.name)),
         public void show_items () {
             this.show_collection_items ();
             this.show_history_items ();
+            this.titlebar.show_environments ();
         }
 
         public void show_collection_items () {

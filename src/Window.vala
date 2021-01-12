@@ -37,6 +37,16 @@ namespace Spectator {
             }
         }
 
+        private Repository.IEnvironment _environment_service;
+        public Repository.IEnvironment environment_service {
+            get {
+                return this._environment_service;
+            }
+            private set {
+                this._environment_service = value;
+            }
+        }
+
         private Repository.ICollection _collection_service;
         public Repository.ICollection collection_service {
             get {
@@ -57,8 +67,11 @@ namespace Spectator {
             }
         }
 
-        public Window (Gtk.Application app, Repository.IRequest request_service,
-                       Repository.ICollection collection_service, Repository.ICustomOrder order_service) {
+        public Window (Gtk.Application app,
+                       Repository.IRequest request_service,
+                       Repository.ICollection collection_service,
+                       Repository.ICustomOrder order_service,
+                       Repository.IEnvironment environment) {
             var settings = Settings.get_instance ();
             Object (application: app);
 
@@ -73,6 +86,7 @@ namespace Spectator {
             this.request_service = request_service;
             this.collection_service = collection_service;
             this.order_service = order_service;
+            this.environment_service = environment;
         }
 
         public void show_content () {

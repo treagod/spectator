@@ -3,6 +3,7 @@ sources += files(
 	'Collection.vala',
 	'Request.vala',
     'Method.vala',
+    'Environment.vala',
     'RequestBody.vala',
 	'ResponseItem.vala',
     'Script.vala',
