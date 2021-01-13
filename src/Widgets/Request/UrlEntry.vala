@@ -67,8 +67,6 @@ namespace Spectator.Widgets.Request {
             popover.add (popover_box);
 
             url_entry.key_release_event.connect ((event) => {
-                notify_url_change (); // Todo: Only if not ctrl+space pressed?
-
                 if (event.state == Gdk.ModifierType.CONTROL_MASK && event.keyval == Gdk.Key.space) {
                     // Todo: Extract into variable engine?
                     var current_environment = window.environment_service.get_current_environment ();
@@ -85,12 +83,15 @@ namespace Spectator.Widgets.Request {
                         button.label = variable_name;
                         button.clicked.connect (() => {
                             variable_engine.insert_variable (variable_name);
+                            notify_url_change ();
                         });
                         popover_box.add (button);
                     }
 
                     popover.show_all ();
                     popover.popup ();
+                } else {
+                    notify_url_change ();
                 }
 
                 return true;
