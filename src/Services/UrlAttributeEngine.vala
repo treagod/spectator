@@ -43,6 +43,10 @@ namespace Spectator.Services {
             this.url_entry.delete_text.connect (handle_variable_deletion);
         }
 
+        public void insert_variable (string variable_name) {
+            url_entry.insert_at_cursor ("#{%s}".printf (variable_name));
+        }
+
         private void handle_variable_deletion (int start_pos, int end_pos) {
             var deleted_text = this.url_entry.text.substring(start_pos, end_pos - start_pos);
 

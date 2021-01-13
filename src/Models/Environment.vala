@@ -28,5 +28,17 @@ namespace Spectator.Models {
             name = n;
             variables = new Gee.HashMap<string, string> ();
         }
+
+        public Gee.Set<string> get_variable_names () {
+            return variables.keys;
+        }
+
+        public string? get_variable (string variable_name)  {
+            if (variables.has_key (variable_name)) {
+                return variables.get (variable_name);
+            }
+
+            return null;
+        }
     }
 }

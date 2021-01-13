@@ -33,7 +33,7 @@ namespace Spectator.Widgets.Sidebar {
         private Gtk.Label title;
         private weak Window window;
         private Gtk.Box environment_box;
-        private string collection_title_text = _("My Enviroment");
+        private string collection_title_text = _("Loading...");
         private string history_title_text = _("History");
 
         public signal void request_dropped (uint id);
@@ -131,6 +131,7 @@ namespace Spectator.Widgets.Sidebar {
                 environment_box.add(button);
                 environment_box.show_all ();
             }
+            title.label = window.environment_service.get_current_environment ().name;
         }
     }
 

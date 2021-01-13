@@ -22,13 +22,26 @@
 
 namespace Spectator.Repository {
     public class InMemoryEnvironment : IEnvironment, Object {
+        private Gee.ArrayList<Models.Environment> envs;
         public Gee.ArrayList<Models.Environment> get_environments () {
-            var envs = new Gee.ArrayList<Models.Environment> ();
-            envs.add (new Models.Environment ("My Environment"));
+            envs = new Gee.ArrayList<Models.Environment> ();
+            var env = new Models.Environment ("My Environment");
+            env.variables["id"] = "123";
+            env.variables["base_url"] = "http://localhost:3456";
+            envs.add (env);
             envs.add (new Models.Environment ("Development"));
             envs.add (new Models.Environment ("Woop"));
             
             return envs;
         }
+
+        public Models.Environment get_current_environment () {
+            return envs.get (0);
+        }
+
+        public void set_current_environment (Models.Environment env) {
+            // Do something
+        }
+
     }
 }

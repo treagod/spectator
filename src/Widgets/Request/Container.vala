@@ -22,6 +22,7 @@
 namespace Spectator.Widgets.Request {
     class Container : Gtk.Box, Interface {
         private UrlEntry url_entry;
+        private weak Window window;
         private KeyValueList header_view;
         private BodyView body_view;
         private KeyValueList url_params_view;
@@ -47,7 +48,8 @@ namespace Spectator.Widgets.Request {
             margin = 4;
         }
 
-        public Container () {
+        public Container (Window win) {
+            window = win;
             this.header_view = create_header_view ();
             this.url_params_view = create_url_params_view ();
             this.url_entry = create_url_entry ();
@@ -158,7 +160,7 @@ namespace Spectator.Widgets.Request {
         }
 
         private UrlEntry create_url_entry () {
-            var url_entry = new UrlEntry ();
+            var url_entry = new UrlEntry (window);
             url_entry.margin_bottom = 7;
 
             url_entry.url_changed.connect ((url) => {

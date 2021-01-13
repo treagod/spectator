@@ -71,7 +71,7 @@ namespace Spectator.Widgets {
 
         public RequestResponsePane (Spectator.Window window) {
             this.window = window;
-            this.request_view = new Request.Container ();
+            this.request_view = new Request.Container (window);
             this.current_response_view = new Response.Container ();
             this.sending_service = new SendingService ();
             response_views = new Gee.HashMap<uint, Response.Container> ();

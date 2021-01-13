@@ -19,6 +19,16 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
+private void calculate_position (out Gdk.Rectangle rectangle, Pango.Layout layout, int cursor_position) {
+    var rec = layout.index_to_pos (cursor_position + 1);
+    rectangle = Gdk.Rectangle ();
+    rectangle.height = 20;
+    rectangle.width = rec.width / Pango.SCALE;
+    rectangle.x = (rec.x / Pango.SCALE);
+    rectangle.y = 0;
+
+}
+
 namespace Spectator.Widgets.Request {
     public class UrlEntry : Gtk.Grid {
         private Gtk.ComboBoxText method_box;
@@ -38,7 +48,7 @@ namespace Spectator.Widgets.Request {
             url_changed (url_entry.text);
         }
 
-        public UrlEntry () {
+        public UrlEntry (Window window) {
 
             init_method_box ();
             init_url_entry ();
@@ -48,28 +58,37 @@ namespace Spectator.Widgets.Request {
 
             popover = new Gtk.Popover (url_entry);
             popover_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
-            popover.add(popover_box);
             popover.set_position(Gtk.PositionType.BOTTOM);
             popover.closed.connect (() => {
                 foreach (var child in popover_box.get_children ()) {
                     popover_box.remove (child);
                 }
             });
+            popover.add (popover_box);
 
             url_entry.key_release_event.connect ((event) => {
-                notify_url_change ();
+                notify_url_change (); // Todo: Only if not ctrl+space pressed?
 
                 if (event.state == Gdk.ModifierType.CONTROL_MASK && event.keyval == Gdk.Key.space) {
-                    var layout = url_entry.get_layout ();
-                    var index = url_entry.text_index_to_layout_index (url_entry.cursor_position);
-                    var rec = layout.index_to_pos (index + 1);
-                    r = Gdk.Rectangle ();
-                    r.height = 20;
-                    r.width = rec.width / Pango.SCALE;
-                    r.x = (rec.x / Pango.SCALE);
-                    r.y = 0;
+                    // Todo: Extract into variable engine?
+                    var current_environment = window.environment_service.get_current_environment ();
+                    calculate_position (
+                        out r,
+                        url_entry.get_layout (),
+                        url_entry.text_index_to_layout_index (url_entry.cursor_position)
+                    );
                     popover.set_relative_to (url_entry);
                     popover.set_pointing_to (r);
+
+                    foreach (var variable_name in current_environment.get_variable_names ()) {
+                        var button = new Gtk.ModelButton ();
+                        button.label = variable_name;
+                        button.clicked.connect (() => {
+                            variable_engine.insert_variable (variable_name);
+                        });
+                        popover_box.add (button);
+                    }
+
                     popover.show_all ();
                     popover.popup ();
                 }

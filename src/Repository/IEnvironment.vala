@@ -23,5 +23,7 @@
 namespace Spectator.Repository {
     public interface IEnvironment : Object {
         public abstract Gee.ArrayList<Models.Environment> get_environments ();
+        public abstract Models.Environment get_current_environment ();
+        public abstract void set_current_environment (Models.Environment env);
     }
 }
