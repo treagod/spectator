@@ -200,7 +200,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         }
 
         public void add_request (Models.Request request) {
-            var request_list_item = new RequestListItem (request.id, request.name, request.uri, request.method);
+            var request_list_item = new RequestListItem (window.variable_resolver, request.id, request.name, request.uri, request.method);
             request_list_item.activate_drag_and_drop ();
 
             this.add (request_list_item);
@@ -232,7 +232,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         }
 
         public void add_collection (Models.Collection collection) {
-            var dropdown = new Dropdown (collection);
+            var dropdown = new Dropdown (window, collection);
 
             dropdown.item_edit.connect ((request) => {
                 item_edit (request);

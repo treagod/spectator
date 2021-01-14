@@ -24,6 +24,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         public delegate void ItemIterator (RequestListItem item);
         private static string collection_open_icon = "folder-open";
         private static string collection_closed_icon = "folder";
+        private weak Window window;
 
         public signal void item_edit (Models.Request request);
         public signal void item_clone (Models.Request request);
@@ -90,7 +91,7 @@ namespace Spectator.Widgets.Sidebar.Collection {
         }
 
         public RequestListItem add_request (Models.Request request) {
-            var request_list_item = new RequestListItem (request.id, request.name, request.uri, request.method);
+            var request_list_item = new RequestListItem (window.variable_resolver, request.id, request.name, request.uri, request.method);
             request_list_item.activate_drag_and_drop ();
 
             this.item_box.add (request_list_item);
@@ -120,7 +121,8 @@ namespace Spectator.Widgets.Sidebar.Collection {
             return request_list_item;
         }
 
-        public Dropdown (Models.Collection collection) {
+        public Dropdown (Window win, Models.Collection collection) {
+            window = win;
             this.collection_id = collection.id;
             this.box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 3);
             this.item_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 2);

@@ -19,20 +19,32 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-
 namespace Spectator.Repository {
     public class InMemoryEnvironment : IEnvironment, Object {
         private Gee.ArrayList<Models.Environment> envs;
-        public Gee.ArrayList<Models.Environment> get_environments () {
+        
+        public InMemoryEnvironment () {
             envs = new Gee.ArrayList<Models.Environment> ();
             var env = new Models.Environment ("My Environment");
-            env.variables["id"] = "123";
+            env.variables["id"] = "5";
             env.variables["base_url"] = "http://localhost:3456";
+            env.variables["placeholder"] = "https://jsonplaceholder.typicode.com";
             envs.add (env);
             envs.add (new Models.Environment ("Development"));
             envs.add (new Models.Environment ("Woop"));
-            
+        }
+        public Gee.ArrayList<Models.Environment> get_environments () {
             return envs;
+        }
+
+        public Models.Environment? get_environment_by_name (string name) {
+            foreach (var env in envs) {
+                if (env.name == name ) {
+                    return env;
+                }
+            }
+
+            return null;
         }
 
         public Models.Environment get_current_environment () {
@@ -43,5 +55,16 @@ namespace Spectator.Repository {
             // Do something
         }
 
+        public void create_environment (string name) throws RecordExistsError {
+            var env = new Models.Environment (name);
+
+            foreach (var e in envs) {
+                if (e.name == name) {
+                    throw new RecordExistsError.CODE_1A (_("Environment name already exists"));
+                }
+            }
+
+            envs.add (env);
+        }
     }
 }

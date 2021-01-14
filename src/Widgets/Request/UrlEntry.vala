@@ -19,25 +19,13 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-private void calculate_position (out Gdk.Rectangle rectangle, Pango.Layout layout, int cursor_position) {
-    var rec = layout.index_to_pos (cursor_position + 1);
-    rectangle = Gdk.Rectangle ();
-    rectangle.height = 20;
-    rectangle.width = rec.width / Pango.SCALE;
-    rectangle.x = (rec.x / Pango.SCALE);
-    rectangle.y = 0;
-
-}
-
 namespace Spectator.Widgets.Request {
     public class UrlEntry : Gtk.Grid {
         private Gtk.ComboBoxText method_box;
         private Gtk.Entry url_entry;
         private Services.UrlVariableEngine variable_engine;
         private bool processing = false;
-        private Gtk.Box popover_box;
-        private Gtk.Popover popover;
-        private Gdk.Rectangle r;
+        private Popover popover;
 
         public signal void url_changed (string url);
         public signal void method_changed (Models.Method method);
@@ -48,48 +36,23 @@ namespace Spectator.Widgets.Request {
             url_changed (url_entry.text);
         }
 
-        public UrlEntry (Window window) {
+        public UrlEntry (Repository.IEnvironment envs) {
 
             init_method_box ();
             init_url_entry ();
             margin_top = 2;
             margin_bottom = 1;
             variable_engine = new Services.UrlVariableEngine (url_entry);
+            popover = new Popover (url_entry, envs);
 
-            popover = new Gtk.Popover (url_entry);
-            popover_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
-            popover.set_position(Gtk.PositionType.BOTTOM);
-            popover.closed.connect (() => {
-                foreach (var child in popover_box.get_children ()) {
-                    popover_box.remove (child);
-                }
+            popover.variable_selected.connect ((name) => {
+                variable_engine.insert_variable (name);
+                notify_url_change ();
             });
-            popover.add (popover_box);
 
             url_entry.key_release_event.connect ((event) => {
                 if (event.state == Gdk.ModifierType.CONTROL_MASK && event.keyval == Gdk.Key.space) {
-                    // Todo: Extract into variable engine?
-                    var current_environment = window.environment_service.get_current_environment ();
-                    calculate_position (
-                        out r,
-                        url_entry.get_layout (),
-                        url_entry.text_index_to_layout_index (url_entry.cursor_position)
-                    );
-                    popover.set_relative_to (url_entry);
-                    popover.set_pointing_to (r);
-
-                    foreach (var variable_name in current_environment.get_variable_names ()) {
-                        var button = new Gtk.ModelButton ();
-                        button.label = variable_name;
-                        button.clicked.connect (() => {
-                            variable_engine.insert_variable (variable_name);
-                            notify_url_change ();
-                        });
-                        popover_box.add (button);
-                    }
-
-                    popover.show_all ();
-                    popover.popup ();
+                    popover.show_variables ();
                 } else {
                     notify_url_change ();
                 }

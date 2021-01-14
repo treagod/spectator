@@ -20,8 +20,25 @@
 */
 
 namespace Spectator.Dialogs {
+    public class EnvironmentRow : Gtk.ListBoxRow {
+        public string env_name;
+        
+        public EnvironmentRow (string n) {
+            env_name = n;
+            var label = new Gtk.Label(env_name);
+            label.halign = Gtk.Align.START;
+            add (label);
+        }
+    }
     public class Environments : Gtk.Dialog {
-        public Environments (Gtk.Window parent) {
+        public Gtk.ListBox environment_list;
+        private EnvironmentVariables environment_variables;
+
+        construct {
+            use_header_bar = 1;
+        }
+
+        public Environments (Window parent) {
             title = _("Environments");
             border_width = 5;
             deletable = false;
@@ -30,18 +47,74 @@ namespace Spectator.Dialogs {
             modal = true;
 
             add_button (_("Close"), Gtk.ResponseType.CLOSE);
-
             response.connect ((source, id) => {
                 destroy ();
             });
 
+            build_headerbar (parent.environment_service);
+            build_content (parent.environment_service);
+        }
+
+        private void build_headerbar (Repository.IEnvironment repository) {
+            var headerbar = get_header_bar ();
+            var new_environment = new Gtk.Button.from_icon_name ("bookmark-new", Gtk.IconSize.LARGE_TOOLBAR);
+            new_environment.tooltip_text = _("Create Environment");
+            new_environment.clicked.connect (() => {
+                var dialog = new NewEnvironment ((Window) this.transient_for);
+                dialog.environemnt_created.connect (() => {
+                    environment_list.foreach((w) => {
+                        environment_list.remove (w);
+                    });
+
+                    foreach (var env in repository.get_environments ()) {
+                        environment_list.add (new EnvironmentRow (env.name));
+                    }
+                    environment_list.show_all ();
+                });
+                dialog.show_all ();
+            });
+            headerbar.pack_start (new_environment);
+        }
+
+        private void build_content (Repository.IEnvironment environment_repository) {
             var content = get_content_area () as Gtk.Box;
+            var paned = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
+            
+            environment_list = new Gtk.ListBox ();
+            environment_variables = new EnvironmentVariables (environment_repository);
+            environment_list.selection_mode = Gtk.SelectionMode.SINGLE;
+
+            foreach (var env in environment_repository.get_environments ()) {
+                environment_list.add (new EnvironmentRow (env.name));
+            }
+
+            environment_list.row_activated.connect ((r) => {
+                var env_row = (EnvironmentRow) r;
+                environment_variables.show_environment_variables (env_row.env_name);
+            });
+            
+            paned.pack1 (environment_list, false, true);
+            paned.pack2 (environment_variables, true, false);
+
+            var current_env = environment_repository.get_current_environment ();
+            
+            // Select row
+            environment_list.foreach((w) => {
+                var row = (EnvironmentRow) w;
+
+                if (row.env_name == current_env.name) {
+                    environment_list.select_row (row);
+
+                    environment_variables.show_environment_variables (row.env_name);
+                    return;
+                }
+            });
 
             content.width_request = 675;
             content.height_request = 460;
 
-            content.margin = 15;
-            content.margin_top = 0;
+            content.add (paned);
+            content.show_all ();
         }
     }
 }

@@ -78,8 +78,15 @@ namespace Spectator.Widgets.Sidebar {
 
             popover.add (environment_box);
 
+            popover.closed.connect (() => {
+                environment_box.foreach ((w) => {
+                    environment_box.remove (w);
+                });
+            });
+
             event_box.add (box);
             event_box.button_release_event.connect (() => {
+                show_environments ();
                 popover.popup ();
                 return true;
             });
@@ -386,7 +393,6 @@ This can't be undone!""".printf (collection.name)),
         public void show_items () {
             this.show_collection_items ();
             this.show_history_items ();
-            this.titlebar.show_environments ();
         }
 
         public void show_collection_items () {

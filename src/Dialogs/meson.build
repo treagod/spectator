@@ -7,6 +7,8 @@ sources += files(
 	'Collection/UpdateCollection.vala',
 	'Alert.vala',
 	'Environments.vala',
+	'Environment/NewEnvironment.vala',
+	'Environment/EnvironmentVariables.vala',
 	'Preferences.vala',
 	'Preference/General.vala',
 	'Preference/Network.vala',

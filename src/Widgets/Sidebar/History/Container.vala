@@ -123,7 +123,7 @@ namespace Spectator.Widgets.Sidebar.History {
         }
 
         private void add_history_item (string key_date, Models.Request request) {
-            var request_list_item = new RequestListItem (request.id, request.name, request.uri, request.method);
+            var request_list_item = new RequestListItem (window.variable_resolver ,request.id, request.name, request.uri, request.method);
 
             request_list_item.clicked.connect ((event) => {
                 this.request_item_selected (request.id);

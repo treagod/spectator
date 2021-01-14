@@ -26,6 +26,7 @@ namespace Spectator {
         private Widgets.HeaderBar headerbar;
         private Widgets.Sidebar.Container sidebar;
         private Widgets.Content content;
+        public  Services.VariableResolver variable_resolver { get; private set; }
 
         private Repository.IRequest _request_service;
         public Repository.IRequest request_service {
@@ -87,6 +88,11 @@ namespace Spectator {
             this.collection_service = collection_service;
             this.order_service = order_service;
             this.environment_service = environment;
+            this.variable_resolver = new Services.VariableResolver (environment);
+            this.headerbar = new Widgets.HeaderBar ();
+            this.setup_headerbar_events ();
+            this.set_titlebar (this.headerbar);
+            this.create_paned ();
         }
 
         public void show_content () {
@@ -99,11 +105,6 @@ namespace Spectator {
             provider.load_from_resource ("/com/github/treagod/spectator/stylesheet.css");
             Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (),
                                                       provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-
-            this.headerbar = new Widgets.HeaderBar ();
-            this.setup_headerbar_events ();
-            this.set_titlebar (this.headerbar);
-            this.create_paned ();
         }
 
         private void setup_headerbar_events () {

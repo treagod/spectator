@@ -69,11 +69,31 @@ namespace Spectator.Widgets {
             }
         }
 
+        private string resolve_variables (string url) {
+            // TODO: Refactor. Just proof of concept
+            try {
+                var regex = new Regex("#{(.*)}", RegexCompileFlags.UNGREEDY);
+                return regex.replace_eval (url, url.length, 0, 0, (match_info, builder) => {
+                    var current_environment = window.environment_service.get_current_environment ();
+                    var variable_name = current_environment.get_variable (match_info.fetch (1));
+    
+                    if (variable_name != null) {
+                        builder.append (variable_name);
+                    } else {
+                        builder.append ("UNDEF_VARIABLE");
+                    }
+                    return false;
+                });
+            } catch (RegexError error) {
+                return "Could not parse URL";
+            }
+        }
+
         public RequestResponsePane (Spectator.Window window) {
             this.window = window;
             this.request_view = new Request.Container (window);
             this.current_response_view = new Response.Container ();
-            this.sending_service = new SendingService ();
+            this.sending_service = new SendingService (window.environment_service);
             response_views = new Gee.HashMap<uint, Response.Container> ();
 
             this.sending_service.request_script_output.connect ((id, str, type) => {
@@ -144,8 +164,7 @@ namespace Spectator.Widgets {
 
             request_view.request_activated.connect (() => {
                 var req = this.window.request_service.get_request_by_id (this.active_id);
-
-                // if (valid_uri == false) {
+                req.uri = resolve_variables (req.uri);
 
                 if (Services.Utilities.valid_uri_string (req.uri)) {
                     this.request_view.set_request_status (Models.RequestStatus.SENDING);

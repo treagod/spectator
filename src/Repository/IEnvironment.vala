@@ -21,9 +21,15 @@
 
 
 namespace Spectator.Repository {
+    public errordomain RecordExistsError {
+        CODE_1A
+    }
+
     public interface IEnvironment : Object {
         public abstract Gee.ArrayList<Models.Environment> get_environments ();
+        public abstract Models.Environment? get_environment_by_name (string name);
         public abstract Models.Environment get_current_environment ();
         public abstract void set_current_environment (Models.Environment env);
+        public abstract void create_environment (string name) throws RecordExistsError;
     }
 }

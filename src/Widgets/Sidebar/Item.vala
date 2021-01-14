@@ -28,6 +28,7 @@ namespace Spectator.Widgets.Sidebar {
         private Gtk.Label url;
         private Gtk.Revealer motion_revealer;
         private Gtk.Revealer content;
+        private weak Services.VariableResolver variable_resolver;
         public uint id { get; private set; }
 
         public signal void clicked ();
@@ -63,7 +64,8 @@ namespace Spectator.Widgets.Sidebar {
             }
         }
 
-        public RequestListItem (uint id, string name, string request_url, Models.Method request_method) {
+        public RequestListItem (Services.VariableResolver rsv, uint id, string name, string request_url, Models.Method request_method) {
+            variable_resolver = rsv;
             this.id = id;
             item_box = new Gtk.EventBox ();
             var info_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
@@ -240,7 +242,7 @@ namespace Spectator.Widgets.Sidebar {
 
         private void set_formatted_uri (string request_url) {
             if (request_url.length > 0) {
-                url.label = "<small><i>" + escape_url (request_url) + "</i></small>";
+                url.label = "<small><i>" + escape_url (variable_resolver.resolve_variables (request_url)) + "</i></small>";
             } else {
                 url.label = no_url;
             }

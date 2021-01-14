@@ -24,8 +24,10 @@ namespace Spectator {
         public signal void request_script_output (uint id, string str, Services.ConsoleMessageType mt);
         private Gee.HashMap<uint, Services.RequestAction> running_actions;
         private Services.ScriptRuntime javascript_runtime;
+        private weak Repository.IEnvironment environments;
 
-        public SendingService () {
+        public SendingService (Repository.IEnvironment envs) {
+            this.environments = envs;
             this.running_actions = new Gee.HashMap<uint, Services.RequestAction> ();
             this.javascript_runtime = new Services.ScriptRuntime ();
         }

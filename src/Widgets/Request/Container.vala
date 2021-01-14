@@ -160,7 +160,7 @@ namespace Spectator.Widgets.Request {
         }
 
         private UrlEntry create_url_entry () {
-            var url_entry = new UrlEntry (window);
+            var url_entry = new UrlEntry (window.environment_service);
             url_entry.margin_bottom = 7;
 
             url_entry.url_changed.connect ((url) => {
