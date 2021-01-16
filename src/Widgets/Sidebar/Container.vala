@@ -31,14 +31,14 @@ namespace Spectator.Widgets.Sidebar {
 
     public class TitleBar : Gtk.Box {
         private Gtk.Label title;
-        private weak Window window;
+        private weak Repository.IEnvironment environments;
         private Gtk.Box environment_box;
-        private string collection_title_text = _("Loading...");
-        private string history_title_text = _("History");
+        public bool source_destination;
 
         public signal void request_dropped (uint id);
         public signal void request_dragged ();
         public signal void request_removed ();
+        public signal void environment_changed ();
 
         public string title_text {
             get {
@@ -49,19 +49,12 @@ namespace Spectator.Widgets.Sidebar {
             }
         }
 
-        public void show_collection () {
-            title_text = collection_title_text;
-        }
-
-        public void show_history () {
-            title_text = history_title_text;
-        }
-
-        public TitleBar (Window win) {
-            this.window = win;
+        public TitleBar (Repository.IEnvironment envs) {
+            environments = envs;
             orientation = Gtk.Orientation.VERTICAL;
+            source_destination = true;
 
-            title = new Gtk.Label (collection_title_text);
+            title = new Gtk.Label (envs.get_current_environment ().name);
             title.get_style_context ().add_class ("h2");
             title.halign = Gtk.Align.CENTER;
             title.margin = 5;
@@ -109,7 +102,7 @@ namespace Spectator.Widgets.Sidebar {
         private void on_drag_data_received (Gdk.DragContext context, int x, int y,
             Gtk.SelectionData selection_data, uint target_type, uint time) {
             /* Drag & Drop is only activated for collection mode */
-            if (title.label == collection_title_text) {
+            if (source_destination) {
                 var row = ((Gtk.Widget[]) selection_data.get_data ())[0];
                 var source = (RequestListItem) row;
 
@@ -128,17 +121,19 @@ namespace Spectator.Widgets.Sidebar {
         }
 
         public void show_environments () {
-            foreach (var env in window.environment_service.get_environments ()) {
+            foreach (var env in environments.get_environments ()) {
                 var button = new Gtk.ModelButton ();
     
                 button.label = env.name;
                 button.clicked.connect (() => {
                     title.label = env.name;
+                    environments.set_current_environment (env);
+                    environment_changed ();
                 });
                 environment_box.add(button);
                 environment_box.show_all ();
             }
-            title.label = window.environment_service.get_current_environment ().name;
+            title.label = environments.get_current_environment ().name;
         }
     }
 
@@ -170,7 +165,7 @@ namespace Spectator.Widgets.Sidebar {
             collection_scroll = new Gtk.ScrolledWindow (null, null);
             collection_scroll.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
             collection_scroll.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
-            titlebar = new TitleBar (window);
+            titlebar = new TitleBar (window.environment_service);
 
             orientation = Gtk.Orientation.VERTICAL;
             width_request = 265;
@@ -309,6 +304,10 @@ This can't be undone!""".printf (collection.name)),
                 this.show_items ();
             });
 
+            titlebar.environment_changed.connect (() => {
+                this.show_items ();
+            });
+
             titlebar.request_dragged.connect (() => {
                 collection.drag_reavel_top ();
             });
@@ -341,10 +340,10 @@ This can't be undone!""".printf (collection.name)),
             mode_buttons.mode_changed.connect (() => {
                 if (mode_buttons.selected == 0) {
                     stack.set_visible_child (collection_scroll);
-                    titlebar.show_collection ();
+                    titlebar.source_destination = true;
                 } else {
                     stack.set_visible_child (history_scroll);
-                    titlebar.show_history ();
+                    titlebar.source_destination = false;
                 }
             });
 
@@ -373,13 +372,13 @@ This can't be undone!""".printf (collection.name)),
         public void show_history () {
             mode_buttons.selected = 1;
             stack.set_visible_child (history_scroll);
-            titlebar.show_history ();
+            titlebar.source_destination = false;
         }
 
         public void show_collection () {
             mode_buttons.selected = 0;
             stack.set_visible_child (collection_scroll);
-            titlebar.show_collection ();
+            titlebar.source_destination = true;
         }
 
         public void add_collection (Models.Collection model) {

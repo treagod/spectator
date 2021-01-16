@@ -37,6 +37,7 @@ namespace Spectator.Widgets {
         public signal void key_value_updated (Pair item);
         public signal void request_edit_clicked (uint id);
         public signal void send_error (string error);
+        public signal void clear_error ();
         public signal void request_sent (uint id);
 
         public void display_request (uint id) {
@@ -78,7 +79,7 @@ namespace Spectator.Widgets {
                     var variable_name = current_environment.get_variable (match_info.fetch (1));
     
                     if (variable_name != null) {
-                        builder.append (variable_name);
+                        builder.append (variable_name.key);
                     } else {
                         builder.append ("UNDEF_VARIABLE");
                     }
@@ -164,11 +165,37 @@ namespace Spectator.Widgets {
 
             request_view.request_activated.connect (() => {
                 var req = this.window.request_service.get_request_by_id (this.active_id);
-                req.uri = resolve_variables (req.uri);
+                var result  = window.variable_resolver.resolve_variables (req.uri);
+
+                if (!result.has_errors ()) {
+                    req.uri = result.resolved_text;
+                } else {
+                    if (result.unresolved_variable_names.size == 1) {
+                        this.send_error ("%s is not defined".printf (result.unresolved_variable_names.get (0)));
+                    } else {
+                        var builder = new StringBuilder ();
+                        var first = true;
+                        
+                        foreach (var variable in result.unresolved_variable_names) {
+                            if (first) {
+                                first = false;
+                                builder.append (variable);
+                            } else {
+                                builder.append (", %s".printf (variable));
+                            }
+                        }
+
+                        builder.append (" are not defined");
+
+                        this.send_error (builder.str);
+                    }
+                    return;
+                }
 
                 if (Services.Utilities.valid_uri_string (req.uri)) {
                     this.request_view.set_request_status (Models.RequestStatus.SENDING);
                     this.sending_service.send_request.begin (req);
+                    this.clear_error ();
                 } else {
                     this.send_error ("Invalid URI");
                 }

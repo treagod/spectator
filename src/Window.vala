@@ -133,6 +133,11 @@ namespace Spectator {
 
         private void open_environments () {
             var dialog = new Dialogs.Environments (this);
+            
+
+            dialog.destroy.connect (() => {
+                this.sidebar.show_items ();
+            });
 
             dialog.show_all ();
         }

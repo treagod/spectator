@@ -110,7 +110,7 @@ namespace Spectator.Dialogs {
                 }
             });
 
-            content.width_request = 675;
+            content.width_request = 670;
             content.height_request = 460;
 
             content.add (paned);

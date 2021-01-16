@@ -59,12 +59,12 @@ namespace Spectator.Widgets.Request {
 
             var variables_exists = false;
 
-            foreach (var variable_name in current_environment.get_variable_names ()) {
+            foreach (var variable in environments.get_environment_variables (current_environment.name)) {
                 variables_exists = true;
                 var button = new Gtk.ModelButton ();
-                button.label = variable_name;
+                button.label = variable.key;
                 button.clicked.connect (() => {
-                    variable_selected (variable_name);
+                    variable_selected (variable.key);
                 });
                 popover_box.add (button);
             }

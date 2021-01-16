@@ -148,6 +148,10 @@ namespace Spectator.Widgets {
                 this.set_error (error);
             });
 
+            request.clear_error.connect (() => {
+                this.reset_infobar ();
+            });
+
             request.method_changed.connect ((method) => {
                 method_changed (this.active_id, method);
             });

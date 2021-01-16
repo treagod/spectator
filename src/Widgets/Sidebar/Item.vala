@@ -241,8 +241,13 @@ namespace Spectator.Widgets.Sidebar {
         }
 
         private void set_formatted_uri (string request_url) {
+            var result = variable_resolver.resolve_variables (request_url);
             if (request_url.length > 0) {
-                url.label = "<small><i>" + escape_url (variable_resolver.resolve_variables (request_url)) + "</i></small>";
+                if (!result.has_errors ()) {
+                    url.label = "<small><i>" + escape_url (result.resolved_text) + "</i></small>";
+                } else {
+                    url.label = "<small><i><span color=\"#a10705\">" + escape_url (result.resolved_text) + "</span></i></small>";
+                }
             } else {
                 url.label = no_url;
             }

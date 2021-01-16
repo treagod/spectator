@@ -117,14 +117,6 @@ namespace Spectator {
         protected override void activate () {
             this.load_database ();
             if (!running) {
-                
-                
-                //  while (info.matches ()) {
-                //      print ("%s\n", info.fetch (0));
-                //      print ("%s\n", info.fetch (1));
-                //      info.next ();
-                //  }
-
                 var rs = new Repository.SQLiteRequest (db);
                 var cs = new Repository.SQLiteCollection (db);
                 var os = new Repository.SQLiteCustomOrder (db);

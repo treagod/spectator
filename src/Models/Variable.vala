@@ -20,22 +20,18 @@
 */
 
 namespace Spectator.Models {
-    public class Environment {
-        public string name { get; private set; }
-        public Gee.HashMap<string, Models.Variable> variables { get; private set; }
+    //[Compact] Maybe in a moderner compiler?
+    public class Variable {
+        public string id;
+        public string key;
+        public string val;
+        public DateTime created_at { get; private set; }
 
-        public Environment (string n) {
-            name = n;
-            variables = new Gee.HashMap<string, Models.Variable> ();
-        }
-
-        public Models.Variable? get_variable (string id)  {
-            foreach (var v in variables.values) {
-                if (v.key == id) {
-                    return v;
-                }
-            }
-            return null;
+        public Variable (string k, string v) {
+            id = Uuid.string_random ();
+            created_at = new DateTime.now_utc ();
+            key = k;
+            val = v;
         }
     }
 }

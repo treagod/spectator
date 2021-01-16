@@ -20,8 +20,22 @@
 */
 
 namespace Spectator.Services {
+    public class ResolveResult {
+        public Gee.ArrayList<string> unresolved_variable_names { get; private set; }
+        public string resolved_text { get; private set; }
+
+        public ResolveResult (string text, Gee.ArrayList<string> errors) {
+            resolved_text = text;
+            unresolved_variable_names = errors;
+        }
+
+        public bool has_errors () {
+            return unresolved_variable_names.size > 0;
+        }
+    }
+    
     public class VariableResolver {
-        private weak Repository.IEnvironment environments;
+        weak Repository.IEnvironment environments;
         Regex variable_regex;
 
         public VariableResolver (Repository.IEnvironment envs) {
@@ -34,26 +48,43 @@ namespace Spectator.Services {
             }
         }
 
-        public void resolve_request_variables (ref Models.Request request) {
-            request.uri = resolve_variables (request.uri);
+        public ResolveResult? resolve_request_variables (ref Models.Request request) {
+            var result = resolve_variables (request.uri);
+
+            if (!result.has_errors ()) {
+                request.uri = result.resolved_text;
+            } else {
+                return result;
+            }
+
+            return null;
         }
 
-        public string resolve_variables (string url) {
+        public ResolveResult resolve_variables (string url) {
             // TODO: Refactor. Just proof of concept
             try {
-                return variable_regex.replace_eval (url, url.length, 0, 0, (match_info, builder) => {
+                var errors = new Gee.ArrayList<string> ();
+                var resolved_text = variable_regex.replace_eval (url, url.length, 0, 0, (match_info, builder) => {
+                    var variable_name = match_info.fetch (1);
                     var current_environment = environments.get_current_environment ();
-                    var variable_name = current_environment.get_variable (match_info.fetch (1));
+                    var variable = current_environment.get_variable (match_info.fetch (1));
     
-                    if (variable_name != null) {
-                        builder.append (variable_name);
+                    if (variable != null) {
+                        builder.append (variable.val);
                     } else {
-                        builder.append ("UNDEF_VARIABLE");
+                        builder.append (variable_name);
+                        errors.add (variable_name);
                     }
                     return false;
                 });
+
+                return new ResolveResult (resolved_text, errors);
             } catch (RegexError error) {
-                return "Could not parse URL";
+                var errors = new Gee.ArrayList<string> ();
+                errors.add ("Could not parse text");
+                var result = new ResolveResult ("", errors);
+                
+                return result;
             }
         }
     }
