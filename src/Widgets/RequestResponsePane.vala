@@ -74,7 +74,7 @@ namespace Spectator.Widgets {
             this.window = window;
             this.request_view = new Request.Container (window);
             this.current_response_view = new Response.Container ();
-            this.sending_service = new SendingService (window.environment_service);
+            this.sending_service = new SendingService ();
             response_views = new Gee.HashMap<uint, Response.Container> ();
 
             this.sending_service.request_script_output.connect ((id, str, type) => {
