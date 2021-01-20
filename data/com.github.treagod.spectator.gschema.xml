@@ -125,6 +125,12 @@
             <summary>Editor Scheme.</summary>
             <description>Specifies which color scheme shall be used for the editor.</description>
         </key>
+
+        <key name="current-environment" type="s">
+            <default>''</default>
+            <summary>Current Environment.</summary>
+            <description>Specifies the name of the current environment.</description>
+        </key>
     </schema>
 </schemalist>
 

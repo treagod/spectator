@@ -49,6 +49,7 @@ namespace Spectator {
         public string font { get; set; }
         public bool use_default_font { get; set; }
         public string editor_scheme { get; set; }
+        public string current_environment { get; set; }
 
 
         public static Settings get_instance () {

@@ -25,7 +25,7 @@ namespace Spectator.Models {
         public string id;
         public string key;
         public string val;
-        public DateTime created_at { get; private set; }
+        public DateTime created_at;
 
         public Variable (string k, string v) {
             id = Uuid.string_random ();
@@ -33,5 +33,7 @@ namespace Spectator.Models {
             key = k;
             val = v;
         }
+
+        public Variable.empty () {}
     }
 }

@@ -36,5 +36,7 @@ namespace Spectator.Repository {
         public abstract Gee.ArrayList<Models.Variable> get_environment_variables(string env_name);
         public abstract void update_variable_name_in_environment (Models.Environment env, string id, string key);
         public abstract void update_variable_value_in_environment (Models.Environment env, string id, string value1);
+        public abstract Models.Variable? get_variables_in_environment_by_name (string env_name, string variable_name);
+        public abstract Models.Variable? get_variables_in_current_environment_by_name (string variable_name);
     }
 }

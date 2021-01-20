@@ -65,6 +65,14 @@ namespace Spectator.Repository {
             return envs;
         }
 
+        public Models.Variable? get_variables_in_current_environment_by_name (string variable_name) {
+            return get_variables_in_environment_by_name ("current_env", variable_name);
+        }
+        
+        public Models.Variable? get_variables_in_environment_by_name (string env_name, string variable_name) {
+            return new Models.Variable ("asd", "asd");
+        }
+
         public Gee.ArrayList<Models.Variable> get_environment_variables (string env_name) {
             foreach (var env in envs) {
                 if (env.name == env_name) {

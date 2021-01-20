@@ -20,7 +20,7 @@
 */
 
 namespace Spectator.Services {
-    public class ResolveResult {
+    public class ResolveResult {        
         public Gee.ArrayList<string> unresolved_variable_names { get; private set; }
         public string resolved_text { get; private set; }
 
@@ -41,7 +41,7 @@ namespace Spectator.Services {
         public VariableResolver (Repository.IEnvironment envs) {
             environments = envs;
             try {
-                variable_regex = new Regex("#{(.*)}", RegexCompileFlags.UNGREEDY);
+                variable_regex = new Regex("#{(.*)}", RegexCompileFlags.UNGREEDY); // Todo: Cache Regex
             } catch (RegexError error) {
                 stderr.printf ("Unable to initialize regex\n");
                 Process.exit(1);
@@ -60,14 +60,12 @@ namespace Spectator.Services {
             return null;
         }
 
-        public ResolveResult resolve_variables (string url) {
-            // TODO: Refactor. Just proof of concept
+        public ResolveResult resolve_variables (string text) {
             try {
                 var errors = new Gee.ArrayList<string> ();
-                var resolved_text = variable_regex.replace_eval (url, url.length, 0, 0, (match_info, builder) => {
+                var resolved_text = variable_regex.replace_eval (text, text.length, 0, 0, (match_info, builder) => {
                     var variable_name = match_info.fetch (1);
-                    var current_environment = environments.get_current_environment ();
-                    var variable = current_environment.get_variable (match_info.fetch (1));
+                    var variable = environments.get_variables_in_current_environment_by_name (variable_name);
     
                     if (variable != null) {
                         builder.append (variable.val);

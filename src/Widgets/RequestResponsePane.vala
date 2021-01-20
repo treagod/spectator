@@ -70,26 +70,6 @@ namespace Spectator.Widgets {
             }
         }
 
-        private string resolve_variables (string url) {
-            // TODO: Refactor. Just proof of concept
-            try {
-                var regex = new Regex("#{(.*)}", RegexCompileFlags.UNGREEDY);
-                return regex.replace_eval (url, url.length, 0, 0, (match_info, builder) => {
-                    var current_environment = window.environment_service.get_current_environment ();
-                    var variable_name = current_environment.get_variable (match_info.fetch (1));
-    
-                    if (variable_name != null) {
-                        builder.append (variable_name.key);
-                    } else {
-                        builder.append ("UNDEF_VARIABLE");
-                    }
-                    return false;
-                });
-            } catch (RegexError error) {
-                return "Could not parse URL";
-            }
-        }
-
         public RequestResponsePane (Spectator.Window window) {
             this.window = window;
             this.request_view = new Request.Container (window);

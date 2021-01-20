@@ -21,21 +21,18 @@
 
 namespace Spectator.Models {
     public class Environment {
-        public string name { get; private set; }
+        public string name;
         public Gee.HashMap<string, Models.Variable> variables { get; private set; }
+        public DateTime created_at;
 
         public Environment (string n) {
             name = n;
             variables = new Gee.HashMap<string, Models.Variable> ();
+            created_at = new DateTime.now_utc ();
         }
 
-        public Models.Variable? get_variable (string id)  {
-            foreach (var v in variables.values) {
-                if (v.key == id) {
-                    return v;
-                }
-            }
-            return null;
+        public Environment.empty () {
+            variables = new Gee.HashMap<string, Models.Variable> ();
         }
     }
 }

@@ -2,6 +2,7 @@ sources += files(
 	'Utilities.vala',
     'ScriptWriter.vala',
     'VariableResolver.vala',
+    'WindowBuilder.vala',
 	'Settings.vala',
 	'JsonSerializer.vala',
 	'JsonDeserializer.vala',

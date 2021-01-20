@@ -23,6 +23,7 @@ namespace Spectator.Dialogs {
     public class NewEnvironment : Gtk.Dialog {
         private Gtk.Entry entry;
         private Gtk.Label warning;
+        private Gtk.Box message_box;
         private weak Repository.IEnvironment environment;
 
         public signal void environemnt_created ();
@@ -61,14 +62,17 @@ namespace Spectator.Dialogs {
                 }
             });
 
+            message_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
             var content = get_content_area () as Gtk.Box;
             content.pack_start (box);
+            content.pack_start (message_box);
 
             content.margin = 15;
             content.margin_top = 0;
         }
 
         private void create_environment () {
+            entry.get_style_context ().remove_class ("error");
             if (entry.text.length == 0) {
                 show_error (_("Environment name must not be empty"));
                 return;
@@ -84,13 +88,14 @@ namespace Spectator.Dialogs {
         }
 
         private void show_error (string warning_string) {
-            var content = get_content_area () as Gtk.Box;
-            content.remove (warning);
+            message_box.foreach ((w) => {
+                message_box.remove (w);
+            });
 
             warning = new Gtk.Label ("<span color=\"#a10705\">" + warning_string + "</span>");
             warning.use_markup = true;
             warning.margin = 5;
-            content.pack_start (warning, false, true, 0);
+            message_box.pack_start (warning, false, true, 0);
             show_all ();
             entry.get_style_context ().add_class ("error");
         }
