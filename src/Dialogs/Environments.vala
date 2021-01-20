@@ -56,7 +56,7 @@ namespace Spectator.Dialogs {
         }
 
         private void build_headerbar (Repository.IEnvironment repository) {
-            var headerbar = get_header_bar ();
+            var headerbar = (Gtk.HeaderBar) get_header_bar (); // Todo: Remove type-cast with modern compiler (Odin)
             var new_environment = new Gtk.Button.from_icon_name ("bookmark-new", Gtk.IconSize.LARGE_TOOLBAR);
             new_environment.tooltip_text = _("Create Environment");
             new_environment.clicked.connect (() => {
@@ -67,7 +67,8 @@ namespace Spectator.Dialogs {
                     });
 
                     foreach (var env in repository.get_environments ()) {
-                        environment_list.add (new EnvironmentRow (env.name));
+                        var new_row = new EnvironmentRow (env.name);
+                        environment_list.add (new_row);
                     }
                     environment_list.show_all ();
                 });

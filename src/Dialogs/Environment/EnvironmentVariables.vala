@@ -26,6 +26,8 @@ namespace Spectator.Dialogs {
         private Gtk.Label no_such_environment;
         private Gtk.Box variable_container;
         private string current_env_name;
+        private uint key_timeout_id;
+        private uint value_timeout_id;
 
         public signal void variable_added ();
 
@@ -77,12 +79,12 @@ namespace Spectator.Dialogs {
                         var variable_name_entry = new Gtk.Entry ();
                         variable_name_entry.text = variable.key;
                         variable_name_entry.changed.connect (() => {
-                            environments.update_variable_name_in_environment (env, variable.id, variable_name_entry.text);
+                            save_key_after_timeout (env, variable.id, variable_name_entry.text);
                         });
                         var variable_value_entry = new Gtk.Entry();
                         variable_value_entry.text = variable.val;
                         variable_value_entry.changed.connect (() => {
-                            environments.update_variable_value_in_environment (env, variable.id, variable_value_entry.text);
+                            save_value_after_timeout (env, variable.id, variable_value_entry.text);
                         });
                         var del_button = new Gtk.Button.from_icon_name ("window-close");
                         del_button.clicked.connect (() => {
@@ -102,5 +104,32 @@ namespace Spectator.Dialogs {
 
             show_all ();
         }
+
+        private void save_key_after_timeout (Models.Environment env, string id, string key) {
+            if (key_timeout_id > 0) {
+                Source.remove (key_timeout_id);
+                key_timeout_id = 0;
+            }
+
+            key_timeout_id = Timeout.add (275, () => {
+                environments.update_variable_name_in_environment (env, id, key);
+                key_timeout_id = 0;
+                return false;
+            });
+        }
+
+        private void save_value_after_timeout (Models.Environment env, string id, string val) {
+            if (value_timeout_id > 0) {
+                Source.remove (value_timeout_id);
+                value_timeout_id = 0;
+            }
+
+            value_timeout_id = Timeout.add (275, () => {
+                environments.update_variable_value_in_environment (env, id, val);
+                value_timeout_id = 0;
+                return false;
+            });
+        }
     }
 }
+

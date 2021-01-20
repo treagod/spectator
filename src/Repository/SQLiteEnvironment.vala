@@ -311,17 +311,8 @@ namespace Spectator.Repository {
                     create_environment (default_env_name);
                     env = get_environment_by_name (default_env_name);
                 } catch (RecordExistsError error) {
-                    try {
-                        // Retry in case Default Environment could not be created
-                        default_env_name = default_env_name + " 2";
-                        create_environment (default_env_name);
-                        env = get_environment_by_name (default_env_name);
-                    } catch (RecordExistsError error) {
-                        // Something more funamentally went wrong and Spectator should not
-                        // recover from this
-                        stderr.printf ("Error loading current environment\n");
-                        Process.exit(1);
-                    }
+                    set_current_environment (new Models.Environment (default_env_name));
+                    env = get_environment_by_name (default_env_name);
                 }
             }
             
