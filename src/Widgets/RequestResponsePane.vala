@@ -37,6 +37,7 @@ namespace Spectator.Widgets {
         public signal void key_value_updated (Pair item);
         public signal void request_edit_clicked (uint id);
         public signal void send_error (string error);
+        public signal void clear_error ();
         public signal void request_sent (uint id);
 
         public void display_request (uint id) {
@@ -71,7 +72,7 @@ namespace Spectator.Widgets {
 
         public RequestResponsePane (Spectator.Window window) {
             this.window = window;
-            this.request_view = new Request.Container ();
+            this.request_view = new Request.Container (window);
             this.current_response_view = new Response.Container ();
             this.sending_service = new SendingService ();
             response_views = new Gee.HashMap<uint, Response.Container> ();
@@ -144,12 +145,37 @@ namespace Spectator.Widgets {
 
             request_view.request_activated.connect (() => {
                 var req = this.window.request_service.get_request_by_id (this.active_id);
+                var result  = window.variable_resolver.resolve_variables (req.uri);
 
-                // if (valid_uri == false) {
+                if (!result.has_errors ()) {
+                    req.uri = result.resolved_text;
+                } else {
+                    if (result.unresolved_variable_names.size == 1) {
+                        this.send_error ("%s is not defined".printf (result.unresolved_variable_names.get (0)));
+                    } else {
+                        var builder = new StringBuilder ();
+                        var first = true;
+                        
+                        foreach (var variable in result.unresolved_variable_names) {
+                            if (first) {
+                                first = false;
+                                builder.append (variable);
+                            } else {
+                                builder.append (", %s".printf (variable));
+                            }
+                        }
+
+                        builder.append (" are not defined");
+
+                        this.send_error (builder.str);
+                    }
+                    return;
+                }
 
                 if (Services.Utilities.valid_uri_string (req.uri)) {
                     this.request_view.set_request_status (Models.RequestStatus.SENDING);
                     this.sending_service.send_request.begin (req);
+                    this.clear_error ();
                 } else {
                     this.send_error ("Invalid URI");
                 }

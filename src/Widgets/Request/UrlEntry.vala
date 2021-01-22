@@ -25,9 +25,7 @@ namespace Spectator.Widgets.Request {
         private Gtk.Entry url_entry;
         private Services.UrlVariableEngine variable_engine;
         private bool processing = false;
-        private Gtk.Box popover_box;
-        private Gtk.Popover popover;
-        private Gdk.Rectangle r;
+        private Popover popover;
 
         public signal void url_changed (string url);
         public signal void method_changed (Models.Method method);
@@ -38,40 +36,25 @@ namespace Spectator.Widgets.Request {
             url_changed (url_entry.text);
         }
 
-        public UrlEntry () {
+        public UrlEntry (Repository.IEnvironment envs) {
 
             init_method_box ();
             init_url_entry ();
             margin_top = 2;
             margin_bottom = 1;
             variable_engine = new Services.UrlVariableEngine (url_entry);
+            popover = new Popover (url_entry, envs);
 
-            popover = new Gtk.Popover (url_entry);
-            popover_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
-            popover.add(popover_box);
-            popover.set_position(Gtk.PositionType.BOTTOM);
-            popover.closed.connect (() => {
-                foreach (var child in popover_box.get_children ()) {
-                    popover_box.remove (child);
-                }
+            popover.variable_selected.connect ((name) => {
+                variable_engine.insert_variable (name);
+                notify_url_change ();
             });
 
             url_entry.key_release_event.connect ((event) => {
-                notify_url_change ();
-
                 if (event.state == Gdk.ModifierType.CONTROL_MASK && event.keyval == Gdk.Key.space) {
-                    var layout = url_entry.get_layout ();
-                    var index = url_entry.text_index_to_layout_index (url_entry.cursor_position);
-                    var rec = layout.index_to_pos (index + 1);
-                    r = Gdk.Rectangle ();
-                    r.height = 20;
-                    r.width = rec.width / Pango.SCALE;
-                    r.x = (rec.x / Pango.SCALE);
-                    r.y = 0;
-                    popover.set_relative_to (url_entry);
-                    popover.set_pointing_to (r);
-                    popover.show_all ();
-                    popover.popup ();
+                    popover.show_variables ();
+                } else {
+                    notify_url_change ();
                 }
 
                 return true;

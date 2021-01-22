@@ -22,6 +22,7 @@ sources += files(
     'Response/StatusBar/Container.vala',
     'Request/Container.vala',
     'Request/UrlEntry.vala',
+    'Request/Popover.vala',
     'Request/HeaderField.vala',
     'Request/BodyView.vala',
     'Request/Scripting/Container.vala',

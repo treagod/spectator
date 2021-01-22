@@ -1,4 +1,8 @@
 sources += files(
+    'IEnvironment.vala',
+    'InMemoryEnvironment.vala',
+    'SQLiteEnvironment.vala',
+
 	'IRequest.vala',
     'SQLiteRequest.vala',
 

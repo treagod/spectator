@@ -141,12 +141,12 @@ namespace Spectator.Widgets {
             });
 
             request.request_sent.connect ((id) => {
-                this.request_sent (id);
+                request_sent (id);
             });
 
-            request.send_error.connect ((error) => {
-                this.set_error (error);
-            });
+            request.send_error.connect (set_error);
+
+            request.clear_error.connect (reset_infobar);
 
             request.method_changed.connect ((method) => {
                 method_changed (this.active_id, method);

@@ -28,6 +28,7 @@ namespace Spectator.Widgets.Sidebar {
         private Gtk.Label url;
         private Gtk.Revealer motion_revealer;
         private Gtk.Revealer content;
+        private weak Services.VariableResolver variable_resolver;
         public uint id { get; private set; }
 
         public signal void clicked ();
@@ -63,7 +64,8 @@ namespace Spectator.Widgets.Sidebar {
             }
         }
 
-        public RequestListItem (uint id, string name, string request_url, Models.Method request_method) {
+        public RequestListItem (Services.VariableResolver rsv, uint id, string name, string request_url, Models.Method request_method) {
+            variable_resolver = rsv;
             this.id = id;
             item_box = new Gtk.EventBox ();
             var info_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
@@ -172,10 +174,11 @@ namespace Spectator.Widgets.Sidebar {
             row.get_allocation (out alloc);
 
             var surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, alloc.width, alloc.height);
+
+            // Draw border arround widget
             var cr = new Cairo.Context (surface);
             cr.set_source_rgba (0, 0, 0, 0.3);
             cr.set_line_width (1);
-
             cr.move_to (0, 0);
             cr.line_to (alloc.width, 0);
             cr.line_to (alloc.width, alloc.height);
@@ -183,6 +186,7 @@ namespace Spectator.Widgets.Sidebar {
             cr.line_to (0, 0);
             cr.stroke ();
 
+            // Set white overlay for widget
             cr.set_source_rgba (255, 255, 255, 0.5);
             cr.rectangle (0, 0, alloc.width, alloc.height);
             cr.fill ();
@@ -237,8 +241,13 @@ namespace Spectator.Widgets.Sidebar {
         }
 
         private void set_formatted_uri (string request_url) {
+            var result = variable_resolver.resolve_variables (request_url);
             if (request_url.length > 0) {
-                url.label = "<small><i>" + escape_url (request_url) + "</i></small>";
+                if (!result.has_errors ()) {
+                    url.label = "<small><i>" + escape_url (result.resolved_text) + "</i></small>";
+                } else {
+                    url.label = "<small><i><span color=\"#a10705\">" + escape_url (result.resolved_text) + "</span></i></small>";
+                }
             } else {
                 url.label = no_url;
             }

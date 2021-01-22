@@ -34,13 +34,54 @@ namespace Spectator.Services {
         }
 
         private weak Gtk.Entry url_entry;
+        private bool adjust_cursor;
 
         public UrlVariableEngine (Gtk.Entry url_entry) {
             this.url_entry = url_entry;
-            this.url_entry.changed.connect (() => {
-                update_highlighting ();
-            });
+            this.adjust_cursor = false;
+            this.url_entry.changed.connect (update_highlighting);
             this.url_entry.delete_text.connect (handle_variable_deletion);
+            this.url_entry.move_cursor.connect (skip_variable_hidden_character);
+        }
+
+        // Skips '#{' or '}' on cursor movement, so that the user does not notice,
+        // that there are extra characters
+        private void skip_variable_hidden_character (Gtk.MovementStep step, int count, bool extend_selection) {
+            // Locking so the cursor movement after readjustment won't be processed (prevents recursion)
+            if (adjust_cursor) return;
+            if (count == 1) {
+                // Cursor movement to the right
+                if (this.url_entry.text[this.url_entry.cursor_position] == '}') {
+                    adjust_cursor = true;
+                    this.url_entry.move_cursor (step, 1, extend_selection);
+                    adjust_cursor = false;
+                } else if (
+                    this.url_entry.text[this.url_entry.cursor_position] == '#' &&
+                    this.url_entry.text[this.url_entry.cursor_position + 1] == '{'
+                ) {
+                    adjust_cursor = true;
+                    this.url_entry.move_cursor (step, 2, extend_selection);
+                    adjust_cursor = false;
+                }
+            } else if (count == -1) {
+                // Cursor movement to the left
+                if (this.url_entry.text[this.url_entry.cursor_position - 1] == '}') {
+                    adjust_cursor = true;
+                    this.url_entry.move_cursor (step, -1, extend_selection);
+                    adjust_cursor = false;
+                } else if (
+                    this.url_entry.text[this.url_entry.cursor_position - 1] == '{' &&
+                    this.url_entry.text[this.url_entry.cursor_position - 2] == '#'
+                ) {
+                    adjust_cursor = true;
+                    this.url_entry.move_cursor (step, -2, extend_selection);
+                    adjust_cursor = false;
+                }
+            }
+        }
+
+        public void insert_variable (string variable_name) {
+            url_entry.insert_at_cursor ("#{%s}".printf (variable_name));
         }
 
         private void handle_variable_deletion (int start_pos, int end_pos) {

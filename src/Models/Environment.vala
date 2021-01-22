@@ -19,19 +19,20 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-namespace Spectator.Queries {
-    public const string SQL_INIT_CMD = """
-        @SQL@
-    """;
+namespace Spectator.Models {
+    public class Environment {
+        public string name;
+        public Gee.HashMap<string, Models.Variable> variables { get; private set; }
+        public DateTime created_at;
 
-    namespace CustomOrder {
-        public const string MOVE_REQUEST_AFTER_REQUEST = """@CUSTOM_ORDER_MOVE_REQUEST_AFTER_REQUEST@""";
-    }
+        public Environment (string n) {
+            name = n;
+            variables = new Gee.HashMap<string, Models.Variable> ();
+            created_at = new DateTime.now_utc ();
+        }
 
-    namespace Migrate060 {
-        public const string CREATE_ENVIRONMENT_TABLE = """@CREATE_ENVIRONMENT_TABLE@""";
-        public const string DROP_ENVIRONMENT_TABLE = """@DROP_ENVIRONMENT_TABLE@""";
-        public const string CREATE_VARIABLE_TABLE = """@CREATE_VARIABLE_TABLE@""";
-        public const string DROP_VARIABLE_TABLE = """@DROP_VARIABLE_TABLE@""";
+        public Environment.empty () {
+            variables = new Gee.HashMap<string, Models.Variable> ();
+        }
     }
 }
