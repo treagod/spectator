@@ -17,7 +17,7 @@ API endpoints of your HTTP server.
 - [x] Handle Basic Proxy Server
 - [x] Scripting capabilities
 - [x] Create collections of requests
-- [ ] Create request enviroments
+- [x] Create request enviroments
 - [ ] Create test enviroments for your collections
 
 Right now Spectator allows you to make single requests to a web endpoint. In the long run
