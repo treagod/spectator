@@ -20,13 +20,14 @@
 */
 
 namespace Spectator.Widgets {
-    class RequestResponsePane : Gtk.Paned, Request.Interface {
+    public class RequestResponsePane : Gtk.Paned, Request.Interface {
         private Request.Container request_view;
         private Response.Container current_response_view;
-        private weak Spectator.Window window;
         private uint active_id;
         private SendingService sending_service;
         private Gee.HashMap<uint, Response.Container> response_views;
+        private weak Repository.IRequest request_repository;
+        private Services.VariableResolver resolver;
 
         public signal void type_changed (RequestBody.ContentType type);
         public signal void reset_body (RequestBody.ContentType type);
@@ -46,7 +47,7 @@ namespace Spectator.Widgets {
         }
 
         private void refresh_request (uint id) {
-            var request = this.window.request_service.get_request_by_id (id);
+            var request = request_repository.get_request_by_id (id);
 
             if (request != null) {
                 this.request_view.set_request_url (request.uri);
@@ -70,9 +71,10 @@ namespace Spectator.Widgets {
             }
         }
 
-        public RequestResponsePane (Spectator.Window window) {
-            this.window = window;
-            this.request_view = new Request.Container (window);
+        public RequestResponsePane (Repository.IRequest reqs, Repository.IEnvironment envs, Request.Container req_container) {
+            request_view = req_container;
+            request_repository = reqs;
+            resolver = new Services.VariableResolver (envs);
             this.current_response_view = new Response.Container ();
             this.sending_service = new SendingService ();
             response_views = new Gee.HashMap<uint, Response.Container> ();
@@ -101,31 +103,6 @@ namespace Spectator.Widgets {
                 res_view.update (res);
             });
 
-            request_view.url_params_updated.connect ((query_pairs) => {
-                var request = this.window.request_service.get_request_by_id (active_id);
-
-                if (request != null) {
-                    var query_builder = new StringBuilder ();
-                    var first = true;
-
-                    foreach (var pair in query_pairs) {
-                        if (first) {
-                            first = false;
-                        } else {
-                            if (pair.key.strip ().length > 0) {
-                                query_builder.append ("&");
-                            }
-                        }
-                        if (pair.key.strip ().length > 0) {
-                            query_builder.append ("%s=%s".printf (pair.key, pair.val));
-                        }
-                    }
-
-                    request.query = query_builder.str;
-                    this.request_view.set_url_entry (request.uri);
-                    this.url_changed (request.uri);
-                }
-            });
 
             request_view.url_changed.connect ((url) => {
                 this.url_changed (url);
@@ -136,7 +113,7 @@ namespace Spectator.Widgets {
             });
 
             request_view.content_changed.connect ((content) => {
-                var request = this.window.request_service.get_request_by_id (active_id);
+                var request = request_repository.get_request_by_id (active_id);
 
                 if (request != null) {
                     this.content_changed (content);
@@ -144,8 +121,8 @@ namespace Spectator.Widgets {
             });
 
             request_view.request_activated.connect (() => {
-                var req = this.window.request_service.get_request_by_id (this.active_id);
-                var result  = window.variable_resolver.resolve_variables (req.uri);
+                var req = request_repository.get_request_by_id (this.active_id);
+                var result  = resolver.resolve_variables (req.uri);
 
                 if (!result.has_errors ()) {
                     req.uri = result.resolved_text;
@@ -185,56 +162,10 @@ namespace Spectator.Widgets {
                 this.method_changed (method);
             });
 
-            request_view.header_added.connect ((headers) => {
-                this.window.request_service.update_request (active_id, (updater) => {
-                    updater.update_headers (headers);
-                });
-            });
-
             request_view.script_changed.connect ((script) => {
-                this.window.request_service.update_request (active_id, (updater) => {
+                request_repository.update_request (active_id, (updater) => {
                     updater.update_script (script);
                 });
-            });
-
-            request_view.header_deleted.connect ((headers) => {
-                this.window.request_service.update_request (active_id, (updater) => {
-                    updater.update_headers (headers);
-                });
-            });
-
-            request_view.body_type_changed.connect ((type) => {
-                var request = this.window.request_service.get_request_by_id (active_id);
-
-                if (request != null) {
-                    if (type != request.request_body.type && request.request_body.content.length > 0) {
-                        var message_dialog = new Granite.MessageDialog.with_image_from_icon_name (
-                             _("Are you sure you want to change the type?"),
-                             _("This action will delete the current body content. Proceed changing the body type?"),
-                             "dialog-warning",
-                             Gtk.ButtonsType.CANCEL
-                        );
-                        message_dialog.transient_for = this.window;
-
-                        var suggested_button = new Gtk.Button.with_label (_("Change Type"));
-                        suggested_button.get_style_context ().add_class (Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION);
-                        message_dialog.add_action_widget (suggested_button, Gtk.ResponseType.ACCEPT);
-
-                        message_dialog.show_all ();
-                        if (message_dialog.run () == Gtk.ResponseType.ACCEPT) {
-                            request.request_body.content = "";
-                            request.request_body.type = type;
-                            request_view.reset_body ();
-                            this.reset_body (type);
-                        }
-
-                        message_dialog.destroy ();
-                    } else {
-                        request.request_body.type = type;
-                        this.type_changed (type);
-                    }
-                }
-                request_view.set_request_body (request.request_body);
             });
 
             pack1 (request_view, false, false);

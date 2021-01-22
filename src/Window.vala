@@ -24,7 +24,7 @@ namespace Spectator {
         public signal void close_window ();
 
         private Widgets.HeaderBar headerbar;
-        private Widgets.Sidebar.Container sidebar;
+        public Widgets.Sidebar.Container sidebar { get; private set; }
         private Widgets.Content content;
         public  Services.VariableResolver variable_resolver { get; private set; }
 
@@ -72,7 +72,8 @@ namespace Spectator {
                        Repository.IRequest request_service,
                        Repository.ICollection collection_service,
                        Repository.ICustomOrder order_service,
-                       Repository.IEnvironment environment) {
+                       Repository.IEnvironment environment,
+                       Widgets.Content content) {
             var settings = Settings.get_instance ();
             Object (application: app);
 
@@ -92,7 +93,7 @@ namespace Spectator {
             this.headerbar = new Widgets.HeaderBar ();
             this.setup_headerbar_events ();
             this.set_titlebar (this.headerbar);
-            this.create_paned ();
+            this.create_paned (content);
         }
 
         public void show_content () {
@@ -175,11 +176,11 @@ namespace Spectator {
             dialog.show_all ();
         }
 
-        private void create_paned () {
+        private void create_paned (Widgets.Content content) {
             var paned = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
             paned.wide_handle = true;
 
-            this.content = new Widgets.Content (this);
+            this.content = content;
             this.content.hexpand = true;
 
             this.setup_content_events ();
@@ -209,13 +210,6 @@ namespace Spectator {
                 });
                 this.sidebar.show_history_items ();
             });
-
-            this.content.method_changed.connect ((id, method) => {
-                this.sidebar.update_active_method (method);
-                this.request_service.update_request (id, (updater) => {
-                    updater.update_method (method);
-                });
-             });
 
             this.content.body_type_changed.connect ((id, body_type) => {
                 this.request_service.update_request (id, (updater) => {

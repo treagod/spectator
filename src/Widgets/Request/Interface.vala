@@ -20,7 +20,7 @@
 */
 
 namespace Spectator.Widgets.Request {
-    interface Interface {
+    public interface Interface {
         public signal void url_changed (string url);
         public signal void method_changed (Models.Method method);
         public signal void request_activated ();

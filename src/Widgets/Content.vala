@@ -26,7 +26,6 @@ namespace Spectator.Widgets {
         private RequestResponsePane req_res_pane;
         private Gtk.InfoBar infobar;
         private Gtk.Label infolabel;
-        private weak Spectator.Window window;
         private uint active_id;
 
         public signal void url_changed (uint id, string url);
@@ -37,16 +36,17 @@ namespace Spectator.Widgets {
         public signal void cancel_process ();
 
         public signal void welcome_activated (int index);
-        public signal void url_params_updated (Gee.ArrayList<Pair> items);
+        public signal void create_request_activated ();
+        public signal void create_collection_activated ();
         public signal void request_sent (uint id);
 
         private void create_activated_welcome_dialog (int i) {
             switch (i) {
                 case 0:
-                this.window.create_request_dialog ();
+                create_request_activated ();
                 break;
                 case 1:
-                this.window.create_collection_dialog ();
+                create_collection_activated ();
                 break;
                 default:
                 assert_not_reached ();
@@ -59,11 +59,10 @@ namespace Spectator.Widgets {
             this.stack.set_visible_child (this.req_res_pane);
         }
 
-        public Content (Spectator.Window window) {
+        public Content (Repository.IRequest reqs, Repository.IEnvironment envs, RequestResponsePane pane) {
             this.stack = new Gtk.Stack ();
             this.infobar = new Gtk.InfoBar ();
             this.infolabel = new Gtk.Label ("");
-            this.window = window;
             this.welcome = new Granite.Widgets.Welcome (_(Constants.RELEASE_NAME),
                                                    _("Inspect your HTTP transmissions to the web"));
             welcome.hexpand = true;
@@ -75,7 +74,7 @@ namespace Spectator.Widgets {
                 this.create_activated_welcome_dialog (index);
             });
 
-            req_res_pane = new RequestResponsePane (this.window);
+            req_res_pane = pane;
 
             req_res_pane.cancel_process.connect (() => {
                 cancel_process ();
@@ -162,10 +161,6 @@ namespace Spectator.Widgets {
 
             request.content_changed.connect ((content) => {
                 this.body_content_changed (this.active_id, content);
-            });
-
-            request.url_params_updated.connect ((items) => {
-                url_params_updated (items);
             });
         }
 

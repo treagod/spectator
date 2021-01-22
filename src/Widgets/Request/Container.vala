@@ -20,15 +20,15 @@
 */
 
 namespace Spectator.Widgets.Request {
-    class Container : Gtk.Box, Interface {
+    public class Container : Gtk.Box, Interface {
         private UrlEntry url_entry;
-        private weak Window window;
         private KeyValueList header_view;
         private BodyView body_view;
         private KeyValueList url_params_view;
         private Spectator.Widgets.Request.Scripting.Container scripting_view;
         private Granite.Widgets.ModeButton tabs;
         private Gtk.Stack stack;
+        private Repository.IEnvironment environment_repository;
 
         public int tab_index {
             get {
@@ -48,8 +48,8 @@ namespace Spectator.Widgets.Request {
             margin = 4;
         }
 
-        public Container (Window win) {
-            window = win;
+        public Container (Repository.IRequest reqs, Repository.IEnvironment envs) {
+            environment_repository = envs;
             this.header_view = create_header_view ();
             this.url_params_view = create_url_params_view ();
             this.url_entry = create_url_entry ();
@@ -160,7 +160,7 @@ namespace Spectator.Widgets.Request {
         }
 
         private UrlEntry create_url_entry () {
-            var url_entry = new UrlEntry (window.environment_service);
+            var url_entry = new UrlEntry (environment_repository);
             url_entry.margin_bottom = 7;
 
             url_entry.url_changed.connect ((url) => {
