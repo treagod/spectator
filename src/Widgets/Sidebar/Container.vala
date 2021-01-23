@@ -55,8 +55,8 @@ namespace Spectator.Widgets.Sidebar {
             source_destination = true;
 
             title = new Gtk.Label (envs.get_current_environment ().name);
-            title.get_style_context ().add_class ("h2");
-            title.halign = Gtk.Align.CENTER;
+            title.get_style_context ().add_class ("h3");
+            title.halign = Gtk.Align.START;
             title.margin = 5;
             var down_arrow = new Gtk.Image.from_icon_name ("pan-down-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
             var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
@@ -64,7 +64,7 @@ namespace Spectator.Widgets.Sidebar {
             box.add(title);
             box.add (down_arrow);
             box.hexpand = true;
-            box.halign = Gtk.Align.CENTER;
+            box.halign = Gtk.Align.START;
             var popover = new Gtk.Popover (down_arrow);
 
             environment_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 2);
