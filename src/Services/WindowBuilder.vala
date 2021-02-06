@@ -19,30 +19,49 @@
 * Authored by: Marvin Ahlgrimm <marv.ahlgrimm@gmail.com>
 */
 
-uint? active_id = null;
-
 namespace Spectator.Services {
-    public class WindowBuilder {
-        private Window window;
-        private Repository.IRequest request_repository;
-        private Repository.ICollection collection_repository;
-        private Repository.ICustomOrder order_repository;
-        private Repository.IEnvironment environment_repository;
-        public WindowBuilder (Repository.IRequest rr,
-            Repository.ICollection cr,
-            Repository.ICustomOrder or,
-            Repository.IEnvironment er) {
-            request_repository = rr;
-            collection_repository = cr;
-            order_repository = or;
-            environment_repository = er;
-        }
-        
-        private Widgets.Request.Container build_request_box () {
-            var box = new Widgets.Request.Container (request_repository, environment_repository);
+    public class RequestController {
+        private Models.Request? active_request;
+        private Widgets.Request.Container request_view;
+        private Widgets.Sidebar.Container sidebar_view;
+        private Repository.IRequest repository;
 
-            box.url_params_updated.connect ((query_pairs) => {
-                var request = request_repository.get_request_by_id (active_id);
+        public RequestController (Widgets.Request.Container req_view, Widgets.Sidebar.Container side_view, Repository.IRequest reqs) {
+            active_request = null;
+            request_view = req_view;
+            sidebar_view = side_view;
+            repository = reqs;
+
+            setup_signals ();
+        }
+
+        private void display_request (Models.Request request) {
+            this.request_view.set_request_url (request.uri);
+            this.request_view.set_request_method (request.method);
+            this.request_view.set_script (request.script_code);
+            this.request_view.set_script_buffer (request.id);
+            this.request_view.set_headers (request.headers);
+            this.request_view.set_body (request.request_body);
+        }
+
+        private void setup_signals () {
+            sidebar_view.request_item_selected.connect ((id) => {
+                print("%u\n", id);
+                var request = repository.get_request_by_id (id);
+
+                if (request != null) {
+                    print ("asdasdasdlollol\n");
+                }
+
+                //  if (request != null) {
+                //      this.display_request (request);
+                //  } else {
+                //      error ("Not able to find request with id %u\n", id);
+                //  }
+            });
+
+            request_view.url_params_updated.connect ((query_pairs) => {
+                var request = repository.get_request_by_id (active_request.id);
 
                 if (request != null) {
                     var query_builder = new StringBuilder ();
@@ -62,35 +81,35 @@ namespace Spectator.Services {
                     }
 
                     request.query = query_builder.str;
-                    box.set_url_entry (request.uri);
-                    this.window.sidebar.update_active_url (request.uri);
-                    request_repository.update_request (active_id, (updater) => {
+                    request_view.set_url_entry (request.uri);
+                    sidebar_view.update_active_url (request.uri);
+                    repository.update_request (active_request.id, (updater) => {
                         updater.update_url (request.uri);
                     });
                 }
             });
 
-            box.method_changed.connect ((id, method) => {
-                window.sidebar.update_active_method (method);
-                request_repository.update_request (active_id, (updater) => {
+            request_view.method_changed.connect ((id, method) => {
+                sidebar_view.update_active_method (method);
+                repository.update_request (active_request.id, (updater) => {
                     updater.update_method (method);
                 });
              });
 
-             box.header_added.connect ((headers) => {
-                request_repository.update_request (active_id, (updater) => {
+             request_view.header_added.connect ((headers) => {
+                repository.update_request (active_request.id, (updater) => {
                     updater.update_headers (headers);
                 });
             });
 
-            box.header_deleted.connect ((headers) => {
-                request_repository.update_request (active_id, (updater) => {
+            request_view.header_deleted.connect ((headers) => {
+                repository.update_request (active_request.id, (updater) => {
                     updater.update_headers (headers);
                 });
             });
 
-            box.body_type_changed.connect ((type) => {
-                var request = request_repository.get_request_by_id (active_id);
+            request_view.body_type_changed.connect ((type) => {
+                var request = repository.get_request_by_id (active_request.id);
 
                 if (request != null) {
                     if (type != request.request_body.type && request.request_body.content.length > 0) {
@@ -109,8 +128,8 @@ namespace Spectator.Services {
                         if (message_dialog.run () == Gtk.ResponseType.ACCEPT) {
                             request.request_body.content = "";
                             request.request_body.type = type;
-                            box.reset_body ();
-                            request_repository.update_request (active_id, (updater) => {
+                            request_view.reset_body ();
+                            repository.update_request (active_request.id, (updater) => {
                                 updater.update_body_type (type);
                                 updater.update_body_content ("");
                             });
@@ -119,13 +138,35 @@ namespace Spectator.Services {
                         message_dialog.destroy ();
                     } else {
                         request.request_body.type = type;
-                        request_repository.update_request (active_id, (updater) => {
+                        repository.update_request (active_request.id, (updater) => {
                             updater.update_body_type (type);
                         });
                     }
                 }
-                box.set_request_body (request.request_body);
+                request_view.set_request_body (request.request_body);
             });
+        }
+    }
+    public class WindowBuilder {
+        private Window window;
+        private Repository.IRequest request_repository;
+        private Repository.ICollection collection_repository;
+        private Repository.ICustomOrder order_repository;
+        private Repository.IEnvironment environment_repository;
+        public WindowBuilder (Repository.IRequest rr,
+            Repository.ICollection cr,
+            Repository.ICustomOrder or,
+            Repository.IEnvironment er) {
+            request_repository = rr;
+            collection_repository = cr;
+            order_repository = or;
+            environment_repository = er;
+        }
+        
+        private Widgets.Request.Container build_request_box () {
+            var box = new Widgets.Request.Container (request_repository, environment_repository);
+
+            
 
             return box;
         }
@@ -144,9 +185,8 @@ namespace Spectator.Services {
                 new Widgets.Content (request_repository, environment_repository, req_res)
             );
 
-            window.sidebar.selection_changed.connect ((request) => {
-                active_id = request.id;
-            });
+            var c = new RequestController (req_container, window.sidebar, request_repository);
+            
             return window;
         }
     }
