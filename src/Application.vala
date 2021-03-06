@@ -156,15 +156,14 @@ namespace Spectator {
 
         protected override void activate () {
             this.load_database ();
-            
+
             if (!running) {
                 var rs = new Repository.SQLiteRequest (db);
                 var cs = new Repository.SQLiteCollection (db);
                 var os = new Repository.SQLiteCustomOrder (db);
-                //var es = new Repository.InMemoryEnvironment ();
                 var ses = new Repository.SQLiteEnvironment (db);
-                
-                
+
+
                 this.load_legacy (cs, rs);
                 var window_builder = new Services.WindowBuilder (rs, cs, os, ses);
 

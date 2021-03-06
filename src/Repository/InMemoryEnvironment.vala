@@ -23,7 +23,7 @@ namespace Spectator.Repository {
     public class InMemoryEnvironment : IEnvironment, Object {
         private Gee.ArrayList<Models.Environment> envs;
         private int current_env;
-        
+
         public InMemoryEnvironment () {
             envs = new Gee.ArrayList<Models.Environment> ();
             current_env = 0;
@@ -41,6 +41,8 @@ namespace Spectator.Repository {
             envs.add (env);
             envs.add (new Models.Environment ("Woop"));
         }
+
+        public override void delete_environment (string name) {}
 
         public void add_variable_to_environment (string env_name) {
             foreach (var env in envs) {
@@ -68,7 +70,7 @@ namespace Spectator.Repository {
         public Models.Variable? get_variables_in_current_environment_by_name (string variable_name) {
             return get_variables_in_environment_by_name ("current_env", variable_name);
         }
-        
+
         public Models.Variable? get_variables_in_environment_by_name (string env_name, string variable_name) {
             return new Models.Variable ("asd", "asd");
         }

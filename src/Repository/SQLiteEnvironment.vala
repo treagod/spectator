@@ -22,9 +22,35 @@
 namespace Spectator.Repository {
     public class SQLiteEnvironment : IEnvironment, Object {
         private weak Sqlite.Database db;
-        
+
         public SQLiteEnvironment (Sqlite.Database d) {
             db = d;
+        }
+
+        public void delete_environment (string name) {
+            var query = """DELETE FROM Environment
+            WHERE name=$NAME;
+            """;
+            Sqlite.Statement stmt;
+            int rc = db.prepare_v2 (query, query.length, out stmt);
+
+            if (rc == Sqlite.ERROR) {
+                warning ("Could not delete environment\n");
+                return;
+            }
+
+            int name_pos = stmt.bind_parameter_index ("$NAME");
+
+            stmt.bind_text (name_pos, name);
+
+            stmt.step ();
+
+            var environments = get_environments ();
+            if (environments.size == 0) {
+                get_current_environment (); // Creates default environment
+            } else {
+                set_current_environment (environments.get(0));
+            }
         }
 
         public Gee.ArrayList<Models.Environment> get_environments () {
@@ -43,7 +69,7 @@ namespace Spectator.Repository {
             }
 
             int cols = stmt.column_count ();
-            
+
             while (stmt.step () == Sqlite.ROW) {
                 var environment = new Models.Environment.empty ();
 
@@ -68,7 +94,7 @@ namespace Spectator.Repository {
         public void add_variable_to_environment (string env_name) {
             var query = """INSERT INTO Variable
             (id, "key", value, created_at, environment_name)
-            VALUES($ID, '', '', $CREATED_AT, $ENV_NAME);            
+            VALUES($ID, '', '', $CREATED_AT, $ENV_NAME);
             """;
 
             Sqlite.Statement stmt;
@@ -113,12 +139,12 @@ namespace Spectator.Repository {
 
             if (stmt.step () != Sqlite.DONE) {
                 // Do something
-            } 
+            }
         }
 
         public Gee.ArrayList<Models.Variable> get_environment_variables (string env_name) {
             var variables = new Gee.ArrayList<Models.Variable> ();
-            var query = """SELECT id, "key", value, created_at 
+            var query = """SELECT id, "key", value, created_at
             FROM Variable
             WHERE Variable.environment_name == $ENV_NAME;""";
             Sqlite.Statement stmt;
@@ -164,7 +190,7 @@ namespace Spectator.Repository {
         }
 
         public Models.Variable? get_variables_in_environment_by_name (string env_name, string variable_name) {
-            var query = """SELECT id, "key", value, created_at 
+            var query = """SELECT id, "key", value, created_at
             FROM Variable
             WHERE Variable.key=$NAME AND Variable.environment_name=$ENV_NAME;""";
             Sqlite.Statement stmt;
@@ -211,8 +237,8 @@ namespace Spectator.Repository {
         public void update_variable_name_in_environment (Models.Environment env, string id, string key) {
             var query = """UPDATE Variable
             SET "key"=$KEY
-            WHERE id=$ID AND  environment_name=$ENV_NAME;            
-            """; 
+            WHERE id=$ID AND  environment_name=$ENV_NAME;
+            """;
 
             Sqlite.Statement stmt;
             int rc = db.prepare_v2 (query, query.length, out stmt);
@@ -232,14 +258,14 @@ namespace Spectator.Repository {
             stmt.bind_text (key_pos, key);
             if (stmt.step () != Sqlite.DONE) {
                 // Do something
-            } 
+            }
         }
 
         public void update_variable_value_in_environment (Models.Environment env, string id, string value) {
             var query = """UPDATE Variable
             SET "value"=$VALUE
-            WHERE id=$ID AND  environment_name=$ENV_NAME;            
-            """; 
+            WHERE id=$ID AND  environment_name=$ENV_NAME;
+            """;
 
             Sqlite.Statement stmt;
             int rc = db.prepare_v2 (query, query.length, out stmt);
@@ -259,7 +285,7 @@ namespace Spectator.Repository {
             stmt.bind_text (value_pos, value);
             if (stmt.step () != Sqlite.DONE) {
                 // Do something
-            } 
+            }
         }
 
         public Models.Environment? get_environment_by_name (string name) {
@@ -306,7 +332,7 @@ namespace Spectator.Repository {
 
             if (env == null) {
                 var default_env_name = _("Default Environment");
-                
+
                 try {
                     create_environment (default_env_name);
                     env = get_environment_by_name (default_env_name);
@@ -315,7 +341,7 @@ namespace Spectator.Repository {
                     env = get_environment_by_name (default_env_name);
                 }
             }
-            
+
             return env;
         }
 
@@ -345,7 +371,7 @@ namespace Spectator.Repository {
 
             if (stmt.step () != Sqlite.DONE) {
                 throw new RecordExistsError.CODE_1A ("%s", db.errmsg ());
-            } 
+            }
         }
     }
 }
