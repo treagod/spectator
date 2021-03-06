@@ -134,6 +134,13 @@ namespace Spectator.Dialogs {
                     environment_list.show_all ();
                     select_current_environment (environment_repository);
                 });
+
+                new_row.duplicate_environment.connect ((name) => {
+                    environment_repository.duplicate_environment (name);
+                    fill_list (environment_repository);
+                    environment_list.show_all ();
+                    select_current_environment (environment_repository);
+                });
                 environment_list.add (new_row);
             }
         }

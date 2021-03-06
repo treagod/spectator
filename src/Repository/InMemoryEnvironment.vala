@@ -43,6 +43,7 @@ namespace Spectator.Repository {
         }
 
         public override void delete_environment (string name) {}
+        public override void duplicate_environment (string name) {}
 
         public void add_variable_to_environment (string env_name) {
             foreach (var env in envs) {

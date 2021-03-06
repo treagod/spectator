@@ -53,6 +53,23 @@ namespace Spectator.Repository {
             }
         }
 
+        public void duplicate_environment (string name) {
+            int duplicateNo = 1;
+            var duplicatedName = "";
+            duplicatedName = "%s-%d".printf (name, duplicateNo);
+
+            var env = get_environment_by_name (duplicatedName);
+
+            while (env != null) {
+                duplicateNo += 1;
+                duplicatedName = "%s-%d".printf (name, duplicateNo);
+                env = get_environment_by_name (duplicatedName);
+            }
+
+            create_environment (duplicatedName);
+            set_current_environment (new Models.Environment (duplicatedName));
+        }
+
         public Gee.ArrayList<Models.Environment> get_environments () {
             var environments = new Gee.ArrayList<Models.Environment> ();
             var query = """
