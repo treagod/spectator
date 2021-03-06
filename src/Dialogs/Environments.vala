@@ -121,6 +121,31 @@ namespace Spectator.Dialogs {
             });
         }
 
+        private bool confirm_deletion (string name) {
+            var message_dialog = new Granite.MessageDialog.with_image_from_icon_name (
+                _("Delete Environment?"),
+                _("This action will permanently delete <b>%s</b>. This can't be undone!".printf (name)),
+                "dialog-warning",
+                Gtk.ButtonsType.CANCEL
+           );
+           bool confirmation = false;
+
+           message_dialog.transient_for = this;
+           message_dialog.secondary_label.use_markup = true;
+
+           var suggested_button = new Gtk.Button.with_label (_("Delete Environment"));
+           suggested_button.get_style_context ().add_class (Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION);
+           message_dialog.add_action_widget (suggested_button, Gtk.ResponseType.ACCEPT);
+
+           message_dialog.show_all ();
+           if (message_dialog.run () == Gtk.ResponseType.ACCEPT) {
+               confirmation = true;
+           }
+
+           message_dialog.destroy ();
+           return confirmation;
+        }
+
         private void fill_list (Repository.IEnvironment environment_repository) {
             environment_list.foreach ((w) => {
                 environment_list.remove (w);
@@ -129,10 +154,12 @@ namespace Spectator.Dialogs {
                 var new_row = new EnvironmentRow (env.name);
 
                 new_row.delete_environment.connect ((name) => {
-                    environment_repository.delete_environment (name);
-                    fill_list (environment_repository);
-                    environment_list.show_all ();
-                    select_current_environment (environment_repository);
+                    if (confirm_deletion (name)) {
+                        environment_repository.delete_environment (name);
+                        fill_list (environment_repository);
+                        environment_list.show_all ();
+                        select_current_environment (environment_repository);
+                    }
                 });
 
                 new_row.duplicate_environment.connect ((name) => {
