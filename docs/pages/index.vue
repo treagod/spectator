@@ -30,7 +30,7 @@
             Fully customizable way to test your APIs
           </h3>
         </div>
-        <details id="properties" class="columns has-text-centered">
+        <div id="properties" class="columns has-text-centered">
           <div class="column">
             <div>
               <i data-feather="cloud"></i>
@@ -64,7 +64,7 @@
               alternatives.
             </p>
           </div>
-        </details>
+        </div>
         <div id="call-to-action" class="has-text-centered">
           <NuxtLink class="button is-spectator" to="/docs"
             >Get now started with Spectator!</NuxtLink
