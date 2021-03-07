@@ -27,9 +27,6 @@ export default Vue.extend({
       ],
     };
   },
-  mounted() {
-    console.log(this.$content('getting-started/installation'))
-  },
   async asyncData({ $content, params }) {
     const installation = await $content("getting-started/installation").fetch();
 

@@ -166,7 +166,6 @@ export default Vue.extend({
   },
   methods: {
     convertToUrl(slug : string) {
-      console.log(slug)
       if (slug == 'installation') {
         return 'docs/getting-started/installation';
       } else if ('getting-started') {
@@ -194,11 +193,18 @@ export default Vue.extend({
         this.results = [];
         return;
       }
-      this.results = await this.$content("getting-started")
+      let scripting = await this.$content("scripting")
+        .search(searchQuery)
+        .fetch();
+      let gettingStarted = await this.$content("getting-started")
+        .search(searchQuery)
+        .fetch();
+      let environment = await this.$content("environment")
         .search(searchQuery)
         .fetch();
 
-      console.log(this.results);
+      this.results = scripting.concat(gettingStarted).concat(environment);
+
     },
   },
 });
