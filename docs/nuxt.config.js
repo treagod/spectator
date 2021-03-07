@@ -15,7 +15,7 @@ export default {
       { hid: 'description', name: 'description', content: '' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' }
 
     ],
     script: [
@@ -46,7 +46,7 @@ export default {
     // https://go.nuxtjs.dev/bootstrap
     '@nuxtjs/bulma',
     // https://go.nuxtjs.dev/content
-    '@nuxt/content',
+    '@nuxt/content'
   ],
 
   // Content module configuration (https://go.nuxtjs.dev/config-content)

@@ -30,7 +30,7 @@
             Fully customizable way to test your APIs
           </h3>
         </div>
-        <div id="properties" class="columns has-text-centered">
+        <details id="properties" class="columns has-text-centered">
           <div class="column">
             <div>
               <i data-feather="cloud"></i>
@@ -64,9 +64,11 @@
               alternatives.
             </p>
           </div>
-        </div>
+        </details>
         <div id="call-to-action" class="has-text-centered">
-            <NuxtLink class="button is-spectator" to="/docs">Get now started with Spectator!</NuxtLink>
+          <NuxtLink class="button is-spectator" to="/docs"
+            >Get now started with Spectator!</NuxtLink
+          >
         </div>
       </div>
     </section>
@@ -87,7 +89,8 @@ export default Vue.extend({
         {
           hid: "description",
           name: "description",
-          content: "Spectator is a GTK based tool developed for Elementary OS. Define requests, specify the headers, URL parameters and the body. Make your requests dynamic by using JavaScript to alter your requests.",
+          content:
+            "Spectator is a GTK based tool developed for Elementary OS. Define requests, specify the headers, URL parameters and the body.",
         },
       ],
     };
