@@ -389,6 +389,8 @@ namespace Spectator.Repository {
             if (stmt.step () != Sqlite.DONE) {
                 throw new RecordExistsError.CODE_1A ("%s", db.errmsg ());
             }
+
+            set_current_environment (new Models.Environment (name));
         }
     }
 }

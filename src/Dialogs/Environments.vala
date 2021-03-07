@@ -58,8 +58,9 @@ namespace Spectator.Dialogs {
                     menu.add (delete_item);
                     menu.show_all ();
                     menu.popup_at_pointer (event);
+                    return true;
                 }
-                return true;
+                return false;
             });
             add (event_box);
         }
