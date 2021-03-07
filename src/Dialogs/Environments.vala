@@ -177,6 +177,7 @@ namespace Spectator.Dialogs {
             var paned = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
 
             environment_list = new Gtk.ListBox ();
+            environment_list.vexpand = true;
             environment_variables = new EnvironmentVariables (environment_repository);
             environment_list.selection_mode = Gtk.SelectionMode.SINGLE;
 
