@@ -154,6 +154,15 @@ namespace Spectator.Dialogs {
             foreach (var env in environment_repository.get_environments ()) {
                 var new_row = new EnvironmentRow (env.name);
 
+                new_row.rename_environment.connect((name) => {
+                    var dialog = new UpdateEnvironment ((Window) this.transient_for, name);
+                    dialog.environemnt_renamed.connect (() => {
+                        fill_list (environment_repository);
+                        environment_list.show_all ();
+                    });
+                    dialog.show_all ();
+                });
+
                 new_row.delete_environment.connect ((name) => {
                     if (confirm_deletion (name)) {
                         environment_repository.delete_environment (name);

@@ -42,8 +42,9 @@ namespace Spectator.Repository {
             envs.add (new Models.Environment ("Woop"));
         }
 
-        public override void delete_environment (string name) {}
-        public override void duplicate_environment (string name) {}
+        public void delete_environment (string name) {}
+        public void duplicate_environment (string name) {}
+        public void update_environment (string old_name, string name) {}
 
         public void add_variable_to_environment (string env_name) {
             foreach (var env in envs) {

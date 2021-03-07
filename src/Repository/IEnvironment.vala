@@ -32,6 +32,7 @@ namespace Spectator.Repository {
         public abstract void create_environment (string name) throws RecordExistsError;
         public abstract void delete_environment (string name);
         public abstract void duplicate_environment (string name);
+        public abstract void update_environment (string old_name, string name);
         public abstract void set_current_environment (Models.Environment env);
         public abstract void add_variable_to_environment (string env_name);
         public abstract void delete_variable_value_in_environment (Models.Environment env, string variable_id);

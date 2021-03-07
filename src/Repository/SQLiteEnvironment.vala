@@ -53,6 +53,30 @@ namespace Spectator.Repository {
             }
         }
 
+        public void update_environment (string old_name, string name) {
+            var query = """UPDATE Environment
+            SET name=$NAME
+            WHERE name=$OLD_NAME;
+            """;
+            Sqlite.Statement stmt;
+            int rc = db.prepare_v2 (query, query.length, out stmt);
+
+            if (rc == Sqlite.ERROR) {
+                warning ("Could update environment\n");
+                return;
+            }
+
+            int name_pos = stmt.bind_parameter_index ("$NAME");
+            stmt.bind_text (name_pos, name);
+
+            int old_name_pos = stmt.bind_parameter_index ("$OLD_NAME");
+            stmt.bind_text (old_name_pos, old_name);
+
+            if (stmt.step () != Sqlite.DONE) {
+                throw new RecordExistsError.CODE_1A ("%s", db.errmsg ());
+            }
+        }
+
         public void duplicate_environment (string name) {
             int duplicateNo = 1;
             var duplicatedName = "";
