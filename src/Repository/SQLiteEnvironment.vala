@@ -67,7 +67,6 @@ namespace Spectator.Repository {
             }
 
             create_environment (duplicatedName);
-            set_current_environment (new Models.Environment (duplicatedName));
         }
 
         public Gee.ArrayList<Models.Environment> get_environments () {
@@ -389,8 +388,6 @@ namespace Spectator.Repository {
             if (stmt.step () != Sqlite.DONE) {
                 throw new RecordExistsError.CODE_1A ("%s", db.errmsg ());
             }
-
-            set_current_environment (new Models.Environment (name));
         }
     }
 }
