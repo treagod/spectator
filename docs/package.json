@@ -1,0 +1,38 @@
+{
+  "name": "spectator",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt-ts",
+    "build": "nuxt-ts build",
+    "start": "nuxt-ts start",
+    "generate": "nuxt-ts generate",
+    "deploy": "push-dir --dir=dist --branch=gh-pages --cleanup",
+    "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lint": "yarn lint:js"
+  },
+  "dependencies": {
+    "@nuxt/content": "^1.11.1",
+    "@nuxt/typescript-runtime": "^2.0.0",
+    "@nuxtjs/bulma": "^1.3.0",
+    "@splidejs/splide": "^2.4.21",
+    "@splidejs/vue-splide": "^0.3.5",
+    "core-js": "^3.6.5",
+    "nuxt": "^2.14.6",
+    "swiper": "^6.5.0"
+  },
+  "devDependencies": {
+    "@nuxt/types": "^2.14.6",
+    "@nuxt/typescript-build": "^2.0.3",
+    "@nuxtjs/eslint-config": "^3.1.0",
+    "@nuxtjs/eslint-config-typescript": "^3.0.0",
+    "@nuxtjs/eslint-module": "^2.0.0",
+    "@nuxtjs/style-resources": "^1.0.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.10.0",
+    "eslint-plugin-nuxt": "^1.0.0",
+    "node-sass": "^5.0.0",
+    "push-dir": "^0.4.1",
+    "sass-loader": "^11.0.1"
+  }
+}
