@@ -2,7 +2,7 @@
   <div>
     <nav class="breadcrumb" aria-label="breadcrumbs">
       <ul>
-        <li><a href="/docs">Documentation</a></li>
+        <li><a href="docs">Documentation</a></li>
         <li class="is-active"><a href="#">Getting Started</a></li>
         <li class="is-active">
           <a href="#" aria-current="page">{{ pageName }}</a>
