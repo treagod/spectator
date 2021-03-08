@@ -15,7 +15,7 @@
           </h2>
 
           <img
-            src="spectator.png"
+            src="spectator.webp"
             alt="Spectator Window"
             height="600"
             id="hero-img"
