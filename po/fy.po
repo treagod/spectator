@@ -2,155 +2,160 @@
 # Copyright (C) 2019 THE com.github.treagod.spectator'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.treagod.spectator package.
 # Automatically generated, 2019.
+# vancha <tjipke@tutanota.com>, 2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.treagod.spectator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-19 17:23+0200\n"
-"PO-Revision-Date: 2019-03-31 16:03+0200\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2021-04-28 11:15+0200\n"
+"Last-Translator: vancha <tjipke@tutanota.com>\n"
+"Language-Team: Western Frisian <none>\n"
 "Language: fy\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Gtranslator 40.0\n"
 
 #: src/Window.vala:230 src/Window.vala:279
 msgid "Delete Request?"
-msgstr ""
+msgstr "Oanfraach Fuortsmite?"
 
 #: src/Window.vala:231 src/Window.vala:280
 #, c-format
 msgid "This action will permanently delete <b>%s</b>. This can't be undone!"
 msgstr ""
+"Disse aksje smiet <b>%s</b> foar oltiid fuort. Dit kinst nei de tiid nea "
+"weromhelje!"
 
 #: src/Window.vala:239 src/Window.vala:288
 msgid "Delete Request"
-msgstr ""
+msgstr "Oanfraach Fuortsmite"
 
 #: src/Dialogs/Request/Dialog.vala:39
 msgid "Name:"
-msgstr ""
+msgstr "Namme:"
 
 #: src/Dialogs/Request/Dialog.vala:44 src/Dialogs/Alert.vala:42
 #: src/Dialogs/Preferences.vala:46
 msgid "Close"
-msgstr ""
+msgstr "Slúte"
 
 #: src/Dialogs/Request/CreateDialog.vala:28 src/Widgets/Content.vala:70
 #: src/Widgets/HeaderBar.vala:47
 msgid "Create Request"
-msgstr ""
+msgstr "Oanfraach oanmeitsje"
 
 #: src/Dialogs/Request/CreateDialog.vala:29
 msgid "My Request"
-msgstr ""
+msgstr "Mien Oanfraach"
 
 #: src/Dialogs/Request/CreateDialog.vala:31
 msgid "Create"
-msgstr ""
+msgstr "Oanmeitsje"
 
 #: src/Dialogs/Request/CreateDialog.vala:54
 #: src/Dialogs/Request/UpdateDialog.vala:53
 msgid "Request name must not be empty."
-msgstr ""
+msgstr "Oanfraach namme mei net leech wéze."
 
 #: src/Dialogs/Request/UpdateDialog.vala:27
 msgid "Update Request"
-msgstr ""
+msgstr "Fernijings oanfraach"
 
 #: src/Dialogs/Request/UpdateDialog.vala:35
 msgid "Update"
-msgstr ""
+msgstr "Fernije"
 
 #: src/Dialogs/Preferences.vala:26 src/Widgets/HeaderBar.vala:53
 msgid "Preferences"
-msgstr ""
+msgstr "Foarkarren"
 
 #: src/Dialogs/Preferences.vala:38
 msgid "General"
-msgstr ""
+msgstr "Algemien"
 
 #: src/Dialogs/Preferences.vala:39
 msgid "Network"
-msgstr ""
+msgstr "Netwurk"
 
 #: src/Dialogs/Preferences.vala:40
 msgid "Editor"
-msgstr ""
+msgstr "Bewurker"
 
 #: src/Dialogs/Preference/General.vala:36
 msgid "Dark Theme"
-msgstr ""
+msgstr "Tsjuster tema"
 
 #: src/Dialogs/Preference/General.vala:41
 msgid "Follow redirects automatically"
-msgstr ""
+msgstr "Trochferwiizingen automatysk folchje"
 
 #: src/Dialogs/Preference/General.vala:62
 msgid "Maximum Redirects"
-msgstr ""
+msgstr "Maksimum oantal trochferwiizingen"
 
 #: src/Dialogs/Preference/General.vala:73
 msgid "Network Request Timeout"
-msgstr ""
+msgstr "Netwurk oanfraachen Skoftsje"
 
 #: src/Dialogs/Preference/Network.vala:36
 msgid "Use Proxy"
-msgstr ""
+msgstr "Proksje brûke"
 
 #: src/Dialogs/Preference/Network.vala:44
 msgid "HTTP Proxy"
-msgstr ""
+msgstr "HTTP Proksje"
 
 #: src/Dialogs/Preference/Network.vala:54
 msgid "HTTPS Proxy"
-msgstr ""
+msgstr "HTTPS Proksje"
 
 #: src/Dialogs/Preference/Network.vala:64
 msgid "No Proxy"
-msgstr ""
+msgstr "Gjin Proksje"
 
 #: src/Dialogs/Preference/Network.vala:75
 msgid "Use User Information"
-msgstr ""
+msgstr "Brûkersinformaasje brûke"
 
 #: src/Dialogs/Preference/Network.vala:81
 msgid "Username"
-msgstr ""
+msgstr "Brûkersnamme"
 
 #: src/Dialogs/Preference/Network.vala:93
 msgid "Password"
-msgstr ""
+msgstr "Wachtwurd"
 
 #: src/Widgets/Content.vala:68
 msgid "Inspect your HTTP transmissions to the web"
-msgstr ""
+msgstr "Ynspektearje jo HTTP oerdrachten op it web"
 
 #: src/Widgets/Content.vala:70
 msgid "Create a new request to the web."
-msgstr ""
+msgstr "In nije oanfraach tot it web oanmeitsje"
 
 #: src/Widgets/Content.vala:71 src/Widgets/HeaderBar.vala:50
 msgid "Create Collection"
-msgstr ""
+msgstr "Samling Oanmeitsje"
 
 #: src/Widgets/Content.vala:72
 msgid "Create a new collection to arrange your requests."
-msgstr ""
+msgstr "In nije samling oanmeitsje om jo oanfraachen te organisearjen."
 
 #: src/Widgets/Sidebar/Container.vala:34
 msgid "Collections"
-msgstr ""
+msgstr "Samlingen"
 
 #: src/Widgets/Sidebar/Container.vala:35
 msgid "History"
-msgstr ""
+msgstr "Skiednis"
 
 #: src/Widgets/Sidebar/Container.vala:156
 msgid "Delete Collection?"
-msgstr ""
+msgstr "Samling fuortsmite?"
 
 #: src/Widgets/Sidebar/Container.vala:157
 #, c-format
@@ -159,115 +164,120 @@ msgid ""
 "All requests for this collection will also be deleted.\n"
 "This can't be undone!"
 msgstr ""
+"Disse asksje sil <b>%s</b> foar oltiid fuortsmite.\n"
+"Alle oanfraachen foar disse samling sille ek fuortsmiten wurde.\n"
+"Dit kinne jo nei de tiid nea weromhelje!"
 
 #: src/Widgets/Sidebar/Container.vala:167
 msgid "Delete Collection"
-msgstr ""
+msgstr "Samling Fuortsmite"
 
 #: src/Widgets/Sidebar/Item.vala:24
 msgid "No URL specified"
-msgstr ""
+msgstr "Gjin URL oantsjutte"
 
 #: src/Widgets/Sidebar/Item.vala:257
 msgid "Edit"
-msgstr ""
+msgstr "Bewurkje"
 
 #: src/Widgets/Sidebar/Item.vala:258
 msgid "Clone"
-msgstr ""
+msgstr "Ferdûbbelje"
 
 #: src/Widgets/Sidebar/Item.vala:259
 msgid "Delete"
-msgstr ""
+msgstr "Fuortsmite"
 
 #: src/Widgets/RequestResponsePane.vala:168
 msgid "Are you sure you want to change the type?"
-msgstr ""
+msgstr "Binne jo der wis fan dat jo it type feroarje wolle?"
 
 #: src/Widgets/RequestResponsePane.vala:169
 msgid ""
 "This action will delete the current body content. Proceed changing the body "
 "type?"
 msgstr ""
+"Disse aksje sil de aktuele haadtekst ynhâld fuort smite. Trochgean mei it "
+"feroarjen fan it haadtekst type?"
 
 #: src/Widgets/RequestResponsePane.vala:175
 msgid "Change Type"
-msgstr ""
+msgstr "Type feroarje"
 
 #: src/Widgets/Response/JsonTreeView.vala:50
 #: src/Widgets/Response/JsonTreeView.vala:81
 msgid "Key"
-msgstr ""
+msgstr "Kaai"
 
 #: src/Widgets/Response/JsonTreeView.vala:51
 #: src/Widgets/Response/JsonTreeView.vala:82
 msgid "Value"
-msgstr ""
+msgstr "Waerde"
 
 #: src/Widgets/Response/JsonTreeView.vala:92
 msgid "Object"
-msgstr ""
+msgstr "Object"
 
 #: src/Widgets/Response/JsonTreeView.vala:95
 msgid "Array"
-msgstr ""
+msgstr "Searje"
 
 #: src/Widgets/Response/StatusBar/Container.vala:46
 msgid "Text"
-msgstr ""
+msgstr "Tekst"
 
 #: src/Widgets/Response/StatusBar/Container.vala:47
 #: src/Widgets/Response/StatusBar/Container.vala:70
 #: src/Widgets/Response/StatusBar/Container.vala:83
 msgid "Raw"
-msgstr ""
+msgstr "Rau"
 
 #: src/Widgets/Response/StatusBar/Container.vala:56
 #: src/Widgets/Response/StatusBar/Container.vala:68
 msgid "Source Code"
-msgstr ""
+msgstr "Boarne koade"
 
 #: src/Widgets/Response/StatusBar/Container.vala:57
 #: src/Widgets/Response/StatusBar/Container.vala:69
 #: src/Widgets/Response/StatusBar/Container.vala:82
 #: src/Widgets/Request/Container.vala:238
 msgid "Headers"
-msgstr ""
+msgstr "Kopteksten"
 
 #: src/Widgets/Response/StatusBar/Container.vala:58
 msgid "Web View"
-msgstr ""
+msgstr "Web Oansicht"
 
 #: src/Widgets/Response/StatusBar/Container.vala:67
 msgid "XML Tree"
-msgstr ""
+msgstr "XML Beam"
 
 #: src/Widgets/Response/StatusBar/Container.vala:80
 msgid "JSON Tree"
-msgstr ""
+msgstr "JSON beam"
 
 #: src/Widgets/Response/StatusBar/Container.vala:81
 msgid "Prettified"
-msgstr ""
+msgstr "Moaier makke"
 
 #: src/Widgets/Response/StatusBar/Container.vala:91
 #: src/Widgets/Response/StatusBar/Container.vala:157
 msgid "No status"
-msgstr ""
+msgstr "Gjin status"
 
 #: src/Widgets/Response/StatusBar/Container.vala:99
 #: src/Widgets/Response/StatusBar/Container.vala:154
 msgid "No duration"
-msgstr ""
+msgstr "Gjin lingte fan tiid"
 
 #: src/Widgets/Response/StatusBar/Container.vala:107
 #: src/Widgets/Response/StatusBar/Container.vala:151
 msgid "No size"
-msgstr ""
+msgstr "Gjin grutte"
 
 #: src/Widgets/Response/StatusBar/Container.vala:161
 msgid "seconds"
-msgstr ""
+msgstr "sekonden"
 
 #: src/Widgets/Response/StatusBar/Container.vala:175
 msgid "GB"
@@ -287,44 +297,44 @@ msgstr ""
 
 #: src/Widgets/Request/Container.vala:109
 msgid "Add Header"
-msgstr ""
+msgstr "Koptekst tafoegje"
 
 #: src/Widgets/Request/Container.vala:189
 msgid "Add Parameter"
-msgstr ""
+msgstr "Parameters tafoegje"
 
 #: src/Widgets/Request/Container.vala:239
 msgid "Parameters"
-msgstr ""
+msgstr "Parameters"
 
 #: src/Widgets/Request/Container.vala:240
 msgid "Script"
-msgstr ""
+msgstr "Skript"
 
 #: src/Widgets/Request/Container.vala:241
 msgid "Body"
-msgstr ""
+msgstr "Haadtekst"
 
 #: src/Widgets/Request/UrlEntry.vala:166
 msgid "Type an URL"
-msgstr ""
+msgstr "URL ynfiere"
 
 #: src/Widgets/Request/BodyView.vala:65
 msgid "Plain"
-msgstr ""
+msgstr "Gewoan"
 
 #: src/Widgets/Request/BodyView.vala:66
 msgid "XML"
-msgstr ""
+msgstr "XML"
 
 #: src/Widgets/Request/BodyView.vala:67
 msgid "JSON"
-msgstr ""
+msgstr "JSON"
 
 #: src/Widgets/Request/BodyView.vala:68
 msgid "HTML"
-msgstr ""
+msgstr "HTML"
 
 #: src/Widgets/Request/BodyView.vala:203 src/Widgets/Request/BodyView.vala:221
 msgid "Add"
-msgstr ""
+msgstr "Tafoechje"
