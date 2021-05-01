@@ -1,3 +1,15 @@
+com.github.treagod.spectator (0.6.0) bionic; urgency=medium
+
+  * Introduction of environments and variables
+
+ -- Marvin <marv.ahlgrimm@gmail.com>  Sat, 01 May 20 17:55:16 +0200
+
+com.github.treagod.spectator (0.5.7) bionic; urgency=low
+
+  * Fix database path
+
+ -- Marvin <marv.ahlgrimm@gmail.com>  Mon, 16 Nov 20 21:03:16 +0200
+
 com.github.treagod.spectator (0.5.6) bionic; urgency=low
 
   * Use $XDG_DATA_HOME for database path

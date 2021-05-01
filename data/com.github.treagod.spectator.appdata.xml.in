@@ -14,6 +14,19 @@
     </p>
   </description>
   <releases>
+    <release version="0.6.0" date="2021-05-01">
+      <description>
+        <p>Spectator 0.6.0 introduces environments</p>
+        <p>Environments contain variables which you can use inside your URL.</p>
+        <p>You can create multiple environments with different variable values.</p>
+        <p>To insert the variables into the URL bar, press CTRL+Space when the URL bar is focused.</p>
+      </description>
+    </release>
+    <release version="0.5.7" date="2020-11-16">
+      <description>
+        <p>Fix database path</p>
+      </description>
+    </release>
     <release version="0.5.6" date="2020-11-16">
       <description>
         <p>Use $XDG_DATA_HOME for database path</p>
