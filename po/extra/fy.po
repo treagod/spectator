@@ -2,46 +2,49 @@
 # Copyright (C) 2019 THE extra'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the extra package.
 # Automatically generated, 2019.
+# vancha <tjipke@tutanota.com>, 2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-04 18:01+0200\n"
-"PO-Revision-Date: 2019-03-31 16:04+0200\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2021-04-28 11:19+0200\n"
+"Last-Translator: vancha <tjipke@tutanota.com>\n"
+"Language-Team: Western Frisian <none>\n"
 "Language: fy\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Gtranslator 40.0\n"
 
 #: data/com.github.treagod.spectator.desktop.in:3
 #: data/com.github.treagod.spectator.desktop.in:4
 #: data/com.github.treagod.spectator.appdata.xml.in:7
 msgid "Spectator"
-msgstr ""
+msgstr "Spectator"
 
 #: data/com.github.treagod.spectator.desktop.in:5
 msgid "REST Client"
-msgstr ""
+msgstr "REST Kliïnt"
 
 #: data/com.github.treagod.spectator.desktop.in:8
 msgid "com.github.treagod.spectator"
-msgstr ""
+msgstr "com.github.treagod.spectator"
 
 #: data/com.github.treagod.spectator.desktop.in:12
 msgid "REST;HTTP;Client;"
-msgstr ""
+msgstr "REST;HTTP;Client;"
 
 #: data/com.github.treagod.spectator.appdata.xml.in:8
 #: data/com.github.treagod.spectator.appdata.xml.in:56
 msgid "Comfortably test your REST APIs!"
-msgstr ""
+msgstr "Noflik Jo REST API's teste."
 
 #: data/com.github.treagod.spectator.appdata.xml.in:10
 msgid "Gives you the possibilty to test your REST application."
-msgstr ""
+msgstr "Jout jo de kâns jo REST applikaasje te testen."
 
 #: data/com.github.treagod.spectator.appdata.xml.in:11
 #: data/com.github.treagod.spectator.appdata.xml.in:57
@@ -49,41 +52,49 @@ msgid ""
 "Send custom headers and self defined bodies to your application and displays "
 "the response in a clean way."
 msgstr ""
+"Stjoer oanposte kopteksten en sels definieere ynhâld nei jo applikaasje en "
+"lit de beantwurding der op op in dúdlike wize sjen."
 
 #: data/com.github.treagod.spectator.appdata.xml.in:36
 msgid "JavaScript Integration"
-msgstr ""
+msgstr "JavaScript Yntegraasje"
 
 #: data/com.github.treagod.spectator.appdata.xml.in:38
 msgid "Adds the possibility to augment your requests with scripting."
-msgstr ""
+msgstr "Foeget de mooglikheid ta om jo oanfraachen oan te passen mei skripts."
 
 #: data/com.github.treagod.spectator.appdata.xml.in:39
 msgid ""
 "The developer can use the 'before_sending' JavaScript function to augment "
 "the request."
 msgstr ""
+"De ûntwikkelder kin de JavaScript funksje 'before_sending' brûke, om de "
+"oanfraach oan te passen."
 
 #: data/com.github.treagod.spectator.appdata.xml.in:40
 msgid ""
 "HTTP.get(url), HTTP.post(url, config) and other request methods are "
 "available from script"
 msgstr ""
+"HTTP.get(url), HTTP.post(url, config) en oare oanfraach metodes binne "
+"beskikber fanút it skript"
 
 #: data/com.github.treagod.spectator.appdata.xml.in:46
 msgid "URL Params fixes"
-msgstr ""
+msgstr "URL Params fixes"
 
 #: data/com.github.treagod.spectator.appdata.xml.in:48
 msgid ""
 "Fixes a bug where the application crashes if a URL param is entered from key-"
 "value view without a URL"
 msgstr ""
+"Lost in probleem op werby de applikaasje ûtfalt as jo in URL param ynfiere "
+"yn it kaai-waerde oersjoch, sûnder in URL."
 
 #: data/com.github.treagod.spectator.appdata.xml.in:54
 msgid "Initial Release"
-msgstr ""
+msgstr "Earste Útjouwing"
 
 #: data/com.github.treagod.spectator.appdata.xml.in:108
 msgid "Marvin Ahlgrimm"
-msgstr ""
+msgstr "Marvin Ahlgrimm"
