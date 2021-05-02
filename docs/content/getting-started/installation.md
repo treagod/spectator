@@ -38,3 +38,17 @@ $ cd build
 $ ninja
 $ sudo ninja install
 ```
+
+On Fedora following command should be sufficient:
+
+```bash
+$ sudo dnf install git meson vala duktape-devel gtk3-devel libgee-devel \
+   granite-devel gtksourceview3-devel webkitgtk4-devel json-glib-devel
+
+$ git clone https://github.com/treagod/spectator.git
+$ cd spectator
+$ meson build --prefix=/usr
+$ cd build
+$ ninja
+$ sudo ninja install
+```
