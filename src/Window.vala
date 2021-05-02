@@ -20,12 +20,13 @@
 */
 
 namespace Spectator {
-    public class Window : Gtk.ApplicationWindow {
+    public class Window : Hdy.ApplicationWindow {
         public signal void close_window ();
 
         private Widgets.HeaderBar headerbar;
         private Widgets.Sidebar.Container sidebar;
         private Widgets.Content content;
+        private Gtk.Box spectator_content;
         public  Services.VariableResolver variable_resolver { get; private set; }
 
         private Repository.IRequest _request_service;
@@ -89,10 +90,19 @@ namespace Spectator {
             this.order_service = order_service;
             this.environment_service = environment;
             this.variable_resolver = new Services.VariableResolver (environment);
+            //  this.headerbar = new Widgets.HeaderBar ();
+            //  this.setup_headerbar_events ();
+            //  this.set_titlebar (this.headerbar);
+            //  this.create_paned ();
+
+            Hdy.init ();
+            spectator_content = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
             this.headerbar = new Widgets.HeaderBar ();
             this.setup_headerbar_events ();
-            this.set_titlebar (this.headerbar);
+            //this.set_titlebar (this.headerbar);
+            spectator_content.add (headerbar);
             this.create_paned ();
+            this.add (spectator_content);
         }
 
         public void show_content () {
@@ -133,7 +143,7 @@ namespace Spectator {
 
         private void open_environments () {
             var dialog = new Dialogs.Environments (this);
-            
+
 
             dialog.destroy.connect (() => {
                 this.sidebar.show_items ();
@@ -192,7 +202,8 @@ namespace Spectator {
             paned.pack1 (sidebar, false, false);
             paned.pack2 (content, true, false);
 
-            this.add (paned);
+
+            spectator_content.add (paned);
         }
 
         private void setup_content_events () {
