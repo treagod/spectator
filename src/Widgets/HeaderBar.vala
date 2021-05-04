@@ -20,7 +20,7 @@
 */
 
 namespace Spectator.Widgets {
-    public class HeaderBar : Gtk.HeaderBar {
+    public class HeaderBar : Hdy.HeaderBar  {
         private Gtk.Button _new_request;
         private Gtk.Button _new_collection;
         public Gtk.MenuButton app_menu;
