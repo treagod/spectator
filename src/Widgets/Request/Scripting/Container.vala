@@ -75,14 +75,15 @@ namespace Spectator.Widgets.Request.Scripting {
             console.border_width = 12;
             console.editable = false;
             console.get_style_context ().add_class (Granite.STYLE_CLASS_TERMINAL);
+            var rev = new Gtk.Revealer ();
+
 
             js_console_button.clicked.connect (() => {
                 if (js_console_button.relief == Gtk.ReliefStyle.NONE) {
-                    paned.remove (scrolled_console);
+                    rev.reveal_child = false;
                     js_console_button.relief = Gtk.ReliefStyle.NORMAL;
                 } else {
-                    paned.pack2 (scrolled_console, true, true);
-                    scrolled_console.show_all ();
+                    rev.reveal_child = true;
                     js_console_button.relief = Gtk.ReliefStyle.NONE;
                 }
             });
@@ -97,8 +98,10 @@ namespace Spectator.Widgets.Request.Scripting {
 
             scrolled_console.add (console);
             scrolled_scripting_view.add (scripting_view);
+            rev.add (scrolled_console);
 
             paned.pack1 (scrolled_scripting_view, true, true);
+            paned.pack2 (rev, true, true);
             pack_start (paned, true, true);
             button_box.pack_end (js_console_button, false, false);
             button_box.pack_end (js_info_button, false, false);
