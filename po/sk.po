@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.treagod.spectator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-19 17:23+0200\n"
+"POT-Creation-Date: 2021-05-12 16:44+0200\n"
 "PO-Revision-Date: 2019-03-31 16:03+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,16 +17,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
-#: src/Window.vala:230 src/Window.vala:279
+#: src/Window.vala:271 src/Window.vala:320
 msgid "Delete Request?"
 msgstr ""
 
-#: src/Window.vala:231 src/Window.vala:280
+#: src/Window.vala:272 src/Window.vala:321
 #, c-format
 msgid "This action will permanently delete <b>%s</b>. This can't be undone!"
 msgstr ""
 
-#: src/Window.vala:239 src/Window.vala:288
+#: src/Window.vala:280 src/Window.vala:329
 msgid "Delete Request"
 msgstr ""
 
@@ -40,7 +40,7 @@ msgid "Close"
 msgstr ""
 
 #: src/Dialogs/Request/CreateDialog.vala:28 src/Widgets/Content.vala:70
-#: src/Widgets/HeaderBar.vala:47
+#: src/Widgets/HeaderBar.vala:48
 msgid "Create Request"
 msgstr ""
 
@@ -65,7 +65,7 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: src/Dialogs/Preferences.vala:26 src/Widgets/HeaderBar.vala:53
+#: src/Dialogs/Preferences.vala:26 src/Widgets/HeaderBar.vala:54
 msgid "Preferences"
 msgstr ""
 
@@ -133,7 +133,7 @@ msgstr ""
 msgid "Create a new request to the web."
 msgstr ""
 
-#: src/Widgets/Content.vala:71 src/Widgets/HeaderBar.vala:50
+#: src/Widgets/Content.vala:71 src/Widgets/HeaderBar.vala:51
 msgid "Create Collection"
 msgstr ""
 
@@ -141,19 +141,19 @@ msgstr ""
 msgid "Create a new collection to arrange your requests."
 msgstr ""
 
-#: src/Widgets/Sidebar/Container.vala:34
-msgid "Collections"
+#: src/Widgets/HeaderBar.vala:58
+msgid "Environments"
 msgstr ""
 
-#: src/Widgets/Sidebar/Container.vala:35
-msgid "History"
+#: src/Widgets/HeaderBar.vala:72
+msgid "Menu"
 msgstr ""
 
-#: src/Widgets/Sidebar/Container.vala:156
+#: src/Widgets/Sidebar/Container.vala:188
 msgid "Delete Collection?"
 msgstr ""
 
-#: src/Widgets/Sidebar/Container.vala:157
+#: src/Widgets/Sidebar/Container.vala:189
 #, c-format
 msgid ""
 "This action will permanently delete <b>%s</b>.\n"
@@ -161,7 +161,7 @@ msgid ""
 "This can't be undone!"
 msgstr ""
 
-#: src/Widgets/Sidebar/Container.vala:167
+#: src/Widgets/Sidebar/Container.vala:199
 msgid "Delete Collection"
 msgstr ""
 
@@ -169,29 +169,29 @@ msgstr ""
 msgid "No URL specified"
 msgstr ""
 
-#: src/Widgets/Sidebar/Item.vala:257
+#: src/Widgets/Sidebar/Item.vala:266
 msgid "Edit"
 msgstr ""
 
-#: src/Widgets/Sidebar/Item.vala:258
+#: src/Widgets/Sidebar/Item.vala:267
 msgid "Clone"
 msgstr ""
 
-#: src/Widgets/Sidebar/Item.vala:259
+#: src/Widgets/Sidebar/Item.vala:268
 msgid "Delete"
 msgstr ""
 
-#: src/Widgets/RequestResponsePane.vala:168
+#: src/Widgets/RequestResponsePane.vala:212
 msgid "Are you sure you want to change the type?"
 msgstr ""
 
-#: src/Widgets/RequestResponsePane.vala:169
+#: src/Widgets/RequestResponsePane.vala:213
 msgid ""
 "This action will delete the current body content. Proceed changing the body "
 "type?"
 msgstr ""
 
-#: src/Widgets/RequestResponsePane.vala:175
+#: src/Widgets/RequestResponsePane.vala:219
 msgid "Change Type"
 msgstr ""
 
@@ -213,100 +213,66 @@ msgstr ""
 msgid "Array"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:46
-msgid "Text"
-msgstr ""
-
-#: src/Widgets/Response/StatusBar/Container.vala:47
-#: src/Widgets/Response/StatusBar/Container.vala:70
-#: src/Widgets/Response/StatusBar/Container.vala:83
-msgid "Raw"
-msgstr ""
-
-#: src/Widgets/Response/StatusBar/Container.vala:56
-#: src/Widgets/Response/StatusBar/Container.vala:68
-msgid "Source Code"
-msgstr ""
-
-#: src/Widgets/Response/StatusBar/Container.vala:57
-#: src/Widgets/Response/StatusBar/Container.vala:69
-#: src/Widgets/Response/StatusBar/Container.vala:82
-#: src/Widgets/Request/Container.vala:238
-msgid "Headers"
-msgstr ""
-
-#: src/Widgets/Response/StatusBar/Container.vala:58
-msgid "Web View"
-msgstr ""
-
-#: src/Widgets/Response/StatusBar/Container.vala:67
-msgid "XML Tree"
-msgstr ""
-
-#: src/Widgets/Response/StatusBar/Container.vala:80
-msgid "JSON Tree"
-msgstr ""
-
-#: src/Widgets/Response/StatusBar/Container.vala:81
-msgid "Prettified"
-msgstr ""
-
-#: src/Widgets/Response/StatusBar/Container.vala:91
-#: src/Widgets/Response/StatusBar/Container.vala:157
+#: src/Widgets/Response/StatusBar/Container.vala:42
+#: src/Widgets/Response/StatusBar/Container.vala:100
 msgid "No status"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:99
-#: src/Widgets/Response/StatusBar/Container.vala:154
+#: src/Widgets/Response/StatusBar/Container.vala:50
+#: src/Widgets/Response/StatusBar/Container.vala:97
 msgid "No duration"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:107
-#: src/Widgets/Response/StatusBar/Container.vala:151
+#: src/Widgets/Response/StatusBar/Container.vala:58
+#: src/Widgets/Response/StatusBar/Container.vala:94
 msgid "No size"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:161
+#: src/Widgets/Response/StatusBar/Container.vala:104
 msgid "seconds"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:175
+#: src/Widgets/Response/StatusBar/Container.vala:118
 msgid "GB"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:177
+#: src/Widgets/Response/StatusBar/Container.vala:120
 msgid "MB"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:179
+#: src/Widgets/Response/StatusBar/Container.vala:122
 msgid "KB"
 msgstr ""
 
-#: src/Widgets/Response/StatusBar/Container.vala:184
+#: src/Widgets/Response/StatusBar/Container.vala:127
 msgid "B"
 msgstr ""
 
-#: src/Widgets/Request/Container.vala:109
+#: src/Widgets/Request/Container.vala:111
 msgid "Add Header"
 msgstr ""
 
-#: src/Widgets/Request/Container.vala:189
+#: src/Widgets/Request/Container.vala:191
 msgid "Add Parameter"
 msgstr ""
 
-#: src/Widgets/Request/Container.vala:239
-msgid "Parameters"
-msgstr ""
-
 #: src/Widgets/Request/Container.vala:240
-msgid "Script"
+msgid "Headers"
 msgstr ""
 
 #: src/Widgets/Request/Container.vala:241
+msgid "Parameters"
+msgstr ""
+
+#: src/Widgets/Request/Container.vala:242
+msgid "Script"
+msgstr ""
+
+#: src/Widgets/Request/Container.vala:243
 msgid "Body"
 msgstr ""
 
-#: src/Widgets/Request/UrlEntry.vala:166
+#: src/Widgets/Request/UrlEntry.vala:121
 msgid "Type an URL"
 msgstr ""
 

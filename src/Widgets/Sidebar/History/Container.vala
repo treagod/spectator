@@ -159,9 +159,9 @@ namespace Spectator.Widgets.Sidebar.History {
             var difference = now.difference (request.last_sent);
 
             if (difference < 1 * TimeSpan.DAY) {
-                add_history_item ("Today", request);
+                add_history_item (_("Today"), request);
             } else if (difference >= 1 * TimeSpan.DAY && difference < 2 * TimeSpan.DAY) {
-                add_history_item ("Yesterday", request);
+                add_history_item (_("Yesterday"), request);
             } else {
                 add_history_item (request.last_sent.format ("%e. %B %Y"), request);
             }
