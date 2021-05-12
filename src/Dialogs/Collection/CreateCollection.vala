@@ -47,7 +47,7 @@ namespace Spectator.Dialogs.Collection {
 
             var request_name_label = new Gtk.Label (_("Name:"));
             collection_name_entry = new Gtk.Entry ();
-            collection_name_entry.text = "New Collection";
+            collection_name_entry.text = _("New Collection");
             dialog_title = new DialogTitle (_("New Collection"));
 
             collection_name_entry.activate.connect (create_collection);
