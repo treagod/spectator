@@ -46,20 +46,6 @@ namespace Spectator.Services {
             this.thread_id = this.main_context.push_thread ();
             this.writer = new BufferWriter ();
 
-            this.request = request;
-            this.eval_code ();
-        }
-
-        ~ScriptRunner () {
-            this.main_context.remove (this.thread_id);
-        }
-
-        public void run_before_sending () {
-            unowned ScriptContext runner_context = create_runner_context ();
-            runner_context.push_ref (writer);
-            runner_context.put_global_string (Duktape.hidden_symbol ("writer"));
-
-
             writer.written.connect ((str) => {
                 this.console_output (str, ConsoleMessageType.LOG);
             });
@@ -72,7 +58,32 @@ namespace Spectator.Services {
                 this.console_output (str, ConsoleMessageType.WARNING);
             });
 
-            runner_context.get_global_string ("before_sending");
+            this.request = request;
+            this.eval_code ();
+        }
+
+        ~ScriptRunner () {
+            this.main_context.remove (this.thread_id);
+        }
+
+        public async void run_function_async (string function_name) {
+            SourceFunc callback = run_function_async.callback;
+            ThreadFunc<void> run = () => {
+                run_function (function_name);
+                callback ();
+            };
+            new Thread<void>("script-request", (owned) run);
+
+            // Wait for background thread to schedule our callback
+            yield;
+        }
+
+        public void run_function (string function_name) {
+            unowned ScriptContext runner_context = create_runner_context ();
+            runner_context.push_ref (writer);
+            runner_context.put_global_string (Duktape.hidden_symbol ("writer"));
+
+            runner_context.get_global_string (function_name);
             if (runner_context.is_function (-1)) {
                 runner_context.push_false ();
                 runner_context.put_global_string (Duktape.hidden_symbol ("abort"));

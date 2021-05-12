@@ -78,76 +78,78 @@ namespace Spectator.Services {
         }
 
         private void read_response (Soup.Session sess, Soup.Message mess) {
-            if (mess.response_body.data == null) {
-                if (!is_canceled) {
-                    request_failed (this.request);
-                }
-                return;
-            }
-
-            if (mess.status_code == 407) {
-                if (settings.use_proxy) {
-                    var auth_string = "";
-                    if (settings.use_userinformation) {
-                        auth_string = "%s:%s".printf (settings.proxy_username, settings.proxy_password);
-                    } else {
-                        // try to extract info from url string
-                        var http_proxy = new Soup.URI (settings.http_proxy);
-                        auth_string = "%s:%s".printf (http_proxy.get_user (), http_proxy.get_password ());
+            script_runner.run_function_async.begin ("after_sending", () => {
+                if (mess.response_body.data == null) {
+                    if (!is_canceled) {
+                        request_failed (this.request);
                     }
-                    var auth_string_b64 = Base64.encode ((uchar[]) auth_string.to_utf8 ());
-                    mess.request_headers.append ("Proxy-Authorization", "Basic %s".printf (auth_string_b64));
-                    sess.send_message (mess);
-                } else {
-                    proxy_failed (this.request);
+                    return;
                 }
-            }
 
-            var res = new Models.Response ();
-            res.url = request.uri;
+                if (mess.status_code == 407) {
+                    if (settings.use_proxy) {
+                        var auth_string = "";
+                        if (settings.use_userinformation) {
+                            auth_string = "%s:%s".printf (settings.proxy_username, settings.proxy_password);
+                        } else {
+                            // try to extract info from url string
+                            var http_proxy = new Soup.URI (settings.http_proxy);
+                            auth_string = "%s:%s".printf (http_proxy.get_user (), http_proxy.get_password ());
+                        }
+                        var auth_string_b64 = Base64.encode ((uchar[]) auth_string.to_utf8 ());
+                        mess.request_headers.append ("Proxy-Authorization", "Basic %s".printf (auth_string_b64));
+                        sess.send_message (mess);
+                    } else {
+                        proxy_failed (this.request);
+                    }
+                }
 
-            // Performance new request to redirected location
-            if (mess.status_code == 302 && settings.follow_redirects) {
-                res.redirects = redirect_request (mess);
-            }
+                var res = new Models.Response ();
+                res.url = request.uri;
 
-            res.status_code = mess.status_code;
-            res.size = mess.response_body.length;
+                // Performance new request to redirected location
+                if (mess.status_code == 302 && settings.follow_redirects) {
+                    res.redirects = redirect_request (mess);
+                }
 
-            var builder = new StringBuilder ();
-            var http_version = mess.http_version == Soup.HTTPVersion.@1_0 ? "HTTP/1.0"
-                                                                          : "HTTP/1.1";
+                res.status_code = mess.status_code;
+                res.size = mess.response_body.length;
 
-            builder.append ("%s %u %s\r\n".printf (http_version,
-                                                   res.status_code,
-                                                   Soup.Status.get_phrase (res.status_code)));
+                var builder = new StringBuilder ();
+                var http_version = mess.http_version == Soup.HTTPVersion.@1_0 ? "HTTP/1.0"
+                                                                              : "HTTP/1.1";
 
-            var cookies = Soup.cookies_from_request (mess);
+                builder.append ("%s %u %s\r\n".printf (http_version,
+                                                       res.status_code,
+                                                       Soup.Status.get_phrase (res.status_code)));
 
-            foreach (var cookie in cookies) {
-                response.add_cookie (cookie.name, cookie.value);
-            }
+                var cookies = Soup.cookies_from_request (mess);
 
-            mess.response_headers.foreach ((key, val) => {
-                res.add_header (key, val);
-                builder.append ("%s: %s\r\n".printf (key, val));
+                foreach (var cookie in cookies) {
+                    response.add_cookie (cookie.name, cookie.value);
+                }
+
+                mess.response_headers.foreach ((key, val) => {
+                    res.add_header (key, val);
+                    builder.append ("%s: %s\r\n".printf (key, val));
+                });
+
+                builder.append ("\r\n");
+                var body_data = (string) mess.response_body.data;
+                builder.append (body_data);
+
+                res.raw = builder.str;
+                res.data = body_data;
+
+                timer.stop ();
+
+                ulong _;
+                var seconds = timer.elapsed (out _);
+
+                res.duration = seconds;
+
+                this.finished_request (res);
             });
-
-            builder.append ("\r\n");
-            var body_data = (string) mess.response_body.data;
-            builder.append (body_data);
-
-            res.raw = builder.str;
-            res.data = body_data;
-
-            timer.stop ();
-
-            ulong _;
-            var seconds = timer.elapsed (out _);
-
-            res.duration = seconds;
-
-            this.finished_request (res);
         }
 
         private async void perform_request () {
@@ -275,23 +277,12 @@ namespace Spectator.Services {
             }
 
             // Call script async. On finish call the main request
-            run_script.begin (script_runner, () => {
-                timer = new Timer ();
-                session.queue_message (msg, read_response);
-            });
-        }
 
-        private async void run_script(Spectator.Services.ScriptRunner script) throws ThreadError {
-            SourceFunc callback = run_script.callback;
-            if (script.valid) {
-                ThreadFunc<void> run = () => {
-                    script.run_before_sending ();
-                    callback ();
-                };
-                new Thread<void>("script-request", (owned) run);
-
-                // Wait for background thread to schedule our callback
-                yield;
+            if (script_runner.valid) {
+                script_runner.run_function_async.begin ("before_sending", () => {
+                    timer = new Timer ();
+                    session.queue_message (msg, read_response);
+                });
             }
         }
     }
