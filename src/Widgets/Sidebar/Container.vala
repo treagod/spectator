@@ -58,14 +58,14 @@ namespace Spectator.Widgets.Sidebar {
             title.get_style_context ().add_class ("h3");
             title.halign = Gtk.Align.START;
             title.margin = 5;
-            var down_arrow = new Gtk.Image.from_icon_name ("pan-down-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
+            var down_arrow = new Gtk.Image.from_icon_name ("pan-down-symbolic", Gtk.IconSize.MENU);
             var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
             var event_box = new Gtk.EventBox ();
             box.add(title);
             box.add (down_arrow);
             box.hexpand = true;
             box.halign = Gtk.Align.START;
-            var popover = new Gtk.Popover (down_arrow);
+            var popover = new Gtk.Popover (this);
 
             environment_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 2);
 
@@ -84,11 +84,7 @@ namespace Spectator.Widgets.Sidebar {
                 return true;
             });
 
-            var separator = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
-            separator.margin_top = 2;
-
             pack_start (event_box, true, true, 0);
-            pack_start (separator, true, true, 0);
             this.build_drag_and_drop ();
         }
 
@@ -123,7 +119,7 @@ namespace Spectator.Widgets.Sidebar {
         public void show_environments () {
             foreach (var env in environments.get_environments ()) {
                 var button = new Gtk.ModelButton ();
-    
+
                 button.label = env.name;
                 button.clicked.connect (() => {
                     title.label = env.name;
@@ -347,9 +343,16 @@ This can't be undone!""".printf (collection.name)),
                 }
             });
 
+            this.titlebar.hexpand = true;
+            this.titlebar.halign = Gtk.Align.CENTER;
+
+            var separator = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
+            separator.margin_top = 2;
+
             mode_buttons.get_style_context ().add_class ("square");
 
             this.pack_start (this.titlebar, false, true, 0);
+            this.pack_start (separator, false, true, 0);
             this.pack_start (this.stack, true, true, 0);
             this.pack_end (this.mode_buttons, false, true, 0);
         }
