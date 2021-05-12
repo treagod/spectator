@@ -163,7 +163,6 @@ namespace Spectator {
                 var os = new Repository.SQLiteCustomOrder (db);
                 var ses = new Repository.SQLiteEnvironment (db);
 
-
                 this.load_legacy (cs, rs);
                 var window_builder = new Services.WindowBuilder (rs, cs, os, ses);
 

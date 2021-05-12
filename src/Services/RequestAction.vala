@@ -274,12 +274,25 @@ namespace Spectator.Services {
                 session.user_agent = user_agent;
             }
 
+            // Call script async. On finish call the main request
+            run_script.begin (script_runner, () => {
+                timer = new Timer ();
+                session.queue_message (msg, read_response);
+            });
+        }
 
-            if (script_runner.valid) {
-                script_runner.run_before_sending ();
+        private async void run_script(Spectator.Services.ScriptRunner script) throws ThreadError {
+            SourceFunc callback = run_script.callback;
+            if (script.valid) {
+                ThreadFunc<void> run = () => {
+                    script.run_before_sending ();
+                    callback ();
+                };
+                new Thread<void>("script-request", (owned) run);
+
+                // Wait for background thread to schedule our callback
+                yield;
             }
-            timer = new Timer ();
-            session.queue_message (msg, read_response);
         }
     }
 }
