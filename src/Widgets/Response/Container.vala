@@ -89,6 +89,10 @@ namespace Spectator.Widgets.Response {
             xml_scrolled.add (xml_tree_view);
             current_view = CurrentView.None;
 
+            cookie_scroll.margin_top = 10;
+            header_scroll.margin_top = 10;
+            stack.margin_top = 5;
+
             stack.add_named (text_scrolled, "prettified_view");
             stack.add_named (header_scroll, "headers");
             stack.add_named (cookie_scroll, "cookies");
@@ -178,7 +182,6 @@ namespace Spectator.Widgets.Response {
                 cookie_list.add_header ("No cookies", "");
             } else {
                 foreach (var cookie in response.cookies) {
-                    // freeform=3252; Path=/; Domain=httpbin.org
                     var cookie_info = "%s; Path=%s; Domain=%s".printf (cookie.value, cookie.path, cookie.domain);
                     cookie_list.add_header (cookie.name, cookie_info);
                 }
