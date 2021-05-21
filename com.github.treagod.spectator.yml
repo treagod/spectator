@@ -36,6 +36,8 @@ modules:
 
   - name: spectator
     buildsystem: meson
+    config-opts:
+      - --buildtype=release
     sources:
       - type: dir
         path: .

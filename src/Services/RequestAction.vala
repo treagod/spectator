@@ -28,6 +28,7 @@ namespace Spectator.Services {
         private Soup.Session session;
         private bool is_canceled;
         private ScriptRunner script_runner;
+        private Soup.CookieJar jar;
 
         public signal void finished_request (Models.Response response);
         public signal void script_log (string log);
@@ -123,10 +124,8 @@ namespace Spectator.Services {
                                                        res.status_code,
                                                        Soup.Status.get_phrase (res.status_code)));
 
-                var cookies = Soup.cookies_from_request (mess);
-
-                foreach (var cookie in cookies) {
-                    response.add_cookie (cookie.name, cookie.value);
+                foreach (var cookie in jar.all_cookies ()) {
+                    res.cookies.append (cookie);
                 }
 
                 mess.response_headers.foreach ((key, val) => {
@@ -154,6 +153,8 @@ namespace Spectator.Services {
 
         private async void perform_request () {
             session.timeout = (uint) settings.timeout;
+            jar = new Soup.CookieJar ();
+            session.add_feature (jar);
 
             var method = this.request.method;
 
@@ -282,6 +283,7 @@ namespace Spectator.Services {
                 script_runner.run_function_async.begin ("before_sending", () => {
                     timer = new Timer ();
                     session.queue_message (msg, read_response);
+                    // LOL
                 });
             }
         }

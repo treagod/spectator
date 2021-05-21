@@ -174,11 +174,13 @@ namespace Spectator.Widgets.Response {
                 }
             }
 
-            if (response.cookies.size == 0) {
+            if (response.cookies.length () == 0) {
                 cookie_list.add_header ("No cookies", "");
             } else {
-                foreach (var cookie in response.cookies.entries) {
-                    cookie_list.add_header (cookie.key, cookie.value);
+                foreach (var cookie in response.cookies) {
+                    // freeform=3252; Path=/; Domain=httpbin.org
+                    var cookie_info = "%s; Path=%s; Domain=%s".printf (cookie.value, cookie.path, cookie.domain);
+                    cookie_list.add_header (cookie.name, cookie_info);
                 }
             }
 

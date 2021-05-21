@@ -30,19 +30,15 @@ namespace Spectator.Models {
         public uint redirects { get; set; }
 
         public Gee.HashMap<string, string> headers { get; private set; }
-        public Gee.HashMap<string, string> cookies { get; private set; }
+        public SList<Soup.Cookie> cookies;
 
         public Response () {
             headers = new Gee.HashMap<string, string> ();
-            cookies = new Gee.HashMap<string, string> ();
+            cookies = new SList<Soup.Cookie> ();
         }
 
         public void add_header (string key, string val) {
             headers[key] = val;
-        }
-
-        public void add_cookie (string key, string val) {
-            cookies[key] = val;
         }
     }
 }
