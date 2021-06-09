@@ -89,9 +89,9 @@ namespace Spectator.Widgets.Response {
             xml_scrolled.add (xml_tree_view);
             current_view = CurrentView.None;
 
-            cookie_scroll.margin_top = 10;
-            header_scroll.margin_top = 10;
-            stack.margin_top = 5;
+            cookie_scroll.margin_top = 5;
+            header_scroll.margin_top = 5;
+            stack.margin_top = 2;
 
             stack.add_named (text_scrolled, "prettified_view");
             stack.add_named (header_scroll, "headers");
