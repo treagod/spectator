@@ -5,3 +5,4 @@ build/
 com.github.treagod.spectator.desktop
 com.github.treagod.spectator.appdata.xml
 config.vala
+.flatpak-builder/
