@@ -28,7 +28,7 @@ If you are on an Ubuntu derivate, you can build and install Spectator as follows
 
 ```bash
 $ sudo apt install valac meson libgee-0.8-dev libgranite-dev \
-   libgtksourceview-3.0-dev libwebkit2gtk-4.0-dev libjson-glib-dev \
+   libgtksourceview-4-dev libwebkit2gtk-4.0-dev libjson-glib-dev \
    libxml2-dev duktape-dev git cmake libsqlite3-dev
 
 $ git clone https://github.com/treagod/spectator.git
@@ -43,7 +43,7 @@ On Fedora following command should be sufficient:
 
 ```bash
 $ sudo dnf install git meson vala duktape-devel gtk3-devel libgee-devel \
-   granite-devel gtksourceview3-devel webkitgtk4-devel json-glib-devel
+   granite-devel gtksourceview4-devel webkitgtk4-devel json-glib-devel
 
 $ git clone https://github.com/treagod/spectator.git
 $ cd spectator
@@ -51,4 +51,10 @@ $ meson build --prefix=/usr
 $ cd build
 $ ninja
 $ sudo ninja install
+```
+
+Or simply build it with flatpak-builder
+
+```bash
+flatpak-builder build  com.github.treagod.spectator.yml --user --install --force-clean
 ```

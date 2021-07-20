@@ -42,7 +42,7 @@ namespace Spectator.Widgets.Request {
                     popover_box.remove (child);
                 }
             });
-            
+
             init_no_variable_message ();
             add (popover_box);
         }

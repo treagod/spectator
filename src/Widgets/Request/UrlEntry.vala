@@ -37,7 +37,6 @@ namespace Spectator.Widgets.Request {
         }
 
         public UrlEntry (Repository.IEnvironment envs) {
-
             init_method_box ();
             init_url_entry ();
             margin_top = 2;
