@@ -26,7 +26,7 @@ namespace Spectator.Dialogs {
         private Gtk.Box message_box;
         private weak Repository.IEnvironment environment;
 
-        public signal void environemnt_created ();
+        public signal void environemnt_created (string env_name);
 
         public NewEnvironment (Window parent) {
             title = _("New Environment");
@@ -80,7 +80,7 @@ namespace Spectator.Dialogs {
 
             try {
                 environment.create_environment (entry.text);
-                environemnt_created ();
+                environemnt_created (entry.text);
                 destroy ();
             } catch (Repository.RecordExistsError e) {
                 show_error (_("Environment name already exists"));

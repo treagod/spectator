@@ -30,6 +30,7 @@ namespace Spectator.Dialogs {
         public EnvironmentRow (string n) {
             env_name = n;
             var label = new Gtk.Label(env_name);
+            label.margin = 7;
             label.halign = Gtk.Align.START;
             var event_box = new Gtk.EventBox ();
             event_box.add (label);
@@ -96,30 +97,32 @@ namespace Spectator.Dialogs {
             new_environment.tooltip_text = _("Create Environment");
             new_environment.clicked.connect (() => {
                 var dialog = new NewEnvironment ((Window) this.transient_for);
-                dialog.environemnt_created.connect (() => {
+                dialog.environemnt_created.connect ((env_name) => {
                     fill_list (repository);
                     environment_list.show_all ();
+                    select_environment (new Models.Environment (env_name), repository);
                 });
                 dialog.show_all ();
-                select_current_environment (repository);
             });
             headerbar.pack_start (new_environment);
         }
 
-        private void select_current_environment (Repository.IEnvironment environment_repository) {
-            var current_env = environment_repository.get_current_environment ();
-
+        private void select_environment (Models.Environment env, Repository.IEnvironment environment_repository) {
             // Select row
             environment_list.foreach((w) => {
                 var row = (EnvironmentRow) w;
 
-                if (row.env_name == current_env.name) {
+                if (row.env_name == env.name) {
                     environment_list.select_row (row);
 
                     environment_variables.show_environment_variables (row.env_name);
                     return;
                 }
             });
+        }
+
+        private void select_current_environment (Repository.IEnvironment environment_repository) {
+            select_environment (environment_repository.get_current_environment (), environment_repository);
         }
 
         private bool confirm_deletion (string name) {
