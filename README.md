@@ -30,7 +30,7 @@ You'll need the following dependencies:
 * meson
 * libgee-0.8-dev
 * libgranite-dev
-* libgtksourceview-3.0-dev
+* libgtksourceview-4-dev
 * libwebkit2gtk-4.0-dev
 * libjson-glib-dev
 * libxml2-dev
