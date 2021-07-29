@@ -29,15 +29,17 @@ your workflow more fluent.
 You'll need the following dependencies:
 * flatpak-builder
 
-If you are not on elementary OS then you may also have to install the `flatpak` before compiling.
+If you are not on elementary OS then you may also have to install the `flatpak` package before compiling.
 
 To build and install, use `flatpak-builder`.
 
     flatpak-builder buildir com.github.treagod.spectator.yml --install --user --force-clean
 
 Then you can run the app with `flatpak run com.github.treagod.spectator`.
+
 Once you are done testing and want to remove the app, run `flatpak uninstall com.github.treagod.spectator`.
-If you instead want to completely remove the both the app and its user data, run `flatpak uninstall com.github.treagod.spectator. --delete-data`.
+
+If you instead want to completely remove the both the app and its user data, run `flatpak uninstall com.github.treagod.spectator --delete-data`.
 
 Flatpak building is the only officially supported build method, though building in the Debian format is possible via meson:
 
