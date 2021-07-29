@@ -27,25 +27,22 @@ your workflow more fluent.
 ## Building, Testing, and Installation
 
 You'll need the following dependencies:
-* meson
-* libgee-0.8-dev
-* libgranite-dev
-* libgtksourceview-4-dev
-* libwebkit2gtk-4.0-dev
-* libjson-glib-dev
-* libxml2-dev
-* libsqlite3
-* libhandy-1-dev
-* duktape-dev
-* valac
+* flatpak-builder
 
-Run `meson build` to configure the build environment. Change to the build directory and run `ninja test` to build
+If you are not on elementary OS then you may also have to install the `flatpak` before compiling.
+
+To build and install, use `flatpak-builder`.
+
+    flatpak-builder buildir com.github.treagod.spectator.yml --install --user --force-clean
+
+Then you can run the app with `flatpak run com.github.treagod.spectator`.
+Once you are done testing and want to remove the app, run `flatpak uninstall com.github.treagod.spectator`.
+If you instead want to completely remove the both the app and its user data, run `flatpak uninstall com.github.treagod.spectator. --delete-data`.
+
+Flatpak building is the only officially supported build method, though building in the Debian format is possible via meson:
 
     meson build --prefix=/usr
     cd build
     ninja
-
-To install, use `ninja install`, then execute with `com.github.treagod.spectator`
-
-    sudo ninja install
-    com.github.treagod.spectator
+    
+And can then be installed with `sudo ninja install`
