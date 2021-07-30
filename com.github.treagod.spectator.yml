@@ -1,6 +1,6 @@
 app-id: com.github.treagod.spectator
 runtime: io.elementary.Platform
-runtime-version: 'daily'
+runtime-version: '6'
 sdk: io.elementary.Sdk
 command: com.github.treagod.spectator
 appstream-compose: false
