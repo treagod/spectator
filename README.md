@@ -39,7 +39,7 @@ Then you can run the app with `flatpak run com.github.treagod.spectator`.
 
 Once you are done testing and want to remove the app, run `flatpak uninstall com.github.treagod.spectator`.
 
-If you instead want to completely remove the both the app and its user data, run `flatpak uninstall com.github.treagod.spectator --delete-data`.
+If you instead want to completely remove both the app and its user data, run `flatpak uninstall com.github.treagod.spectator --delete-data`.
 
 Flatpak building is the only officially supported build method, though building in the Debian format is possible via meson:
 
