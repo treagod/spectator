@@ -223,5 +223,6 @@
   <url type="translate">https://github.com/treagod/spectator/tree/master/po</url>
   <custom>
     <value key="x-appcenter-suggested-price">6</value>
+    <value key="x-appcenter-stripe">pk_live_jDRKjcQ9mEOoQNMQlsSObXLA</value>
   </custom>
 </component>
