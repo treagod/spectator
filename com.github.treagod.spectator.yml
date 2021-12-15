@@ -1,6 +1,6 @@
 app-id: com.github.treagod.spectator
 runtime: io.elementary.Platform
-runtime-version: '6'
+runtime-version: '6.1'
 sdk: io.elementary.Sdk
 command: com.github.treagod.spectator
 appstream-compose: false
@@ -17,7 +17,7 @@ modules:
     sources:
       - type: git
         url: https://gitlab.gnome.org/GNOME/gtksourceview.git
-        tag: '4.8.0'
+        tag: '4.8.2'
 
   - name: duktape
     buildsystem: simple
