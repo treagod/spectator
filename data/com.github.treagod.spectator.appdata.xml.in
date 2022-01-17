@@ -14,6 +14,11 @@
     </p>
   </description>
   <releases>
+    <release version="0.6.2" date="2022-01-17">
+      <description>
+        <p>Updated flatpak yaml</p>
+      </description>
+    </release>
     <release version="0.6.1" date="2021-12-15">
       <description>
         <p>Updated screenshot to Elementary 6</p>
