@@ -2,7 +2,7 @@
 Name=Spectator
 GenericName=Spectator
 Comment=REST Client
-Categories=Network;Development;
+Categories=Network;Development;WebDevelopment
 Exec=com.github.treagod.spectator
 Icon=com.github.treagod.spectator
 Terminal=false

@@ -1,9 +1,8 @@
 app-id: com.github.treagod.spectator
 runtime: io.elementary.Platform
-runtime-version: '6'
+runtime-version: '6.1'
 sdk: io.elementary.Sdk
 command: com.github.treagod.spectator
-appstream-compose: false
 finish-args:
   - --socket=wayland
   - --socket=fallback-x11
