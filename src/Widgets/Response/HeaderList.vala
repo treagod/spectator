@@ -25,7 +25,7 @@ namespace Spectator.Widgets.Response {
         public HeaderList () {
             idx = 0;
             column_spacing = 18;
-            row_spacing = 5;
+            row_spacing = 10;
             get_style_context ().add_class ("response-header-list");
         }
 
@@ -42,7 +42,7 @@ namespace Spectator.Widgets.Response {
             key_l.selectable = true;
             val_l.selectable = true;
 
-            key_l.halign = Gtk.Align.END;
+            key_l.halign = Gtk.Align.START;
             val_l.halign = Gtk.Align.START;
             key_l.hexpand = true;
             val_l.hexpand = true;
