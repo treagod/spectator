@@ -184,13 +184,13 @@
   </releases>
   <screenshots>
     <screenshot>
-      <image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/screenshot1.png</image>
+      <image>https://raw.githubusercontent.com/treagod/spectator/main/screenshots/screenshot1.png</image>
     </screenshot>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/screenshot2.png</image>
+      <image>https://raw.githubusercontent.com/treagod/spectator/main/screenshots/screenshot2.png</image>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/treagod/spectator/master/screenshots/screenshot3.png</image>
+      <image>https://raw.githubusercontent.com/treagod/spectator/main/screenshots/screenshot3.png</image>
     </screenshot>
   </screenshots>
   <content_rating type="oars-1.1">
@@ -225,7 +225,7 @@
   <developer_name>Marvin Ahlgrimm</developer_name>
   <url type="homepage">https://github.com/treagod/spectator</url>
   <url type="bugtracker">https://github.com/treagod/spectator/issues</url>
-  <url type="translate">https://github.com/treagod/spectator/tree/master/po</url>
+  <url type="translate">https://github.com/treagod/spectator/tree/main/po</url>
   <custom>
     <value key="x-appcenter-suggested-price">6</value>
     <value key="x-appcenter-stripe">pk_live_jDRKjcQ9mEOoQNMQlsSObXLA</value>

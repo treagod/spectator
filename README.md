@@ -1,6 +1,6 @@
 
 # Spectator
-[![Build Status](https://travis-ci.com/treagod/spectator.svg?branch=master)](https://travis-ci.com/treagod/spectator)
+[![Build Status](https://travis-ci.com/treagod/spectator.svg?branch=main)](https://travis-ci.com/treagod/spectator)
 
 Spectator is a native application written in Vala using GTK. It's enables you to test the
 API endpoints of your HTTP server.
@@ -46,5 +46,5 @@ Flatpak building is the only officially supported build method, though building 
     meson build --prefix=/usr
     cd build
     ninja
-    
+
 And can then be installed with `sudo ninja install`
