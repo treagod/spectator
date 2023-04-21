@@ -8,4 +8,4 @@ Icon=com.github.treagod.spectator
 Terminal=false
 Type=Application
 X-GNOME-Gettext-Domain=spectator
-Keywords=REST;HTTP;Client;
+Keywords=REST;HTTP;Client;postman;
